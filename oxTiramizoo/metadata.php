@@ -5,6 +5,8 @@
  *
  *
  */
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
 
 /**
  * Metadata version
@@ -34,6 +36,7 @@ $aModule = array(
                         ),
     'files'        =>   array(
                         'oxTiramizoo_settings' => 'oxTiramizoo/admin/oxTiramizoo_settings.php',
+                        'oxTiramizoo_setup' => 'oxTiramizoo/core/oxTiramizoo_setup.php',
                       ),
     'templates'    =>   array(
                             'oxTiramizoo_settings.tpl' => 'oxTiramizoo/out/admin/tpl/oxTiramizoo_settings.tpl',

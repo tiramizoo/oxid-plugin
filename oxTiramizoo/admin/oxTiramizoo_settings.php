@@ -1,5 +1,7 @@
 <?php
 
+require_once  dirname(__FILE__) . '/../core/oxTiramizoo_setup.php';
+
 class oxTiramizoo_settings extends Shop_Config
 {
   const OX_TIRAMIZOO_MODULE_NAME = 'oxTiramizoo';
@@ -17,9 +19,16 @@ class oxTiramizoo_settings extends Shop_Config
   
   protected $oxTiramizoo_is_module_installed = null;
 
-  function Init() {
-    
-    return parent::Init();
+  public function init()
+  {
+      $oxTiramizooConfig = $this->getConfig();
+      if(!(int)$oxTiramizooConfig->getConfigParam('oxTiramizoo_is_installed'))
+      {
+          $oxTiramizooSetup = new oxTiramizoo_setup();
+          $oxTiramizooSetup->install();
+      }
+
+      return parent::Init();
   }
 
   /**
