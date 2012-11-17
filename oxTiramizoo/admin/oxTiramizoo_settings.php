@@ -137,6 +137,10 @@ class oxTiramizoo_settings extends Shop_Config
         }
     }
 
+    for ($iPickupHourIterator; $iPickupHourIterator <=3; $iPickupHourIterator++)
+    {
+        $aConfStrs['oxTiramizoo_shop_pickup_hour_' . $iPickupHourIterator++] = '';
+    }
 
     if ( is_array( $aConfBools ) ) {
       foreach ( $aConfBools as $sVarName => $sVarVal ) {

@@ -154,7 +154,9 @@
                   [{foreach from=$oPaymentsList key=sPaymentId item=aPayment}]
                      <li>
                         <input type="hidden" name="payment[[{$sPaymentId}]]" value="0" />
-                        <input type="checkbox" name="payment[[{$sPaymentId}]]" value="1" [{if ($aPayment.checked)}]checked="checked"[{/if}] /> [{$aPayment.desc}]</li>
+                        <input type="checkbox" name="payment[[{$sPaymentId}]]" value="1" [{if ($aPayment.checked)}]checked="checked"[{/if}] />
+                        [{$aPayment.desc}]
+                     </li>
                   [{/foreach}]                
                 </ul>
               </td>
