@@ -58,6 +58,19 @@ $aLang = array(
 'oxTiramizoo_settings_enable_module_label'              => 'Enable Tiramizoo',
 'oxTiramizoo_settings_enable_module_help'               => 'Help for Enable Tiramizoo',
 
+'oxTiramizoo_settings_pickup_hour_1_label'              => '1st pick up hour',
+'oxTiramizoo_settings_pickup_hour_2_label'              => '2nd pick up hour',
+'oxTiramizoo_settings_pickup_hour_3_label'              => '3rd pick up hour',
+'oxTiramizoo_settings_pickup_hours_help'                => 'You can select 1-3 pickup hours',
+
+'oxTiramizoo_pickup_hour_not_specified'                 => 'Not specified',
+
+'oxTiramizoo_settings_payment_methods_assigned_label'   => 'Tiramizoo payment methods assigned',
+
+'oxTiramizoo_settings_order_to_pickup_offset_label'     => 'Order To Pickup Time offset',
+'oxTiramizoo_settings_order_to_pickup_offset_help'      => 'How many time You need to create pickup',
+
+
 
 );
 

@@ -45,8 +45,9 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         }
 
         //@TODO: check if remove Tiramizoo
-        unset($this->_aAllSets['1b842e732a23255b1.91207750']);
-        $this->checkIfTiramizooShow();
+        if (!$this->tiramizooCanShow()) {
+            unset($this->_aAllSets['Tiramizoo']);
+        }
 
         return $this->_aAllSets;
     }
@@ -92,11 +93,13 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 
     public function getAvailableDeliveryHours()
     {
+        $oxTiramizooConfig = $this->getConfig();
+
         $aAvailableDeliveryHours = array();
         $aAvailablePickupHours = $this->getAvailablePickupHours();
 
-        $orderOffsetTime = 30;
-        $deliveryOffsetTime = 90;
+        $orderOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
+        $deliveryOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
 
         $dateTime = date('Y-m-d H:i');
 
@@ -105,7 +108,7 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         while ($itertator++ <= 3)
         {
             $dateTime = $this->getNextAvailableDate($dateTime);
-
+            
             if (strtotime('Y-m-d', strtotime($dateTime)) ==  date('Y-m-d')) {
                 $aAvailableDeliveryHours[$dateTime] = oxLang::getInstance()->translateString('oxTiramizoo_Today', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($dateTime)) . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
             } else if (strtotime('Y-m-d', strtotime($dateTime)) ==  date('Y-m-d', strtotime('+1days', strtotime(date('Y-m-d')))))
@@ -123,7 +126,9 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 
     public function getNextAvailableDate($fromDateTime)
     {
-        $orderOffsetTime = 30;
+        $oxTiramizooConfig = $this->getConfig();
+
+        $orderOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
 
         $fromDateTime = date('Y-m-d H:i', strtotime('+' . $orderOffsetTime . ' minutes', strtotime($fromDateTime)));
         $fromHour = date('H:i', strtotime($fromDateTime));
@@ -165,7 +170,7 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
     }
 
 
-    public function checkIfTiramizooShow() 
+    public function tiramizooCanShow() 
     {
         $oBasket = $this->getSession()->getBasket();
 
@@ -180,6 +185,12 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 
         }
 
+
+        if (!count($this->getAvailablePickupHours())) {
+            return false;
+        }
+
+        return true;
 
         //print_r($oBasket->getBasketArticles());
 

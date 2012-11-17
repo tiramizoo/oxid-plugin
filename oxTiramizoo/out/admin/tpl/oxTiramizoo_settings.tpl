@@ -106,7 +106,13 @@
               </td>
             </tr>
 
-
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_order_to_pickup_offset_label" }]</td>
+              <td valign="top" class="edittext">
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_order_pickup_offset] value="[{$confstrs.oxTiramizoo_order_pickup_offset}]" maxlength="30" />
+                [{ oxinputhelp ident="oxTiramizoo_settings_order_to_pickup_offset_help" }]
+              </td>
+            </tr>
 
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_1_label" }]</td>

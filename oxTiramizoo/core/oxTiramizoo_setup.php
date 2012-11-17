@@ -8,10 +8,15 @@ class oxTiramizoo_setup extends Shop_Config
 
     public function install()
     {
+        $oxTiramizooConfig = $this->getConfig();
+
         try 
         {
-            $this->setupDefaultConfigVars();
-            $this->runDatabase();
+            if (!$oxTiramizooConfig->getConfigParam('oxTiramizoo_is_installed')) {
+                $this->setupDefaultConfigVars();
+                $this->runDatabase();
+                $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 1);
+            }
             
             // clear cache 
             oxUtils::getInstance()->rebuildCache();            
@@ -25,7 +30,8 @@ class oxTiramizoo_setup extends Shop_Config
     {
         $oxTiramizooConfig = $this->getConfig();
 
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://api-sandbox.tiramizoo.com/v1');
+        //@TODO: change if goes live
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://api-sandbox.tiramizoo.com/v1'); 
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_key', '');
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_address', '');
@@ -35,11 +41,18 @@ class oxTiramizoo_setup extends Shop_Config
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_contact_name', '');
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_phone_number', '');
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_email_address', '');
+
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_order_pickup_offset', 30);
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_del_offset', 90);
+
+
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_1', '');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_2', '');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_3', '');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_price', "7.90");
         $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
         $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 0);
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_version', '0.1.0');
-
-
     }
 
     public function runDatabase()
@@ -60,6 +73,8 @@ class oxTiramizoo_setup extends Shop_Config
         {
             call_user_func_array(array($this, $migrationMethod), array());
         }
+
+        oxDb::getInstance()->updateViews();
     }
 
     public function databaseMigration_0_1_0()
@@ -77,7 +92,7 @@ class oxTiramizoo_setup extends Shop_Config
                             OXDELSETID = 'tiramizoo';");
 
         //@TODO: what is shop id?
-        $this->ExecuteSQL("INSERT INTO `oxdelivery` SET
+        $this->ExecuteSQL("INSERT IGNORE INTO `oxdelivery` SET
                             OXID = 'tiramizoo',
                             OXSHOPID = 1,
                             OXACTIVE = 1,
@@ -88,16 +103,16 @@ class oxTiramizoo_setup extends Shop_Config
                             OXTITLE_2 = 'Tiramizoo',
                             OXTITLE_3 = 'Tiramizoo',
                             OXADDSUMTYPE = 'abs',
-                            OXADDSUM = 0.1,
+                            OXADDSUM = 7.90,
                             OXDELTYPE = 'p',
                             OXPARAM = 0,
                             OXPARAMEND = 999999,
-                            OXFIXED = 1,
-                            OXSORT = 1,
+                            OXFIXED = 0,
+                            OXSORT = 1000,
                             OXFINALIZE = 0;");
 
         //@TODO: what is shop id?
-        $this->ExecuteSQL("INSERT INTO `oxdeliveryset` SET
+        $this->ExecuteSQL("INSERT IGNORE INTO `oxdeliveryset` SET
                             OXID = 'Tiramizoo',
                             OXSHOPID = 1,
                             OXACTIVE = 1,
