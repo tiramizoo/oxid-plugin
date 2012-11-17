@@ -77,9 +77,6 @@
               <td valign="top" class="edittext">
                 <select name=confstrs[oxTiramizoo_shop_country_label]>
                   <option value="de">Germany</option>
-                  <option value="uk">United Kingdom</option>
-                  <option value="pl">Poland</option>
-                  <option value="dk">Denmark</option>
                 </select>
                 [{ oxinputhelp ident="oxTiramizoo_settings_shop_country_help" }]
               </td>
@@ -104,8 +101,62 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_shop_email_address_label" }]</td>
               <td valign="top" class="edittext">
-                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_email_address] value="[{$confstrs.oxTiramizoo_email_address_number}]" maxlength="30" />
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_email_address] value="[{$confstrs.oxTiramizoo_shop_email_address}]" maxlength="30" />
                 [{ oxinputhelp ident="oxTiramizoo_settings_shop_email_address_help" }]
+              </td>
+            </tr>
+
+
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_1_label" }]</td>
+              <td valign="top" class="edittext">
+                <select name=oxTiramizoo_shop_pickup_hour[]>
+                  <option value="">[{ oxmultilang ident="oxTiramizoo_pickup_hour_not_specified" }]</option>
+                  [{foreach from=$aAvailablePickupHours item=aAvailablePickupHour}]
+                    <option value="[{$aAvailablePickupHour}]" [{if ($confstrs.oxTiramizoo_shop_pickup_hour_1 == $aAvailablePickupHour)}]selected="selected"[{/if}]>[{$aAvailablePickupHour}]</option>
+                  [{/foreach}]
+                </select>
+                [{ oxinputhelp ident="oxTiramizoo_settings_pickup_hours_help" }]              
+              </td>
+            </tr>
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_2_label" }]</td>
+              <td valign="top" class="edittext">
+                <select name=oxTiramizoo_shop_pickup_hour[]>
+                  <option value="">[{ oxmultilang ident="oxTiramizoo_pickup_hour_not_specified" }]</option>
+                  [{foreach from=$aAvailablePickupHours item=aAvailablePickupHour}]
+                    <option value="[{$aAvailablePickupHour}]" [{if ($confstrs.oxTiramizoo_shop_pickup_hour_2 == $aAvailablePickupHour)}]selected="selected"[{/if}]>[{$aAvailablePickupHour}]</option>
+                  [{/foreach}]
+                </select>
+                [{ oxinputhelp ident="oxTiramizoo_settings_pickup_hours_help" }]
+              </td>
+            </tr>
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_3_label" }]</td>
+              <td valign="top" class="edittext">
+                <select name=oxTiramizoo_shop_pickup_hour[]>
+                  <option value="">[{ oxmultilang ident="oxTiramizoo_pickup_hour_not_specified" }]</option>
+                  [{foreach from=$aAvailablePickupHours item=aAvailablePickupHour}]
+                    <option value="[{$aAvailablePickupHour}]" [{if ($confstrs.oxTiramizoo_shop_pickup_hour_3 == $aAvailablePickupHour)}]selected="selected"[{/if}]>[{$aAvailablePickupHour}]</option>
+                  [{/foreach}]
+                </select>
+                [{ oxinputhelp ident="oxTiramizoo_settings_pickup_hours_help" }]
+              </td>
+            </tr>
+
+            <tr>
+              <td>[{ oxmultilang ident="oxTiramizoo_settings_payment_methods_assigned_label" }]</td>
+              <td>
+                <ul>
+                  [{foreach from=$oPaymentsList key=sPaymentId item=aPayment}]
+                     <li>
+                        <input type="hidden" name="payment[[{$sPaymentId}]]" value="0" />
+                        <input type="checkbox" name="payment[[{$sPaymentId}]]" value="1" [{if ($aPayment.checked)}]checked="checked"[{/if}] /> [{$aPayment.desc}]</li>
+                  [{/foreach}]                
+                </ul>
               </td>
             </tr>
 
