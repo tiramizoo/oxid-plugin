@@ -84,6 +84,12 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         return parent::render();
     }
 
+    public function isTiramizooCurrentShiippingMethod()
+    {
+        $oBasket = $this->getSession()->getBasket();
+        return  $oBasket->getShippingId() == 'Tiramizoo';
+    }
+
     public function getAvailableDeliveryHours()
     {
         $aAvailableDeliveryHours = array();

@@ -7,15 +7,14 @@
 <button type="submit" class="submitButton largeButton">[{ oxmultilang ident="PAGE_CHECKOUT_PAYMENT_UPDATESHIPPING" }]</button>
 </noscript>
 
-[{$aaa}]
-
-<dl style="margin-top:16px;">
-[{foreach key=sDeliveryTime from=$oView->getAvailableDeliveryHours() item=sDeliveryWindow}]
-    <dt>
-        <input id="payment_oxiddebitnote" type="radio" name="paymentid" value="oxiddebitnote" >
-        <label for="payment_oxiddebitnote"><b>[{$sDeliveryWindow}]</b></label>
-    </dt>
-[{/foreach}]
-
+[{if $oView->isTiramizooCurrentShiippingMethod()}]
+    <dl style="margin-top:16px;">
+    [{foreach key=sDeliveryTime from=$oView->getAvailableDeliveryHours() item=sDeliveryWindow}]
+        <dt>
+            <input id="payment_oxiddebitnote" type="radio" name="paymentid" value="oxiddebitnote" >
+            <label for="payment_oxiddebitnote"><b>[{$sDeliveryWindow}]</b></label>
+        </dt>
+    [{/foreach}]
+[{/if}]
 
 </dl>                                                    
