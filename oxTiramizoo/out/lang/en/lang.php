@@ -15,7 +15,7 @@ $aLang = array(
 //delivery hours
 'oxTiramizoo_Today'                                     => 'Today',
 'oxTiramizoo_Tomorrow'                                  => 'Tomorrow',
-
+'oxTiramizoo_selectTimeWindowTitle'                     => 'Select when the order will be delivered'
 );
 
 

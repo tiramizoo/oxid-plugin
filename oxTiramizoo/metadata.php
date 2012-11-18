@@ -47,9 +47,13 @@ $aModule = array(
     'blocks'        =>  array(
                             array(  'template'  =>  'page/checkout/payment.tpl',    
                                     'block'     =>  'act_shipping',              
-                                    'file'      =>   'oxTiramizoo_logo.tpl'
+                                    'file'      =>   'oxTiramizoo_act_shipping.tpl'
                             ),
-    ),
+                            array(  'template'  =>  'page/checkout/order.tpl',    
+                                    'block'     =>  'shippingAndPayment',              
+                                    'file'      =>   'oxTiramizoo_shippingAndPayment.tpl'
+                            ),
+                        ),
 
 );
 
