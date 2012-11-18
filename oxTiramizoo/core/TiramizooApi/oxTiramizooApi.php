@@ -41,4 +41,12 @@ class oxTiramizooApi extends TiramizooApi
 
         return $result;
     }
+
+    public function setOrder($data)
+    {
+        $result = null;
+        $this->request('quotes', $data, $result);
+        return $result;
+    }
+
 }
