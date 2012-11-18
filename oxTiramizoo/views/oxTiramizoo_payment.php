@@ -67,6 +67,10 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         $oBasket->setShipping( null );
         $oBasket->onUpdate();
         oxSession::setVar( 'sShipSet', oxConfig::getParameter( 'sShipSet' ) );
+
+        if (oxConfig::getParameter( 'sTiramizooTimeWindow' )) {
+            oxSession::setVar( 'sTiramizooTimeWindow', oxConfig::getParameter( 'sTiramizooTimeWindow' ) );
+        }
     }
 
     /**
@@ -84,6 +88,16 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
     {
         return parent::render();
     }
+
+
+
+
+
+    public function getTiramizooTimeWindow()
+    {
+        return oxSession::getVar( 'sTiramizooTimeWindow' );
+    }
+
 
     public function isTiramizooCurrentShiippingMethod()
     {
@@ -103,26 +117,43 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 
         $dateTime = date('Y-m-d H:i');
 
-        $itertator = 1;
+        $itertator = 0;
 
-        while ($itertator++ <= 3)
+        while ($itertator++ < 3)
         {
             $dateTime = $this->getNextAvailableDate($dateTime);
-            
-            if (strtotime('Y-m-d', strtotime($dateTime)) ==  date('Y-m-d')) {
-                $aAvailableDeliveryHours[$dateTime] = oxLang::getInstance()->translateString('oxTiramizoo_Today', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($dateTime)) . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
-            } else if (strtotime('Y-m-d', strtotime($dateTime)) ==  date('Y-m-d', strtotime('+1days', strtotime(date('Y-m-d')))))
-            {
-                $aAvailableDeliveryHours[$dateTime] = oxLang::getInstance()->translateString('oxTiramizoo_Tomorrow', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($dateTime)) . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
 
-            } else {
-                $aAvailableDeliveryHours[$dateTime] = $dateTime . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
-            } 
+            $aAvailableDeliveryHours[$dateTime] = $this->getLabelDeliveryWindow($dateTime);
 
+            if (($itertator == 1) && !oxSession::hasVar( 'sTiramizooTimeWindow' )) {
+                oxSession::setVar( 'sTiramizooTimeWindow',  $dateTime);
+            }
         }
+
+
 
         return $aAvailableDeliveryHours;
     }
+
+    public function getLabelDeliveryWindow($dateTime)
+    {
+        $oxTiramizooConfig = $this->getConfig();
+
+        $orderOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
+        $deliveryOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
+
+
+        if (strtotime('Y-m-d', strtotime($dateTime)) ==  strtotime(date('Y-m-d'))) {
+            return oxLang::getInstance()->translateString('oxTiramizoo_Today', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($dateTime)) . ' ' . date('H:i', strtotime($dateTime)) . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
+        } else if (strtotime('Y-m-d', strtotime($dateTime)) ==  strtotime('Y-m-d', strtotime('+1days', strtotime(date('Y-m-d')))))
+        {
+            return oxLang::getInstance()->translateString('oxTiramizoo_Tomorrow', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($dateTime)) . ' ' . date('H:i', strtotime($dateTime)) . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
+
+        } else {
+            return $dateTime . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
+        }
+    }
+
 
     public function getNextAvailableDate($fromDateTime)
     {
@@ -226,7 +257,7 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         var_dump($result);
 
         if (!in_array($result['http_status'], array(200, 201))) {
-            return false;
+            //return false;
         }
 
         return true;
