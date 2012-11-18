@@ -60,7 +60,67 @@ class oxTiramizoo_oxDelivery extends oxTiramizoo_oxDelivery_parent
         if ($this->oxdelivery__oxtitle->value == 'Tiramizoo') {
             $oBasket = $this->getSession()->getBasket();
             //@todo: api
-            $this->_oPrice->setPrice(5000);
+            //$this->_oPrice->setPrice(3000); //price: 7.90 gross
+
+
+
+            $data = new stdClass();
+            $data->pickup_postal_code = $this->getConfig()->getConfigParam('oxTiramizoo_shop_postal_code');
+            $data->delivery_postal_code = "81925";
+            $data->items = array();
+
+            $data->items = array(array
+                (
+                  "width"=> 120,
+                  "height"=> 82,
+                  "length"=> 50,
+                  "weight"=> 2,
+                  "quantity"=> 1
+
+                ),
+                array(
+                  "width"=> 40,
+                  "height"=> 40,
+                  "length"=> 120,
+                  "weight"=> 5.4,
+                  "quantity"=> 3
+                ));
+
+
+
+            foreach ($oBasket->getBasketArticles() as $key => $oArticle) 
+            {
+                $item = array();
+
+                if ($oArticle->oxarticles__oxweight->value) {
+                    $item['weight'] = $oArticle->oxarticles__oxweight->value;
+                }
+
+                if ($oArticle->oxarticles__oxweight->value) {
+                    $item['width'] = $oArticle->oxarticles__oxwidth->value;
+                }
+
+                if ($oArticle->oxarticles__oxweight->value) {
+                    $item['height'] = $oArticle->oxarticles__oxheight->value;
+                }
+
+                if ($oArticle->oxarticles__oxweight->value) {
+                    $item['length'] = $oArticle->oxarticles__oxlength->value;
+                }
+
+
+
+                //$item;
+                // echo $oArticle->oxarticles__oxweight->value;
+                // echo $oArticle->oxarticles__oxwidth->value;
+                // echo $oArticle->oxarticles__oxlength->value;
+                // echo $oArticle->oxarticles__oxheight->value;
+                //echo $oArticle->oxarticles__oxtiramizooenable->value;
+                
+                //print_r($oArticle);
+
+            }
+
         }
 
 

@@ -35,8 +35,10 @@ $aModule = array(
                             'payment'       => 'oxTiramizoo/views/oxTiramizoo_payment',
                         ),
     'files'        =>   array(
-                        'oxTiramizoo_settings' => 'oxTiramizoo/admin/oxTiramizoo_settings.php',
-                        'oxTiramizoo_setup' => 'oxTiramizoo/core/oxTiramizoo_setup.php',
+                        'oxTiramizoo_settings'  => 'oxTiramizoo/admin/oxTiramizoo_settings.php',
+                        'oxTiramizoo_setup'     => 'oxTiramizoo/core/oxTiramizoo_setup.php',
+                        'oxTiramizooApi'        => 'oxTiramizoo/core/TiramizooApi/oxTiramizooApi.php',
+                        'TiramizooApi'          => 'oxTiramizoo/core/TiramizooApi/TiramizooApi.php',
                       ),
     'templates'    =>   array(
                             'oxTiramizoo_settings.tpl' => 'oxTiramizoo/out/admin/tpl/oxTiramizoo_settings.tpl',

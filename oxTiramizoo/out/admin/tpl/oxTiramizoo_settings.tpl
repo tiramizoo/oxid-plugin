@@ -10,6 +10,10 @@
  
 <h2>[{ oxmultilang ident="oxTiramizoo_settings_title" }]</h2>
 
+<style type="text/css">
+  .editinput {width:240px;}
+</style>
+
 <div id=liste>
   
     <form name="myedit" id="myedit" action="[{$oViewConf->getSelfLink()}]" method="post">
@@ -27,7 +31,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_api_url_label" }]</td>
               <td valign="top" class="edittext">
-                <input type=text class="editinput" name=confstrs[oxTiramizoo_api_url] value="[{$confstrs.oxTiramizoo_api_url}]" maxlength="30" />
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_api_url] value="[{$confstrs.oxTiramizoo_api_url}]" maxlength="100" />
                 [{ oxinputhelp ident="oxTiramizoo_settings_api_url_help" }]
               </td>
             </tr>
@@ -35,7 +39,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_api_key_label" }]</td>
               <td valign="top" class="edittext">
-                <input type=text class="editinput" name=confstrs[oxTiramizoo_api_key] value="[{$confstrs.oxTiramizoo_api_key}]" maxlength="30" />
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_api_key] value="[{$confstrs.oxTiramizoo_api_key}]" maxlength="100" />
                 [{ oxinputhelp ident="oxTiramizoo_settings_api_key_help" }]
               </td>
             </tr>
@@ -43,7 +47,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_shop_url_label" }]</td>
               <td valign="top" class="edittext">
-                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_url] value="[{$confstrs.oxTiramizoo_shop_url}]" maxlength="30" />
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_url] value="[{$confstrs.oxTiramizoo_shop_url}]" maxlength="100" />
                 [{ oxinputhelp ident="oxTiramizoo_settings_shop_url_help" }]
               </td>
             </tr>
@@ -51,7 +55,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_shop_address_label" }]</td>
               <td valign="top" class="edittext">
-                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_address] value="[{$confstrs.oxTiramizoo_shop_address}]" maxlength="30" />
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_address] value="[{$confstrs.oxTiramizoo_shop_address}]" maxlength="100" />
                 [{ oxinputhelp ident="oxTiramizoo_settings_shop_address_help" }]
               </td>
             </tr>
@@ -59,7 +63,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_shop_city_label" }]</td>
               <td valign="top" class="edittext">
-                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_city] value="[{$confstrs.oxTiramizoo_shop_city}]" maxlength="30" />
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_city] value="[{$confstrs.oxTiramizoo_shop_city}]" maxlength="100" />
                 [{ oxinputhelp ident="oxTiramizoo_settings_shop_city_help" }]
               </td>
             </tr>
@@ -67,7 +71,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_shop_postal_code_label" }]</td>
               <td valign="top" class="edittext">
-                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_postal_code] value="[{$confstrs.oxTiramizoo_shop_postal_code}]" maxlength="30" />
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_postal_code] value="[{$confstrs.oxTiramizoo_shop_postal_code}]" maxlength="100" />
                 [{ oxinputhelp ident="oxTiramizoo_settings_shop_postal_code_help" }]
               </td>
             </tr>
@@ -85,7 +89,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_shop_contact_name_label" }]</td>
               <td valign="top" class="edittext">
-                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_contact_name] value="[{$confstrs.oxTiramizoo_shop_contact_name}]" maxlength="30" />
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_contact_name] value="[{$confstrs.oxTiramizoo_shop_contact_name}]" maxlength="100" />
                 [{ oxinputhelp ident="oxTiramizoo_settings_shop_contact_name_help" }]
               </td>
             </tr>
@@ -93,7 +97,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_shop_phone_number_label" }]</td>
               <td valign="top" class="edittext">
-                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_phone_number] value="[{$confstrs.oxTiramizoo_shop_phone_number}]" maxlength="30" />
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_phone_number] value="[{$confstrs.oxTiramizoo_shop_phone_number}]" maxlength="100" />
                 [{ oxinputhelp ident="oxTiramizoo_settings_shop_phone_number_help" }]
               </td>
             </tr>
@@ -101,7 +105,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_shop_email_address_label" }]</td>
               <td valign="top" class="edittext">
-                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_email_address] value="[{$confstrs.oxTiramizoo_shop_email_address}]" maxlength="30" />
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_email_address] value="[{$confstrs.oxTiramizoo_shop_email_address}]" maxlength="100" />
                 [{ oxinputhelp ident="oxTiramizoo_settings_shop_email_address_help" }]
               </td>
             </tr>
@@ -109,7 +113,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_order_to_pickup_offset_label" }]</td>
               <td valign="top" class="edittext">
-                <input type=text class="editinput" name=confstrs[oxTiramizoo_order_pickup_offset] value="[{$confstrs.oxTiramizoo_order_pickup_offset}]" maxlength="30" />
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_order_pickup_offset] value="[{$confstrs.oxTiramizoo_order_pickup_offset}]" maxlength="100" />
                 [{ oxinputhelp ident="oxTiramizoo_settings_order_to_pickup_offset_help" }]
               </td>
             </tr>

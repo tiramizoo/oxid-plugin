@@ -174,26 +174,62 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
     {
         $oBasket = $this->getSession()->getBasket();
 
-        foreach ($oBasket->getBasketArticles() as $key => $oArticle) {
-            // echo $oArticle->oxarticles__oxweight->value;
-            // echo $oArticle->oxarticles__oxwidth->value;
-            // echo $oArticle->oxarticles__oxlength->value;
-            // echo $oArticle->oxarticles__oxheight->value;
-            echo $oArticle->oxarticles__oxtiramizooenable->value;
-            
-            //print_r($oArticle);
+        $oOrder = oxNew( 'oxorder' );
+        $address = $oOrder->getDelAddressInfo();
 
-        }
+        $oUser = $this->getUser();
 
+        $sZipCode = $address ? $address->oxaddress__oxzip->value : $oUser->oxuser__oxzip->value;
 
         if (!count($this->getAvailablePickupHours())) {
             return false;
         }
 
+        //check if Tiramizoo can deliver this basket
+        $data = new stdClass();
+        $data->pickup_postal_code = $this->getConfig()->getConfigParam('oxTiramizoo_shop_postal_code');
+        $data->delivery_postal_code = $sZipCode;
+        $data->items = array();
+
+        foreach ($oBasket->getBasketArticles() as $key => $oArticle) 
+        {
+            $item = new stdClass();
+            $item->weight = 2;
+            $item->width = 30;
+            $item->height = 30;
+            $item->length = 35;
+
+            if ($oArticle->oxarticles__oxweight->value) {
+                $item->weight = $oArticle->oxarticles__oxweight->value;
+            }
+
+            if ($oArticle->oxarticles__oxwidth->value) {
+                $item->width = $oArticle->oxarticles__oxwidth->value;
+            }
+
+            if ($oArticle->oxarticles__oxheight->value) {
+                $item->height = $oArticle->oxarticles__oxheight->value;
+            }
+
+            if ($oArticle->oxarticles__oxlength->value) {
+                $item->length = $oArticle->oxarticles__oxlength->value;
+            }
+
+            $item->quantity = $oBasket->getArtStockInBasket($oArticle->oxarticles__oxid->value);
+
+            $data->items[] = $item;
+        }
+
+        $result = oxTiramizooApi::getInstance()->getQuotes($data, true);
+
+        echo json_encode($data);
+        var_dump($result);
+
+        if (!in_array($result['http_status'], array(200, 201))) {
+            return false;
+        }
+
         return true;
-
-        //print_r($oBasket->getBasketArticles());
-
     }
 
 
