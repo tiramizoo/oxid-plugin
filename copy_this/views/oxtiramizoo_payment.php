@@ -1,36 +1,7 @@
 <?php
 class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 {
-    /**
-     * Template variable getter. Returns paymentlist
-     * http://wiki.oxidforge.org/Tutorials/en/Disable_Payment_Method 
-     * @return object
-     */
-    public function getPaymentList()
-    {
-        if ( $this->_oPaymentList === null ) {
-            $this->_oPaymentList = false;
 
-            $sActShipSet = oxConfig::getParameter( 'sShipSet' );
-            if ( !$sActShipSet ) {
-                 $sActShipSet = oxSession::getVar( 'sShipSet' );
-            }
-
-            $oBasket = $this->getSession()->getBasket();
-
-            // load sets, active set, and active set payment list
-            list( $aAllSets, $sActShipSet, $aPaymentList ) = oxDeliverySetList::getInstance()->getDeliverySetData( $sActShipSet, $this->getUser(), $oBasket );
-
-            $oBasket->setShipping( $sActShipSet );
-
-            // calculating payment expences for preview for each payment
-            $this->_setDeprecatedValues( $aPaymentList, $oBasket );
-            $this->_oPaymentList = $aPaymentList;
-            $this->_aAllSets     = $aAllSets;
-
-        }
-        return $this->_oPaymentList;
-    }
 
     public function getAllSets()
     {
@@ -84,10 +55,6 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
      *
      * @return  string  current template file name
      */
-    public function render()
-    {
-        return parent::render();
-    }
 
 
 
@@ -143,9 +110,9 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         $deliveryOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
 
 
-        if (strtotime('Y-m-d', strtotime($dateTime)) ==  strtotime(date('Y-m-d'))) {
+        if (strtotime(date('Y-m-d', strtotime($dateTime))) ==  strtotime(date('Y-m-d'))) {
             return oxLang::getInstance()->translateString('oxTiramizoo_Today', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($dateTime)) . ' ' . date('H:i', strtotime($dateTime)) . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
-        } else if (strtotime('Y-m-d', strtotime($dateTime)) ==  strtotime('Y-m-d', strtotime('+1days', strtotime(date('Y-m-d')))))
+        } else if (strtotime(date('Y-m-d', strtotime($dateTime))) ==  strtotime(date('Y-m-d', strtotime('+1days', strtotime(date('Y-m-d'))))))
         {
             return oxLang::getInstance()->translateString('oxTiramizoo_Tomorrow', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($dateTime)) . ' ' . date('H:i', strtotime($dateTime)) . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
 
@@ -251,13 +218,16 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
             $data->items[] = $item;
         }
 
+        require_once getShopBasePath() . '/modules/oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php';
+
+
         $result = oxTiramizooApi::getInstance()->getQuotes($data, true);
 
-        echo json_encode($data);
-        var_dump($result);
+        //echo json_encode($data);
+        //var_dump($result);
 
         if (!in_array($result['http_status'], array(200, 201))) {
-            //return false;
+             //return false;
         }
 
         return true;
