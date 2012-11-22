@@ -5,11 +5,16 @@ This folders contains OXID eSales Module for integration with [Tiramizoo API](ht
 
 # Installation #
 
-*   Copy all files from copy_this folder to your OXID eSales installation path
+*   Copy all files from *copy_this* folder to your OXID eSales installation path
 
-*   Map modules
+*   Add Shop Modules in **Master Settings -> Core Settings -> System Tab -> Modules**
 
-*   Change the templates (payment, order)
+    ```
+    payment => oxtiramizoo_payment
+    order => oxtiramizoo_order
+    ```
+
+*   Change the templates in *changed_full* folder
 
 *   Configure the module 
     -   At the **Tiramizoo -> settings**
