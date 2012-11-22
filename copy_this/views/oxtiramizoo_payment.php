@@ -68,8 +68,10 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 
     public function isTiramizooCurrentShiippingMethod()
     {
-        $oBasket = $this->getSession()->getBasket();
-        return  $oBasket->getShippingId() == 'Tiramizoo';
+        if (!$this->tiramizooCanShow()) {
+            $oBasket = $this->getSession()->getBasket();
+            return  $oBasket->getShippingId() == 'Tiramizoo';
+        }
     }
 
     public function getAvailableDeliveryHours()
@@ -192,25 +194,46 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         foreach ($oBasket->getBasketArticles() as $key => $oArticle) 
         {
             $item = new stdClass();
-            $item->weight = 2;
-            $item->width = 30;
-            $item->height = 30;
-            $item->length = 35;
+            $item->weight = null;
+            $item->width = null;
+            $item->height = null;
+            $item->length = null;
+
+            $inheritedData = $this->_getArticleInheritData($oArticle);
+
+            //article is disabled return false
+            if ($oArticle->oxarticles__tiramizoo_enable->value == -1) {
+                return false;
+            }
+
+            if ($oArticle->oxarticles__tiramizoo_enable->value == 0) {
+                if (isset($inheritedData['tiramizoo_enable']) && ($inheritedData['tiramizoo_enable'] == -1)) {
+                    return false;
+                }            
+            }
 
             if ($oArticle->oxarticles__oxweight->value) {
                 $item->weight = $oArticle->oxarticles__oxweight->value;
+            } else {
+                $item->weight = isset($inheritedData['weight']) && $inheritedData['weight'] ? $inheritedData['weight'] : 0;
             }
 
             if ($oArticle->oxarticles__oxwidth->value) {
-                $item->width = $oArticle->oxarticles__oxwidth->value;
+                $item->width = $oArticle->oxarticles__oxwidth->value * 100;
+            } else {
+                $item->width = isset($inheritedData['width']) && $inheritedData['width'] ? $inheritedData['width'] : 0;
             }
 
             if ($oArticle->oxarticles__oxheight->value) {
-                $item->height = $oArticle->oxarticles__oxheight->value;
+                $item->height = $oArticle->oxarticles__oxheight->value * 100;
+            } else {
+                $item->height = isset($inheritedData['height']) && $inheritedData['height'] ? $inheritedData['height'] : 0;
             }
 
             if ($oArticle->oxarticles__oxlength->value) {
-                $item->length = $oArticle->oxarticles__oxlength->value;
+                $item->length = $oArticle->oxarticles__oxlength->value * 100;
+            } else {
+                $item->length = isset($inheritedData['length']) && $inheritedData['length'] ? $inheritedData['length'] : 0;
             }
 
             $item->quantity = $oBasket->getArtStockInBasket($oArticle->oxarticles__oxid->value);
@@ -223,15 +246,70 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 
         $result = oxTiramizooApi::getInstance()->getQuotes($data, true);
 
-        //echo json_encode($data);
-        //var_dump($result);
-
         if (!in_array($result['http_status'], array(200, 201))) {
-             //return false;
+            
+            echo '<div>';
+            echo json_encode($data);
+            echo json_encode($result);
+            echo '</div>';
+
+            return false;
         }
 
         return true;
     }
 
+
+    protected function _getArticleInheritData($oArticle)
+    {
+        $oCategory = $oArticle->getCategory();
+
+        $aCheckCategories = $this->getParentsTree($oCategory);
+
+        $oxTiramizooInheritedData = array();
+
+        foreach ($aCheckCategories as $aCategoryData) 
+        {
+            if (isset($aCategoryData['tiramizoo_enable'])) {
+                $oxTiramizooInheritedData['tiramizoo_enable'] = $aCategoryData['tiramizoo_enable'];
+            }
+
+            if ($aCategoryData['tiramizoo_weight']) {
+                $oxTiramizooInheritedData['tiramizoo_weight'] = $aCategoryData['tiramizoo_weight'];
+            }
+
+            if ($aCategoryData['tiramizoo_width']) {
+                $oxTiramizooInheritedData['tiramizoo_width'] = $aCategoryData['tiramizoo_width'];
+            }
+
+            if ($aCategoryData['tiramizoo_height']) {
+                $oxTiramizooInheritedData['tiramizoo_height'] = $aCategoryData['tiramizoo_height'];
+            }
+
+            if ($aCategoryData['tiramizoo_length']) {
+                $oxTiramizooInheritedData['tiramizoo_length'] = $aCategoryData['tiramizoo_length'];
+            }                                    
+        }
+    }
+
+    public function getParentsTree($oCategory, $returnCategories = array())
+    {
+        $oxTiramizooCategoryData = array();
+        $oxTiramizooCategoryData['oxid'] = $oCategory->oxcategories__oxid->value;
+        $oxTiramizooCategoryData['oxtitle'] = $oCategory->oxcategories__oxtitle->value;
+        $oxTiramizooCategoryData['oxsort'] = $oCategory->oxcategories__oxsort->value;
+        $oxTiramizooCategoryData['tiramizoo_enable'] = $oCategory->oxcategories__tiramizoo_enable->value;
+        $oxTiramizooCategoryData['tiramizoo_weight'] = $oCategory->oxcategories__tiramizoo_weight->value;
+        $oxTiramizooCategoryData['tiramizoo_width'] = $oCategory->oxcategories__tiramizoo_width->value;
+        $oxTiramizooCategoryData['tiramizoo_height'] = $oCategory->oxcategories__tiramizoo_height->value;
+        $oxTiramizooCategoryData['tiramizoo_length'] = $oCategory->oxcategories__tiramizoo_length->value;
+
+        array_unshift($returnCategories, $oxTiramizooCategoryData);
+        if ($parentCategory = $oCategory->getParentCategory()) {
+            $returnCategories = $this->getParentsTree($parentCategory, $returnCategories);
+        }
+
+        return $returnCategories;
+    }
 
 }

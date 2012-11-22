@@ -36,7 +36,7 @@ class oxTiramizooApi extends TiramizooApi
 
         $this->request('quotes', $data, $result);
 
-        if ($cache) {
+        if ($cache && in_array($result['http_status'], array(200, 201))) {
             oxSession::setVar('oxTiramizooQuote_' . $cachedDataKey, $result);
         }
 

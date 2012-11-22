@@ -35,13 +35,13 @@ function loadLang(obj)
           
           <tr>
             <td class="edittext">
-              [{ oxinputhelp ident="oxTiramizoo_category_tab_enable_tiramizoo_label" }]
+              [{ oxmultilang ident="oxTiramizoo_category_tab_enable_tiramizoo_label" }]
             </td>
             <td class="edittext">
                 <select name="editval[oxcategories__tiramizoo_enable]">
-                    <option value="0" [{if ($edit->oxcategories__tiramizoo_enable->value == 0)}]selected="selected"[{/if}]>[{ oxinputhelp ident="oxTiramizoo_category_tab_enable_inherit_value" }]</option>
-                    <option value="1" [{if ($edit->oxcategories__tiramizoo_enable->value == 1)}]selected="selected"[{/if}]>[{ oxinputhelp ident="oxTiramizoo_category_tab_enable_yes_value" }]</option>
-                    <option value="-1" [{if ($edit->oxcategories__tiramizoo_enable->value == -1)}]selected="selected"[{/if}]>[{ oxinputhelp ident="oxTiramizoo_category_tab_enable_no_value" }]</option>
+                    <option value="0" [{if ($edit->oxcategories__tiramizoo_enable->value == 0)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_category_tab_enable_inherit_value" }]</option>
+                    <option value="1" [{if ($edit->oxcategories__tiramizoo_enable->value == 1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_category_tab_enable_yes_value" }]</option>
+                    <option value="-1" [{if ($edit->oxcategories__tiramizoo_enable->value == -1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_category_tab_enable_no_value" }]</option>
                 </select>
                 [{ oxinputhelp ident="oxTiramizoo_category_tab_enable_tiramizoo_help" }]
             </td>
@@ -49,21 +49,21 @@ function loadLang(obj)
 
           <tr>
             <td class="edittext">
-              [{ oxinputhelp ident="oxTiramizoo_category_tab_weight_label" }]
+              [{ oxmultilang ident="oxTiramizoo_category_tab_weight_label" }]
             </td>
             <td class="edittext">
-              <input type="text" class="editinput" size="10" maxlength="10" name="editval[oxcategories__tiramizoo_weight]" value="[{$edit->oxcategories__tiramizoo_weight->value}]">[{ oxinputhelp ident="oxTiramizoo_category_tab_weight_unit" }] 
+              <input type="text" class="editinput" size="10" maxlength="10" name="editval[oxcategories__tiramizoo_weight]" value="[{$edit->oxcategories__tiramizoo_weight->value}]">[{ oxmultilang ident="oxTiramizoo_category_tab_weight_unit" }] 
               [{ oxinputhelp ident="oxTiramizoo_category_tab_weight_help" }]
             </td>
           </tr>
           <tr>
             <td class="edittext">
-              [{ oxinputhelp ident="oxTiramizoo_category_tab_dimensions_label" }]
+              [{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_label" }]
             </td>
             <td class="edittext">
-              L:&nbsp;<input type="text" class="editinput" size="3" maxlength="10" name="editval[oxcategories__tiramizoo_length]" value="[{$edit->oxcategories__tiramizoo_length->value}]">[{ oxinputhelp ident="oxTiramizoo_category_tab_dimensions_unit" }]
-              W:&nbsp;<input type="text" class="editinput" size="3" maxlength="" name="editval[oxcategories__tiramizoo_width]" value="[{$edit->oxcategories__tiramizoo_width->value}]">[{ oxinputhelp ident="oxTiramizoo_category_tab_dimensions_unit" }]
-              H:&nbsp;<input type="text" class="editinput" size="3" maxlength="" name="editval[oxcategories__tiramizoo_height]" value="[{$edit->oxcategories__tiramizoo_height->value}]">[{ oxinputhelp ident="oxTiramizoo_category_tab_dimensions_unit" }]
+              L:&nbsp;<input type="text" class="editinput" size="3" maxlength="10" name="editval[oxcategories__tiramizoo_length]" value="[{$edit->oxcategories__tiramizoo_length->value}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
+              W:&nbsp;<input type="text" class="editinput" size="3" maxlength="" name="editval[oxcategories__tiramizoo_width]" value="[{$edit->oxcategories__tiramizoo_width->value}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
+              H:&nbsp;<input type="text" class="editinput" size="3" maxlength="" name="editval[oxcategories__tiramizoo_height]" value="[{$edit->oxcategories__tiramizoo_height->value}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
 
               [{ oxinputhelp ident="oxTiramizoo_category_tab_dimensions_help" }]
               

@@ -1,14 +1,14 @@
 oxid-plugin-dev
 ===============
 
-This folders contains OXID eSales Module for integration with [Tiramizoo API](http://dev.tiramizoo.com/)
+This folders contains OXID eSales module for integration with [Tiramizoo API](http://dev.tiramizoo.com/).
 Module working with foloowingOXID eSales versions: 4.3.2+, 4.4.x, 4.5.x 
 
 # Installation #
 
 *   Copy all files from *copy_this* folder to your OXID eSales installation path. This step not overwrite any files.
 
-*   Add Shop Modules in **Master Settings -> Core Settings -> System Tab -> Modules**
+*   Add these 2 lines to Textarea Shop Modules in **Master Settings -> Core Settings -> System Tab -> Modules**
 
     ```
     payment => oxtiramizoo_payment
