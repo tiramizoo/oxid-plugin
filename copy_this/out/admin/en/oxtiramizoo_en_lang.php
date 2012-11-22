@@ -70,6 +70,9 @@ $aLang = array(
 'oxTiramizoo_settings_order_to_pickup_offset_label'     => 'Order To Pickup Time offset',
 'oxTiramizoo_settings_order_to_pickup_offset_help'      => 'How many time You need to create pickup',
 
+'oxtiramizoo_category_tab_label'                        => 'Tiramizoo',
+'oxtiramizoo_article_tab_label'                         => 'Tiramizoo',
+'oxtiramizoo_order_tab_label'                           => 'Tiramizoo',
 
 
 );
