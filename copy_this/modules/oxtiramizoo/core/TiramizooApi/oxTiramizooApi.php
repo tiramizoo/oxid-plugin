@@ -1,4 +1,5 @@
 <?php
+require_once 'TiramizooApi.php';
 
 class oxTiramizooApi extends TiramizooApi
 {
@@ -45,7 +46,7 @@ class oxTiramizooApi extends TiramizooApi
     public function setOrder($data)
     {
         $result = null;
-        $this->request('quotes', $data, $result);
+        $this->request('orders', $data, $result);
         return $result;
     }
 
