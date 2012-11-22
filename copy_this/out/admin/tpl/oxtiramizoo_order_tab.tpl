@@ -36,26 +36,27 @@ function ThisDate( sID)
 
 <table cellspacing="0" cellpadding="0" border="0">
 <tr>
-    <td class="edittext">Tiramizoo status</td>
-    <td class="edittext">[{$edit->oxorder__tiramizoo_status->value}]</td>
+    <td class="edittext">[{ oxinputhelp ident="oxTiramizoo_order_tab_status_label" }]</td>
+    <td class="edittext">[{$edit->oxorder__tiramizoo_status->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_status_help" }]</td>
 </tr>
 
 <tr>
-    <td class="edittext">Tiramizoo tracking url</td>
-    <td class="edittext">[{$edit->oxorder__tiramizoo_tracking_url->value}]</td>
+    <td class="edittext">[{ oxinputhelp ident="oxTiramizoo_order_tab_tracking_url_label" }]</td>
+    <td class="edittext">[{$edit->oxorder__tiramizoo_tracking_url->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_tracking_url_help" }]</td>
 </tr>
 
 <tr>
-    <td class="edittext">Tiramizoo external_id</td>
-    <td class="edittext">[{$edit->oxorder__tiramizoo_external_id->value}]</td>
+    <td class="edittext">[{ oxinputhelp ident="oxTiramizoo_order_tab_external_id_label" }]</td>
+    <td class="edittext">[{$edit->oxorder__tiramizoo_external_id->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_external_id_help" }]</td>
 </tr>
 
 <tr>
-    <td class="edittext">Tiramizoo response params</td>
+    <td class="edittext">[{ oxinputhelp ident="oxTiramizoo_order_tab_response_label" }]</td>
     <td class="edittext">
         <textarea style="width:400px; height:180px; border:1px solid #AAA;" readonly="true">
         [{$aTiramizooParams|@print_r}]
         </textarea>
+        [{ oxinputhelp ident="oxTiramizoo_order_tab_response_help" }]
     </td>
 </tr>
 

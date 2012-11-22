@@ -7,6 +7,7 @@ This folders contains OXID eSales Module for integration with [Tiramizoo API](ht
 
 *   Copy all files from copy_this folder to your OXID eSales installation path
 
+*   Map modules
 
 *   Change the templates (payment, order)
 

@@ -60,17 +60,18 @@ function editThis( sID )
       <td valign="top" class="edittext">
         <table cellspacing="0" cellpadding="0" border="0">
 
-
           <tr>
             <td class="edittext">
-              Enable Tiramizoo
+              [{ oxmultilang ident="oxTiramizoo_article_tab_enable_tiramizoo_label" }]
             </td>
             <td class="edittext">
                 <select name="editval[oxarticles__tiramizoo_enable]">
-                    <option value="0" [{if ($edit->oxarticles__tiramizoo_enable->value == 0)}]selected="selected"[{/if}]>Inherit from parent settings</option>
-                    <option value="1" [{if ($edit->oxarticles__tiramizoo_enable->value == 1)}]selected="selected"[{/if}]>Yes</option>
-                    <option value="-1" [{if ($edit->oxarticles__tiramizoo_enable->value == -1)}]selected="selected"[{/if}]>No</option>
+                    <option value="0" [{if ($edit->oxarticles__tiramizoo_enable->value == 0)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_inherit_value" }]</option>
+                    <option value="1" [{if ($edit->oxarticles__tiramizoo_enable->value == 1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_yes_value" }]</option>
+                    <option value="-1" [{if ($edit->oxarticles__tiramizoo_enable->value == -1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_no_value" }]</option>
                 </select>
+
+                [{ oxinputhelp ident="oxTiramizoo_article_tab_enable_tiramizoo_help" }]
             </td>
           </tr>
 

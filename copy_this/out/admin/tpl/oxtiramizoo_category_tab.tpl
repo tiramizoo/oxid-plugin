@@ -35,40 +35,44 @@ function loadLang(obj)
           
           <tr>
             <td class="edittext">
-              Enable Tiramizoo
+              [{ oxinputhelp ident="oxTiramizoo_category_tab_enable_tiramizoo_label" }]
             </td>
             <td class="edittext">
                 <select name="editval[oxcategories__tiramizoo_enable]">
-                    <option value="0" [{if ($edit->oxcategories__tiramizoo_enable->value == 0)}]selected="selected"[{/if}]>Inherit from parent settings</option>
-                    <option value="1" [{if ($edit->oxcategories__tiramizoo_enable->value == 1)}]selected="selected"[{/if}]>Yes</option>
-                    <option value="-1" [{if ($edit->oxcategories__tiramizoo_enable->value == -1)}]selected="selected"[{/if}]>No</option>
+                    <option value="0" [{if ($edit->oxcategories__tiramizoo_enable->value == 0)}]selected="selected"[{/if}]>[{ oxinputhelp ident="oxTiramizoo_category_tab_enable_inherit_value" }]</option>
+                    <option value="1" [{if ($edit->oxcategories__tiramizoo_enable->value == 1)}]selected="selected"[{/if}]>[{ oxinputhelp ident="oxTiramizoo_category_tab_enable_yes_value" }]</option>
+                    <option value="-1" [{if ($edit->oxcategories__tiramizoo_enable->value == -1)}]selected="selected"[{/if}]>[{ oxinputhelp ident="oxTiramizoo_category_tab_enable_no_value" }]</option>
                 </select>
+                [{ oxinputhelp ident="oxTiramizoo_category_tab_enable_tiramizoo_help" }]
             </td>
           </tr>
 
           <tr>
             <td class="edittext">
-              Weight
+              [{ oxinputhelp ident="oxTiramizoo_category_tab_weight_label" }]
             </td>
             <td class="edittext">
-              <input type="text" class="editinput" size="10" maxlength="10" name="editval[oxcategories__tiramizoo_weight]" value="[{$edit->oxcategories__tiramizoo_weight->value}]">kg
+              <input type="text" class="editinput" size="10" maxlength="10" name="editval[oxcategories__tiramizoo_weight]" value="[{$edit->oxcategories__tiramizoo_weight->value}]">[{ oxinputhelp ident="oxTiramizoo_category_tab_weight_unit" }] 
+              [{ oxinputhelp ident="oxTiramizoo_category_tab_weight_help" }]
             </td>
           </tr>
           <tr>
             <td class="edittext">
-              Dimensions
+              [{ oxinputhelp ident="oxTiramizoo_category_tab_dimensions_label" }]
             </td>
             <td class="edittext">
-              L:&nbsp;<input type="text" class="editinput" size="3" maxlength="10" name="editval[oxcategories__tiramizoo_length]" value="[{$edit->oxcategories__tiramizoo_length->value}]">cm
-              W:&nbsp;<input type="text" class="editinput" size="3" maxlength="" name="editval[oxcategories__tiramizoo_width]" value="[{$edit->oxcategories__tiramizoo_width->value}]">cm
-              H:&nbsp;<input type="text" class="editinput" size="3" maxlength="" name="editval[oxcategories__tiramizoo_height]" value="[{$edit->oxcategories__tiramizoo_height->value}]">cm
+              L:&nbsp;<input type="text" class="editinput" size="3" maxlength="10" name="editval[oxcategories__tiramizoo_length]" value="[{$edit->oxcategories__tiramizoo_length->value}]">[{ oxinputhelp ident="oxTiramizoo_category_tab_dimensions_unit" }]
+              W:&nbsp;<input type="text" class="editinput" size="3" maxlength="" name="editval[oxcategories__tiramizoo_width]" value="[{$edit->oxcategories__tiramizoo_width->value}]">[{ oxinputhelp ident="oxTiramizoo_category_tab_dimensions_unit" }]
+              H:&nbsp;<input type="text" class="editinput" size="3" maxlength="" name="editval[oxcategories__tiramizoo_height]" value="[{$edit->oxcategories__tiramizoo_height->value}]">[{ oxinputhelp ident="oxTiramizoo_category_tab_dimensions_unit" }]
+
+              [{ oxinputhelp ident="oxTiramizoo_category_tab_dimensions_help" }]
               
             </td>
           </tr>
 
         <tr>
           <td>
-                <input type="submit" class="edittext" name="save" value="[{ oxmultilang ident="CATEGORY_TEXT_SAVE" }]" onClick="Javascript:document.myedit.fnc.value='save'">
+                <input type="submit" class="edittext" name="save" value="[{ oxmultilang ident="GENERAL_SAVE" }]" onClick="Javascript:document.myedit.fnc.value='save'">
           </td>
         </tr>
         </form>
