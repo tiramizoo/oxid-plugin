@@ -2,21 +2,21 @@
 <OX>
     <OXMENU id="NAVIGATION_ESHOPADMIN">
         <MAINMENU id="oxTiramizoo_admin_menu_label">
-            <SUBMENU id="oxTiramizoo_settings" cl="oxTiramizoo_settings"></SUBMENU>
+            <SUBMENU id="oxTiramizoo_settings" cl="oxtiramizoo_settings"></SUBMENU>
         </MAINMENU>
         <MAINMENU id="mxorders">
             <SUBMENU id="mxdisplayorders" cl="admin_order" list="order_list">
-                <TAB id="oxTiramizoo_order_submenu_label" cl="oxTiramizoo_order_submenu_label" />
+                <TAB id="oxtiramizoo_order_tab_label" cl="oxtiramizoo_order_tab" />
             </SUBMENU>
         </MAINMENU>
-        <MAINMENU id="mxarticles">
-            <SUBMENU id="mxdisplayorders" cl="article" list="article_list">
-                <TAB id="oxTiramizoo_article_submenu_label" cl="oxTiramizoo_article_submenu_label" />
+        <MAINMENU id="mxmanageprod">
+            <SUBMENU id="mxarticles" cl="article" list="article_list">
+                <TAB id="oxtiramizoo_article_tab_label" cl="oxtiramizoo_article_tab" />
             </SUBMENU>
         </MAINMENU>
-        <MAINMENU id="mxcategories">
-            <SUBMENU id="mxdisplayorders" cl="category" list="category_list">
-                <TAB id="oxTiramizoo_category_submenu_label" cl="oxTiramizoo_category_submenu_label" />
+        <MAINMENU id="mxmanageprod">
+            <SUBMENU id="mxcategories" cl="category" list="category_list">
+                <TAB id="oxtiramizoo_category_tab_label" cl="oxtiramizoo_category_tab" />
             </SUBMENU>
         </MAINMENU>
     </OXMENU>
