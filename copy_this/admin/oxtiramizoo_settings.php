@@ -1,6 +1,6 @@
 <?php
 
-require_once  dirname(__FILE__) . '/../core/oxTiramizoo_setup.php';
+require_once  dirname(__FILE__) . '/../modules/oxtiramizoo/core/oxtiramizoo_setup.php';
 
 class oxTiramizoo_settings extends Shop_Config
 {
@@ -58,6 +58,9 @@ class oxTiramizoo_settings extends Shop_Config
   public function getPaymentsList()
   {
     $oxPaymentList = new Payment_List();
+    //added 4.3.2
+    $oxPaymentList->init();
+
     $aPaymentList = array();
     $soxId = 'Tiramizoo';
     $oDb = oxDb::getDb();
@@ -180,6 +183,8 @@ class oxTiramizoo_settings extends Shop_Config
    */
   public function save()
   {
+
+
         // saving config params
         $this->saveConfVars();
         $this->assignPaymentsToTiramizoo();
@@ -188,8 +193,7 @@ class oxTiramizoo_settings extends Shop_Config
         // clear cache 
         oxUtils::getInstance()->rebuildCache();
     
-    
-        return;
+        return 'oxtiramizoo_settings';
     }
   
 
