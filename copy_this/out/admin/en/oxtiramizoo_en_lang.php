@@ -25,37 +25,37 @@ $aLang = array(
 'oxTiramizoo_settings_title'                            => 'Tiramizoo settings',
 
 'oxTiramizoo_settings_api_url_label'                    => 'Tiramizoo URL',
-'oxTiramizoo_settings_api_url_help'                     => 'Tiramizoo URL probably http://api.tiramizoo.com/v1',
+'oxTiramizoo_settings_api_url_help'                     => 'Production version probably https://api.tiramizoo.com/v1, testing version https://api-sandbox.tiramizoo.com/v1',
 
 'oxTiramizoo_settings_api_key_label'                    => 'Tiramizoo API key',
-'oxTiramizoo_settings_api_key_help'                     => 'Some help to get the Tiramizoo API key',
+'oxTiramizoo_settings_api_key_help'                     => 'Can be obtained via your user profile',
 
-'oxTiramizoo_settings_shop_url_label'                   => 'Tiramizoo Shop URL',
-'oxTiramizoo_settings_shop_url_help'                    => 'some help Tiramizoo Shop URL',
+'oxTiramizoo_settings_shop_url_label'                   => 'Shop URL',
+'oxTiramizoo_settings_shop_url_help'                    => 'The URL of your web shop',
 
-'oxTiramizoo_settings_shop_address_label'               => 'Shop Address',
-'oxTiramizoo_settings_shop_address_help'                => 'some help address',
+'oxTiramizoo_settings_shop_address_label'               => 'Pickup street address',
+'oxTiramizoo_settings_shop_address_help'                => 'Where the goods should be picked up from, e.g. Alexanderplatz 1',
 
-'oxTiramizoo_settings_shop_postal_code_label'           => 'Shop Postal Code',
-'oxTiramizoo_settings_shop_postal_code_help'            => 'some help postal code',
+'oxTiramizoo_settings_shop_postal_code_label'           => 'Pickup Postal Code',
+'oxTiramizoo_settings_shop_postal_code_help'            => 'e.g. 10112',
 
-'oxTiramizoo_settings_shop_country_label'               => 'Shop Country',
-'oxTiramizoo_settings_shop_country_help'                => 'some help zip code',
+'oxTiramizoo_settings_shop_country_label'               => 'Pickup Country Code',
+'oxTiramizoo_settings_shop_country_help'                => 'e.g. DE',
 
-'oxTiramizoo_settings_shop_contact_name_label'          => 'Shop Contact Name',
-'oxTiramizoo_settings_shop_contact_name_help'           => 'some help shop contact name',
+'oxTiramizoo_settings_shop_contact_name_label'          => 'Pickup Location Name',
+'oxTiramizoo_settings_shop_contact_name_help'           => 'e.g. Example Shop GmbH,
 
-'oxTiramizoo_settings_shop_phone_number_label'          => 'Shop Phone Number',
-'oxTiramizoo_settings_shop_phone_number_help'           => 'some help shop phone number',
+'oxTiramizoo_settings_shop_phone_number_label'          => 'Pickup Phone Number',
+'oxTiramizoo_settings_shop_phone_number_help'           => 'e.g. +49 30 / 123456',
 
-'oxTiramizoo_settings_shop_email_address_label'         => 'Shop Email Address',
-'oxTiramizoo_settings_shop_email_address_help'          => 'some help shop email address',
+'oxTiramizoo_settings_shop_email_address_label'         => 'Pickup email',
+'oxTiramizoo_settings_shop_email_address_help'          => 'Email for notifications',
 
-'oxTiramizoo_settings_shop_city_label'                  => 'Shop City',
-'oxTiramizoo_settings_shop_city_help'                   => 'some help zip code',
+'oxTiramizoo_settings_shop_city_label'                  => 'Pickup city',
+'oxTiramizoo_settings_shop_city_help'                   => 'e.g. Berlin',
 
 'oxTiramizoo_settings_enable_module_label'              => 'Enable Tiramizoo',
-'oxTiramizoo_settings_enable_module_help'               => 'Help for Enable Tiramizoo',
+'oxTiramizoo_settings_enable_module_help'               => 'If the tiramizoo shipping option should be enabled',
 
 'oxTiramizoo_settings_pickup_hour_1_label'              => '1st pick up hour',
 'oxTiramizoo_settings_pickup_hour_2_label'              => '2nd pick up hour',
@@ -67,7 +67,7 @@ $aLang = array(
 'oxTiramizoo_settings_payment_methods_assigned_label'   => 'Tiramizoo payment methods assigned',
 
 'oxTiramizoo_settings_order_to_pickup_offset_label'     => 'Order To Pickup Time offset',
-'oxTiramizoo_settings_order_to_pickup_offset_help'      => 'How many time You need to create pickup',
+'oxTiramizoo_settings_order_to_pickup_offset_help'      => 'Preparation time for goods from ordering to pickup',
 
 // Article administration -> Tiramizoo Tab
 
@@ -91,14 +91,14 @@ $aLang = array(
 
 'oxTiramizoo_category_tab_dimensions_label'             => 'Dimensions',
 'oxTiramizoo_category_tab_dimensions_unit'              => 'cm',
-'oxTiramizoo_category_tab_dimensions_help'              => 'L-length, W - width, H - height. This dimensions will be assigned to all products in this category without dimensions specified',
+'oxTiramizoo_category_tab_dimensions_help'              => 'L-length, W - width, H - height. These dimensions will be assigned to all products in this category without dimensions specified',
 
 // Order administration -> Tiramizoo Tab
 'oxTiramizoo_order_tab_status_label'                    => 'Tiramizoo status',
 'oxTiramizoo_order_tab_status_help'                     => 'Current Tiramizoo status for this order',
 
 'oxTiramizoo_order_tab_tracking_url_label'              => 'Tiramizoo tracking url',
-'oxTiramizoo_order_tab_tracking_url_help'               => 'Url to Tiramizoo website where You can check status for this order',
+'oxTiramizoo_order_tab_tracking_url_help'               => 'Url to Tiramizoo website where you can check the status for this order',
 
 'oxTiramizoo_order_tab_external_id_label'               => 'Tiramizoo external_id',
 'oxTiramizoo_order_tab_external_id_help'                => 'Property used for Tiramizoo API Webhooks',
