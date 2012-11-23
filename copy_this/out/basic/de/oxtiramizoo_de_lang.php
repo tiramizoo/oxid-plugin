@@ -13,9 +13,9 @@ $aLang = array(
 'charset' => 'UTF-8',
 
 //delivery hours
-'oxTiramizoo_Today'                                     => 'Today',
-'oxTiramizoo_Tomorrow'                                  => 'Tomorrow',
-'oxTiramizoo_selectTimeWindowTitle'                     => 'Select when the order will be delivered'
+'oxTiramizoo_Today'                                     => 'Heute',
+'oxTiramizoo_Tomorrow'                                  => 'Morgen',
+'oxTiramizoo_selectTimeWindowTitle'                     => 'Bitte wählen Sie die gewünschte Lieferzeit'
 );
 
 
