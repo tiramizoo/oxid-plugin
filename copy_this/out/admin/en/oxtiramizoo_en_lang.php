@@ -27,7 +27,7 @@ $aLang = array(
 'oxTiramizoo_settings_api_url_label'                    => 'Tiramizoo URL',
 'oxTiramizoo_settings_api_url_help'                     => 'Production version probably https://api.tiramizoo.com/v1, testing version https://api-sandbox.tiramizoo.com/v1',
 
-'oxTiramizoo_settings_api_key_label'                    => 'Tiramizoo API key',
+'oxTiramizoo_settings_api_key_label'                    => 'Tiramizoo API token',
 'oxTiramizoo_settings_api_key_help'                     => 'Can be obtained via your user profile',
 
 'oxTiramizoo_settings_shop_url_label'                   => 'Shop URL',

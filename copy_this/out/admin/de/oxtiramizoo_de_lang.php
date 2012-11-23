@@ -28,7 +28,7 @@ $aLang = array(
 'oxTiramizoo_settings_api_url_label'                    => 'Tiramizoo URL',
 'oxTiramizoo_settings_api_url_help'                     => 'Produktivsystem meistens https://api.tiramizoo.com/v1, Testsystem https://api-sandbox.tiramizoo.com/v1',
 
-'oxTiramizoo_settings_api_key_label'                    => 'Tiramizoo API key',
+'oxTiramizoo_settings_api_key_label'                    => 'Tiramizoo API token',
 'oxTiramizoo_settings_api_key_help'                     => 'Zu finden in Ihrem Nutzerprofil',
 
 'oxTiramizoo_settings_shop_url_label'                   => 'Tiramizoo Shop URL',
@@ -77,10 +77,3 @@ $aLang = array(
 
 
 );
-
-
-
-
-);
-
-
