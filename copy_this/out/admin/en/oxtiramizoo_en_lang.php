@@ -43,7 +43,7 @@ $aLang = array(
 'oxTiramizoo_settings_shop_country_help'                => 'e.g. DE',
 
 'oxTiramizoo_settings_shop_contact_name_label'          => 'Pickup Location Name',
-'oxTiramizoo_settings_shop_contact_name_help'           => 'e.g. Example Shop GmbH,
+'oxTiramizoo_settings_shop_contact_name_help'           => 'e.g. Example Shop GmbH',
 
 'oxTiramizoo_settings_shop_phone_number_label'          => 'Pickup Phone Number',
 'oxTiramizoo_settings_shop_phone_number_help'           => 'e.g. +49 30 / 123456',
