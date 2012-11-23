@@ -68,10 +68,12 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 
     public function isTiramizooCurrentShiippingMethod()
     {
-        if (!$this->tiramizooCanShow()) {
+        if ($this->tiramizooCanShow()) {
             $oBasket = $this->getSession()->getBasket();
             return  $oBasket->getShippingId() == 'Tiramizoo';
         }
+
+        return false;
     }
 
     public function getAvailableDeliveryHours()
@@ -173,6 +175,7 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
     public function tiramizooCanShow() 
     {
         $oBasket = $this->getSession()->getBasket();
+        $oxTiramizooConfig = $this->getConfig();
 
         $oOrder = oxNew( 'oxorder' );
         $address = $oOrder->getDelAddressInfo();
@@ -180,6 +183,10 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         $oUser = $this->getUser();
 
         $sZipCode = $address ? $address->oxaddress__oxzip->value : $oUser->oxuser__oxzip->value;
+
+        if (!$this->getConfig()->getConfigParam('oxTiramizoo_enable_module')) {
+            return false;
+        }
 
         if (!count($this->getAvailablePickupHours())) {
             return false;
@@ -238,6 +245,14 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 
             $item->quantity = $oBasket->getArtStockInBasket($oArticle->oxarticles__oxid->value);
 
+
+            $item->weight = floatval($item->weight);
+            $item->width = floatval($item->width);
+            $item->height = floatval($item->height);
+            $item->length = floatval($item->length);
+            $item->quantity = floatval($item->quantity);
+
+
             $data->items[] = $item;
         }
 
@@ -275,21 +290,23 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
             }
 
             if ($aCategoryData['tiramizoo_weight']) {
-                $oxTiramizooInheritedData['tiramizoo_weight'] = $aCategoryData['tiramizoo_weight'];
+                $oxTiramizooInheritedData['weight'] = $aCategoryData['tiramizoo_weight'];
             }
 
             if ($aCategoryData['tiramizoo_width']) {
-                $oxTiramizooInheritedData['tiramizoo_width'] = $aCategoryData['tiramizoo_width'];
+                $oxTiramizooInheritedData['width'] = $aCategoryData['tiramizoo_width'];
             }
 
             if ($aCategoryData['tiramizoo_height']) {
-                $oxTiramizooInheritedData['tiramizoo_height'] = $aCategoryData['tiramizoo_height'];
+                $oxTiramizooInheritedData['height'] = $aCategoryData['tiramizoo_height'];
             }
 
             if ($aCategoryData['tiramizoo_length']) {
-                $oxTiramizooInheritedData['tiramizoo_length'] = $aCategoryData['tiramizoo_length'];
+                $oxTiramizooInheritedData['length'] = $aCategoryData['tiramizoo_length'];
             }                                    
         }
+
+        return $oxTiramizooInheritedData;
     }
 
     public function getParentsTree($oCategory, $returnCategories = array())

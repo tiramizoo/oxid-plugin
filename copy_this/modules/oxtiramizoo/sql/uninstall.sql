@@ -11,9 +11,9 @@ ALTER TABLE oxcategories DROP COLUMN TIRAMIZOO_HEIGHT;
 ALTER TABLE oxcategories DROP COLUMN TIRAMIZOO_LENGTH;
 ALTER TABLE oxcategories DROP COLUMN TIRAMIZOO_WEIGHT;
 
-DELETE FROM oxdel2delset WHERE OXID = MD5(CONCAT('tiramizoo', 'tiramizoo'));
-DELETE FROM oxdelivery WHERE OXID = 'tiramizoo';
+DELETE FROM oxdel2delset WHERE OXID = MD5(CONCAT('Tiramizoo', 'Tiramizoo'));
+DELETE FROM oxdelivery WHERE OXID = 'Tiramizoo';
 DELETE FROM oxdeliveryset WHERE OXID = 'Tiramizoo';
-DELETE FROM oxobject2payment WHERE OXOBJECTID = 'tiramizoo';
+DELETE FROM oxobject2payment WHERE OXOBJECTID = 'Tiramizoo';
 
 DELETE FROM oxconfig WHERE OXVARNAME LIKE 'oxTiramizoo%';

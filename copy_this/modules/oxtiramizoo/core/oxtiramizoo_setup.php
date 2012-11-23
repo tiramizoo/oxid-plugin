@@ -1,200 +1,158 @@
 <?php
 
-require_once  dirname(__FILE__) . '/../modules/oxtiramizoo/core/oxtiramizoo_setup.php';
-
-class oxTiramizoo_settings extends Shop_Config
+class oxTiramizoo_setup extends Shop_Config
 {
-  const OX_TIRAMIZOO_MODULE_NAME = 'oxTiramizoo';
-  
-  /**
-   * Current Version String.
-   * @var string
-   */
-  protected $_sVersion = 'oxTiramizoo Module v0.1';
-  /**
-   * Current class template.
-   * @var string
-   */
-  protected $_sThisTemplate = 'oxTiramizoo_settings.tpl';
-  
-  protected $oxTiramizoo_is_module_installed = null;
+    // public function __construct() {}
 
-  public function init()
-  {
-      $oxTiramizooConfig = $this->getConfig();
-      if(!(int)$oxTiramizooConfig->getConfigParam('oxTiramizoo_is_installed'))
-      {
-          $oxTiramizooSetup = new oxTiramizoo_setup();
-          $oxTiramizooSetup->install();
-      }
+    protected $messageInfo = null;
 
-      return parent::Init();
-  }
-
-  /**
-   * Executes parent method parent::render() and returns name of template
-   * file "payengine.tpl".
-   *
-   * @return string
-   */
-  public function render()
-  {
-    $myConfig  = $this->getConfig();
-    parent::render();
-
-    $this->_aViewData['oPaymentsList'] = $this->getPaymentsList();
-
-    $sCurrentAdminShop = $myConfig->getShopId();
-
-    $this->_aViewData['aAvailablePickupHours'] = array('9:00', '9:30', '10:00', '10:30', '11:00', '11:30', 
-                                                       '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', 
-                                                       '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', 
-                                                       '18:00', '18:30');
-
-    return $this->_sThisTemplate;
-  }
-  
-
-  public function getPaymentsList()
-  {
-    $oxPaymentList = new Payment_List();
-    //added 4.3.2
-    $oxPaymentList->init();
-
-    $aPaymentList = array();
-    $soxId = 'Tiramizoo';
-    $oDb = oxDb::getDb();
-
-    foreach ($oxPaymentList->getItemList() as $key => $oPayment) 
+    public function install()
     {
-        $aPaymentList[$oPayment->oxpayments__oxid->value] = array();
-        $aPaymentList[$oPayment->oxpayments__oxid->value]['desc'] = $oPayment->oxpayments__oxdesc->value;
+        $oxTiramizooConfig = $this->getConfig();
 
-        $sID = $oDb->getOne("select oxid from oxobject2payment where oxpaymentid = " . $oDb->quote( $oPayment->oxpayments__oxid->value ) . "  and oxobjectid = ".$oDb->quote( $soxId )." and oxtype = 'oxdelset'", false, false);
-
-        $aPaymentList[$oPayment->oxpayments__oxid->value]['checked'] = isset($sID) && $sID;
-
-
-    }  
-
-    return $aPaymentList;
-  }
-
-  public function assignPaymentsToTiramizoo()
-  {
-        $aPayments  = oxConfig::getParameter( "payment" );
-        $soxId = 'Tiramizoo';
-
-        $oDb = oxDb::getDb();
-
-        foreach ( $aPayments as $sPaymentId => $isAssigned) 
+        try 
         {
-            if ($isAssigned) {
-                // check if we have this entry already in
-                $sID = $oDb->getOne("SELECT oxid FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'", false, false);
-                if ( !isset( $sID) || !$sID) {
-                    $oObject = oxNew( 'oxbase' );
-                    $oObject->init( 'oxobject2payment' );
-                    $oObject->oxobject2payment__oxpaymentid = new oxField($sPaymentId);
-                    $oObject->oxobject2payment__oxobjectid  = new oxField($soxId);
-                    $oObject->oxobject2payment__oxtype      = new oxField("oxdelset");
-                    $oObject->save();
-                }
-            } else {
-                $oDb->Execute("DELETE FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'");
+            if (!$oxTiramizooConfig->getConfigParam('oxTiramizoo_is_installed')) {
+                $this->setupDefaultConfigVars();
+                $this->runDatabase();
+                $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 1);
             }
-        }
-  }
-
-  /**
-   * Saves shop configuration variables
-   *
-   * @return null
-   */
-  public function saveConfVars()
-  {
-    $myConfig = $this->getConfig();
-
-    $aConfBools = oxConfig::getParameter( "confbools" );
-    $aConfStrs  = oxConfig::getParameter( "confstrs" );
-    $aConfArrs  = oxConfig::getParameter( "confarrs" );
-    $aConfAarrs = oxConfig::getParameter( "confaarrs" );
-
-    $aPickupHoursVars = oxConfig::getParameter( "oxTiramizoo_shop_pickup_hour" );
-
-    $iPickupHourIterator = 1;
-    $aPickupKeys = array();
-
-    foreach ($aPickupHoursVars as $sPickupHour) 
-    {
-        $aPickupKeys[] = intval(str_replace(':', '', $sPickupHour));
-    }
-
-    $aPickupHours = array_combine($aPickupKeys, $aPickupHoursVars);
-    ksort($aPickupHours);
-
-    foreach ($aPickupHours as $sPickupHour) 
-    {
-        if (trim($sPickupHour)) {
-            $aConfStrs['oxTiramizoo_shop_pickup_hour_' . $iPickupHourIterator++] = trim($sPickupHour);
+            
+            // clear cache 
+            oxUtils::getInstance()->rebuildCache();            
+        } catch(Exception $e) {
+            //do sth
+            print_r($e);
         }
     }
 
-    for ($iPickupHourIterator; $iPickupHourIterator <=3; $iPickupHourIterator++)
+    public function setupDefaultConfigVars()
     {
-        $aConfStrs['oxTiramizoo_shop_pickup_hour_' . $iPickupHourIterator++] = '';
+        $oxTiramizooConfig = $this->getConfig();
+
+        //@TODO: change if goes live
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://api-sandbox.tiramizoo.com/v1'); 
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_key', '');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_address', '');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_postal_code', '');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_city', '');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_country_code', 'de');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_contact_name', '');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_phone_number', '');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_email_address', '');
+
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_order_pickup_offset', 30);
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_del_offset', 90);
+
+
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_1', '');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_2', '');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_3', '');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_price', "7.90");
+        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
+        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 0);
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_version', '0.1.0');
     }
 
-    if ( is_array( $aConfBools ) ) {
-      foreach ( $aConfBools as $sVarName => $sVarVal ) {
-          $myConfig->saveShopConfVar( "bool", $sVarName, $sVarVal);
-      }
-    }
-
-    if ( is_array( $aConfStrs ) ) {
-      foreach ( $aConfStrs as $sVarName => $sVarVal ) {
-        $myConfig->saveShopConfVar( "str", $sVarName, $sVarVal);
-      }
-    }
-
-    if ( is_array( $aConfArrs ) ) {
-      foreach ( $aConfArrs as $sVarName => $aVarVal ) {
-        // home country multiple selectlist feature
-        if ( !is_array( $aVarVal ) ) {
-          $aVarVal = $this->_multilineToArray($aVarVal);
-        }
-        $myConfig->saveShopConfVar("arr", $sVarName, $aVarVal);
-      }
-    }
-
-    if ( is_array( $aConfAarrs ) ) {
-      foreach ( $aConfAarrs as $sVarName => $aVarVal ) {
-        $myConfig->saveShopConfVar( "aarr", $sVarName, $this->_multilineToAarray( $aVarVal ));
-      }
-    }
-  }
-  
-
-
-  /**
-   * Saves main user parameters.
-   *
-   * @return mixed
-   */
-  public function save()
-  {
-
-
-        // saving config params
-        $this->saveConfVars();
-        $this->assignPaymentsToTiramizoo();
-
+    public function runDatabase()
+    {
+        $methodsName = get_class_methods(__CLASS__);
+        $migrationsMethods = array();
         
-        // clear cache 
-        oxUtils::getInstance()->rebuildCache();
-    
-        return 'oxtiramizoo_settings';
-    }
-  
+        foreach ($methodsName as $methodName) 
+        {
+            if (strpos($methodName, 'databaseMigration') === 0) {
+                $migrationsMethods[] = $methodName;
+            }
+        }        
 
+        natsort($migrationsMethods);
+
+        foreach($migrationsMethods as $migrationMethod)
+        {
+            call_user_func_array(array($this, $migrationMethod), array());
+        }
+
+        //oxDb::getInstance()->updateViews();
+    }
+
+    public function databaseMigration_0_1_0()
+    {
+        $this->addColumnToTable('oxorder', 'TIRAMIZOO_TRACKING_URL', 'VARCHAR(255) NOT NULL');
+        $this->addColumnToTable('oxorder', 'TIRAMIZOO_STATUS', 'TINYINT NOT NULL');
+        $this->addColumnToTable('oxorder', 'TIRAMIZOO_PARAMS', 'TEXT NOT NULL');
+        $this->addColumnToTable('oxorder', 'TIRAMIZOO_EXTERNAL_ID', 'VARCHAR(40) NOT NULL');
+
+        $this->addColumnToTable('oxarticles', 'TIRAMIZOO_ENABLE', 'INT(1) NOT NULL DEFAULT 0');
+        $this->addColumnToTable('oxcategories', 'TIRAMIZOO_ENABLE', 'INT(1) NOT NULL DEFAULT 0');
+        $this->addColumnToTable('oxcategories', 'TIRAMIZOO_WIDTH', 'FLOAT NOT NULL DEFAULT 0');
+        $this->addColumnToTable('oxcategories', 'TIRAMIZOO_HEIGHT', 'FLOAT NOT NULL DEFAULT 0');
+        $this->addColumnToTable('oxcategories', 'TIRAMIZOO_LENGTH', 'FLOAT NOT NULL DEFAULT 0');
+        $this->addColumnToTable('oxcategories', 'TIRAMIZOO_WEIGHT', 'FLOAT NOT NULL DEFAULT 0');
+
+
+        $this->ExecuteSQL("INSERT IGNORE INTO `oxdel2delset` SET
+                            OXID = MD5(CONCAT('tiramizoo', 'tiramizoo')),
+                            OXDELID = 'tiramizoo',
+                            OXDELSETID = 'tiramizoo';");
+
+        //@TODO: what is shop id?
+        $this->ExecuteSQL("INSERT IGNORE INTO `oxdelivery` SET
+                            OXID = 'tiramizoo',
+                            OXSHOPID = 1,
+                            OXACTIVE = 1,
+                            OXACTIVEFROM = '0000-00-00 00:00:00',
+                            OXACTIVETO = '0000-00-00 00:00:00',
+                            OXTITLE = 'Tiramizoo',
+                            OXTITLE_1 = 'Tiramizoo',
+                            OXTITLE_2 = 'Tiramizoo',
+                            OXTITLE_3 = 'Tiramizoo',
+                            OXADDSUMTYPE = 'abs',
+                            OXADDSUM = 7.90,
+                            OXDELTYPE = 'p',
+                            OXPARAM = 0,
+                            OXPARAMEND = 999999,
+                            OXFIXED = 0,
+                            OXSORT = 1000,
+                            OXFINALIZE = 0;");
+
+        //@TODO: what is shop id?
+        $this->ExecuteSQL("INSERT IGNORE INTO `oxdeliveryset` SET
+                            OXID = 'Tiramizoo',
+                            OXSHOPID = 1,
+                            OXACTIVE = 1,
+                            OXACTIVEFROM = '0000-00-00 00:00:00',
+                            OXACTIVETO = '0000-00-00 00:00:00',
+                            OXTITLE = 'Tiramizoo',
+                            OXTITLE_1 = 'Tiramizoo',
+                            OXTITLE_2 = 'Tiramizoo',
+                            OXTITLE_3 = 'Tiramizoo',
+                            OXPOS = 10;");
+    }
+
+    protected function ExecuteSQL($sql)
+    {
+        $result = oxDb::getDb()->Execute($sql);
+        if ($result === false) {
+            $this->messageInfo .= $sql . ";\n";
+        }
+        return $result;
+    }
+
+    protected function addColumnToTable($tableName, $columnName, $columnData)
+    {
+        if (!$this->columnExistsInTable($columnName, $tableName)) {
+            $sql = "ALTER TABLE " . $tableName . " ADD " . $columnName . " " . $columnData . ";";
+            $result = $this->ExecuteSQL($sql);
+        }
+    }
+
+    protected function columnExistsInTable($columnName, $tableName)
+    {
+        $sql = "SHOW COLUMNS FROM " . $tableName . " LIKE '" . $columnName . "'";
+        $result = $this->ExecuteSQL($sql);
+
+        return $result->RecordCount();
+    }
 }
