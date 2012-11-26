@@ -36,29 +36,41 @@ function ThisDate( sID)
 
 <table cellspacing="0" cellpadding="0" border="0">
 <tr>
-    <td class="edittext">[{ oxinputhelp ident="oxTiramizoo_order_tab_status_label" }]</td>
+    <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_status_label" }]</td>
     <td class="edittext">[{$edit->oxorder__tiramizoo_status->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_status_help" }]</td>
 </tr>
 
 <tr>
-    <td class="edittext">[{ oxinputhelp ident="oxTiramizoo_order_tab_tracking_url_label" }]</td>
+    <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_tracking_url_label" }]</td>
     <td class="edittext">[{$edit->oxorder__tiramizoo_tracking_url->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_tracking_url_help" }]</td>
 </tr>
 
 <tr>
-    <td class="edittext">[{ oxinputhelp ident="oxTiramizoo_order_tab_external_id_label" }]</td>
+    <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_external_id_label" }]</td>
     <td class="edittext">[{$edit->oxorder__tiramizoo_external_id->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_external_id_help" }]</td>
 </tr>
 
 <tr>
-    <td class="edittext">[{ oxinputhelp ident="oxTiramizoo_order_tab_response_label" }]</td>
+    <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_response_label" }]</td>
     <td class="edittext">
-        <textarea style="width:400px; height:180px; border:1px solid #AAA;" readonly="true">
+        <textarea style="width:600px; height:180px; border:1px solid #AAA;" readonly="true">
         [{$aTiramizooParams|@print_r}]
         </textarea>
         [{ oxinputhelp ident="oxTiramizoo_order_tab_response_help" }]
     </td>
 </tr>
+
+<tr>
+    <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_webhook_response_label" }]</td>
+    <td class="edittext">
+        <textarea style="width:600px; height:180px; border:1px solid #AAA;" readonly="true">
+        [{$aTiramizooWebhookResponse|@print_r}]
+        </textarea>
+        [{ oxinputhelp ident="oxTiramizoo_order_tab_webhook_response_help" }]
+    </td>
+</tr>
+
+
 
 </table>
 </form>
