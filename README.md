@@ -60,6 +60,7 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
     ### file: out/basic/tpl/payment.tpl ###
 
     ```
+    ```
     @@ -12,6 +12,12 @@
          <div class="errorbox">[{ oxmultilang ident="ORDER_READANDCONFIRMTERMS" }]</div>
      [{/if}]
