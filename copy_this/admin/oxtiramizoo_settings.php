@@ -1,57 +1,69 @@
 <?php
+/**
+ * This file is part of the module oxTiramizoo for OXID eShop.
+ *
+ * The module oxTiramizoo for OXID eShop is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by the Free Software Foundation
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * The module oxTiramizoo for OXID eShop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+ * or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  
+ * See the GNU General Public License for more details <http://www.gnu.org/licenses/>
+ *
+ * @copyright: Tiramizoo GmbH
+ * @author: Krzysztof Kowalik <kowalikus@gmail.com>
+ * @package: oxTiramizoo
+ * @license: http://www.gnu.org/licenses/
+ * @version: 1.0.0
+ * @link: http://tiramizoo.com
+ */
 
 require_once  dirname(__FILE__) . '/../modules/oxtiramizoo/core/oxtiramizoo_setup.php';
 
+/**
+ * Tiramizoo settings
+ *
+ * @package: oxTiramizoo
+ */
 class oxTiramizoo_settings extends Shop_Config
 {
-  const OX_TIRAMIZOO_MODULE_NAME = 'oxTiramizoo';
-  
-  /**
-   * Current Version String.
-   * @var string
-   */
-  protected $_sVersion = 'oxTiramizoo Module v0.1';
-  /**
-   * Current class template.
-   * @var string
-   */
-  protected $_sThisTemplate = 'oxTiramizoo_settings.tpl';
-  
-  protected $oxTiramizoo_is_module_installed = null;
-
+ 
   public function init()
   {
-      $oxTiramizooConfig = $this->getConfig();
-      if(!(int)$oxTiramizooConfig->getConfigParam('oxTiramizoo_is_installed'))
-      {
-          $oxTiramizooSetup = new oxTiramizoo_setup();
-          $oxTiramizooSetup->install();
-      }
+      $oxTiramizooSetup = new oxTiramizoo_setup();
+      $oxTiramizooSetup->install();
 
       return parent::Init();
   }
 
   /**
    * Executes parent method parent::render() and returns name of template
-   * file "payengine.tpl".
    *
    * @return string
    */
   public function render()
   {
-    $myConfig  = $this->getConfig();
+    $oxConfig  = $this->getConfig();
     parent::render();
 
     $this->_aViewData['oPaymentsList'] = $this->getPaymentsList();
 
-    $sCurrentAdminShop = $myConfig->getShopId();
+    $sCurrentAdminShop = $oxConfig->getShopId();
 
     $this->_aViewData['aAvailablePickupHours'] = array('9:00', '9:30', '10:00', '10:30', '11:00', '11:30', 
                                                        '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', 
                                                        '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', 
                                                        '18:00', '18:30');
 
-    return $this->_sThisTemplate;
+
+    if (count(oxSession::getVar('oxTiramizoo_settings_errors'))) {
+        $this->_aViewData['aErrors'] = oxSession::getVar('oxTiramizoo_settings_errors');
+        oxSession::setVar('oxTiramizoo_settings_errors', null);
+    }
+
+    return 'oxTiramizoo_settings.tpl';
   }
   
 
@@ -106,95 +118,194 @@ class oxTiramizoo_settings extends Shop_Config
         }
   }
 
-  /**
-   * Saves shop configuration variables
-   *
-   * @return null
-   */
-  public function saveConfVars()
-  {
-    $myConfig = $this->getConfig();
-
-    $aConfBools = oxConfig::getParameter( "confbools" );
-    $aConfStrs  = oxConfig::getParameter( "confstrs" );
-    $aConfArrs  = oxConfig::getParameter( "confarrs" );
-    $aConfAarrs = oxConfig::getParameter( "confaarrs" );
-
-    $aPickupHoursVars = oxConfig::getParameter( "oxTiramizoo_shop_pickup_hour" );
-
-    $iPickupHourIterator = 1;
-    $aPickupKeys = array();
-
-    foreach ($aPickupHoursVars as $sPickupHour) 
+    /**
+    * Saves shop configuration variables
+    *
+    * @return null
+    */
+    public function saveConfVars()
     {
-        $aPickupKeys[] = intval(str_replace(':', '', $sPickupHour));
-    }
+        $oxConfig = $this->getConfig();
 
-    $aPickupHours = array_combine($aPickupKeys, $aPickupHoursVars);
-    ksort($aPickupHours);
+        $aConfBools = oxConfig::getParameter( "confbools" );
+        $aConfStrs  = oxConfig::getParameter( "confstrs" );
+        $aConfArrs  = oxConfig::getParameter( "confarrs" );
+        $aConfAarrs = oxConfig::getParameter( "confaarrs" );
 
-    foreach ($aPickupHours as $sPickupHour) 
-    {
-        if (trim($sPickupHour)) {
-            $aConfStrs['oxTiramizoo_shop_pickup_hour_' . $iPickupHourIterator++] = trim($sPickupHour);
+        $aPickupHoursVars = oxConfig::getParameter( "oxTiramizoo_shop_pickup_hour" );
+
+        $iPickupHourIterator = 1;
+        $aPickupKeys = array();
+
+        foreach ($aPickupHoursVars as $sPickupHour) 
+        {
+            $aPickupKeys[] = intval(str_replace(':', '', $sPickupHour));
+        }
+
+        $aPickupHours = array_combine($aPickupKeys, $aPickupHoursVars);
+        ksort($aPickupHours);
+
+        foreach ($aPickupHours as $sPickupHour) 
+        {
+            if (trim($sPickupHour)) {
+                $aConfStrs['oxTiramizoo_shop_pickup_hour_' . $iPickupHourIterator++] = trim($sPickupHour);
+            }
+        }
+
+        for ($iPickupHourIterator; $iPickupHourIterator <=3; $iPickupHourIterator++)
+        {
+            $aConfStrs['oxTiramizoo_shop_pickup_hour_' . $iPickupHourIterator++] = '';
+        }
+
+        if ( is_array( $aConfBools ) ) {
+          foreach ( $aConfBools as $sVarName => $sVarVal ) {
+              $oxConfig->saveShopConfVar( "bool", $sVarName, $sVarVal);
+          }
+        }
+
+        if ( is_array( $aConfStrs ) ) {
+          foreach ( $aConfStrs as $sVarName => $sVarVal ) {
+            $oxConfig->saveShopConfVar( "str", $sVarName, $sVarVal);
+          }
+        }
+
+        if ( is_array( $aConfArrs ) ) {
+          foreach ( $aConfArrs as $sVarName => $aVarVal ) {
+            if ( !is_array( $aVarVal ) ) {
+              $aVarVal = $this->_multilineToArray($aVarVal);
+            }
+            $oxConfig->saveShopConfVar("arr", $sVarName, $aVarVal);
+          }
+        }
+
+        if ( is_array( $aConfAarrs ) ) {
+          foreach ( $aConfAarrs as $sVarName => $aVarVal ) {
+            $oxConfig->saveShopConfVar( "aarr", $sVarName, $this->_multilineToAarray( $aVarVal ));
+          }
         }
     }
-
-    for ($iPickupHourIterator; $iPickupHourIterator <=3; $iPickupHourIterator++)
-    {
-        $aConfStrs['oxTiramizoo_shop_pickup_hour_' . $iPickupHourIterator++] = '';
-    }
-
-    if ( is_array( $aConfBools ) ) {
-      foreach ( $aConfBools as $sVarName => $sVarVal ) {
-          $myConfig->saveShopConfVar( "bool", $sVarName, $sVarVal);
-      }
-    }
-
-    if ( is_array( $aConfStrs ) ) {
-      foreach ( $aConfStrs as $sVarName => $sVarVal ) {
-        $myConfig->saveShopConfVar( "str", $sVarName, $sVarVal);
-      }
-    }
-
-    if ( is_array( $aConfArrs ) ) {
-      foreach ( $aConfArrs as $sVarName => $aVarVal ) {
-        // home country multiple selectlist feature
-        if ( !is_array( $aVarVal ) ) {
-          $aVarVal = $this->_multilineToArray($aVarVal);
-        }
-        $myConfig->saveShopConfVar("arr", $sVarName, $aVarVal);
-      }
-    }
-
-    if ( is_array( $aConfAarrs ) ) {
-      foreach ( $aConfAarrs as $sVarName => $aVarVal ) {
-        $myConfig->saveShopConfVar( "aarr", $sVarName, $this->_multilineToAarray( $aVarVal ));
-      }
-    }
-  }
   
+    /**
+     * Set active on/off in tiramizoo delivery and delivery set
+     */
+    public function enableShippingMethod()
+    {
+        $aConfStrs = oxConfig::getParameter( "confstrs" );
+
+        $isTiramizooEnable = intval($aConfStrs['oxTiramizoo_enable_module'] == 'on');
+
+        $errors = $this->validateSave();
+
+        if ($isTiramizooEnable && count($errors)) {
+            $isTiramizooEnable = 0;
+            oxSession::setVar('oxTiramizoo_settings_errors', $errors);
+            $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_module', 0);
+        }
+
+        $sql = "UPDATE oxdelivery
+                    SET OXACTIVE = " . $isTiramizooEnable . "
+                    WHERE OXID = 'Tiramizoo';";
+
+        oxDb::getDb()->Execute($sql);
+
+        $sql = "UPDATE oxdeliveryset
+                    SET OXACTIVE = " . $isTiramizooEnable . "
+                    WHERE OXID = 'Tiramizoo';";
+
+        oxDb::getDb()->Execute($sql);
+    }
 
 
-  /**
-   * Saves main user parameters.
-   *
-   * @return mixed
-   */
-  public function save()
-  {
-
-
+    /**
+     * Saves main user parameters.
+     *
+     * @return mixed
+     */
+    public function save()
+    {
         // saving config params
         $this->saveConfVars();
         $this->assignPaymentsToTiramizoo();
 
-        
+        $this->enableShippingMethod();       
+
         // clear cache 
         oxUtils::getInstance()->rebuildCache();
     
         return 'oxtiramizoo_settings';
     }
-  
+
+    /**
+     * Validate form
+     *
+     * @return array
+     */
+    public function validateSave()
+    {
+        $aConfStrs = oxConfig::getParameter( "confstrs" );
+        $aPickupHours = oxConfig::getParameter( "oxTiramizoo_shop_pickup_hour" );
+        $aPayments = oxConfig::getParameter( "payment" );
+
+        $errors = array();
+
+        if (!trim($aConfStrs['oxTiramizoo_api_url'])) {
+            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_api_url_label', oxLang::getInstance()->getBaseLanguage(), true) . ' ' . oxLang::getInstance()->translateString('oxTiramizoo_is_required', oxLang::getInstance()->getBaseLanguage(), true);
+        }
+
+        if (!trim($aConfStrs['oxTiramizoo_api_token'])) {
+            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_api_token_label', oxLang::getInstance()->getBaseLanguage(), true) . ' ' . oxLang::getInstance()->translateString('oxTiramizoo_is_required', oxLang::getInstance()->getBaseLanguage(), true);
+        }
+
+        if (!trim($aConfStrs['oxTiramizoo_shop_url'])) {
+            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_shop_url_label', oxLang::getInstance()->getBaseLanguage(), true) . ' ' . oxLang::getInstance()->translateString('oxTiramizoo_is_required', oxLang::getInstance()->getBaseLanguage(), true);
+        }
+
+        if (!trim($aConfStrs['oxTiramizoo_shop_address'])) {
+            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_shop_address_label', oxLang::getInstance()->getBaseLanguage(), true) . ' ' . oxLang::getInstance()->translateString('oxTiramizoo_is_required', oxLang::getInstance()->getBaseLanguage(), true);
+        }
+
+        if (!trim($aConfStrs['oxTiramizoo_shop_city'])) {
+            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_shop_city_label', oxLang::getInstance()->getBaseLanguage(), true) . ' ' . oxLang::getInstance()->translateString('oxTiramizoo_is_required', oxLang::getInstance()->getBaseLanguage(), true);
+        }
+
+        if (!trim($aConfStrs['oxTiramizoo_shop_postal_code'])) {
+            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_shop_postal_code_label', oxLang::getInstance()->getBaseLanguage(), true) . ' ' . oxLang::getInstance()->translateString('oxTiramizoo_is_required', oxLang::getInstance()->getBaseLanguage(), true);
+        }
+
+        if (!trim($aConfStrs['oxTiramizoo_shop_contact_name'])) {
+            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_shop_contact_name_label', oxLang::getInstance()->getBaseLanguage(), true) . ' ' . oxLang::getInstance()->translateString('oxTiramizoo_is_required', oxLang::getInstance()->getBaseLanguage(), true);
+        }
+
+        if (!trim($aConfStrs['oxTiramizoo_shop_phone_number'])) {
+            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_shop_phone_number_label', oxLang::getInstance()->getBaseLanguage(), true) . ' ' . oxLang::getInstance()->translateString('oxTiramizoo_is_required', oxLang::getInstance()->getBaseLanguage(), true);
+        }
+
+        if (!trim($aConfStrs['oxTiramizoo_shop_email_address'])) {
+            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_shop_email_address_label', oxLang::getInstance()->getBaseLanguage(), true) . ' ' . oxLang::getInstance()->translateString('oxTiramizoo_is_required', oxLang::getInstance()->getBaseLanguage(), true);
+        }
+
+        if (!trim($aConfStrs['oxTiramizoo_order_pickup_offset'])) {
+            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_order_to_pickup_offset_label', oxLang::getInstance()->getBaseLanguage(), true) . ' ' . oxLang::getInstance()->translateString('oxTiramizoo_is_required', oxLang::getInstance()->getBaseLanguage(), true);
+        }
+
+        if (!count($aPickupHours)) {
+            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_pickup_hours_required_error', oxLang::getInstance()->getBaseLanguage(), true);
+
+        }
+
+        $paymentsAreValid = 0;
+        foreach ($aPayments as $paymentName => $paymentIsEnable) 
+        {
+            if ($paymentIsEnable) {
+               $paymentsAreValid = 1;
+            }
+        }
+
+        if (!$paymentsAreValid) {
+            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_payments_required_error', oxLang::getInstance()->getBaseLanguage(), true);
+        }
+
+        return $errors;
+    }
 
 }

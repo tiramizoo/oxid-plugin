@@ -1,4 +1,4 @@
-[{include file="headitem.tpl" title="PAYENGINE_SETUP_TITLE"|oxmultilangassign}]
+[{include file="headitem.tpl" title="Tiramizoo"}]
 
 [{if $readonly}]
     [{assign var="readonly" value="readonly disabled"}]
@@ -23,6 +23,18 @@
     <input type="hidden" name="oxid" value="[{$oxid}]">
     <input type="hidden" name="editval[oxshops__oxid]" value="[{$oxid}]">
 
+    [{if $aErrors|@count gt 0}]
+    <div class="errorbox">
+      [{ oxmultilang ident="oxTiramizoo_enable_fix_errors_header" }]:
+      <ol>
+      [{foreach from=$aErrors item=sError}]
+        <li>[{$sError}]</li>
+      [{/foreach}]
+      </ol>
+    </div>
+    [{/if}]
+
+
     <table cellspacing="0" cellpadding="0" border="0" style="width:100%;height:100%;">
       <tr>
         <td valign="top" class="edittext" style="padding:10px;">
@@ -37,10 +49,10 @@
             </tr>
 
             <tr>
-              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_api_key_label" }]</td>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_api_token_label" }]</td>
               <td valign="top" class="edittext">
-                <input type=text class="editinput" name=confstrs[oxTiramizoo_api_key] value="[{$confstrs.oxTiramizoo_api_key}]" maxlength="100" />
-                [{ oxinputhelp ident="oxTiramizoo_settings_api_key_help" }]
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_api_token] value="[{$confstrs.oxTiramizoo_api_token}]" maxlength="100" />
+                [{ oxinputhelp ident="oxTiramizoo_settings_api_token_help" }]
               </td>
             </tr>
 
@@ -156,6 +168,58 @@
                 [{ oxinputhelp ident="oxTiramizoo_settings_pickup_hours_help" }]
               </td>
             </tr>
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_4_label" }]</td>
+              <td valign="top" class="edittext">
+                <select name=oxTiramizoo_shop_pickup_hour[]>
+                  <option value="">[{ oxmultilang ident="oxTiramizoo_pickup_hour_not_specified" }]</option>
+                  [{foreach from=$aAvailablePickupHours item=aAvailablePickupHour}]
+                    <option value="[{$aAvailablePickupHour}]" [{if ($confstrs.oxTiramizoo_shop_pickup_hour_4 == $aAvailablePickupHour)}]selected="selected"[{/if}]>[{$aAvailablePickupHour}]</option>
+                  [{/foreach}]
+                </select>
+                [{ oxinputhelp ident="oxTiramizoo_settings_pickup_hours_help" }]
+              </td>
+            </tr>
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_5_label" }]</td>
+              <td valign="top" class="edittext">
+                <select name=oxTiramizoo_shop_pickup_hour[]>
+                  <option value="">[{ oxmultilang ident="oxTiramizoo_pickup_hour_not_specified" }]</option>
+                  [{foreach from=$aAvailablePickupHours item=aAvailablePickupHour}]
+                    <option value="[{$aAvailablePickupHour}]" [{if ($confstrs.oxTiramizoo_shop_pickup_hour_5 == $aAvailablePickupHour)}]selected="selected"[{/if}]>[{$aAvailablePickupHour}]</option>
+                  [{/foreach}]
+                </select>
+                [{ oxinputhelp ident="oxTiramizoo_settings_pickup_hours_help" }]
+              </td>
+            </tr>
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_6_label" }]</td>
+              <td valign="top" class="edittext">
+                <select name=oxTiramizoo_shop_pickup_hour[]>
+                  <option value="">[{ oxmultilang ident="oxTiramizoo_pickup_hour_not_specified" }]</option>
+                  [{foreach from=$aAvailablePickupHours item=aAvailablePickupHour}]
+                    <option value="[{$aAvailablePickupHour}]" [{if ($confstrs.oxTiramizoo_shop_pickup_hour_6 == $aAvailablePickupHour)}]selected="selected"[{/if}]>[{$aAvailablePickupHour}]</option>
+                  [{/foreach}]
+                </select>
+                [{ oxinputhelp ident="oxTiramizoo_settings_pickup_hours_help" }]
+              </td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             <tr>
               <td>[{ oxmultilang ident="oxTiramizoo_settings_payment_methods_assigned_label" }]</td>
