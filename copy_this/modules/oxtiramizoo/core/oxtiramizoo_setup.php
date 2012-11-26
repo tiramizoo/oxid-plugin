@@ -158,7 +158,7 @@ class oxTiramizoo_setup extends Shop_Config
 
         $oxConfig = $this->getConfig();
 
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/v1/api'); 
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/api/v1'); 
         $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_api_token', '');
         $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
         $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_address', '');
