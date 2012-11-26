@@ -1,89 +1,118 @@
 <?php
+/**
+ * This file is part of the module oxTiramizoo for OXID eShop.
+ *
+ * The module oxTiramizoo for OXID eShop is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by the Free Software Foundation
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * The module oxTiramizoo for OXID eShop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+ * or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  
+ * See the GNU General Public License for more details <http://www.gnu.org/licenses/>
+ *
+ * @copyright: Tiramizoo GmbH
+ * @author: Krzysztof Kowalik <kowalikus@gmail.com>
+ * @package: oxTiramizoo
+ * @license: http://www.gnu.org/licenses/
+ * @version: 1.0.0
+ * @link: http://tiramizoo.com
+ */
 
+/**
+ * This class is used to install or update oxTiramizoo module
+ *
+ * @package: oxTiramizoo
+ */
 class oxTiramizoo_setup extends Shop_Config
 {
-    // public function __construct() {}
+    /**
+     * Current version of oxTiramizoo module
+     */
+    const VERSION = '1.0.0';
 
-    protected $messageInfo = null;
+    /**
+     * Error message
+     * @var string
+     */
+    protected $_messageInfo = '';
 
+    /**
+     * Install or update module if needed
+     */
     public function install()
     {
-        $oxTiramizooConfig = $this->getConfig();
+        $oxConfig = $this->getConfig();
+
+        $currentInstalledVersion = $oxConfig->getConfigParam('oxTiramizoo_version');
+        $tiramizooIsInstalled = $oxConfig->getConfigParam('oxTiramizoo_is_installed');
 
         try 
-        {
-            if (!$oxTiramizooConfig->getConfigParam('oxTiramizoo_is_installed')) {
-                $this->setupDefaultConfigVars();
-                $this->runDatabase();
-                $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 1);
+        { 
+            if (!$tiramizooIsInstalled || !$currentInstalledVersion) {
+
+                $this->runMigrations();
+                $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 1);
+                oxUtils::getInstance()->rebuildCache();
+
+            } else if ($tiramizooIsInstalled && (version_compare(oxTiramizoo_setup::VERSION, $currentInstalledVersion) !== 0)) {
+                
+                $this->runMigrations(oxTiramizoo_setup::VERSION);
+                oxUtils::getInstance()->rebuildCache();
+
             }
-            
-            // clear cache 
-            oxUtils::getInstance()->rebuildCache();            
+
         } catch(Exception $e) {
-            //do sth
+            echo $this->_messageInfo;
             print_r($e);
         }
     }
 
-    public function setupDefaultConfigVars()
+    /**
+     * This method executes all migration methods newer than already installed version and older than new version
+     * 
+     * @param  string $version Version of this package
+     */
+    public function runMigrations($version = null)
     {
-        $oxTiramizooConfig = $this->getConfig();
+        $currentInstalledVersion = $this->getConfig()->getConfigParam('oxTiramizoo_version');
 
-        //@TODO: change if goes live
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://api-sandbox.tiramizoo.com/v1'); 
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_key', '');
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_address', '');
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_postal_code', '');
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_city', '');
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_country_code', 'de');
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_contact_name', '');
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_phone_number', '');
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_email_address', '');
-
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_order_pickup_offset', 30);
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_del_offset', 90);
-
-
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_1', '');
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_2', '');
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_3', '');
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_price', "7.90");
-        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
-        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 0);
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_version', '0.1.0');
-    }
-
-    public function runDatabase()
-    {
         $methodsName = get_class_methods(__CLASS__);
+
         $migrationsMethods = array();
         
         foreach ($methodsName as $methodName) 
         {
-            if (strpos($methodName, 'databaseMigration') === 0) {
-                $migrationsMethods[] = $methodName;
+            if (strpos($methodName, 'migration_') === 0) {
+                $methodVersion = str_replace('migration_', '', $methodName);
+                $methodVersion = str_replace('_', '.', $methodVersion);
+                $migrationsMethods[$methodVersion] = $methodName;
             }
         }        
 
-        natsort($migrationsMethods);
+        uksort($migrationsMethods, 'version_compare');
 
-        foreach($migrationsMethods as $migrationMethod)
+        foreach($migrationsMethods as $methodVersion => $migrationMethod)
         {
-            call_user_func_array(array($this, $migrationMethod), array());
+            if (version_compare($methodVersion, $currentInstalledVersion) > 0) {
+                if (version_compare($methodVersion, oxTiramizoo_setup::VERSION) <= 0) {
+                    call_user_func_array(array($this, $migrationMethod), array());
+                }
+            }
         }
-
-        //oxDb::getInstance()->updateViews();
     }
 
-    public function databaseMigration_0_1_0()
+    /**
+     * Update database to version 1.0.0 
+     */
+    public function migration_1_0_0()
     {
         $this->addColumnToTable('oxorder', 'TIRAMIZOO_TRACKING_URL', 'VARCHAR(255) NOT NULL');
         $this->addColumnToTable('oxorder', 'TIRAMIZOO_STATUS', 'TINYINT NOT NULL');
         $this->addColumnToTable('oxorder', 'TIRAMIZOO_PARAMS', 'TEXT NOT NULL');
+        $this->addColumnToTable('oxorder', 'TIRAMIZOO_WEBHOOK_RESPONSE', 'TEXT NOT NULL');
         $this->addColumnToTable('oxorder', 'TIRAMIZOO_EXTERNAL_ID', 'VARCHAR(40) NOT NULL');
-
         $this->addColumnToTable('oxarticles', 'TIRAMIZOO_ENABLE', 'INT(1) NOT NULL DEFAULT 0');
         $this->addColumnToTable('oxcategories', 'TIRAMIZOO_ENABLE', 'INT(1) NOT NULL DEFAULT 0');
         $this->addColumnToTable('oxcategories', 'TIRAMIZOO_WIDTH', 'FLOAT NOT NULL DEFAULT 0');
@@ -91,17 +120,15 @@ class oxTiramizoo_setup extends Shop_Config
         $this->addColumnToTable('oxcategories', 'TIRAMIZOO_LENGTH', 'FLOAT NOT NULL DEFAULT 0');
         $this->addColumnToTable('oxcategories', 'TIRAMIZOO_WEIGHT', 'FLOAT NOT NULL DEFAULT 0');
 
-
         $this->ExecuteSQL("INSERT IGNORE INTO `oxdel2delset` SET
-                            OXID = MD5(CONCAT('tiramizoo', 'tiramizoo')),
-                            OXDELID = 'tiramizoo',
-                            OXDELSETID = 'tiramizoo';");
+                            OXID = MD5(CONCAT('Tiramizoo', 'Tiramizoo')),
+                            OXDELID = 'Tiramizoo',
+                            OXDELSETID = 'Tiramizoo';");
 
-        //@TODO: what is shop id?
         $this->ExecuteSQL("INSERT IGNORE INTO `oxdelivery` SET
-                            OXID = 'tiramizoo',
-                            OXSHOPID = 1,
-                            OXACTIVE = 1,
+                            OXID = 'Tiramizoo',
+                            OXSHOPID = 'oxbaseshop',
+                            OXACTIVE = 0,
                             OXACTIVEFROM = '0000-00-00 00:00:00',
                             OXACTIVETO = '0000-00-00 00:00:00',
                             OXTITLE = 'Tiramizoo',
@@ -114,32 +141,69 @@ class oxTiramizoo_setup extends Shop_Config
                             OXPARAM = 0,
                             OXPARAMEND = 999999,
                             OXFIXED = 0,
-                            OXSORT = 1000,
-                            OXFINALIZE = 0;");
+                            OXSORT = 1,
+                            OXFINALIZE = 1;");
 
-        //@TODO: what is shop id?
         $this->ExecuteSQL("INSERT IGNORE INTO `oxdeliveryset` SET
                             OXID = 'Tiramizoo',
-                            OXSHOPID = 1,
-                            OXACTIVE = 1,
+                            OXSHOPID = 'oxbaseshop',
+                            OXACTIVE = 0,
                             OXACTIVEFROM = '0000-00-00 00:00:00',
                             OXACTIVETO = '0000-00-00 00:00:00',
                             OXTITLE = 'Tiramizoo',
                             OXTITLE_1 = 'Tiramizoo',
                             OXTITLE_2 = 'Tiramizoo',
                             OXTITLE_3 = 'Tiramizoo',
-                            OXPOS = 10;");
+                            OXPOS = 1;");
+
+        $oxConfig = $this->getConfig();
+
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/v1/api'); 
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_api_token', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_address', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_postal_code', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_city', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_country_code', 'de');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_contact_name', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_phone_number', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_email_address', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_order_pickup_offset', 30);
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_del_offset', 90);
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_1', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_2', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_3', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_4', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_5', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_6', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_price', "7.90");
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 0);
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_version', '1.0.0');
     }
 
+    /**
+     * Executesql query
+     * 
+     * @param string $sql SQL query to execute
+     * @return: SQL query result
+     */
     protected function ExecuteSQL($sql)
     {
         $result = oxDb::getDb()->Execute($sql);
         if ($result === false) {
-            $this->messageInfo .= $sql . ";\n";
+            $this->_messageInfo .= $sql . ";\n";
         }
         return $result;
     }
 
+    /**
+     * Create sql query add column to table
+     * 
+     * @param string $tableName  Table name
+     * @param string $columnName Column name
+     * @param string $columnData Column datatype
+     */
     protected function addColumnToTable($tableName, $columnName, $columnData)
     {
         if (!$this->columnExistsInTable($columnName, $tableName)) {
@@ -148,6 +212,13 @@ class oxTiramizoo_setup extends Shop_Config
         }
     }
 
+    /**
+     * Check if column exists in table
+     * 
+     * @param string $tableName  Table name
+     * @param string $columnName Column name
+     * @return boolean
+     */
     protected function columnExistsInTable($columnName, $tableName)
     {
         $sql = "SHOW COLUMNS FROM " . $tableName . " LIKE '" . $columnName . "'";
