@@ -60,60 +60,30 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
     ### file: out/basic/tpl/payment.tpl ###
 
     ```
-    ```
-    @@ -12,6 +12,12 @@
-         <div class="errorbox">[{ oxmultilang ident="ORDER_READANDCONFIRMTERMS" }]</div>
-     [{/if}]
-
-    +
-    +[{ if $oView->isTiramizooError() }]
-    +    <div class="errorbox">[{$oView->getTiramizooError()}]</div>
-    +[{/if}]
-    +
-    +
-     [{ if !$oxcmp_basket->getProductsCount()  }]
-       <div class="msg">[{ oxmultilang ident="ORDER_BASKETEMPTY" }]</div>
-     [{else}]
-    @@ -475,7 +481,10 @@
-                       <input type="hidden" name="cl" value="payment">
-                       <input type="hidden" name="fnc" value="">
-                       [{assign var="oShipSet" value=$oView->getShipSet() }]
-    -                  [{ $oShipSet->oxdeliveryset__oxtitle->value }]&nbsp;<span class="btn"><input id="test_orderChangeShipping" type="submit" value="[{ oxmultilang ident="ORDER_MODIFY3" }]" class="btn"></span>
-    +                  [{ $oShipSet->oxdeliveryset__oxtitle->value }]&nbsp;
-    +                  [{ $oView->getTiramizooTimeWindow()}]
-    +
-    +                  <span class="btn"><input id="test_orderChangeShipping" type="submit" value="[{ oxmultilang ident="ORDER_MODIFY3" }]" class="btn"></span>
-                   </div>
-                 </form>
-             </dd>
-
-    ```
-
-    ### file: out/basic/tpl/order.tpl ###
-
-
-    ```
-    @@ -34,9 +34,30 @@
+    @@ -34,9 +34,33 @@
                      [{ /if}]
                    </div>
                </div>
-    +          [{if $oView->isTiramizooCurrentShiippingMethod()}]
-    +          <br />
-    +          <br />
-    +          <h3>[{ oxmultilang ident="oxTiramizoo_selectTimeWindowTitle" }]</h3>
     +
-    +              <dl style="margin-top:16px;">
-    +              [{foreach key=sDeliveryTime from=$oView->getAvailableDeliveryHours() item=sDeliveryWindow}]
-    +                  <dt>
-    +                      <input class="selectTiramizooTimeWindow" type="radio" name="sTiramizooTimeWindow" value="[{$sDeliveryTime}]" [{if $oView->getTiramizooTimeWindow() == $sDeliveryTime}]checked="checked"[{/if}] onchange="JavaScript:document.forms.shipping.submit();" />
-    +                      <label for="sTiramizooTimeWindow"><b>[{$sDeliveryWindow}]</b></label>
-    +                  </dt>
-    +              [{/foreach}]
-    +              </dl>
+    +          [{if $isTiramizooPaymentView}]
+    +            [{if $oView->isTiramizooCurrentShiippingMethod()}]
+    +            <br />
+    +            <br />
+    +            <h3>[{ oxmultilang ident="oxTiramizoo_selectTimeWindowTitle" }]</h3>
+    +
+    +                <dl style="margin-top:16px;">
+    +                [{foreach key=sDeliveryTime from=$oView->getAvailableDeliveryHours() item=sDeliveryWindow}]
+    +                    <dt>
+    +                        <input class="selectTiramizooTimeWindow" type="radio" name="sTiramizooTimeWindow" value="[{$sDeliveryTime}]" [{if $oView->getTiramizooTimeWindow() == $sDeliveryTime}]checked="checked"[{/if}] onchange="JavaScript:document.forms.shipping.submit();" />
+    +                        <label for="sTiramizooTimeWindow"><b>[{$sDeliveryWindow}]</b></label>
+    +                    </dt>
+    +                [{/foreach}]
+    +                </dl>
+    +            [{/if}]
     +          [{/if}]
              </form>
          </div>
-
+     
     +
     +
     +
@@ -122,8 +92,45 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
     +
     +
        [{/if}]
-
+     
        [{assign var="iPayError" value=$oView->getPaymentError() }]
+
+
+    ```
+
+    ### file: out/basic/tpl/order.tpl ###
+
+
+    ```
+    @@ -12,6 +12,13 @@
+         <div class="errorbox">[{ oxmultilang ident="ORDER_READANDCONFIRMTERMS" }]</div>
+     [{/if}]
+     
+    +[{ if $isTiramizooOrderView }]
+    +  [{ if $oView->isTiramizooError() }]
+    +      <div class="errorbox">[{$oView->getTiramizooError()}]</div>
+    +  [{/if}]
+    +[{/if}]
+    +
+    +
+     [{ if !$oxcmp_basket->getProductsCount()  }]
+       <div class="msg">[{ oxmultilang ident="ORDER_BASKETEMPTY" }]</div>
+     [{else}]
+    @@ -475,7 +482,13 @@
+                       <input type="hidden" name="cl" value="payment">
+                       <input type="hidden" name="fnc" value="">
+                       [{assign var="oShipSet" value=$oView->getShipSet() }]
+    -                  [{ $oShipSet->oxdeliveryset__oxtitle->value }]&nbsp;<span class="btn"><input id="test_orderChangeShipping" type="submit" value="[{ oxmultilang ident="ORDER_MODIFY3" }]" class="btn"></span>
+    +                  [{ $oShipSet->oxdeliveryset__oxtitle->value }]&nbsp;
+    +
+    +                  [{ if $isTiramizooOrderView }]
+    +                    [{ $oView->getTiramizooTimeWindow()}]
+    +                  [{/if}]
+    +
+    +                  <span class="btn"><input id="test_orderChangeShipping" type="submit" value="[{ oxmultilang ident="ORDER_MODIFY3" }]" class="btn"></span>
+                   </div>
+                 </form>
+             </dd>
 
     ```
 
