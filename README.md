@@ -1,4 +1,4 @@
-oxid-plugin-dev
+oxid-plugin
 ===============
 
 OXID eSales module for integration with [Tiramizoo API](http://dev.tiramizoo.com/).
