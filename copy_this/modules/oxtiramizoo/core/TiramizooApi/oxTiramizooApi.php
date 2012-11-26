@@ -80,6 +80,8 @@ class oxTiramizooApi extends TiramizooApi
     {
         $items = array();
 
+
+
         foreach ($oBasket->getBasketArticles() as $key => $oArticle) 
         {
             $item = new stdClass();
@@ -88,15 +90,17 @@ class oxTiramizooApi extends TiramizooApi
             $item->height = null;
             $item->length = null;
 
+
             $inheritedData = $this->_getArticleInheritData($oArticle);
 
             //article is disabled return false
             if ($oArticle->oxarticles__tiramizoo_enable->value == -1) {
+
                 return false;
             }
 
             if ($oArticle->oxarticles__tiramizoo_enable->value == 0) {
-                if (isset($inheritedData['tiramizoo_enable']) && ($inheritedData['tiramizoo_enable'] == -1)) {
+                if (isset($inheritedData['tiramizoo_enable']) && (!($inheritedData['tiramizoo_enable']))) {
                     return false;
                 }            
             }
@@ -127,7 +131,6 @@ class oxTiramizooApi extends TiramizooApi
 
             $item->quantity = $oBasket->getArtStockInBasket($oArticle->oxarticles__oxid->value);
 
-
             $item->weight = floatval($item->weight);
             $item->width = floatval($item->width);
             $item->height = floatval($item->height);
@@ -150,17 +153,17 @@ class oxTiramizooApi extends TiramizooApi
 
         $oxTiramizooInheritedData = array();
 
-        $allCategoryIsEnabled = true;
+        $allCategoriesAreEnabled = true;
 
         foreach ($aCheckCategories as $aCategoryData) 
         {
-            if (!isset($aCategoryData['tiramizoo_enable']) || !$aCategoryData['tiramizoo_enable']) {
-                $allCategoryIsEnabled = false;
+            if (!isset($aCategoryData['tiramizoo_enable']) || !(intval($aCategoryData['tiramizoo_enable']) > 0)) {
+                $allCategoriesAreEnabled = false;
                 break;
             }
         }
 
-        $oxTiramizooInheritedData['tiramizoo_enable'] = $allCategoryIsEnabled;
+        $oxTiramizooInheritedData['tiramizoo_enable'] = $allCategoriesAreEnabled;
 
         $oxTiramizooInheritedData['weight'] = $oCategory->oxcategories__tiramizoo_weight->value;
         $oxTiramizooInheritedData['width'] = $oCategory->oxcategories__tiramizoo_width->value;
