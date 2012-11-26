@@ -1,12 +1,12 @@
 oxid-plugin-dev
 ===============
 
-This folders contains OXID eSales module for integration with [Tiramizoo API](http://dev.tiramizoo.com/).
-Module working with foloowingOXID eSales versions: 4.3.2+, 4.4.x, 4.5.x 
+OXID eSales module for integration with [Tiramizoo API](http://dev.tiramizoo.com/).
+Module works with following OXID eSales versions: 4.3.2+, 4.4.x, 4.5.x
 
 # Installation #
 
-*   Copy all files from *copy_this* folder to your OXID eSales installation path. This step not overwrite any files.
+*   Copy all files from *copy_this* folder to OXID eSales installation path. This step does not overwrite any files.
 
 *   Add these 2 lines to Textarea Shop Modules in **Master Settings -> Core Settings -> System Tab -> Modules**
 
@@ -15,7 +15,7 @@ Module working with foloowingOXID eSales versions: 4.3.2+, 4.4.x, 4.5.x
     order => oxtiramizoo_order
     ```
 
-*   Change the templates in *changed_full* folder. If You use "basic" template and these files had never been changed, You can overwrite them.
+*   Change templates in *changed_full* folder. If you use "basic" template and these files had never been changed, You can overwrite them.
 
     ### file: out/basic/tpl/email_order_cust_html.tpl ###
 
@@ -23,7 +23,7 @@ Module working with foloowingOXID eSales versions: 4.3.2+, 4.4.x, 4.5.x
     @@ -354,7 +354,14 @@
          [{ $order->oxorder__oxdelcountry->value }]<br>
        [{/if}]
-     
+
     -  [{if $payment->oxuserpayments__oxpaymentsid->value != "oxempty"}][{ oxmultilang ident="EMAIL_ORDER_CUST_HTML_SHIPPINGCARRIER" }] <strong>[{ $order->oDelSet->oxdeliveryset__oxtitle->value }]</strong><br>[{/if}]
     +  [{if $payment->oxuserpayments__oxpaymentsid->value != "oxempty"}][{ oxmultilang ident="EMAIL_ORDER_CUST_HTML_SHIPPINGCARRIER" }] <strong>[{ $order->oDelSet->oxdeliveryset__oxtitle->value }]</strong>
     +  <br>
@@ -33,7 +33,7 @@ Module working with foloowingOXID eSales versions: 4.3.2+, 4.4.x, 4.5.x
     +  [{/if}]
     +
     +  [{/if}]
-     
+
        [{if $payment->oxuserpayments__oxpaymentsid->value == "oxidpayadvance"}]
          [{ oxmultilang ident="EMAIL_ORDER_CUST_HTML_BANK" }] [{$shop->oxshops__oxbankname->value}]<br>
 
@@ -43,13 +43,13 @@ Module working with foloowingOXID eSales versions: 4.3.2+, 4.4.x, 4.5.x
 
     ```
     @@ -119,6 +119,9 @@
-     
+
      [{if $payment->oxuserpayments__oxpaymentsid->value != "oxempty"}][{ oxmultilang ident="EMAIL_ORDER_CUST_HTML_SHIPPINGCARRIER" }] [{ $order->oDelSet->oxdeliveryset__oxtitle->getRawValue() }]
      [{/if}]
     +[{if $order->oxorder__tiramizoo_tracking_url->value }]
     +  Tracking URL: [{$order->oxorder__tiramizoo_tracking_url->value}]
     +[{/if}]
-     
+
      [{if $payment->oxuserpayments__oxpaymentsid->value == "oxidpayadvance"}]
      [{ oxmultilang ident="EMAIL_ORDER_CUST_HTML_BANK" }] [{$shop->oxshops__oxbankname->getRawValue()}]<br>
 
@@ -61,7 +61,7 @@ Module working with foloowingOXID eSales versions: 4.3.2+, 4.4.x, 4.5.x
     @@ -12,6 +12,12 @@
          <div class="errorbox">[{ oxmultilang ident="ORDER_READANDCONFIRMTERMS" }]</div>
      [{/if}]
-     
+
     +
     +[{ if $oView->isTiramizooError() }]
     +    <div class="errorbox">[{$oView->getTiramizooError()}]</div>
@@ -110,7 +110,7 @@ Module working with foloowingOXID eSales versions: 4.3.2+, 4.4.x, 4.5.x
     +          [{/if}]
              </form>
          </div>
-     
+
     +
     +
     +
@@ -119,14 +119,14 @@ Module working with foloowingOXID eSales versions: 4.3.2+, 4.4.x, 4.5.x
     +
     +
        [{/if}]
-     
+
        [{assign var="iPayError" value=$oView->getPaymentError() }]
 
     ```
 
 
 
-*   Configure the module 
+*   Configure the module
     -   At the **Tiramizoo -> Settings**
 
         Api Key
@@ -135,15 +135,15 @@ Module working with foloowingOXID eSales versions: 4.3.2+, 4.4.x, 4.5.x
 
         Time window delivery
 
-        Time from order to packaging
+        Time required by shop to prepare package
 
     -   At the **Administer Products -> Categories -> Category selection -> Tiramizoo tab**
 
-        You can dynamically assign stanard dimensions for all products inside specified category
+        You can dynamically assign stanard dimensions for all products inside selected category
 
     -   At the **Administer Products -> Products -> Article selection -> Tiramizoo tab**
 
-        You can enable or disable use Tiramizoo delivery for specified product
+        You can enable or disable Tiramizoo delivery for selected product
 
 # Checking the Tiramizoo delivery status #
 
