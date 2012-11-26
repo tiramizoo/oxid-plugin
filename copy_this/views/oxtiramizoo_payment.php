@@ -1,12 +1,46 @@
 <?php
+/**
+ * This file is part of the module oxTiramizoo for OXID eShop.
+ *
+ * The module oxTiramizoo for OXID eShop is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by the Free Software Foundation
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * The module oxTiramizoo for OXID eShop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+ * or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  
+ * See the GNU General Public License for more details <http://www.gnu.org/licenses/>
+ *
+ * @copyright: Tiramizoo GmbH
+ * @author: Krzysztof Kowalik <kowalikus@gmail.com>
+ * @package: oxTiramizoo
+ * @license: http://www.gnu.org/licenses/
+ * @version: 1.0.0
+ * @link: http://tiramizoo.com
+ */
+
+require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_helper.php';
+
+/**
+ * Tiramizoo Payment view. Extends to proccess Tiramizoo delivery
+ *
+ * @package: oxTiramizoo
+ */
 class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 {
+    /**
+     * @var integer
+     */
+    protected $_isTiramizooCanShow = -1;
 
-
+    /**
+     * Get all delivery sets, remove Tiramizoo if basket couldn't be delivered
+     * 
+     * @return array
+     */
     public function getAllSets()
     {
-        //@TODO: 
-
         if ( $this->_aAllSets === null ) {
             $this->_aAllSets = false;
 
@@ -15,14 +49,13 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
             }
         }
 
-        //@TODO: check if remove Tiramizoo
+        //check if remove Tiramizoo
         if (!$this->tiramizooCanShow()) {
             unset($this->_aAllSets['Tiramizoo']);
         }
 
         return $this->_aAllSets;
     }
-
 
     /**
      * Changes shipping set to chosen one. Sets basket status to not up-to-date, which later
@@ -45,27 +78,33 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
     }
 
     /**
-     * Executes parent::render(), checks if this connection secure
-     * (if not - redirects to secure payment page), loads user object
-     * (if user object loading was not successfull - redirects to start
-     * page), loads user delivery/shipping information. According
-     * to configuration in admin, user profile data loads delivery sets,
-     * and possible payment methods. Returns name of template to render
-     * payment::_sThisTemplate.
+     * Executes parent::render(), pass variable to template to check
+     * if tiramioo module is running now
      *
      * @return  string  current template file name
      */
 
+    public function render()
+    {
+        $this->_aViewData['isTiramizooPaymentView'] = 1;
+        return parent::render();
+    }
 
-
-
-
+    /**
+     * Get tiramizoo deliver time window selected by user 
+     * 
+     * @return string
+     */
     public function getTiramizooTimeWindow()
     {
         return oxSession::getVar( 'sTiramizooTimeWindow' );
     }
 
-
+    /**
+     * Check if tiramizoo is selected
+     * 
+     * @return boolean
+     */
     public function isTiramizooCurrentShiippingMethod()
     {
         if ($this->tiramizooCanShow()) {
@@ -76,61 +115,69 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         return false;
     }
 
+    /**
+     * Get available delivery windows to present in cart
+     * 
+     * @return array
+     */
     public function getAvailableDeliveryHours()
     {
-        $oxTiramizooConfig = $this->getConfig();
+        $oxConfig = $this->getConfig();
 
         $aAvailableDeliveryHours = array();
-        $aAvailablePickupHours = $this->getAvailablePickupHours();
-
-        $orderOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
-        $deliveryOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
+        
+        $orderOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
+        $deliveryOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
 
         $dateTime = date('Y-m-d H:i');
 
         $itertator = 0;
-
-        while ($itertator++ < 3)
+        while ($itertator++ < 6)
         {
             $dateTime = $this->getNextAvailableDate($dateTime);
 
-            $aAvailableDeliveryHours[$dateTime] = $this->getLabelDeliveryWindow($dateTime);
+            $aAvailableDeliveryHours[$dateTime] = oxTiramizooHelper::getLabelDeliveryWindow($dateTime);
 
             if (($itertator == 1) && !oxSession::hasVar( 'sTiramizooTimeWindow' )) {
                 oxSession::setVar( 'sTiramizooTimeWindow',  $dateTime);
             }
         }
 
-
-
         return $aAvailableDeliveryHours;
     }
 
-    public function getLabelDeliveryWindow($dateTime)
+    /**
+     * Get available pikup hours from config
+     * 
+     * @return array Array of datetimes
+     */
+    public function getAvailablePickupHours()
     {
-        $oxTiramizooConfig = $this->getConfig();
+        $aAvailablePickupHours = array();
 
-        $orderOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
-        $deliveryOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
+        $oxConfig = oxConfig::getInstance();
 
-
-        if (strtotime(date('Y-m-d', strtotime($dateTime))) ==  strtotime(date('Y-m-d'))) {
-            return oxLang::getInstance()->translateString('oxTiramizoo_Today', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($dateTime)) . ' ' . date('H:i', strtotime($dateTime)) . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
-        } else if (strtotime(date('Y-m-d', strtotime($dateTime))) ==  strtotime(date('Y-m-d', strtotime('+1days', strtotime(date('Y-m-d'))))))
+        for ($i = 1; $i <= 6 ; $i++) 
         {
-            return oxLang::getInstance()->translateString('oxTiramizoo_Tomorrow', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($dateTime)) . ' ' . date('H:i', strtotime($dateTime)) . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
-
-        } else {
-            return $dateTime . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
+            if ($pickupHour = $oxConfig->getShopConfVar('oxTiramizoo_shop_pickup_hour_' . $i)) {
+                $aAvailablePickupHours[] = $pickupHour;
+            }
         }
+
+        return $aAvailablePickupHours;
     }
 
-
+    /**
+     * Get next available pickup date excluding weekends
+     * 
+     * @param  string $dateTime Date time
+     * @return string Next date time
+     */
     public function getNextAvailableDate($fromDateTime)
     {
-        $oxTiramizooConfig = $this->getConfig();
+        $oxConfig = $this->getConfig();
 
-        $orderOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
+        $orderOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
 
         $fromDateTime = date('Y-m-d H:i', strtotime('+' . $orderOffsetTime . ' minutes', strtotime($fromDateTime)));
         $fromHour = date('H:i', strtotime($fromDateTime));
@@ -155,178 +202,58 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         }
     }
 
-    public function getAvailablePickupHours()
-    {
-        $aAvailablePickupHours = array();
-
-        $oxTiramizooConfig = $this->getConfig();
-
-        for ($i = 1; $i <= 3 ; $i++) 
-        {
-            if ($pickupHour = $oxTiramizooConfig->getShopConfVar('oxTiramizoo_shop_pickup_hour_' . $i)) {
-                $aAvailablePickupHours[] = $pickupHour;
-            }
-
-        }
-        return $aAvailablePickupHours;
-    }
-
-
+    /**
+     * Validate basket data to decide if can be delivered by tiramizoo 
+     * 
+     * @return bool
+     */
     public function tiramizooCanShow() 
     {
-        $oBasket = $this->getSession()->getBasket();
-        $oxTiramizooConfig = $this->getConfig();
+        if ($this->_isTiramizooCanShow === -1) {
 
-        $oOrder = oxNew( 'oxorder' );
-        $address = $oOrder->getDelAddressInfo();
+            $oBasket = $this->getSession()->getBasket();
+            $oxConfig = $this->getConfig();
 
-        $oUser = $this->getUser();
+            $oOrder = oxNew( 'oxorder' );
+            $address = $oOrder->getDelAddressInfo();
 
-        $sZipCode = $address ? $address->oxaddress__oxzip->value : $oUser->oxuser__oxzip->value;
+            $oUser = $this->getUser();
 
-        if (!$this->getConfig()->getConfigParam('oxTiramizoo_enable_module')) {
-            return false;
+            $sZipCode = $address ? $address->oxaddress__oxzip->value : $oUser->oxuser__oxzip->value;
+
+            if (!$this->getConfig()->getConfigParam('oxTiramizoo_enable_module')) {
+                return $this->_isTiramizooCanShow = 0;
+            }
+
+            if (!count($this->getAvailablePickupHours())) {
+                return $this->_isTiramizooCanShow = 0;
+            }
+
+            //check if Tiramizoo can deliver this basket
+            $data = new stdClass();
+            $data->pickup_postal_code = $this->getConfig()->getConfigParam('oxTiramizoo_shop_postal_code');
+            $data->delivery_postal_code = $sZipCode;
+            $data->items = array();
+
+
+            require_once getShopBasePath() . '/modules/oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php';
+
+            $data->items = oxTiramizooApi::getInstance()->buildItemsData($oBasket);
+
+            $result = oxTiramizooApi::getInstance()->getQuotes($data, false);
+
+            if (!in_array($result['http_status'], array(200, 201))) {
+                
+                // Uncomment to debug
+                // echo '<div>';
+                // echo json_encode($data);
+                // echo json_encode($result);
+                // echo '</div>';
+
+                return $this->_isTiramizooCanShow = 0;
+            }
         }
 
-        if (!count($this->getAvailablePickupHours())) {
-            return false;
-        }
-
-        //check if Tiramizoo can deliver this basket
-        $data = new stdClass();
-        $data->pickup_postal_code = $this->getConfig()->getConfigParam('oxTiramizoo_shop_postal_code');
-        $data->delivery_postal_code = $sZipCode;
-        $data->items = array();
-
-        foreach ($oBasket->getBasketArticles() as $key => $oArticle) 
-        {
-            $item = new stdClass();
-            $item->weight = null;
-            $item->width = null;
-            $item->height = null;
-            $item->length = null;
-
-            $inheritedData = $this->_getArticleInheritData($oArticle);
-
-            //article is disabled return false
-            if ($oArticle->oxarticles__tiramizoo_enable->value == -1) {
-                return false;
-            }
-
-            if ($oArticle->oxarticles__tiramizoo_enable->value == 0) {
-                if (isset($inheritedData['tiramizoo_enable']) && ($inheritedData['tiramizoo_enable'] == -1)) {
-                    return false;
-                }            
-            }
-
-            if ($oArticle->oxarticles__oxweight->value) {
-                $item->weight = $oArticle->oxarticles__oxweight->value;
-            } else {
-                $item->weight = isset($inheritedData['weight']) && $inheritedData['weight'] ? $inheritedData['weight'] : 0;
-            }
-
-            if ($oArticle->oxarticles__oxwidth->value) {
-                $item->width = $oArticle->oxarticles__oxwidth->value * 100;
-            } else {
-                $item->width = isset($inheritedData['width']) && $inheritedData['width'] ? $inheritedData['width'] : 0;
-            }
-
-            if ($oArticle->oxarticles__oxheight->value) {
-                $item->height = $oArticle->oxarticles__oxheight->value * 100;
-            } else {
-                $item->height = isset($inheritedData['height']) && $inheritedData['height'] ? $inheritedData['height'] : 0;
-            }
-
-            if ($oArticle->oxarticles__oxlength->value) {
-                $item->length = $oArticle->oxarticles__oxlength->value * 100;
-            } else {
-                $item->length = isset($inheritedData['length']) && $inheritedData['length'] ? $inheritedData['length'] : 0;
-            }
-
-            $item->quantity = $oBasket->getArtStockInBasket($oArticle->oxarticles__oxid->value);
-
-
-            $item->weight = floatval($item->weight);
-            $item->width = floatval($item->width);
-            $item->height = floatval($item->height);
-            $item->length = floatval($item->length);
-            $item->quantity = floatval($item->quantity);
-
-
-            $data->items[] = $item;
-        }
-
-        require_once getShopBasePath() . '/modules/oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php';
-
-
-        $result = oxTiramizooApi::getInstance()->getQuotes($data, true);
-
-        if (!in_array($result['http_status'], array(200, 201))) {
-            
-            echo '<div>';
-            echo json_encode($data);
-            echo json_encode($result);
-            echo '</div>';
-
-            return false;
-        }
-
-        return true;
+        return $this->_isTiramizooCanShow = 1;
     }
-
-
-    protected function _getArticleInheritData($oArticle)
-    {
-        $oCategory = $oArticle->getCategory();
-
-        $aCheckCategories = $this->getParentsTree($oCategory);
-
-        $oxTiramizooInheritedData = array();
-
-        foreach ($aCheckCategories as $aCategoryData) 
-        {
-            if (isset($aCategoryData['tiramizoo_enable'])) {
-                $oxTiramizooInheritedData['tiramizoo_enable'] = $aCategoryData['tiramizoo_enable'];
-            }
-
-            if ($aCategoryData['tiramizoo_weight']) {
-                $oxTiramizooInheritedData['weight'] = $aCategoryData['tiramizoo_weight'];
-            }
-
-            if ($aCategoryData['tiramizoo_width']) {
-                $oxTiramizooInheritedData['width'] = $aCategoryData['tiramizoo_width'];
-            }
-
-            if ($aCategoryData['tiramizoo_height']) {
-                $oxTiramizooInheritedData['height'] = $aCategoryData['tiramizoo_height'];
-            }
-
-            if ($aCategoryData['tiramizoo_length']) {
-                $oxTiramizooInheritedData['length'] = $aCategoryData['tiramizoo_length'];
-            }                                    
-        }
-
-        return $oxTiramizooInheritedData;
-    }
-
-    public function getParentsTree($oCategory, $returnCategories = array())
-    {
-        $oxTiramizooCategoryData = array();
-        $oxTiramizooCategoryData['oxid'] = $oCategory->oxcategories__oxid->value;
-        $oxTiramizooCategoryData['oxtitle'] = $oCategory->oxcategories__oxtitle->value;
-        $oxTiramizooCategoryData['oxsort'] = $oCategory->oxcategories__oxsort->value;
-        $oxTiramizooCategoryData['tiramizoo_enable'] = $oCategory->oxcategories__tiramizoo_enable->value;
-        $oxTiramizooCategoryData['tiramizoo_weight'] = $oCategory->oxcategories__tiramizoo_weight->value;
-        $oxTiramizooCategoryData['tiramizoo_width'] = $oCategory->oxcategories__tiramizoo_width->value;
-        $oxTiramizooCategoryData['tiramizoo_height'] = $oCategory->oxcategories__tiramizoo_height->value;
-        $oxTiramizooCategoryData['tiramizoo_length'] = $oCategory->oxcategories__tiramizoo_length->value;
-
-        array_unshift($returnCategories, $oxTiramizooCategoryData);
-        if ($parentCategory = $oCategory->getParentCategory()) {
-            $returnCategories = $this->getParentsTree($parentCategory, $returnCategories);
-        }
-
-        return $returnCategories;
-    }
-
 }

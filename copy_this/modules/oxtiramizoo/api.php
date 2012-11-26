@@ -20,7 +20,13 @@
  * @link: http://tiramizoo.com
  */
 
+
+
+$_POST['api_response'] = json_decode(file_get_contents('php://input'));
 $_POST['cl'] = 'oxtiramizoo_webhook';
+
+
+
 
 // executing regular routines ...
 require '../../index.php';
