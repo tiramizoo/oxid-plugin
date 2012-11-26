@@ -34,19 +34,22 @@
                 [{ /if}]
               </div>
           </div>
-          [{if $oView->isTiramizooCurrentShiippingMethod()}]
-          <br />
-          <br />
-          <h3>[{ oxmultilang ident="oxTiramizoo_selectTimeWindowTitle" }]</h3>
 
-              <dl style="margin-top:16px;">
-              [{foreach key=sDeliveryTime from=$oView->getAvailableDeliveryHours() item=sDeliveryWindow}]
-                  <dt>
-                      <input class="selectTiramizooTimeWindow" type="radio" name="sTiramizooTimeWindow" value="[{$sDeliveryTime}]" [{if $oView->getTiramizooTimeWindow() == $sDeliveryTime}]checked="checked"[{/if}] onchange="JavaScript:document.forms.shipping.submit();" />
-                      <label for="sTiramizooTimeWindow"><b>[{$sDeliveryWindow}]</b></label>
-                  </dt>
-              [{/foreach}]
-              </dl>
+          [{if $isTiramizooPaymentView}]
+            [{if $oView->isTiramizooCurrentShiippingMethod()}]
+            <br />
+            <br />
+            <h3>[{ oxmultilang ident="oxTiramizoo_selectTimeWindowTitle" }]</h3>
+
+                <dl style="margin-top:16px;">
+                [{foreach key=sDeliveryTime from=$oView->getAvailableDeliveryHours() item=sDeliveryWindow}]
+                    <dt>
+                        <input class="selectTiramizooTimeWindow" type="radio" name="sTiramizooTimeWindow" value="[{$sDeliveryTime}]" [{if $oView->getTiramizooTimeWindow() == $sDeliveryTime}]checked="checked"[{/if}] onchange="JavaScript:document.forms.shipping.submit();" />
+                        <label for="sTiramizooTimeWindow"><b>[{$sDeliveryWindow}]</b></label>
+                    </dt>
+                [{/foreach}]
+                </dl>
+            [{/if}]
           [{/if}]
         </form>
     </div>

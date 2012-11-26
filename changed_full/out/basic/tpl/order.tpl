@@ -12,9 +12,10 @@
     <div class="errorbox">[{ oxmultilang ident="ORDER_READANDCONFIRMTERMS" }]</div>
 [{/if}]
 
-
-[{ if $oView->isTiramizooError() }]
-    <div class="errorbox">[{$oView->getTiramizooError()}]</div>
+[{ if $isTiramizooOrderView }]
+  [{ if $oView->isTiramizooError() }]
+      <div class="errorbox">[{$oView->getTiramizooError()}]</div>
+  [{/if}]
 [{/if}]
 
 
@@ -482,7 +483,10 @@
                   <input type="hidden" name="fnc" value="">
                   [{assign var="oShipSet" value=$oView->getShipSet() }]
                   [{ $oShipSet->oxdeliveryset__oxtitle->value }]&nbsp;
-                  [{ $oView->getTiramizooTimeWindow()}]
+
+                  [{ if $isTiramizooOrderView }]
+                    [{ $oView->getTiramizooTimeWindow()}]
+                  [{/if}]
 
                   <span class="btn"><input id="test_orderChangeShipping" type="submit" value="[{ oxmultilang ident="ORDER_MODIFY3" }]" class="btn"></span>
               </div>
