@@ -1,32 +1,29 @@
 <?php
 /**
- *    This file is part of OXID eShop Community Edition.
+ * This file is part of the module oxTiramizoo for OXID eShop.
  *
- *    OXID eShop Community Edition is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
+ * The module oxTiramizoo for OXID eShop is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by the Free Software Foundation
+ * either version 3 of the License, or (at your option) any later version.
  *
- *    OXID eShop Community Edition is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
+ * The module oxTiramizoo for OXID eShop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+ * or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  
+ * See the GNU General Public License for more details <http://www.gnu.org/licenses/>
  *
- *    You should have received a copy of the GNU General Public License
- *    along with OXID eShop Community Edition.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @link      http://www.oxid-esales.com
- * @package   admin
- * @copyright (C) OXID eSales AG 2003-2010
- * @version OXID eShop CE
- * @version   SVN: $Id: category_text.php 25466 2010-02-01 14:12:07Z alfonsas $
+ * @copyright: Tiramizoo GmbH
+ * @author: Krzysztof Kowalik <kowalikus@gmail.com>
+ * @package: oxTiramizoo
+ * @license: http://www.gnu.org/licenses/
+ * @version: 1.0.0
+ * @link: http://tiramizoo.com
  */
 
 /**
- * Admin article categories text manager.
- * Category text/description manager, enables editing of text.
- * Admin Menu: Manage Products -> Categories -> Text.
- * @package admin
+ * Tiramizoo category tab
+ *
+ * @package: oxTiramizoo
  */
 class oxTiramizoo_Category_Tab extends oxAdminDetails
 {
