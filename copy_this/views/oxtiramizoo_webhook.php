@@ -6,10 +6,9 @@ class oxTiramizoo_Webhook extends oxUBase
         $aApiResponse = $this->getConfig()->getParameter('api_response');
 
         $sql = "UPDATE oxorder 
-                    SET TIRAMIZOO_WEBHOOK_RESPONSE = '" . serialize($aApiResponse) . "'
+                    SET TIRAMIZOO_WEBHOOK_RESPONSE = '" . base64_encode(serialize($aApiResponse)) . "'
                     WHERE TIRAMIZOO_EXTERNAL_ID = '" . $aApiResponse->external_id . "';";
 
-        mail('kowalikus@gmail.com', 'test', $sql);
         oxDb::getDb()->Execute($sql);
 
         header("HTTP/1.1 200 OK");
