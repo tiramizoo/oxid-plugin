@@ -2,9 +2,11 @@ oxid-plugin-dev
 ===============
 
 OXID eSales module for integration with [Tiramizoo API](http://dev.tiramizoo.com/).
-Module works with following OXID eSales versions: 4.3.2+, 4.4.x, 4.5.x
+Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x will be available soon
 
 # Installation #
+
+*		Switch to 4.3.2 branch, download code
 
 *   Copy all files from *copy_this* folder to OXID eSales installation path. This step does not overwrite any files.
 
