@@ -1,6 +1,23 @@
 <?php
 /**
- * Tiramizoo block comment
+ * This file is part of the module oxTiramizoo for OXID eShop.
+ *
+ * The module oxTiramizoo for OXID eShop is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by the Free Software Foundation
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * The module oxTiramizoo for OXID eShop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+ * or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  
+ * See the GNU General Public License for more details <http://www.gnu.org/licenses/>
+ *
+ * @copyright: Tiramizoo GmbH
+ * @author: Krzysztof Kowalik <kowalikus@gmail.com>
+ * @package: oxTiramizoo
+ * @license: http://www.gnu.org/licenses/
+ * @version: 1.0.0
+ * @link: http://tiramizoo.com
  */
 
 $sLangName  = "English";
@@ -15,7 +32,8 @@ $aLang = array(
 //delivery hours
 'oxTiramizoo_Today'                                     => 'Today',
 'oxTiramizoo_Tomorrow'                                  => 'Tomorrow',
-'oxTiramizoo_selectTimeWindowTitle'                     => 'Select when the order will be delivered'
+'oxTiramizoo_selectTimeWindowTitle'                     => 'Select when the order will be delivered',
+'oxTiramizoo_post_order_error'                          => 'Tiramizoo couldn\'t proccess this order, try again later or change your shipping method'
 );
 
 

@@ -27,8 +27,8 @@ $aLang = array(
 'oxTiramizoo_settings_api_url_label'                    => 'Tiramizoo URL',
 'oxTiramizoo_settings_api_url_help'                     => 'Production version probably https://api.tiramizoo.com/v1, testing version https://api-sandbox.tiramizoo.com/v1',
 
-'oxTiramizoo_settings_api_key_label'                    => 'Tiramizoo API token',
-'oxTiramizoo_settings_api_key_help'                     => 'Can be obtained via your user profile',
+'oxTiramizoo_settings_api_token_label'                  => 'Tiramizoo API token',
+'oxTiramizoo_settings_api_token_help'                   => 'Can be obtained via your user profile',
 
 'oxTiramizoo_settings_shop_url_label'                   => 'Shop URL',
 'oxTiramizoo_settings_shop_url_help'                    => 'The URL of your web shop',
@@ -60,6 +60,9 @@ $aLang = array(
 'oxTiramizoo_settings_pickup_hour_1_label'              => '1st pick up hour',
 'oxTiramizoo_settings_pickup_hour_2_label'              => '2nd pick up hour',
 'oxTiramizoo_settings_pickup_hour_3_label'              => '3rd pick up hour',
+'oxTiramizoo_settings_pickup_hour_4_label'              => '4th pick up hour',
+'oxTiramizoo_settings_pickup_hour_5_label'              => '5th pick up hour',
+'oxTiramizoo_settings_pickup_hour_6_label'              => '6th pick up hour',
 'oxTiramizoo_settings_pickup_hours_help'                => 'You can select 1-3 pickup hours',
 
 'oxTiramizoo_pickup_hour_not_specified'                 => 'Not specified',
@@ -68,6 +71,11 @@ $aLang = array(
 
 'oxTiramizoo_settings_order_to_pickup_offset_label'     => 'Order To Pickup Time offset',
 'oxTiramizoo_settings_order_to_pickup_offset_help'      => 'Preparation time for goods from ordering to pickup',
+
+'oxTiramizoo_is_required'                               => 'is required',
+'oxTiramizoo_pickup_hours_required_error'               => 'You must specify at least one pick up hour',
+'oxTiramizoo_payments_required_error'                   => 'You must assign at least one payment method to Tiramizoo shipping',
+'oxTiramizoo_enable_fix_errors_header'                  => 'Fix these errors, to enable tiramizoo',
 
 // Article administration -> Tiramizoo Tab
 
@@ -105,6 +113,12 @@ $aLang = array(
 
 'oxTiramizoo_order_tab_response_label'                  => 'Tiramizoo API response',
 'oxTiramizoo_order_tab_response_help'                   => 'Tiramizoo API response data',
+
+'oxTiramizoo_order_tab_webhook_response_label'          => 'Tiramizoo webhook response',
+'oxTiramizoo_order_tab_webhook_response_help'           => 'Tiramizoo webhook response data',
+
+
+
 
 );
 

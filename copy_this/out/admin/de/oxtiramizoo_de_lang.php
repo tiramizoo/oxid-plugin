@@ -15,10 +15,9 @@ $aLang = array(
 // Admin Menu
 'oxTiramizoo_admin_menu_label'                          => 'Tiramizoo',
 'oxTiramizoo_settings'                                  => 'Einstellungen',
-
-'oxTiramizoo_order_submenu_label'                       => 'Tiramizoo',
-'oxTiramizoo_article_submenu_label'                     => 'Tiramizoo',
-'oxTiramizoo_category_submenu_label'                    => 'Tiramizoo',
+'oxtiramizoo_category_tab_label'                        => 'Tiramizoo',
+'oxtiramizoo_article_tab_label'                         => 'Tiramizoo',
+'oxtiramizoo_order_tab_label'                           => 'Tiramizoo',
 
 //Admin settings
 'oxTiramizoo_settings_save_label'                       => 'Einstellungen speichern',
@@ -28,8 +27,8 @@ $aLang = array(
 'oxTiramizoo_settings_api_url_label'                    => 'Tiramizoo URL',
 'oxTiramizoo_settings_api_url_help'                     => 'Produktivsystem meistens https://api.tiramizoo.com/v1, Testsystem https://api-sandbox.tiramizoo.com/v1',
 
-'oxTiramizoo_settings_api_key_label'                    => 'Tiramizoo API token',
-'oxTiramizoo_settings_api_key_help'                     => 'Zu finden in Ihrem Nutzerprofil',
+'oxTiramizoo_settings_api_token_label'                  => 'Tiramizoo API token',
+'oxTiramizoo_settings_api_token_help'                   => 'Zu finden in Ihrem Nutzerprofil',
 
 'oxTiramizoo_settings_shop_url_label'                   => 'Tiramizoo Shop URL',
 'oxTiramizoo_settings_shop_url_help'                    => 'URL Ihres Webshops',
@@ -61,6 +60,9 @@ $aLang = array(
 'oxTiramizoo_settings_pickup_hour_1_label'              => '1. Abholzeitpunkt',
 'oxTiramizoo_settings_pickup_hour_2_label'              => '2. Abholzeitpunkt',
 'oxTiramizoo_settings_pickup_hour_3_label'              => '3. Abholzeitpunkt',
+'oxTiramizoo_settings_pickup_hour_4_label'              => '4. Abholzeitpunkt',
+'oxTiramizoo_settings_pickup_hour_5_label'              => '5. Abholzeitpunkt',
+'oxTiramizoo_settings_pickup_hour_6_label'              => '6. Abholzeitpunkt',
 'oxTiramizoo_settings_pickup_hours_help'                => 'Sie können bis zu 3 Abholzeitpunkten wählen',
 
 'oxTiramizoo_pickup_hour_not_specified'                 => 'Nicht angegeben',
@@ -70,10 +72,51 @@ $aLang = array(
 'oxTiramizoo_settings_order_to_pickup_offset_label'     => 'Packzeit',
 'oxTiramizoo_settings_order_to_pickup_offset_help'      => 'Wieviel Zeit benötigen Sie zwischen Bestellung und Abholung zum Bereitstellen der Ware?',
 
-'oxtiramizoo_category_tab_label'                        => 'Tiramizoo',
-'oxtiramizoo_article_tab_label'                         => 'Tiramizoo',
-'oxtiramizoo_order_tab_label'                           => 'Tiramizoo',
+'oxTiramizoo_is_required'                               => 'erforderlich ist',
+'oxTiramizoo_pickup_hours_required_error'               => 'Sie müssen mindestens ein Abholzeitpunkt',
+'oxTiramizoo_payments_required_error'                   => 'Sie müssen mindestens ein Zahlungsmethode Tiramizoo Versandkosten zuweisen',
+'oxTiramizoo_enable_fix_errors_header'                  => 'Fix diese Fehler, um tiramizoo ermöglichen',
 
+// Article administration -> Tiramizoo Tab
+
+'oxTiramizoo_article_tab_enable_tiramizoo_label'        => 'Enable tiramizoo',
+'oxTiramizoo_article_tab_enable_tiramizoo_help'         => 'If <strong>\'Yes\'</strong> You have to specify weight and dimensions per product or category',
+'oxTiramizoo_article_tab_enable_inherit_value'          => 'Inherit from parent settings',
+'oxTiramizoo_article_tab_enable_yes_value'              => 'Yes',
+'oxTiramizoo_article_tab_enable_no_value'               => 'No',
+
+// Category administration -> Tiramizoo Tab
+
+'oxTiramizoo_category_tab_enable_tiramizoo_label'       => 'Enable tiramizoo',
+'oxTiramizoo_category_tab_enable_tiramizoo_help'        => 'If <strong>\'Yes\'</strong> You have to specify weight and dimensions per product or category',
+'oxTiramizoo_category_tab_enable_inherit_value'         => 'Inherit from parent settings',
+'oxTiramizoo_category_tab_enable_yes_value'             => 'Yes',
+'oxTiramizoo_category_tab_enable_no_value'              => 'No',
+
+'oxTiramizoo_category_tab_weight_label'                 => 'Weight',
+'oxTiramizoo_category_tab_weight_unit'                  => 'kg',
+'oxTiramizoo_category_tab_weight_help'                  => 'This weight will be assigned to all products in this category without weight specified',
+
+'oxTiramizoo_category_tab_dimensions_label'             => 'Dimensions',
+'oxTiramizoo_category_tab_dimensions_unit'              => 'cm',
+'oxTiramizoo_category_tab_dimensions_help'              => 'L-length, W - width, H - height. These dimensions will be assigned to all products in this category without dimensions specified',
+
+// Order administration -> Tiramizoo Tab
+// 
+'oxTiramizoo_order_tab_status_label'                    => 'Tiramizoo status',
+'oxTiramizoo_order_tab_status_help'                     => 'Current Tiramizoo status for this order',
+
+'oxTiramizoo_order_tab_tracking_url_label'              => 'Tiramizoo tracking url',
+'oxTiramizoo_order_tab_tracking_url_help'               => 'Url to Tiramizoo website where you can check the status for this order',
+
+'oxTiramizoo_order_tab_external_id_label'               => 'Tiramizoo external_id',
+'oxTiramizoo_order_tab_external_id_help'                => 'Property used for Tiramizoo API Webhooks',
+
+'oxTiramizoo_order_tab_response_label'                  => 'Tiramizoo API response',
+'oxTiramizoo_order_tab_response_help'                   => 'Tiramizoo API response data',
+
+'oxTiramizoo_order_tab_webhook_response_label'          => 'Tiramizoo webhook response',
+'oxTiramizoo_order_tab_webhook_response_help'           => 'Tiramizoo webhook response data',
 
 
 );
