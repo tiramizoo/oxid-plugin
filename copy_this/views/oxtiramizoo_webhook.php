@@ -5,14 +5,20 @@ class oxTiramizoo_Webhook extends oxUBase
     {
         $aApiResponse = $this->getConfig()->getParameter('api_response');
 
-        $sql = "UPDATE oxorder 
-                    SET TIRAMIZOO_WEBHOOK_RESPONSE = '" . base64_encode(serialize($aApiResponse)) . "'
-                    WHERE TIRAMIZOO_EXTERNAL_ID = '" . $aApiResponse->external_id . "';";
+        if ($aApiResponse && isset($aApiResponse->external_id)) {
+            $sql = "UPDATE oxorder 
+                        SET TIRAMIZOO_WEBHOOK_RESPONSE = '" . base64_encode(serialize($aApiResponse)) . "'
+                        WHERE TIRAMIZOO_EXTERNAL_ID = '" . $aApiResponse->external_id . "';";
 
-        oxDb::getDb()->Execute($sql);
+            oxDb::getDb()->Execute($sql);
 
-        header("HTTP/1.1 200 OK");
-        die('OK');
+            header("HTTP/1.1 200 OK");
+            die('OK');
+        } else {
+            header("HTTP/1.1 500 Internal Server Error");
+            die('FALSE');
+        }
+
         return;
     }
 }
