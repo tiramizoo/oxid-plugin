@@ -79,38 +79,38 @@ $aLang = array(
 
 // Article administration -> Tiramizoo Tab
 
-'oxTiramizoo_article_tab_enable_tiramizoo_label'        => 'Enable tiramizoo',
-'oxTiramizoo_article_tab_enable_tiramizoo_help'         => 'If <strong>\'Yes\'</strong> You have to specify weight and dimensions per product or category',
-'oxTiramizoo_article_tab_enable_inherit_value'          => 'Inherit from parent settings',
-'oxTiramizoo_article_tab_enable_yes_value'              => 'Yes',
-'oxTiramizoo_article_tab_enable_no_value'               => 'No',
+'oxTiramizoo_article_tab_enable_tiramizoo_label'        => 'Tiramizoo aktivieren',
+'oxTiramizoo_article_tab_enable_tiramizoo_help'         => 'Falls aktiviert, müssen Sie Gewicht und Abmessungen per Produkt oder Kategorie angeben',
+'oxTiramizoo_article_tab_enable_inherit_value'          => 'Aus Kategorie übernehmen',
+'oxTiramizoo_article_tab_enable_yes_value'              => 'Ja',
+'oxTiramizoo_article_tab_enable_no_value'               => 'Nein',
 
 // Category administration -> Tiramizoo Tab
 
-'oxTiramizoo_category_tab_enable_tiramizoo_label'       => 'Enable tiramizoo',
-'oxTiramizoo_category_tab_enable_tiramizoo_help'        => 'If <strong>\'Yes\'</strong> You have to specify weight and dimensions per product or category',
-'oxTiramizoo_category_tab_enable_inherit_value'         => 'Inherit from parent settings',
-'oxTiramizoo_category_tab_enable_yes_value'             => 'Yes',
-'oxTiramizoo_category_tab_enable_no_value'              => 'No',
+'oxTiramizoo_category_tab_enable_tiramizoo_label'       => 'Tiramizoo aktivieren',
+'oxTiramizoo_category_tab_enable_tiramizoo_help'        => 'Falls aktiviert, müssen Sie Gewicht und Abmessungen per Produkt oder Kategorie angeben',
+'oxTiramizoo_category_tab_enable_inherit_value'         => 'Aus übergeordneter Kategorie übernehmen',
+'oxTiramizoo_category_tab_enable_yes_value'             => 'Ja',
+'oxTiramizoo_category_tab_enable_no_value'              => 'Nein',
 
-'oxTiramizoo_category_tab_weight_label'                 => 'Weight',
+'oxTiramizoo_category_tab_weight_label'                 => 'Gewicht',
 'oxTiramizoo_category_tab_weight_unit'                  => 'kg',
-'oxTiramizoo_category_tab_weight_help'                  => 'This weight will be assigned to all products in this category without weight specified',
+'oxTiramizoo_category_tab_weight_help'                  => 'Dieses Gewicht wird allen Produkten dieser Kategorie zugeornet, bei denen keines angegeben wurde',
 
-'oxTiramizoo_category_tab_dimensions_label'             => 'Dimensions',
+'oxTiramizoo_category_tab_dimensions_label'             => 'Abmessungen',
 'oxTiramizoo_category_tab_dimensions_unit'              => 'cm',
-'oxTiramizoo_category_tab_dimensions_help'              => 'L-length, W - width, H - height. These dimensions will be assigned to all products in this category without dimensions specified',
+'oxTiramizoo_category_tab_dimensions_help'              => 'L - Länge, W - Breite, H - Höhe. Diese Abmessungen werden allen Produkten dieser Kategorie zugeordnet, bei denen keine angegeben wurden',
 
 // Order administration -> Tiramizoo Tab
 // 
-'oxTiramizoo_order_tab_status_label'                    => 'Tiramizoo status',
-'oxTiramizoo_order_tab_status_help'                     => 'Current Tiramizoo status for this order',
+'oxTiramizoo_order_tab_status_label'                    => 'Tiramizoo Auslieferstatus',
+'oxTiramizoo_order_tab_status_help'                     => 'Aktueller Lieferstatus der Bestellung',
 
 'oxTiramizoo_order_tab_tracking_url_label'              => 'Tiramizoo tracking url',
-'oxTiramizoo_order_tab_tracking_url_help'               => 'Url to Tiramizoo website where you can check the status for this order',
+'oxTiramizoo_order_tab_tracking_url_help'               => 'Link auf Tiramizoo.com um den Lieferstatus pro Bestellung einzusehen ',
 
 'oxTiramizoo_order_tab_external_id_label'               => 'Tiramizoo external_id',
-'oxTiramizoo_order_tab_external_id_help'                => 'Property used for Tiramizoo API Webhooks',
+'oxTiramizoo_order_tab_external_id_help'                => 'Eigenschaft, die für Tiramizoo API Webhooks verwendet wird',
 
 'oxTiramizoo_order_tab_response_label'                  => 'Tiramizoo API response',
 'oxTiramizoo_order_tab_response_help'                   => 'Tiramizoo API response data',
