@@ -19,7 +19,7 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 
 *   Change templates in *changed_full* folder. If you use "basic" template and these files had never been changed, You can overwrite them.
 
-    ### file: out/basic/tpl/email_order_cust_html.tpl ###
+    **file: out/basic/tpl/email_order_cust_html.tpl**
 
     ```
     @@ -354,7 +354,14 @@
@@ -41,7 +41,7 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 
     ```
 
-    ### file: out/basic/tpl/email_order_cust_plain.tpl ###
+    **file: out/basic/tpl/email_order_cust_plain.tpl**
 
     ```
     @@ -119,6 +119,9 @@
@@ -57,7 +57,7 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 
     ```
 
-    ### file: out/basic/tpl/payment.tpl ###
+    **file: out/basic/tpl/payment.tpl**
 
     ```
     @@ -34,9 +34,33 @@
@@ -83,14 +83,6 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
     +          [{/if}]
              </form>
          </div>
-     
-    +
-    +
-    +
-    +
-    +
-    +
-    +
        [{/if}]
      
        [{assign var="iPayError" value=$oView->getPaymentError() }]
@@ -98,7 +90,7 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 
     ```
 
-    ### file: out/basic/tpl/order.tpl ###
+    **file: out/basic/tpl/order.tpl**
 
 
     ```
@@ -139,13 +131,9 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 *   Configure the module
     -   At the **Tiramizoo -> Settings**
 
-        Api Key
+        Tiramizoo URL - Production version [https://api.tiramizoo.com/v1](https://api.tiramizoo.com/v1), testing version [https://sandbox.tiramizoo.com/api/v1](https://sandbox.tiramizoo.com/api/v1)
 
-        Shop informations
-
-        Time window delivery
-
-        Time required by shop to prepare package
+        Tiramizoo API token - Can be obtained via your user profile, Production version [https://www.tiramizoo.com/](https://www.tiramizoo.com/), testing version [https://sandbox.tiramizoo.com/](https://sandbox.tiramizoo.com/)
 
     -   At the **Administer Products -> Categories -> Category selection -> Tiramizoo tab**
 
