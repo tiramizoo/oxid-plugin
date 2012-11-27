@@ -16,7 +16,7 @@
  * @author: Krzysztof Kowalik <kowalikus@gmail.com>
  * @package: oxTiramizoo
  * @license: http://www.gnu.org/licenses/
- * @version: 1.0.0
+ * @version: 1.0.1
  * @link: http://tiramizoo.com
  */
 
@@ -30,7 +30,7 @@ class oxTiramizoo_setup extends Shop_Config
     /**
      * Current version of oxTiramizoo module
      */
-    const VERSION = '1.0.0';
+    const VERSION = '1.0.1';
 
     /**
      * Error message
@@ -180,6 +180,35 @@ class oxTiramizoo_setup extends Shop_Config
         $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
         $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 0);
         $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_version', '1.0.0');
+    }
+
+    /**
+     * Update database to version 1.0.1 
+     */
+    public function migration_1_0_1()
+    {
+        if ($this->columnExistsInTable('TIRAMIZOO_STATUS', 'oxorder')) {
+            $sql = "ALTER TABLE oxorder MODIFY TIRAMIZOO_STATUS VARCHAR(255);";
+            $result = $this->ExecuteSQL($sql);
+            $sql = "UPDATE oxorder 
+                        SET TIRAMIZOO_STATUS = 'processing' 
+                        WHERE TIRAMIZOO_STATUS IN (0, 1);";
+            $result = $this->ExecuteSQL($sql);
+        }
+
+        if ($this->columnExistsInTable('TIRAMIZOO_ENABLE', 'oxcategories')) {
+            $sql = "ALTER TABLE oxcategories MODIFY TIRAMIZOO_ENABLE INT(1) NOT NULL DEFAULT 1;";
+            $result = $this->ExecuteSQL($sql);
+            $sql = "UPDATE oxcategories 
+                        SET TIRAMIZOO_ENABLE = 1 
+                        WHERE TIRAMIZOO_ENABLE = 0;";
+            $result = $this->ExecuteSQL($sql);
+
+        }
+
+        $oxConfig = $this->getConfig();
+
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_version', '1.0.1');
     }
 
     /**
