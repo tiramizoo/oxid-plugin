@@ -12,6 +12,13 @@ class oxTiramizoo_Webhook extends oxUBase
 
             oxDb::getDb()->Execute($sql);
 
+            $sql = "UPDATE oxorder 
+                        SET TIRAMIZOO_STATUS = '" . $aApiResponse->state . "'
+                        WHERE TIRAMIZOO_EXTERNAL_ID = '" . $aApiResponse->external_id . "';";
+
+            oxDb::getDb()->Execute($sql);
+
+
             header("HTTP/1.1 200 OK");
             die('OK');
         } else {

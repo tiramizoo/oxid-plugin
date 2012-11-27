@@ -232,7 +232,7 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
                     }
 
                     $oOrder->oxorder__tiramizoo_params = new oxField(base64_encode(serialize($tiramizooResult)), oxField::T_RAW);
-                    $oOrder->oxorder__tiramizoo_status = new oxField(1, oxField::T_RAW);
+                    $oOrder->oxorder__tiramizoo_status = new oxField($tiramizooResult['response']->state, oxField::T_RAW);
                     $oOrder->oxorder__tiramizoo_external_id = new oxField(oxSession::getVar( 'sTiramizooExternalId' ), oxField::T_RAW);
                     $oOrder->oxorder__tiramizoo_tracking_url = new oxField($tiramizooResult['response']->tracking_url . '?locale=' . oxLang::getInstance()->getLanguageAbbr(oxLang::getInstance()->getBaseLanguage()), oxField::T_RAW);
                     oxSession::setVar('tiramizooOrderResponse', null);
