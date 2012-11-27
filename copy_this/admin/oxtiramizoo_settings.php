@@ -63,6 +63,8 @@ class oxTiramizoo_settings extends Shop_Config
         oxSession::setVar('oxTiramizoo_settings_errors', null);
     }
 
+    $this->_aViewData['version'] = oxTiramizoo_setup::VERSION;
+
     return 'oxTiramizoo_settings.tpl';
   }
   

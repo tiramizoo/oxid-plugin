@@ -8,7 +8,7 @@
 
 [{cycle assign="_clear_" values=",2" }]
  
-<h2>[{ oxmultilang ident="oxTiramizoo_settings_title" }]</h2>
+<h2>[{ oxmultilang ident="oxTiramizoo_settings_title" }] <span style="font-size: 9px;">version [{$version}]</span></h2>
 
 <style type="text/css">
   .editinput {width:240px;}
