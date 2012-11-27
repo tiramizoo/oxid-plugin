@@ -83,8 +83,9 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
     +          [{/if}]
              </form>
          </div>
+
        [{/if}]
-     
+
        [{assign var="iPayError" value=$oView->getPaymentError() }]
 
 
@@ -97,7 +98,7 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
     @@ -12,6 +12,13 @@
          <div class="errorbox">[{ oxmultilang ident="ORDER_READANDCONFIRMTERMS" }]</div>
      [{/if}]
-     
+
     +[{ if $isTiramizooOrderView }]
     +  [{ if $oView->isTiramizooError() }]
     +      <div class="errorbox">[{$oView->getTiramizooError()}]</div>
@@ -131,13 +132,19 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 *   Configure the module
     -   At the **Tiramizoo -> Settings**
 
+        To finalize configuration form has to be filled in with proper data and tiramizoo service needs to be enabled. At least one pickup time and one payment method has to be selected. **Warning tiramizoo service will not work with "Pay on delivery" payment option. Such delivery will not be processed.
+
         Tiramizoo URL - Production version [https://api.tiramizoo.com/v1](https://api.tiramizoo.com/v1), testing version [https://sandbox.tiramizoo.com/api/v1](https://sandbox.tiramizoo.com/api/v1)
 
         Tiramizoo API token - Can be obtained via your user profile, Production version [https://www.tiramizoo.com/](https://www.tiramizoo.com/), testing version [https://sandbox.tiramizoo.com/](https://sandbox.tiramizoo.com/)
 
+        Shop informations
+
+        Time window delivery
+
     -   At the **Administer Products -> Categories -> Category selection -> Tiramizoo tab**
 
-        You can dynamically assign stanard dimensions for all products inside selected category
+        Category and all parent categories need to have Tiramizoo service enabled to let containing products to be delivered by Tiramizoo service. Also dimensions form enables to specify default product dimentions which will apply to all products which have the category selected as a main category and will not have dimentions specified explicitly.
 
     -   At the **Administer Products -> Products -> Article selection -> Tiramizoo tab**
 
