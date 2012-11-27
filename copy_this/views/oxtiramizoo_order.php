@@ -126,8 +126,14 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
 
         $data->delivery->country_code = strtolower($oCountry->oxcountry__oxisoalpha2->value);
 
-        //@todo: What description?
-        $data->description = "oxTiramizoo articles";
+        $itemNames = array();
+        foreach ($oBasket->getBasketArticles() as $key => $oArticle) 
+        {
+            $itemNames[] = $oArticle->oxarticles__oxtitle->value . ' (x' . $oBasket->getArtStockInBasket($oArticle->oxarticles__oxid->value) . ')';
+        }
+
+        $data->description = substr(implode($itemNames, ', '), 0, 255);
+        
         $data->external_id = $this->_external_id;
         $data->web_hook_url = trim($oxConfig->getShopConfVar('oxTiramizoo_shop_url'), '/') . '/modules/oxtiramizoo/api.php';
 
