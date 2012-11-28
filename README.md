@@ -4,6 +4,31 @@ oxid-plugin
 OXID eSales module for integration with [Tiramizoo API](http://dev.tiramizoo.com/).
 Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x will be available soon
 
+# Checkout flow #
+
+*   User adds items to basket (All items added by user have to have tiramizoo service enabled, directly or by category)
+
+*   User go to checkout (Step 1)
+
+*   User specify delivery address (Step 2)
+
+*   Between Step 2 and Step 3 plugin sends request to tiramizoo with items dimentions and address data to verify if package can be delivered with Tiramizoo. In case package is too big, or delivery address is outside service area tiramizoo will not appear as delivery option
+
+*   User selects tiramizoo as a delivery option (Step 3)
+
+*   User selects delivery time window - when he wants courier to deliver (Step 3)
+
+*   User selects payment method (Step 3) (please remember that pay on delivery should not be available for tiramizoo service)
+
+*   User selects payment option and go to step 4 (Step 3)
+
+*   User verifies and confirms (corrects if needed) order by going to step 5
+
+*   Between Step 4 and Step 5 plugin sends request to tiramizoo to create order
+
+*   User sees thank you page and receives email with tracking url
+
+
 # Installation #
 
 *	Switch to 4.3.2 branch, download code
