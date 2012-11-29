@@ -1,24 +1,4 @@
 <?php
-/**
- * This file is part of the module oxTiramizoo for OXID eShop.
- *
- * The module oxTiramizoo for OXID eShop is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by the Free Software Foundation
- * either version 3 of the License, or (at your option) any later version.
- *
- * The module oxTiramizoo for OXID eShop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. 
- *  
- * See the GNU General Public License for more details <http://www.gnu.org/licenses/>
- *
- * @copyright: Tiramizoo GmbH
- * @author: Krzysztof Kowalik <kowalikus@gmail.com>
- * @package: oxTiramizoo
- * @license: http://www.gnu.org/licenses/
- * @version: 1.0.1
- * @link: http://tiramizoo.com
- */
 
 /**
  * This class is used to install or update oxTiramizoo module
@@ -30,13 +10,13 @@ class oxTiramizoo_setup extends Shop_Config
     /**
      * Current version of oxTiramizoo module
      */
-    const VERSION = '1.0.1';
+    const VERSION = '0.8.1';
 
     /**
      * Error message
      * @var string
      */
-    protected $_messageInfo = '';
+    protected $_migrationErrors = array();
 
     /**
      * Install or update module if needed
@@ -60,12 +40,12 @@ class oxTiramizoo_setup extends Shop_Config
                 
                 $this->runMigrations(oxTiramizoo_setup::VERSION);
                 oxUtils::getInstance()->rebuildCache();
-
             }
 
-        } catch(Exception $e) {
-            echo $this->_messageInfo;
-            print_r($e);
+        } catch(oxException $e) {
+            $errorMessage = $e->getMessage . "<ul><li>" . implode("</li><li>", $this->_migrationErrors) . "</li></ul>";
+            echo $errorMessage;
+            exit;
         }
     }
 
@@ -98,15 +78,34 @@ class oxTiramizoo_setup extends Shop_Config
             if (version_compare($methodVersion, $currentInstalledVersion) > 0) {
                 if (version_compare($methodVersion, oxTiramizoo_setup::VERSION) <= 0) {
                     call_user_func_array(array($this, $migrationMethod), array());
+
+                    if ($this->stopMigrationsIfErrors($methodVersion)) {
+                        throw new oxException('You need to manually run this sql statements to update database to version: ' . $methodVersion);
+                    }
+
+                    $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_version', $methodVersion);                    
                 }
             }
         }
     }
 
+    public function stopMigrationsIfErrors($migrationVersion)
+    {
+        $oxConfig = $this->getConfig();
+        if (count($this->_migrationErrors)) {
+            //disable tiramizoo if db errors
+            $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
+            return true;
+        } else {
+            $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_update_errors', '');
+            return false;
+        }
+    }
+
     /**
-     * Update database to version 1.0.0 
+     * Update database to version 0.8.0 
      */
-    public function migration_1_0_0()
+    public function migration_0_8_0()
     {
         $this->addColumnToTable('oxorder', 'TIRAMIZOO_TRACKING_URL', 'VARCHAR(255) NOT NULL');
         $this->addColumnToTable('oxorder', 'TIRAMIZOO_STATUS', 'TINYINT NOT NULL');
@@ -120,12 +119,12 @@ class oxTiramizoo_setup extends Shop_Config
         $this->addColumnToTable('oxcategories', 'TIRAMIZOO_LENGTH', 'FLOAT NOT NULL DEFAULT 0');
         $this->addColumnToTable('oxcategories', 'TIRAMIZOO_WEIGHT', 'FLOAT NOT NULL DEFAULT 0');
 
-        $this->ExecuteSQL("INSERT IGNORE INTO `oxdel2delset` SET
+        $this->executeSQL("INSERT IGNORE INTO `oxdel2delset` SET
                             OXID = MD5(CONCAT('Tiramizoo', 'Tiramizoo')),
                             OXDELID = 'Tiramizoo',
                             OXDELSETID = 'Tiramizoo';");
 
-        $this->ExecuteSQL("INSERT IGNORE INTO `oxdelivery` SET
+        $this->executeSQL("INSERT IGNORE INTO `oxdelivery` SET
                             OXID = 'Tiramizoo',
                             OXSHOPID = 'oxbaseshop',
                             OXACTIVE = 0,
@@ -144,7 +143,7 @@ class oxTiramizoo_setup extends Shop_Config
                             OXSORT = 1,
                             OXFINALIZE = 1;");
 
-        $this->ExecuteSQL("INSERT IGNORE INTO `oxdeliveryset` SET
+        $this->executeSQL("INSERT IGNORE INTO `oxdeliveryset` SET
                             OXID = 'Tiramizoo',
                             OXSHOPID = 'oxbaseshop',
                             OXACTIVE = 0,
@@ -155,6 +154,7 @@ class oxTiramizoo_setup extends Shop_Config
                             OXTITLE_2 = 'Tiramizoo',
                             OXTITLE_3 = 'Tiramizoo',
                             OXPOS = 1;");
+
 
         $oxConfig = $this->getConfig();
 
@@ -179,49 +179,44 @@ class oxTiramizoo_setup extends Shop_Config
         $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_price', "7.90");
         $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
         $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 0);
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_version', '1.0.0');
     }
 
     /**
-     * Update database to version 1.0.1 
+     * Update database to version 0.8.1
      */
-    public function migration_1_0_1()
+    public function migration_0_8_1()
     {
         if ($this->columnExistsInTable('TIRAMIZOO_STATUS', 'oxorder')) {
             $sql = "ALTER TABLE oxorder MODIFY TIRAMIZOO_STATUS VARCHAR(255);";
-            $result = $this->ExecuteSQL($sql);
+            $result = $this->executeSQL($sql);
             $sql = "UPDATE oxorder 
                         SET TIRAMIZOO_STATUS = 'processing' 
                         WHERE TIRAMIZOO_STATUS IN (0, 1);";
-            $result = $this->ExecuteSQL($sql);
+            $result = $this->executeSQL($sql);
         }
 
         if ($this->columnExistsInTable('TIRAMIZOO_ENABLE', 'oxcategories')) {
             $sql = "ALTER TABLE oxcategories MODIFY TIRAMIZOO_ENABLE INT(1) NOT NULL DEFAULT 1;";
-            $result = $this->ExecuteSQL($sql);
+            $result = $this->executeSQL($sql);
             $sql = "UPDATE oxcategories 
                         SET TIRAMIZOO_ENABLE = 1 
                         WHERE TIRAMIZOO_ENABLE = 0;";
-            $result = $this->ExecuteSQL($sql);
+            $result = $this->executeSQL($sql);
 
         }
-
-        $oxConfig = $this->getConfig();
-
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_version', '1.0.1');
     }
 
     /**
-     * Executesql query
+     * Execute sql query
      * 
      * @param string $sql SQL query to execute
      * @return: SQL query result
      */
-    protected function ExecuteSQL($sql)
+    protected function executeSQL($sql)
     {
         $result = oxDb::getDb()->Execute($sql);
         if ($result === false) {
-            $this->_messageInfo .= $sql . ";\n";
+            $this->_migrationErrors[] = $sql;
         }
         return $result;
     }
@@ -237,7 +232,7 @@ class oxTiramizoo_setup extends Shop_Config
     {
         if (!$this->columnExistsInTable($columnName, $tableName)) {
             $sql = "ALTER TABLE " . $tableName . " ADD " . $columnName . " " . $columnData . ";";
-            $result = $this->ExecuteSQL($sql);
+            $result = $this->executeSQL($sql);
         }
     }
 
@@ -251,7 +246,7 @@ class oxTiramizoo_setup extends Shop_Config
     protected function columnExistsInTable($columnName, $tableName)
     {
         $sql = "SHOW COLUMNS FROM " . $tableName . " LIKE '" . $columnName . "'";
-        $result = $this->ExecuteSQL($sql);
+        $result = oxDb::getDb()->Execute($sql);
 
         return $result->RecordCount();
     }

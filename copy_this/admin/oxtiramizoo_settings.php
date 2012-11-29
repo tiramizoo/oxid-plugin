@@ -1,24 +1,4 @@
 <?php
-/**
- * This file is part of the module oxTiramizoo for OXID eShop.
- *
- * The module oxTiramizoo for OXID eShop is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by the Free Software Foundation
- * either version 3 of the License, or (at your option) any later version.
- *
- * The module oxTiramizoo for OXID eShop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. 
- *  
- * See the GNU General Public License for more details <http://www.gnu.org/licenses/>
- *
- * @copyright: Tiramizoo GmbH
- * @author: Krzysztof Kowalik <kowalikus@gmail.com>
- * @package: oxTiramizoo
- * @license: http://www.gnu.org/licenses/
- * @version: 1.0.0
- * @link: http://tiramizoo.com
- */
 
 require_once  dirname(__FILE__) . '/../modules/oxtiramizoo/core/oxtiramizoo_setup.php';
 
@@ -190,13 +170,13 @@ class oxTiramizoo_settings extends Shop_Config
     /**
      * Set active on/off in tiramizoo delivery and delivery set
      */
-    public function enableShippingMethod()
+    public function saveEnableShippingMethod()
     {
         $aConfStrs = oxConfig::getParameter( "confstrs" );
 
         $isTiramizooEnable = intval($aConfStrs['oxTiramizoo_enable_module'] == 'on');
 
-        $errors = $this->validateSave();
+        $errors = $this->validateEnable();
 
         if ($isTiramizooEnable && count($errors)) {
             $isTiramizooEnable = 0;
@@ -229,7 +209,7 @@ class oxTiramizoo_settings extends Shop_Config
         $this->saveConfVars();
         $this->assignPaymentsToTiramizoo();
 
-        $this->enableShippingMethod();       
+        $this->saveEnableShippingMethod();       
 
         // clear cache 
         oxUtils::getInstance()->rebuildCache();
@@ -238,11 +218,11 @@ class oxTiramizoo_settings extends Shop_Config
     }
 
     /**
-     * Validate form
+     * Validate if enable
      *
      * @return array
      */
-    public function validateSave()
+    public function validateEnable()
     {
         $aConfStrs = oxConfig::getParameter( "confstrs" );
         $aPickupHours = oxConfig::getParameter( "oxTiramizoo_shop_pickup_hour" );
