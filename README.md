@@ -51,6 +51,7 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 *   Add these 2 lines to Textarea Shop Modules in **Master Settings -> Core Settings -> System Tab -> Modules**
 
     ```
+    oxorder => oxtiramizoo_oxorder
     payment => oxtiramizoo_payment
     order => oxtiramizoo_order
     ```
@@ -60,40 +61,42 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
     **file: out/basic/tpl/email_order_cust_html.tpl**
 
     ```
+    [{* oxtiramizoo BEGIN *}]
     [{if $order->oxorder__tiramizoo_tracking_url->value }]
-      Tracking URL: [{$order->oxorder__tiramizoo_tracking_url->value}]<br>
+        Tracking URL: [{$order->oxorder__tiramizoo_tracking_url->value}]<br>
     [{/if}]
-
+    [{* oxtiramizoo END *}]
     ```
 
     **file: out/basic/tpl/email_order_cust_plain.tpl**
 
     ```
+    [{* oxtiramizoo BEGIN *}]    
     [{if $order->oxorder__tiramizoo_tracking_url->value }]
       Tracking URL: [{$order->oxorder__tiramizoo_tracking_url->value}]
     [{/if}]
-
+    [{* oxtiramizoo END *}]    
     ```
 
     **file: out/basic/tpl/payment.tpl**
 
     ```
-    [{if $isTiramizooPaymentView}]
-      [{if $oView->isTiramizooCurrentShiippingMethod()}]
-        <br />
-        <br />
+    [{* oxtiramizoo BEGIN *}]
+    [{if $isTiramizooCurrentShippingMethod }]
+        <div style="padding-top:20px; clear:both;">
         <h3>[{ oxmultilang ident="oxTiramizoo_selectTimeWindowTitle" }]</h3>
 
-        <dl style="margin-top:16px;">
-          [{foreach key=sDeliveryTime from=$oView->getAvailableDeliveryHours() item=sDeliveryWindow}]
-            <dt>
-              <input class="selectTiramizooTimeWindow" type="radio" name="sTiramizooTimeWindow" value="[{$sDeliveryTime}]" [{if $oView->getTiramizooTimeWindow() == $sDeliveryTime}]checked="checked"[{/if}] onchange="JavaScript:document.forms.shipping.submit();" />
-              <label for="sTiramizooTimeWindow"><b>[{$sDeliveryWindow}]</b></label>
-            </dt>
-          [{/foreach}]
-        </dl>
-      [{/if}]
-    [{if}]
+            <dl style="margin-top:16px;">
+            [{foreach key=sDeliveryTime from=$aTiramizooAvailableDeliveryHours item=sDeliveryWindow}]
+                <dt>
+                    <input class="selectTiramizooTimeWindow" type="radio" name="sTiramizooTimeWindow" value="[{$sDeliveryTime}]" [{if $sTiramizooSelectedDeliveryTime == $sDeliveryTime}]checked="checked"[{/if}] onchange="JavaScript:document.forms.shipping.submit();" />
+                    <label for="sTiramizooTimeWindow"><b>[{$sDeliveryWindow}]</b></label>
+                </dt>
+            [{/foreach}]
+            </dl>
+        </div>
+    [{/if}]
+    [{* oxtiramizoo END *}]
 
     ```
 
@@ -101,16 +104,9 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 
 
     ```
-    [{if $isTiramizooOrderView}]
-      [{if $oView->isTiramizooError()}]
-        <div class="errorbox">[{$oView->getTiramizooError()}]</div>
-      [{/if}]
-    [{/if}]
-
-    [{ if $isTiramizooOrderView }]
-      [{ $oView->getTiramizooTimeWindow()}]
-    [{/if}]
-
+    [{* oxtiramizoo BEGIN *}]
+        [{ $sTiramizooTimeWindow }]
+    [{* oxtiramizoo END *}]
     ```
 
 
