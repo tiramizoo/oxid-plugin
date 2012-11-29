@@ -1,6 +1,6 @@
 <?php
 /**
- * Tiramizoo block comment
+* Tiramizoo admin translation Deutsch
  */
 
 $sLangName  = "Deutsch";
