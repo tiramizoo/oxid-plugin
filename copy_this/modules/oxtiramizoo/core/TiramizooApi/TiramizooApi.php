@@ -1,18 +1,45 @@
 <?php
-
+/**
+ * Pure class used for sending requests to the API via cURL.
+ *
+ * @package: oxTiramizoo
+ */
 class TiramizooApi 
 {
+    /**
+     * API url
+     *             
+     * @var string
+     */
     protected $api_url = null;
-    protected $api_key = null;
 
-    protected function __construct($api_url, $api_key) 
+    /**
+     * API token
+     *             
+     * @var string
+     */    
+    protected $api_token = null;
+
+    /**
+     * Construct the object with api key and url
+     * @param string $api_url   API url
+     * @param string $api_token API token to authenticate
+     */
+    protected function __construct($api_url, $api_token) 
     {
         $this->api_url = $api_url;
-        $this->api_key = $api_key;
+        $this->api_token = $api_token;
     }
     
-
-    public function request($method, $data = array(), &$result = false) 
+    /**
+     * Build http connection to the API via cURL
+     * 
+     * @param  string  $path API path
+     * @param  array   $data  Data to send
+     * @param  boolean $result result
+     * @return boolean Return true if success otherwise false
+     */
+    public function request($path, $data = array(), &$result = false) 
     {
         $c = curl_init();
 
@@ -20,7 +47,7 @@ class TiramizooApi
         curl_setopt($c, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($c, CURLOPT_SSL_VERIFYPEER, 0);
 
-        curl_setopt($c, CURLOPT_URL, $this->api_url.'/'.$method.'?api_token='. $this->api_key);
+        curl_setopt($c, CURLOPT_URL, $this->api_url.'/'.$path.'?api_token='. $this->api_token);
         curl_setopt($c, CURLOPT_POST, true);
         curl_setopt($c, CURLOPT_POSTFIELDS, preg_replace_callback('/(\\\u[0-9a-f]{4})/', array($this, "json_unescape"), json_encode($data)));
 
@@ -39,9 +66,14 @@ class TiramizooApi
         curl_close($c);
     }   
     
+    /**
+     * Unescape json items
+     * 
+     * @param  string $m Element's value
+     * @return string unescaped value
+     */
     protected function json_unescape($m) 
     {
         return json_decode('"'.$m[1].'"');
     }
-      
 }
