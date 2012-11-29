@@ -29,6 +29,19 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 *   User sees thank you page and receives email with tracking url
 
 
+# Demo #
+
+*   Demo shop is available here: http://oxid-demo.tiramizoo.com
+
+*   Admin panel access: http://oxid-demo.tiramizoo.com/admin
+
+*   Admin username: oxid-demo@tiramizoo.com password: secret
+
+*   Test client username: test@tiramizoo.com password: secret
+
+*   Demo shop settings and data are reverted to default every 4h
+
+
 # Installation #
 
 *	Switch to 4.3.2 branch, download code
