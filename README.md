@@ -60,6 +60,8 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 
     **file: out/basic/tpl/email_order_cust_html.tpl**
 
+    Add Tiramizoo tracking url after showing selected delivery method [see in the basic template](https://github.com/tiramizoo/oxid-plugin/blob/4.3.2/changed_full/out/basic/tpl/email_order_cust_html.tpl#L360)
+
     ```
     [{* oxtiramizoo BEGIN *}]
     [{if $order->oxorder__tiramizoo_tracking_url->value }]
@@ -70,6 +72,8 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 
     **file: out/basic/tpl/email_order_cust_plain.tpl**
 
+    Add Tiramizoo tracking url after showing selected delivery method [see in the basic template](https://github.com/tiramizoo/oxid-plugin/blob/4.3.2/changed_full/out/basic/tpl/email_order_cust_plain.tpl#L123)
+
     ```
     [{* oxtiramizoo BEGIN *}]    
     [{if $order->oxorder__tiramizoo_tracking_url->value }]
@@ -79,6 +83,8 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
     ```
 
     **file: out/basic/tpl/payment.tpl**
+
+    Put thes lines after slect box contains abailable delivery sets [see in the basic template](https://github.com/tiramizoo/oxid-plugin/blob/4.3.2/changed_full/out/basic/tpl/payment.tpl#L38)
 
     ```
     [{* oxtiramizoo BEGIN *}]
@@ -101,7 +107,9 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
     ```
 
     **file: out/basic/tpl/order.tpl**
-
+    
+    Put these lines after showing selected delivery method
+    [see in the basic template](https://github.com/tiramizoo/oxid-plugin/blob/4.3.2/changed_full/out/basic/tpl/order.tpl#L480)
 
     ```
     [{* oxtiramizoo BEGIN *}]
