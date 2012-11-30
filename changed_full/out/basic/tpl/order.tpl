@@ -12,13 +12,6 @@
     <div class="errorbox">[{ oxmultilang ident="ORDER_READANDCONFIRMTERMS" }]</div>
 [{/if}]
 
-[{ if $isTiramizooOrderView }]
-  [{ if $oView->isTiramizooError() }]
-      <div class="errorbox">[{$oView->getTiramizooError()}]</div>
-  [{/if}]
-[{/if}]
-
-
 [{ if !$oxcmp_basket->getProductsCount()  }]
   <div class="msg">[{ oxmultilang ident="ORDER_BASKETEMPTY" }]</div>
 [{else}]
@@ -484,9 +477,9 @@
                   [{assign var="oShipSet" value=$oView->getShipSet() }]
                   [{ $oShipSet->oxdeliveryset__oxtitle->value }]&nbsp;
 
-                  [{ if $isTiramizooOrderView }]
-                    [{ $oView->getTiramizooTimeWindow()}]
-                  [{/if}]
+                  [{* oxtiramizoo BEGIN *}]
+                    [{ $sTiramizooTimeWindow }]
+                  [{* oxtiramizoo END *}]
 
                   <span class="btn"><input id="test_orderChangeShipping" type="submit" value="[{ oxmultilang ident="ORDER_MODIFY3" }]" class="btn"></span>
               </div>

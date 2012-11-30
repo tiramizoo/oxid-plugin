@@ -357,9 +357,11 @@
   [{if $payment->oxuserpayments__oxpaymentsid->value != "oxempty"}][{ oxmultilang ident="EMAIL_ORDER_CUST_HTML_SHIPPINGCARRIER" }] <strong>[{ $order->oDelSet->oxdeliveryset__oxtitle->value }]</strong>
   <br>
 
+  [{* oxtiramizoo BEGIN *}]
   [{if $order->oxorder__tiramizoo_tracking_url->value }]
     Tracking URL: [{$order->oxorder__tiramizoo_tracking_url->value}]<br>
   [{/if}]
+  [{* oxtiramizoo END *}]
 
   [{/if}]
 

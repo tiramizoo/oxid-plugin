@@ -1,36 +1,27 @@
 <?php
-/**
- * This file is part of the module oxTiramizoo for OXID eShop.
- *
- * The module oxTiramizoo for OXID eShop is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by the Free Software Foundation
- * either version 3 of the License, or (at your option) any later version.
- *
- * The module oxTiramizoo for OXID eShop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. 
- *  
- * See the GNU General Public License for more details <http://www.gnu.org/licenses/>
- *
- * @copyright: Tiramizoo GmbH
- * @author: Krzysztof Kowalik <kowalikus@gmail.com>
- * @package: oxTiramizoo
- * @license: http://www.gnu.org/licenses/
- * @version: 1.0.0
- * @link: http://tiramizoo.com
- */
 
-require_once 'TiramizooApi.php';
+if ( !class_exists('TiramizooApi') ) {
+    require_once 'TiramizooApi.php';
+}
 
 /**
- * Tiramizoo API class
+ * oxTiramizoo API class used to connection with Tiramizoo API. Main functionality
+ * are getting quotes, sending order and build API data.
  *
  * @package: oxTiramizoo
  */
 class oxTiramizooApi extends TiramizooApi
 {
+    /**
+     * Singleton instance
+     * 
+     * @var oxTiramizooApi
+     */
     protected static $_instance = null;
 
+    /**
+     * Create the API object with api token and url get from appliaction config
+     */
     protected function __construct()
     {
         $tiramizooApiUrl = oxConfig::getInstance()->getShopConfVar('oxTiramizoo_api_url');
@@ -38,6 +29,11 @@ class oxTiramizooApi extends TiramizooApi
         parent::__construct($tiramizooApiUrl, $tiramizooApiToken);
     }
 
+    /**
+     * Get the instance of class
+     * 
+     * @return oxTiramizooApi
+     */
     public static function getInstance()
     {
         if ( !self::$_instance instanceof oxTiramizooApi ) {
@@ -47,57 +43,145 @@ class oxTiramizooApi extends TiramizooApi
         return self::$_instance;
     }
 
-    public function getQuotes($data, $cache = false)
+    /**
+     * Sending request to the API fo getting quotes
+     * 
+     * @param  mixed $data Request data
+     * @return mixed Array with status code of request and response data
+     */
+    public function getQuotes($data)
     {
         $result = null;
 
-        if ($cache) {
-            $cachedDataKey = md5(json_encode($data));
-            $cachedesultVarName = 'oxTiramizooQuote_' . $cachedDataKey;
-
-            if ($result = oxSession::hasVar($cachedesultVarName)) {
-                return oxSession::getVar($cachedesultVarName);
-            }
-        }
-
         $this->request('quotes', $data, $result);
-
-        if ($cache && in_array($result['http_status'], array(200, 201))) {
-            oxSession::setVar('oxTiramizooQuote_' . $cachedDataKey, $result);
-        }
 
         return $result;
     }
 
-    public function setOrder($data)
+    /**
+     * Send order to the API
+     * 
+     * @param  mixed $data pickup, delivery and items data
+     * @return mixed Array with status code of request and response data
+     */
+    public function sendOrder($data)
     {
         $result = null;
         $this->request('orders', $data, $result);
         return $result;
     }
 
-    public function buildItemsData($oBasket)
+    /**
+     * Build description from product's names. Used for build partial data to send order API request
+     * 
+     * @param  oxBasket $oBasket
+     * @return string description
+     */
+    public function buildDescription(oxBasket $oBasket)
+    {
+        $itemNames = array();
+        foreach ($oBasket->getBasketArticles() as $key => $oArticle) 
+        {
+            $itemNames[] = $oArticle->oxarticles__oxtitle->value . ' (x' . $oBasket->getArtStockInBasket($oArticle->oxarticles__oxid->value) . ')';
+        }
+
+        //string should be contains at least 255 chars
+        return substr(implode($itemNames, ', '), 0, 255);
+    }
+
+    /**
+     * Build pickup object from tiramizoo config values. Used for build partial data 
+     * to send order API request
+     * 
+     * @param  oxConfig $oxConfig
+     * @param  string Selected tiramizoo delivery window
+     * @return stdClass Pickup object
+     */
+    public function buildPickupObject(oxConfig $oxConfig, $sTiramizooWindow)
+    {
+        $oPickup = new stdClass();
+
+        $oPickup->address_line_1 = $oxConfig->getShopConfVar('oxTiramizoo_shop_address');
+        $oPickup->city = $oxConfig->getShopConfVar('oxTiramizoo_shop_city');
+        $oPickup->postal_code = $oxConfig->getShopConfVar('oxTiramizoo_shop_postal_code');
+        $oPickup->country_code = $oxConfig->getShopConfVar('oxTiramizoo_shop_country_code');
+        $oPickup->name = $oxConfig->getShopConfVar('oxTiramizoo_shop_contact_name');
+        $oPickup->phone_number = $oxConfig->getShopConfVar('oxTiramizoo_shop_phone_number');
+        $oPickup->email = $oxConfig->getShopConfVar('oxTiramizoo_shop_email_address');
+        $oPickup->after = date('c', strtotime($sTiramizooWindow));
+        $oPickup->before = date('c', strtotime('+' . $oxConfig->getShopConfVar('oxTiramizoo_pickup_del_offset') . 'minutes', strtotime($sTiramizooWindow)));
+
+        return $oPickup;
+    }
+
+    /**
+     * Build delivery object from user data. Used for build partial data 
+     * to send order API request
+     * 
+     * @param  oxUser $oUser
+     * @param  mixed $oDeliveryAddress oxAddress if filled by user or null
+     * @return stdClass Delivery object
+     */
+    public function buildDeliveryObject(oxUser $oUser, $oDeliveryAddress)
+    {
+        $oDelivery = new stdClass();
+
+        $oDelivery->email = $oUser->oxuser__oxusername->value; 
+
+        if ($oDeliveryAddress)  {
+            $oDelivery->address_line_1 = $oDeliveryAddress->oxaddress__oxstreet->value . ' ' . $oDeliveryAddress->oxaddress__oxstreetnr->value;
+            $oDelivery->city = $oDeliveryAddress->oxaddress__oxcity->value;
+            $oDelivery->postal_code = $oDeliveryAddress->oxaddress__oxzip->value;
+            $oDelivery->country_code = $oDeliveryAddress->oxaddress__oxcountryid->value;
+            $oDelivery->name = $oDeliveryAddress->oxaddress__oxfname->value . ' ' . $oDeliveryAddress->oxaddress__oxlname->value;
+            $oDelivery->phone_number = $oDeliveryAddress->oxaddress__oxfon->value;
+        } else {
+            $oDelivery->address_line_1 = $oUser->oxuser__oxstreet->value . ' ' . $oUser->oxuser__oxstreetnr->value;
+            $oDelivery->city = $oUser->oxuser__oxcity->value;
+            $oDelivery->postal_code = $oUser->oxuser__oxzip->value;
+            $oDelivery->country_code = $oUser->oxuser__oxcountryid->value;
+            $oDelivery->name = $oUser->oxusers__oxfname->value . ' ' . $oUser->oxuser__oxlname->value;
+            $oDelivery->phone_number = $oUser->oxuser__oxfon->value;
+        }
+
+        //get country code
+        $oCountry = oxNew('oxcountry');
+        $oCountry->load($oDelivery->country_code);
+
+        $oDelivery->country_code = strtolower($oCountry->oxcountry__oxisoalpha2->value);
+
+        return $oDelivery;
+    }
+
+    /**
+     * Build items data used for both type of request sending order and getting quotes.
+     * If product has no specified params e.g. enable, weight, dimensions it inherits 
+     * from main category
+     * 
+     * @param  oxBasket $oBasket
+     * @return array
+     */
+    public function buildItemsData(oxBasket $oBasket)
     {
         $items = array();
 
-
-
         foreach ($oBasket->getBasketArticles() as $key => $oArticle) 
         {
+            //initialize standard class
             $item = new stdClass();
             $item->weight = null;
             $item->width = null;
             $item->height = null;
             $item->length = null;
 
-
-            $inheritedData = $this->_getArticleInheritData($oArticle);
-
             //article is disabled return false
             if ($oArticle->oxarticles__tiramizoo_enable->value == -1) {
 
                 return false;
             }
+
+            //get the data from categories hierarchy
+            $inheritedData = $this->_getArticleInheritData($oArticle);
 
             if ($oArticle->oxarticles__tiramizoo_enable->value == 0) {
                 if (isset($inheritedData['tiramizoo_enable']) && (!($inheritedData['tiramizoo_enable']))) {
@@ -131,12 +215,12 @@ class oxTiramizooApi extends TiramizooApi
 
             $item->quantity = $oBasket->getArtStockInBasket($oArticle->oxarticles__oxid->value);
 
+            // be sure that we have properly types
             $item->weight = floatval($item->weight);
             $item->width = floatval($item->width);
             $item->height = floatval($item->height);
             $item->length = floatval($item->length);
             $item->quantity = floatval($item->quantity);
-
 
             $items[] = $item;
         }
@@ -144,7 +228,12 @@ class oxTiramizooApi extends TiramizooApi
         return $items;
     }
 
-    //@todo:change to not hierarachical transparent
+    /**
+     * Get product data (enable, weight, dimensions) from main category or parents
+     * 
+     * @param  oxArticle $oArticle
+     * @return array
+     */
     protected function _getArticleInheritData($oArticle)
     {
         $oCategory = $oArticle->getCategory();
@@ -173,6 +262,13 @@ class oxTiramizooApi extends TiramizooApi
         return $oxTiramizooInheritedData;
     }
 
+    /**
+     * Recursive method for getting array of arrays product data (enable, weight, dimensions)
+     * 
+     * @param  oxCategory $oCategory
+     * @param  array  $returnCategories
+     * @return array Array of categories hierarchy
+     */
     protected function _getParentsCategoryTree($oCategory, $returnCategories = array())
     {
         $oxTiramizooCategoryData = array();

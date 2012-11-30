@@ -1,20 +1,32 @@
 <?php
+
+/**
+ * Getting data from Tiramizoo Webhook. Update order's state.
+ *
+ * @package: oxTiramizoo
+ */
 class oxTiramizoo_Webhook extends oxUBase
 {
+    /**
+     * Accept data. Set order's status
+     * 
+     * @return null
+     */
     public function render()
     {
-        $aApiResponse = $this->getConfig()->getParameter('api_response');
+        // get Api data
+        $oApiResponse = json_decode(file_get_contents('php://input'));
 
-        if ($aApiResponse && isset($aApiResponse->external_id)) {
+        if ($oApiResponse && isset($oApiResponse->external_id)) {
             $sql = "UPDATE oxorder 
-                        SET TIRAMIZOO_WEBHOOK_RESPONSE = '" . base64_encode(serialize($aApiResponse)) . "'
-                        WHERE TIRAMIZOO_EXTERNAL_ID = '" . $aApiResponse->external_id . "';";
+                        SET TIRAMIZOO_WEBHOOK_RESPONSE = '" . base64_encode(serialize($oApiResponse)) . "'
+                        WHERE TIRAMIZOO_EXTERNAL_ID = '" . $oApiResponse->external_id . "';";
 
             oxDb::getDb()->Execute($sql);
 
             $sql = "UPDATE oxorder 
-                        SET TIRAMIZOO_STATUS = '" . $aApiResponse->state . "'
-                        WHERE TIRAMIZOO_EXTERNAL_ID = '" . $aApiResponse->external_id . "';";
+                        SET TIRAMIZOO_STATUS = '" . $oApiResponse->state . "'
+                        WHERE TIRAMIZOO_EXTERNAL_ID = '" . $oApiResponse->external_id . "';";
 
             oxDb::getDb()->Execute($sql);
 
@@ -25,7 +37,5 @@ class oxTiramizoo_Webhook extends oxUBase
             header("HTTP/1.1 500 Internal Server Error");
             die('FALSE');
         }
-
-        return;
     }
 }

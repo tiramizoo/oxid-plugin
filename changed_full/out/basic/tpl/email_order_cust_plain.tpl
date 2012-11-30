@@ -119,9 +119,12 @@
 
 [{if $payment->oxuserpayments__oxpaymentsid->value != "oxempty"}][{ oxmultilang ident="EMAIL_ORDER_CUST_HTML_SHIPPINGCARRIER" }] [{ $order->oDelSet->oxdeliveryset__oxtitle->getRawValue() }]
 [{/if}]
+
+[{* oxtiramizoo BEGIN *}]
 [{if $order->oxorder__tiramizoo_tracking_url->value }]
   Tracking URL: [{$order->oxorder__tiramizoo_tracking_url->value}]
 [{/if}]
+[{* oxtiramizoo END *}]
 
 [{if $payment->oxuserpayments__oxpaymentsid->value == "oxidpayadvance"}]
 [{ oxmultilang ident="EMAIL_ORDER_CUST_HTML_BANK" }] [{$shop->oxshops__oxbankname->getRawValue()}]<br>
