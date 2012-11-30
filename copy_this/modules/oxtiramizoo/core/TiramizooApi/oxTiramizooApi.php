@@ -181,7 +181,7 @@ class oxTiramizooApi extends TiramizooApi
 
             // check if deliverable is set for articles with stock > 0
             if (oxConfig::getInstance()->getShopConfVar('oxTiramizoo_articles_stock_gt_0')) {
-                if ($oArticle->oxarticles__oxvarstock->value <= 0) {
+                if ($oArticle->oxarticles__oxstock->value <= 0) {
                     return false;
                 }
             }
