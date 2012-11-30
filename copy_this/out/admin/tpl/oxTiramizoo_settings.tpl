@@ -237,6 +237,15 @@
             </tr>
 
             <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_articles_with_stock_gt_0" }]</td>
+              <td valign="top" class="edittext">
+                <input type="hidden"  name="confstrs[oxTiramizoo_articles_stock_gt_0]" value"0" />
+                <input type="checkbox" name="confstrs[oxTiramizoo_articles_stock_gt_0]" value"1" [{ if $confstrs.oxTiramizoo_articles_stock_gt_0}]checked="checked"[{ /if }]> 
+                [{ oxinputhelp ident="oxTiramizoo_settings_articles_with_stock_gt_0_help" }]
+              </td>
+            </tr>
+            
+            <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_enable_module_label" }]</td>
               <td valign="top" class="edittext">
                 <input type="hidden"  name="confstrs[oxTiramizoo_enable_module]" value"0" />

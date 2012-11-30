@@ -176,8 +176,14 @@ class oxTiramizooApi extends TiramizooApi
 
             //article is disabled return false
             if ($oArticle->oxarticles__tiramizoo_enable->value == -1) {
-
                 return false;
+            }
+
+            // check if deliverable is set for articles with stock > 0
+            if (oxConfig::getInstance()->getShopConfVar('oxTiramizoo_articles_stock_gt_0')) {
+                if ($oArticle->oxarticles__oxvarstock->value <= 0) {
+                    return false;
+                }
             }
 
             //get the data from categories hierarchy

@@ -77,6 +77,9 @@ $aLang = array(
 'oxTiramizoo_payments_required_error'                   => 'Sie müssen mindestens ein Zahlungsmethode Tiramizoo Versandkosten zuweisen',
 'oxTiramizoo_enable_fix_errors_header'                  => 'Fix diese Fehler, um tiramizoo ermöglichen',
 
+'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Enable only articles with stock > 0',
+'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Enable only articles with stock > 0',
+
 // Article administration -> Tiramizoo Tab
 
 'oxTiramizoo_article_tab_enable_tiramizoo_label'        => 'Tiramizoo aktivieren',
