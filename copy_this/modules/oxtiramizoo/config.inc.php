@@ -1,7 +1,7 @@
 <?php
 /**
  * Config file to specify tiramizoo settings
- * 
+ * Be careful when change it, it should be setted with tiramizoo rules
  */
 
 //minimum delivery time
