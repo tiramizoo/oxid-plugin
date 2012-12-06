@@ -257,7 +257,21 @@ class oxTiramizooApi extends TiramizooApi
      */
     protected function _getArticleInheritData($oArticle)
     {
+        //set the defaults
+        $oxTiramizooInheritedData = array();
+
+        $oxTiramizooInheritedData['tiramizoo_enable'] = 0;
+        $oxTiramizooInheritedData['weight'] = 0;
+        $oxTiramizooInheritedData['width'] = 0;
+        $oxTiramizooInheritedData['height'] = 0;
+        $oxTiramizooInheritedData['length'] = 0;
+
         $oCategory = $oArticle->getCategory();
+
+        // if article has no assigned categories return only global settings
+        if (!$oCategory) {
+            return  $oxTiramizooInheritedData;
+        }
 
         $aCheckCategories = $this->_getParentsCategoryTree($oCategory);
 
