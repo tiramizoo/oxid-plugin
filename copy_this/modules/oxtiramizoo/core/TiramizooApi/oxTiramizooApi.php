@@ -109,7 +109,12 @@ class oxTiramizooApi extends TiramizooApi
         $oPickup->phone_number = $oxConfig->getShopConfVar('oxTiramizoo_shop_phone_number');
         $oPickup->email = $oxConfig->getShopConfVar('oxTiramizoo_shop_email_address');
         $oPickup->after = date('c', strtotime($sTiramizooWindow));
-        $oPickup->before = date('c', strtotime('+' . intval($oxConfig->getShopConfVar('oxTiramizoo_pickup_time_length')) . 'minutes', strtotime($sTiramizooWindow)));
+        $oPickup->before = date('c', strtotime('+' . $oxConfig->getShopConfVar('oxTiramizoo_pickup_time_length') . 'minutes', strtotime($sTiramizooWindow)));
+
+        //change pickup before time exceed maximum delivery hour
+        if (strtotime(date('H:i', strtotime($oPickup->before))) > strtotime(oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour'))) {
+            $oPickup->before = date('c', strtotime(date('Y-m-d', strtotime($sTiramizooWindow)) . ' ' . oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour')));
+        }
 
         return $oPickup;
     }
@@ -148,10 +153,14 @@ class oxTiramizooApi extends TiramizooApi
         $oCountry = oxNew('oxcountry');
         $oCountry->load($oDelivery->country_code);
 
-
         $sTiramizooWindow = oxSession::getVar( 'sTiramizooTimeWindow' );
         $oDelivery->after = date('c', strtotime($sTiramizooWindow));
         $oDelivery->before = date('c', strtotime('+' . oxConfig::getInstance()->getShopConfVar('oxTiramizoo_pickup_del_offset') . 'minutes', strtotime($sTiramizooWindow)));
+
+        //change delivery before time exceed maximum delivery hour
+        if (strtotime(date('H:i', strtotime($oDelivery->before))) > strtotime(oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour'))) {
+            $oDelivery->before = date('c', strtotime(date('Y-m-d', strtotime($sTiramizooWindow)) . ' ' . oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour')));
+        }
 
 
         $oDelivery->country_code = strtolower($oCountry->oxcountry__oxisoalpha2->value);
