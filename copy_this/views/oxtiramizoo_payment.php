@@ -23,6 +23,20 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 
         if (!oxTiramizooHelper::getInstance()->isTiramizooAvailable()) {
             unset($this->_aAllSets['Tiramizoo']);
+
+            $oBasket = $this->getSession()->getBasket();
+
+            if ($oBasket->getShippingId() == 'Tiramizoo')
+            {
+                $sNewShippingMethod = key($this->_aAllSets);
+
+                oxSession::setVar( 'sShipSet', $sNewShippingMethod );
+
+                $oBasket->setShipping( $sNewShippingMethod );
+                $oBasket->onUpdate();
+
+                oxUtils::getInstance()->redirect( oxConfig::getInstance()->getShopHomeURL() .'cl=payment', true, 302 );
+            }
         }
 
         return $this->_aAllSets;
