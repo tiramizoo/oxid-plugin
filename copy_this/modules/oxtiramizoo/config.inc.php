@@ -5,7 +5,7 @@
  */
 
 //minimum delivery time
-$this->minimumDeliveryHour = '9:00';
+$this->minimumDeliveryHour = '8:00';
 
 //maximum delivery time default is 20:00 but in the Munich we can set up to 22:00
 $this->maximumDeliveryHour = '22:00';

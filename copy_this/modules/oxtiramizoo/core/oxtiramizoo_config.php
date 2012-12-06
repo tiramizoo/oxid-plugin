@@ -18,7 +18,7 @@ class oxTiramizooConfig extends oxSuperCfg
      * minimum delivery time
      * @var string
      */
-    protected $minimumDeliveryHour = '9:00';
+    protected $minimumDeliveryHour = '8:00';
 
     /**
      * maximum delivery time default is 20:00 but in the Munich we can set up to 22:00
