@@ -72,6 +72,13 @@ $aLang = array(
 'oxTiramizoo_settings_order_to_pickup_offset_label'     => 'Packzeit',
 'oxTiramizoo_settings_order_to_pickup_offset_help'      => 'Wieviel Zeit benötigen Sie zwischen Bestellung und Abholung zum Bereitstellen der Ware?',
 
+'oxTiramizoo_settings_pickup_del_offset_label'          => 'Delivery time window length',
+'oxTiramizoo_settings_pickup_del_offset_help'           => 'Delivery time window length 90 minutes is minimal',
+
+'oxTiramizoo_settings_pickup_time_length_label'         => 'Pickup time window length',
+'oxTiramizoo_settings_pickup_time_length_help'          => 'Pickup time window length 90 minutes is minimal',
+
+
 'oxTiramizoo_is_required'                               => 'erforderlich ist',
 'oxTiramizoo_pickup_hours_required_error'               => 'Sie müssen mindestens ein Abholzeitpunkt',
 'oxTiramizoo_payments_required_error'                   => 'Sie müssen mindestens ein Zahlungsmethode Tiramizoo Versandkosten zuweisen',

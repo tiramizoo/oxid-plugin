@@ -72,6 +72,12 @@ $aLang = array(
 'oxTiramizoo_settings_order_to_pickup_offset_label'     => 'Order To Pickup Time offset',
 'oxTiramizoo_settings_order_to_pickup_offset_help'      => 'Preparation time for goods from ordering to pickup',
 
+'oxTiramizoo_settings_pickup_del_offset_label'          => 'Delivery time window length',
+'oxTiramizoo_settings_pickup_del_offset_help'           => 'Delivery time window length 90 minutes is minimal',
+
+'oxTiramizoo_settings_pickup_time_length_label'         => 'Pickup time window length',
+'oxTiramizoo_settings_pickup_time_length_help'          => 'Pickup time window length 90 minutes is minimal',
+
 'oxTiramizoo_is_required'                               => 'is required',
 'oxTiramizoo_pickup_hours_required_error'               => 'You must specify at least one pick up hour',
 'oxTiramizoo_payments_required_error'                   => 'You must assign at least one payment method to Tiramizoo shipping',
