@@ -138,15 +138,26 @@ class oxTiramizooApi extends TiramizooApi
             $oDelivery->city = $oDeliveryAddress->oxaddress__oxcity->value;
             $oDelivery->postal_code = $oDeliveryAddress->oxaddress__oxzip->value;
             $oDelivery->country_code = $oDeliveryAddress->oxaddress__oxcountryid->value;
-            $oDelivery->name = $oDeliveryAddress->oxaddress__oxfname->value . ' ' . $oDeliveryAddress->oxaddress__oxlname->value;
             $oDelivery->phone_number = $oDeliveryAddress->oxaddress__oxfon->value;
+            
+            $oDelivery->name = $oDeliveryAddress->oxaddress__oxfname->value . ' ' . $oDeliveryAddress->oxaddress__oxlname->value;
+
+            if ($oDeliveryAddress->oxaddress__oxcompany->value) {
+                $oDelivery->name = $oDeliveryAddress->oxaddress__oxcompany->value . ' / ' . $oDelivery->name;
+            }
+
         } else {
             $oDelivery->address_line_1 = $oUser->oxuser__oxstreet->value . ' ' . $oUser->oxuser__oxstreetnr->value;
             $oDelivery->city = $oUser->oxuser__oxcity->value;
             $oDelivery->postal_code = $oUser->oxuser__oxzip->value;
             $oDelivery->country_code = $oUser->oxuser__oxcountryid->value;
-            $oDelivery->name = $oUser->oxuser__oxfname->value . ' ' . $oUser->oxuser__oxlname->value;
             $oDelivery->phone_number = $oUser->oxuser__oxfon->value;
+            
+            $oDelivery->name = $oUser->oxuser__oxfname->value . ' ' . $oUser->oxuser__oxlname->value;
+
+            if ($oUser->oxuser__oxcompany->value) {
+                $oDelivery->name = $oUser->oxuser__oxcompany->value . ' / ' . $oDelivery->name;
+            }
         }
 
         //get country code
