@@ -145,7 +145,7 @@ class oxTiramizooApi extends TiramizooApi
             $oDelivery->city = $oUser->oxuser__oxcity->value;
             $oDelivery->postal_code = $oUser->oxuser__oxzip->value;
             $oDelivery->country_code = $oUser->oxuser__oxcountryid->value;
-            $oDelivery->name = $oUser->oxusers__oxfname->value . ' ' . $oUser->oxuser__oxlname->value;
+            $oDelivery->name = $oUser->oxuser__oxfname->value . ' ' . $oUser->oxuser__oxlname->value;
             $oDelivery->phone_number = $oUser->oxuser__oxfon->value;
         }
 
