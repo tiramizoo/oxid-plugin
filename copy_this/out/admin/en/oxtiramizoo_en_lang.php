@@ -79,9 +79,9 @@ $aLang = array(
 'oxTiramizoo_settings_pickup_time_length_help'          => 'Pickup time window length 90 minutes is minimal',
 
 'oxTiramizoo_is_required'                               => 'is required',
-'oxTiramizoo_pickup_hours_required_error'               => 'You must specify at least one pick up hour',
+'oxTiramizoo_pickup_hours_required_error'               => 'You must specify at least one pick up time window',
 'oxTiramizoo_payments_required_error'                   => 'You must assign at least one payment method to Tiramizoo shipping',
-'oxTiramizoo_enable_fix_errors_header'                  => 'Fix these errors, to enable tiramizoo',
+'oxTiramizoo_enable_fix_errors_header'                  => 'Fix these errors to enable tiramizoo',
 
 'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Enable only articles with stock > 0',
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Enable only articles with stock > 0',
