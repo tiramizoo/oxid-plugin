@@ -210,27 +210,19 @@ class oxTiramizooApi extends TiramizooApi
                 }            
             }
 
-            if ($oArticle->oxarticles__oxweight->value) {
-                $item->weight = $oArticle->oxarticles__oxweight->value;
+            //article override dimensions and weight but only if all parameters are specified
+            if ($oArticle->oxarticles__oxweight->value && 
+                $oArticle->oxarticles__oxwidth->value &&
+                $oArticle->oxarticles__oxheight->value && 
+                $oArticle->oxarticles__oxlength->value) {
+                    $item->weight = $oArticle->oxarticles__oxweight->value;
+                    $item->width = $oArticle->oxarticles__oxwidth->value * 100;
+                    $item->height = $oArticle->oxarticles__oxheight->value * 100;
+                    $item->length = $oArticle->oxarticles__oxlength->value * 100;
             } else {
                 $item->weight = isset($inheritedData['weight']) && $inheritedData['weight'] ? $inheritedData['weight'] : 0;
-            }
-
-            if ($oArticle->oxarticles__oxwidth->value) {
-                $item->width = $oArticle->oxarticles__oxwidth->value * 100;
-            } else {
                 $item->width = isset($inheritedData['width']) && $inheritedData['width'] ? $inheritedData['width'] : 0;
-            }
-
-            if ($oArticle->oxarticles__oxheight->value) {
-                $item->height = $oArticle->oxarticles__oxheight->value * 100;
-            } else {
                 $item->height = isset($inheritedData['height']) && $inheritedData['height'] ? $inheritedData['height'] : 0;
-            }
-
-            if ($oArticle->oxarticles__oxlength->value) {
-                $item->length = $oArticle->oxarticles__oxlength->value * 100;
-            } else {
                 $item->length = isset($inheritedData['length']) && $inheritedData['length'] ? $inheritedData['length'] : 0;
             }
 
@@ -293,10 +285,10 @@ class oxTiramizooApi extends TiramizooApi
 
             //category can override dimensions and weight but only all or nothing
             if ($aCategoryData['tiramizoo_weight'] && $aCategoryData['tiramizoo_width'] && $aCategoryData['tiramizoo_height'] && $aCategoryData['tiramizoo_length']) {
-                $oxTiramizooInheritedData['tiramizoo_weight'] = $aCategoryData['tiramizoo_weight'];
-                $oxTiramizooInheritedData['tiramizoo_width'] = $aCategoryData['tiramizoo_width'];
-                $oxTiramizooInheritedData['tiramizoo_height'] = $aCategoryData['tiramizoo_height'];
-                $oxTiramizooInheritedData['tiramizoo_length'] = $aCategoryData['tiramizoo_length'];
+                $oxTiramizooInheritedData['weight'] = $aCategoryData['tiramizoo_weight'];
+                $oxTiramizooInheritedData['width'] = $aCategoryData['tiramizoo_width'];
+                $oxTiramizooInheritedData['height'] = $aCategoryData['tiramizoo_height'];
+                $oxTiramizooInheritedData['length'] = $aCategoryData['tiramizoo_length'];
             }                                    
         }
 
