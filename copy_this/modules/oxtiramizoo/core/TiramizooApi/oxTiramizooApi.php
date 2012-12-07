@@ -266,6 +266,15 @@ class oxTiramizooApi extends TiramizooApi
         $oxTiramizooInheritedData['height'] = 0;
         $oxTiramizooInheritedData['length'] = 0;
 
+        $oxConfig = oxConfig::getInstance();
+
+        // get from tiramizoo settings centimeters and kilograms
+        $oxTiramizooInheritedData['tiramizoo_enable'] = $oxConfig->getShopConfVar('oxTiramizoo_enable_module') == 'on';
+        $oxTiramizooInheritedData['weight'] = floatval($oxConfig->getShopConfVar('oxTiramizoo_global_weight'));
+        $oxTiramizooInheritedData['width'] = floatval($oxConfig->getShopConfVar('oxTiramizoo_global_width'));
+        $oxTiramizooInheritedData['height'] = floatval($oxConfig->getShopConfVar('oxTiramizoo_global_height'));
+        $oxTiramizooInheritedData['length'] = floatval($oxConfig->getShopConfVar('oxTiramizoo_global_length'));
+
         $oCategory = $oArticle->getCategory();
 
         // if article has no assigned categories return only global settings
@@ -275,24 +284,21 @@ class oxTiramizooApi extends TiramizooApi
 
         $aCheckCategories = $this->_getParentsCategoryTree($oCategory);
 
-        $oxTiramizooInheritedData = array();
-
-        $allCategoriesAreEnabled = true;
-
         foreach ($aCheckCategories as $aCategoryData) 
-        {
-            if (!isset($aCategoryData['tiramizoo_enable']) || !(intval($aCategoryData['tiramizoo_enable']) > 0)) {
-                $allCategoriesAreEnabled = false;
-                break;
+        {   
+            //if some category in category parent tree is disabled the wole subtree is disabled
+            if (($aCategoryData['tiramizoo_enable']) == -1) {
+                $oxTiramizooInheritedData['tiramizoo_enable'] = 0;
             }
+
+            //category can override dimensions and weight but only all or nothing
+            if ($aCategoryData['tiramizoo_weight'] && $aCategoryData['tiramizoo_width'] && $aCategoryData['tiramizoo_height'] && $aCategoryData['tiramizoo_length']) {
+                $oxTiramizooInheritedData['tiramizoo_weight'] = $aCategoryData['tiramizoo_weight'];
+                $oxTiramizooInheritedData['tiramizoo_width'] = $aCategoryData['tiramizoo_width'];
+                $oxTiramizooInheritedData['tiramizoo_height'] = $aCategoryData['tiramizoo_height'];
+                $oxTiramizooInheritedData['tiramizoo_length'] = $aCategoryData['tiramizoo_length'];
+            }                                    
         }
-
-        $oxTiramizooInheritedData['tiramizoo_enable'] = $allCategoriesAreEnabled;
-
-        $oxTiramizooInheritedData['weight'] = $oCategory->oxcategories__tiramizoo_weight->value;
-        $oxTiramizooInheritedData['width'] = $oCategory->oxcategories__tiramizoo_width->value;
-        $oxTiramizooInheritedData['height'] = $oCategory->oxcategories__tiramizoo_height->value;
-        $oxTiramizooInheritedData['length'] = $oCategory->oxcategories__tiramizoo_length->value;
 
         return $oxTiramizooInheritedData;
     }
@@ -317,6 +323,7 @@ class oxTiramizooApi extends TiramizooApi
         $oxTiramizooCategoryData['tiramizoo_length'] = $oCategory->oxcategories__tiramizoo_length->value;
 
         array_unshift($returnCategories, $oxTiramizooCategoryData);
+
         if ($parentCategory = $oCategory->getParentCategory()) {
             $returnCategories = $this->_getParentsCategoryTree($parentCategory, $returnCategories);
         }
