@@ -19,7 +19,7 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
      */
     public function render()
     {
-        if (oxSession::getVar('sShipSet') == 'Tiramizoo') {
+        if (in_array(oxSession::getVar('sShipSet'), array('Tiramizoo', 'TiramizooEvening'))) {
             $this->_aViewData['sTiramizooTimeWindow'] = oxTiramizooHelper::getLabelDeliveryWindow(oxSession::getVar( 'sTiramizooTimeWindow' ));
         }
 
