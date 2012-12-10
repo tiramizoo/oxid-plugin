@@ -63,7 +63,7 @@ class oxTiramizooHelper extends oxSuperCfg
             return oxLang::getInstance()->translateString('oxTiramizoo_Tomorrow', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($dateTime)) . ' ' . date('H:i', strtotime($dateTime)) . ' - ' . $deliveryBefore;
 
         } else {
-            return $dateTime . ' - ' . $deliveryBefore;
+            return oxUtilsDate::getInstance()->formatDBDate( $dateTime ) . ' - ' . $deliveryBefore;
         }
     }
 
