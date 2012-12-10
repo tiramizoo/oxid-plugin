@@ -37,6 +37,10 @@ class oxTiramizooHelper extends oxSuperCfg
      */
     protected $_isTiramizooAvailable = -1;
 
+    protected $_isTiramizooImmediateAvailable = -1;
+    protected $_isTiramizooEveningAvailable = -1;
+
+
     /**
      * Convert date time to more readable string
      * 
@@ -232,4 +236,51 @@ class oxTiramizooHelper extends oxSuperCfg
 
         return $this->_isTiramizooAvailable;
     }
+
+
+    /**
+     * Validate basket data to decide if can be delivered by tiramizoo 
+     * 
+     * @return bool
+     */
+    public function isTiramizooImmediateAvailable() 
+    {
+        if ($this->_isTiramizooImmediateAvailable === -1) {
+
+            if (!$this->getConfig()->getShopConfVar('oxTiramizoo_enable_immediate')) {
+                return $this->_isTiramizooImmediateAvailable = 0;
+            }
+            
+            $hour = date('H:i', strtotime($this->getNextAvailableDate( date('Y-m-d H:i:s') )));
+
+            if ($this->isTiramizooEveningAvailable() && (strtotime($hour) == strtotime($this->getConfig()->getShopConfVar('oxTiramizoo_evening_window')))) {
+                return $this->_isTiramizooImmediateAvailable = 0;
+            }
+
+
+            $this->_isTiramizooImmediateAvailable = 1;
+        }
+
+        return $this->_isTiramizooImmediateAvailable;
+    }
+
+    /**
+     * Validate basket data to decide if can be delivered by tiramizoo 
+     * 
+     * @return bool
+     */
+    public function isTiramizooEveningAvailable() 
+    {
+        if ($this->_isTiramizooEveningAvailable === -1) {
+
+            if (!$this->getConfig()->getShopConfVar('oxTiramizoo_enable_evening') && $this->getConfig()->getShopConfVar('oxTiramizoo_evening_window')) {
+                return $this->_isTiramizooEveningAvailable = 0;
+            }
+
+            $this->_isTiramizooEveningAvailable = 1;
+        }
+
+        return $this->_isTiramizooEveningAvailable;
+    }
+
 }
