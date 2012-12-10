@@ -71,6 +71,18 @@ function editThis( sID )
                     <option value="-1" [{if ($edit->oxarticles__tiramizoo_enable->value == -1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_no_value" }]</option>
                 </select>
 
+
+                [{if (($inheritedData.tiramizoo_enable) && ($edit->oxarticles__tiramizoo_enable->value != -1 )) }]
+                  <span style="color:green;">Article is enabled</span>
+                  [{else}]
+                  <span style="color:red;">Atrticle is disabled </span>
+                [{/if}]
+
+
+                [{if ($disabledCategory) }]
+                  <span style="color:red;">because parent category [{$disabledCategory->oxcategories__oxtitle->value }] is disabled </span>
+                [{/if}]
+
                 [{ oxinputhelp ident="oxTiramizoo_article_tab_enable_tiramizoo_help" }]
             </td>
           </tr>
@@ -81,6 +93,36 @@ function editThis( sID )
               <input type="submit" class="edittext" name="save" value="[{ oxmultilang ident="GENERAL_SAVE" }]" onClick="Javascript:document.myedit.fnc.value='save'" ><br>
             </td>
           </tr>
+
+
+
+
+
+          <tr>          
+            <td class="edittext">Article effective values</td>
+            <td class="edittext">
+              <p>
+
+              Weight: [{$effectiveData->weight}] kg.<br />
+              Width: [{$effectiveData->width}] cm.<br />
+              Height: [{$effectiveData->height}] cm.<br />
+              Length: [{$effectiveData->length}] cm.<br />
+              </p>
+
+                [{if ($warningDimensions)}]
+                  <span style="color:red;">[{$warningDimensions}]</span>
+                [{/if}]
+
+
+            </td>
+          </tr>
+
+
+
+
+
+
+
           </table>
       </td>
       <!-- Ende rechte Seite -->

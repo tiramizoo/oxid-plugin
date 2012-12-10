@@ -1,5 +1,13 @@
 <?php
 
+if ( !class_exists('oxTiramizooConfig') ) {
+    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_config.php';
+}
+
+if ( !class_exists('oxTiramizooArticleHelper') ) {
+    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_articlehelper.php';
+}
+
 /**
  * Tiramizoo product tab
  *
@@ -19,6 +27,9 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
 
         $this->_aViewData['edit'] = $oArticle = oxNew( 'oxarticle' );
 
+
+
+
         $soxId = oxConfig::getParameter( 'oxid' );
 
 
@@ -26,6 +37,22 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
             // load object
             $oArticle->load( $soxId );
         }
+
+
+        $this->_aViewData['inheritedData'] = oxTiramizooArticleHelper::getInstance()->getArticleInheritData($oArticle);
+        $this->_aViewData['effectiveData'] = $effectiveData = oxTiramizooArticleHelper::getInstance()->buildArticleEffectiveData($oArticle);
+
+        if ($effectiveData->weight == 0 || 
+            $effectiveData->width  == 0 || 
+            $effectiveData->height == 0 || 
+            $effectiveData->length == 0) {
+
+                $this->_aViewData['warningDimensions'] = 'You must all specify dimesnions and weight. You can do this in global settings, category tab or article extended tab';
+        }
+
+
+        $this->_aViewData['disabledCategory'] = oxTiramizooArticleHelper::getInstance()->getDisabledCategory($oArticle);
+
 
 
         return "oxtiramizoo_article_tab.tpl";
