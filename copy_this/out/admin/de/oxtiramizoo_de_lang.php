@@ -55,15 +55,15 @@ $aLang = array(
 'oxTiramizoo_settings_shop_city_help'                   => 'z.B. Berlin',
 
 'oxTiramizoo_settings_enable_module_label'              => 'Tiramizoo aktivieren',
-'oxTiramizoo_settings_enable_module_help'               => 'Bieten Sie tiramizoo als Lieferoption an',
+'oxTiramizoo_settings_enable_module_help'               => 'Bieten Sie tiramizoo.com als Lieferoption an',
 
-'oxTiramizoo_settings_pickup_hour_1_label'              => '1. Abholzeitpunkt',
-'oxTiramizoo_settings_pickup_hour_2_label'              => '2. Abholzeitpunkt',
-'oxTiramizoo_settings_pickup_hour_3_label'              => '3. Abholzeitpunkt',
-'oxTiramizoo_settings_pickup_hour_4_label'              => '4. Abholzeitpunkt',
-'oxTiramizoo_settings_pickup_hour_5_label'              => '5. Abholzeitpunkt',
-'oxTiramizoo_settings_pickup_hour_6_label'              => '6. Abholzeitpunkt',
-'oxTiramizoo_settings_pickup_hours_help'                => 'Sie können bis zu 3 Abholzeitpunkten wählen',
+'oxTiramizoo_settings_pickup_hour_1_label'              => 'Beginn 1. Abholzeitfenster',
+'oxTiramizoo_settings_pickup_hour_2_label'              => 'Beginn 2. Abholzeitfenster',
+'oxTiramizoo_settings_pickup_hour_3_label'              => 'Beginn 3. Abholzeitfenster',
+'oxTiramizoo_settings_pickup_hour_4_label'              => 'Beginn 4. Abholzeitfenster',
+'oxTiramizoo_settings_pickup_hour_5_label'              => 'Beginn 5. Abholzeitfenster',
+'oxTiramizoo_settings_pickup_hour_6_label'              => 'Beginn 6. Abholzeitfenster',
+'oxTiramizoo_settings_pickup_hours_help'                => 'Sie können bis zu 3 Abholzeitpunkte wählen',
 
 'oxTiramizoo_pickup_hour_not_specified'                 => 'Nicht angegeben',
 
@@ -119,7 +119,7 @@ $aLang = array(
 'oxTiramizoo_order_tab_tracking_url_label'              => 'Tiramizoo tracking url',
 'oxTiramizoo_order_tab_tracking_url_help'               => 'Link auf Tiramizoo.com um den Lieferstatus pro Bestellung einzusehen ',
 
-'oxTiramizoo_order_tab_external_id_label'               => 'Tiramizoo external_id',
+'oxTiramizoo_order_tab_external_id_label'               => 'Tiramizoo external id',
 'oxTiramizoo_order_tab_external_id_help'                => 'Eigenschaft, die für Tiramizoo API Webhooks verwendet wird',
 
 'oxTiramizoo_order_tab_response_label'                  => 'Tiramizoo API response',
