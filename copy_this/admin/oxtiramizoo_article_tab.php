@@ -47,7 +47,7 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
             $effectiveData->height == 0 || 
             $effectiveData->length == 0) {
 
-                $this->_aViewData['warningDimensions'] = 'You must all specify dimesnions and weight. You can do this in global settings, category tab or article extended tab';
+                $this->_aViewData['warningDimensions'] = 'You have to specify dimensions and weight. You can do this in global settings, category tab or article extended tab.';
         }
 
 
