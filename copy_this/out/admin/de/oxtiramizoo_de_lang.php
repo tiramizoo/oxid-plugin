@@ -87,6 +87,15 @@ $aLang = array(
 'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Nur Artikel mit Lagerbestand > 0 über tiramizoo versendbar machen',
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Nur Artikel mit Lagerbestand > 0 über tiramizoo versendbar machen',
 
+'oxTiramizoo_settings_enable_immediate_label'           => 'Enable Tiramizoo "Immediate delivery"',
+'oxTiramizoo_settings_enable_immediate_help'            => 'If checked add shipping method "Immediate delivery" to checkout with the first possible Tiramizoo delivery time window.',
+
+'oxTiramizoo_settings_enable_evening_label'             => 'Enable Tiramizoo "Evening delivery"',
+'oxTiramizoo_settings_enable_evening_help'              => 'If checked and time window selected add shipping method "Evening delivery" to checkout with the selected Tiramizoo delivery time window.',
+
+'oxTiramizoo_settings_select_evening_label'             => 'Select evening delivery window',
+
+
 // Article administration -> Tiramizoo Tab
 
 'oxTiramizoo_article_tab_enable_tiramizoo_label'        => 'Tiramizoo aktivieren',

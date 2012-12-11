@@ -224,19 +224,6 @@
               </td>
             </tr>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
             <tr>
               <td>[{ oxmultilang ident="oxTiramizoo_settings_payment_methods_assigned_label" }]</td>
               <td>
@@ -252,28 +239,23 @@
               </td>
             </tr>
 
+            <script>
+                var helloWorld = function(e) {
+                  var elements = YAHOO.util.Dom.getElementsByClassName('oxTiramizoo-shop-pickup-hour');
+                  
+                  for (var i in elements) {
+                    if (i == 0) continue;
 
-<script>
-    var helloWorld = function(e) {
-      var elements = YAHOO.util.Dom.getElementsByClassName('oxTiramizoo-shop-pickup-hour');
-      
-      for (var i in elements) {
-        if (i == 0) continue;
+                    YAHOO.util.Dom.get('oxTiramizoo-evening-window').getElementsByTagName('option')[i].text = elements[i - 1].value;
+                    YAHOO.util.Dom.get('oxTiramizoo-evening-window').getElementsByTagName('option')[i].value = elements[i - 1].value;
+                  };
+                }
 
-        YAHOO.util.Dom.get('oxTiramizoo-evening-window').getElementsByTagName('option')[i].text = elements[i - 1].value;
-        YAHOO.util.Dom.get('oxTiramizoo-evening-window').getElementsByTagName('option')[i].value = elements[i - 1].value;
-      };
-    }
+                var elements = YAHOO.util.Dom.getElementsByClassName('oxTiramizoo-shop-pickup-hour');
 
-    var elements = YAHOO.util.Dom.getElementsByClassName('oxTiramizoo-shop-pickup-hour');
+                YAHOO.util.Event.addListener(elements, "click", helloWorld);
 
-    YAHOO.util.Event.addListener(elements, "click", helloWorld);
-
-</script>
-
-
-
-
+            </script>
 
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_articles_with_stock_gt_0" }]</td>
@@ -283,28 +265,25 @@
                 [{ oxinputhelp ident="oxTiramizoo_settings_articles_with_stock_gt_0_help" }]
               </td>
             </tr>
-            
-
 
             <tr>
-              <td valign="top" class="edittext" nowrap="">Enable Tiramizoo "Immediate delivery"</td>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_enable_immediate_label" }]</td>
               <td valign="top" class="edittext">
                 <input type="hidden"  name="confstrs[oxTiramizoo_enable_immediate]" value"0" />
                 <input type="checkbox" name="confstrs[oxTiramizoo_enable_immediate]" value"1" [{ if $confstrs.oxTiramizoo_enable_immediate}]checked="checked"[{ /if }]> 
-                [{ oxinputhelp ident="oxTiramizoo_settings_enable_module_help" }]
+                [{ oxinputhelp ident="oxTiramizoo_settings_enable_immediate_help" }]
               </td>
             </tr>
 
 
             <tr>
-              <td valign="top" class="edittext" nowrap="">Enable Tiramizoo "Evening delivery"</td>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_enable_evening_label" }]</td>
               <td valign="top" class="edittext">
                 <input type="hidden"  name="confstrs[oxTiramizoo_enable_evening]" value"0" />
                 <input type="checkbox" name="confstrs[oxTiramizoo_enable_evening]" value"1" [{ if $confstrs.oxTiramizoo_enable_evening}]checked="checked"[{ /if }]> 
 
-
+                [{ oxmultilang ident="oxTiramizoo_settings_select_evening_label" }]
                 <input type="hidden"  name="confstrs[oxTiramizoo_evening_window]" value"0" />
-               
                 <select name="confstrs[oxTiramizoo_evening_window]" id="oxTiramizoo-evening-window">
                   <option value="">Not specified</option>
                   [{foreach from=$aPickupHours item=sPickupHour}]
@@ -312,13 +291,9 @@
                   [{/foreach}]    
                 </select>
                 
-                [{ oxinputhelp ident="oxTiramizoo_settings_enable_module_help" }]
+                [{ oxinputhelp ident="oxTiramizoo_settings_enable_evening_help" }]
               </td>
             </tr>
-
-
-
-
 
             <tr>
               <td valign="top" class="edittext" nowrap="">Enable Tiramizoo</td>
@@ -328,8 +303,6 @@
                 [{ oxinputhelp ident="oxTiramizoo_settings_enable_module_help" }]
               </td>
             </tr>
-
-
 
             <tr>
               <td valign="top" class="edittext" width="250" nowrap="">          
