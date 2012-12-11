@@ -1,6 +1,12 @@
 <?php
 
-require_once  dirname(__FILE__) . '/../modules/oxtiramizoo/core/oxtiramizoo_setup.php';
+if ( !class_exists('oxTiramizooConfig') ) {
+    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_config.php';
+}
+
+if ( !class_exists('oxTiramizooSetup') ) {
+    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_setup.php';
+}
 
 /**
  * Tiramizoo settings
@@ -32,11 +38,25 @@ class oxTiramizoo_settings extends Shop_Config
 
     $sCurrentAdminShop = $oxConfig->getShopId();
 
-    $this->_aViewData['aAvailablePickupHours'] = array('9:00', '9:30', '10:00', '10:30', '11:00', '11:30', 
-                                                       '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', 
-                                                       '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', 
-                                                       '18:00', '18:30');
+    //create an empty array
+    $this->_aViewData['aAvailablePickupHours'] = array();
 
+    $minimumPickupHour = oxTiramizooConfig::getInstance()->getConfigParam('minimumDeliveryHour');
+    $minimumDeliveryLengthInMinutes = (strtotime(oxTiramizooConfig::getInstance()->getConfigParam('minimumDeliveryWindowLength')) - strtotime('00:00')) / 60;
+
+    $maximumPickupHour = date('H:i', strtotime('-' . $minimumDeliveryLengthInMinutes . 'minutes', strtotime(oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour'))));
+
+    $currentPickupHour = strtotime($minimumPickupHour);
+
+    $this->_aViewData['aAvailablePickupHours'][] = date('H:i', $currentPickupHour);
+
+    $selectedDeliveryPickupHourStepInMinutes = (strtotime(oxTiramizooConfig::getInstance()->getConfigParam('selectedDeliveryPickupHourStep')) - strtotime('00:00')) / 60;
+
+    // do if maximum pickup hour is not occured
+    while($currentPickupHour < strtotime($maximumPickupHour)) {
+      $currentPickupHour = strtotime('+' . $selectedDeliveryPickupHourStepInMinutes . 'minutes', $currentPickupHour);
+      $this->_aViewData['aAvailablePickupHours'][] = date('H:i', $currentPickupHour);
+    }
 
     if (count(oxSession::getVar('oxTiramizoo_settings_errors'))) {
         $this->_aViewData['aErrors'] = oxSession::getVar('oxTiramizoo_settings_errors');

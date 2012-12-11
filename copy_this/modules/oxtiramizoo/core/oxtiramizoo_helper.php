@@ -1,5 +1,9 @@
 <?php
 
+if ( !class_exists('oxTiramizooConfig') ) {
+    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_config.php';
+}
+
 /**
  * This class contains static methods used for calculating pickup and delivery hours
  *
@@ -46,15 +50,20 @@ class oxTiramizooHelper extends oxSuperCfg
         $orderOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
         $deliveryOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
 
+        $deliveryBefore = date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
+
+        // cut the delivery before if it greater than maximum delivery hour
+        if (strtotime($deliveryBefore) > strtotime(oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour'))) {
+            $deliveryBefore = oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour');
+        }
 
         if (strtotime(date('Y-m-d', strtotime($dateTime))) ==  strtotime(date('Y-m-d'))) {
-            return oxLang::getInstance()->translateString('oxTiramizoo_Today', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($dateTime)) . ' ' . date('H:i', strtotime($dateTime)) . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
-        } else if (strtotime(date('Y-m-d', strtotime($dateTime))) ==  strtotime(date('Y-m-d', strtotime('+1days', strtotime(date('Y-m-d'))))))
-        {
-            return oxLang::getInstance()->translateString('oxTiramizoo_Tomorrow', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($dateTime)) . ' ' . date('H:i', strtotime($dateTime)) . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
+            return oxLang::getInstance()->translateString('oxTiramizoo_Today', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($dateTime)) . ' ' . date('H:i', strtotime($dateTime)) . ' - ' . $deliveryBefore;
+        } else if (strtotime(date('Y-m-d', strtotime($dateTime))) ==  strtotime(date('Y-m-d', strtotime('+1days', strtotime(date('Y-m-d')))))){
+            return oxLang::getInstance()->translateString('oxTiramizoo_Tomorrow', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($dateTime)) . ' ' . date('H:i', strtotime($dateTime)) . ' - ' . $deliveryBefore;
 
         } else {
-            return $dateTime . ' - ' . date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
+            return oxUtilsDate::getInstance()->formatDBDate( $dateTime ) . ' - ' . $deliveryBefore;
         }
     }
 
@@ -82,8 +91,8 @@ class oxTiramizooHelper extends oxSuperCfg
         $orderOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
         $deliveryOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
 
-        $dateTime = date('Y-m-d H:i');
-
+        $dateTime = date('Y-m-d H:i', strtotime('+' . $orderOffsetTime . ' minutes', strtotime(date('Y-m-d H:i'))));
+        
         $itertator = 0;
         while ($itertator++ < 6)
         {
@@ -91,7 +100,8 @@ class oxTiramizooHelper extends oxSuperCfg
 
             $aAvailableDeliveryHours[$dateTime] = oxTiramizooHelper::getLabelDeliveryWindow($dateTime);
 
-            if (($itertator == 1) && !oxSession::hasVar( 'sTiramizooTimeWindow' )) {
+            //set as default time window if not setted before or the time window was expired
+            if (($itertator == 1) && (!oxSession::hasVar( 'sTiramizooTimeWindow' ) || strtotime(oxSession::getVar( 'sTiramizooTimeWindow' )) < strtotime($dateTime))) {
                 oxSession::setVar( 'sTiramizooTimeWindow',  $dateTime);
             }
         }
@@ -132,14 +142,26 @@ class oxTiramizooHelper extends oxSuperCfg
 
         $orderOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
 
-        $fromDateTime = date('Y-m-d H:i', strtotime('+' . $orderOffsetTime . ' minutes', strtotime($fromDateTime)));
         $fromHour = date('H:i', strtotime($fromDateTime));
         $fromDate = date('Y-m-d', strtotime($fromDateTime));
         $fromDayNum = date('w', strtotime($fromDateTime));
 
+        //check if not exceed the maximum delivery hour
+        $minimumDeliveryLengthInMinutes = (strtotime(oxTiramizooConfig::getInstance()->getConfigParam('minimumDeliveryWindowLength')) - strtotime('00:00')) / 60;
+
+        $goToNextDate = false;
+
         if (in_array($fromDayNum, range(1, 5))) {
             foreach ($this->getAvailablePickupHours() as $sAvailablePickupHour) 
             {
+                $minimumDeliveryBeforeTime = strtotime('+' . $minimumDeliveryLengthInMinutes . 'minutes', strtotime($sAvailablePickupHour));
+                
+                //check if not exceed the maximum delivery hour
+                if ($minimumDeliveryBeforeTime > strtotime(oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour'))) {
+                    $goToNextDate = true;
+                    break;
+                }
+
                 if (strtotime($fromHour) < strtotime($sAvailablePickupHour)) {
                     return $fromDate . ' ' . $sAvailablePickupHour;
                 }

@@ -131,6 +131,22 @@
             </tr>
 
             <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_del_offset_label" }]</td>
+              <td valign="top" class="edittext">
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_pickup_del_offset] value="[{$confstrs.oxTiramizoo_pickup_del_offset}]" maxlength="100" />
+                [{ oxinputhelp ident="oxTiramizoo_settings_pickup_del_offset_help" }]
+              </td>
+            </tr>
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_time_length_label" }]</td>
+              <td valign="top" class="edittext">
+                <input type=text class="editinput" name=confstrs[oxTiramizoo_pickup_time_length] value="[{$confstrs.oxTiramizoo_pickup_time_length}]" maxlength="100" />
+                [{ oxinputhelp ident="oxTiramizoo_settings_pickup_time_length_help" }]
+              </td>
+            </tr>
+
+            <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_1_label" }]</td>
               <td valign="top" class="edittext">
                 <select name=oxTiramizoo_shop_pickup_hour[]>
@@ -236,6 +252,15 @@
               </td>
             </tr>
 
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_articles_with_stock_gt_0" }]</td>
+              <td valign="top" class="edittext">
+                <input type="hidden"  name="confstrs[oxTiramizoo_articles_stock_gt_0]" value"0" />
+                <input type="checkbox" name="confstrs[oxTiramizoo_articles_stock_gt_0]" value"1" [{ if $confstrs.oxTiramizoo_articles_stock_gt_0}]checked="checked"[{ /if }]> 
+                [{ oxinputhelp ident="oxTiramizoo_settings_articles_with_stock_gt_0_help" }]
+              </td>
+            </tr>
+            
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_enable_module_label" }]</td>
               <td valign="top" class="edittext">

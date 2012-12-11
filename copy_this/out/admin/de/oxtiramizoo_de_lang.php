@@ -25,7 +25,7 @@ $aLang = array(
 'oxTiramizoo_settings_title'                            => 'Tiramizoo Einstellungen',
 
 'oxTiramizoo_settings_api_url_label'                    => 'Tiramizoo URL',
-'oxTiramizoo_settings_api_url_help'                     => 'Produktivsystem meistens https://api.tiramizoo.com/v1, Testsystem https://sandbox.tiramizoo.com/api/v1',
+'oxTiramizoo_settings_api_url_help'                     => 'Produktivsystem meistens https://www.tiramizoo.com/api/v1, Testsystem https://sandbox.tiramizoo.com/api/v1',
 
 'oxTiramizoo_settings_api_token_label'                  => 'Tiramizoo API token',
 'oxTiramizoo_settings_api_token_help'                   => 'Zu finden in Ihrem Nutzerprofil',
@@ -72,10 +72,20 @@ $aLang = array(
 'oxTiramizoo_settings_order_to_pickup_offset_label'     => 'Packzeit',
 'oxTiramizoo_settings_order_to_pickup_offset_help'      => 'Wieviel Zeit benötigen Sie zwischen Bestellung und Abholung zum Bereitstellen der Ware?',
 
-'oxTiramizoo_is_required'                               => 'erforderlich ist',
-'oxTiramizoo_pickup_hours_required_error'               => 'Sie müssen mindestens ein Abholzeitpunkt',
-'oxTiramizoo_payments_required_error'                   => 'Sie müssen mindestens ein Zahlungsmethode Tiramizoo Versandkosten zuweisen',
-'oxTiramizoo_enable_fix_errors_header'                  => 'Fix diese Fehler, um tiramizoo ermöglichen',
+'oxTiramizoo_settings_pickup_del_offset_label'          => 'Lieferzeitfenster in Minuten',
+'oxTiramizoo_settings_pickup_del_offset_help'           => 'Mindestens 90 Minuten',
+
+'oxTiramizoo_settings_pickup_time_length_label'         => 'Abholzeitfenster in Minuten',
+'oxTiramizoo_settings_pickup_time_length_help'          => 'Mindestens 90 Minuten',
+
+
+'oxTiramizoo_is_required'                               => 'ist erforderlich',
+'oxTiramizoo_pickup_hours_required_error'               => 'Sie müssen mindestens ein Abholzeitfenster angeben',
+'oxTiramizoo_payments_required_error'                   => 'Sie müssen mindestens eine Zahlungsmethode der Tiramizoo-Lieferoption zuweisen',
+'oxTiramizoo_enable_fix_errors_header'                  => 'Folgende Fehler beheben, damit tiramizoo funktioniert',
+
+'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Nur Artikel mit Lagerbestand > 0 über tiramizoo versendbar machen',
+'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Nur Artikel mit Lagerbestand > 0 über tiramizoo versendbar machen',
 
 // Article administration -> Tiramizoo Tab
 

@@ -52,7 +52,7 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
                 // echo '</div>';
                 // 
                 $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_post_order_error', oxLang::getInstance()->getBaseLanguage(), false);
-                throw new oxTiramizooSendOrderException( $errorMessage );
+                throw new oxTiramizoo_SendOrderException( $errorMessage );
             }
 
             $this->oxorder__tiramizoo_params = new oxField(base64_encode(serialize($tiramizooResult)), oxField::T_RAW);

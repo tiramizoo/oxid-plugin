@@ -109,7 +109,12 @@ class oxTiramizooApi extends TiramizooApi
         $oPickup->phone_number = $oxConfig->getShopConfVar('oxTiramizoo_shop_phone_number');
         $oPickup->email = $oxConfig->getShopConfVar('oxTiramizoo_shop_email_address');
         $oPickup->after = date('c', strtotime($sTiramizooWindow));
-        $oPickup->before = date('c', strtotime('+' . $oxConfig->getShopConfVar('oxTiramizoo_pickup_del_offset') . 'minutes', strtotime($sTiramizooWindow)));
+        $oPickup->before = date('c', strtotime('+' . $oxConfig->getShopConfVar('oxTiramizoo_pickup_time_length') . 'minutes', strtotime($sTiramizooWindow)));
+
+        //change pickup before time exceed maximum delivery hour
+        if (strtotime(date('H:i', strtotime($oPickup->before))) > strtotime(oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour'))) {
+            $oPickup->before = date('c', strtotime(date('Y-m-d', strtotime($sTiramizooWindow)) . ' ' . oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour')));
+        }
 
         return $oPickup;
     }
@@ -133,20 +138,41 @@ class oxTiramizooApi extends TiramizooApi
             $oDelivery->city = $oDeliveryAddress->oxaddress__oxcity->value;
             $oDelivery->postal_code = $oDeliveryAddress->oxaddress__oxzip->value;
             $oDelivery->country_code = $oDeliveryAddress->oxaddress__oxcountryid->value;
-            $oDelivery->name = $oDeliveryAddress->oxaddress__oxfname->value . ' ' . $oDeliveryAddress->oxaddress__oxlname->value;
             $oDelivery->phone_number = $oDeliveryAddress->oxaddress__oxfon->value;
+            
+            $oDelivery->name = $oDeliveryAddress->oxaddress__oxfname->value . ' ' . $oDeliveryAddress->oxaddress__oxlname->value;
+
+            if ($oDeliveryAddress->oxaddress__oxcompany->value) {
+                $oDelivery->name = $oDeliveryAddress->oxaddress__oxcompany->value . ' / ' . $oDelivery->name;
+            }
+
         } else {
             $oDelivery->address_line_1 = $oUser->oxuser__oxstreet->value . ' ' . $oUser->oxuser__oxstreetnr->value;
             $oDelivery->city = $oUser->oxuser__oxcity->value;
             $oDelivery->postal_code = $oUser->oxuser__oxzip->value;
             $oDelivery->country_code = $oUser->oxuser__oxcountryid->value;
-            $oDelivery->name = $oUser->oxusers__oxfname->value . ' ' . $oUser->oxuser__oxlname->value;
             $oDelivery->phone_number = $oUser->oxuser__oxfon->value;
+            
+            $oDelivery->name = $oUser->oxuser__oxfname->value . ' ' . $oUser->oxuser__oxlname->value;
+
+            if ($oUser->oxuser__oxcompany->value) {
+                $oDelivery->name = $oUser->oxuser__oxcompany->value . ' / ' . $oDelivery->name;
+            }
         }
 
         //get country code
         $oCountry = oxNew('oxcountry');
         $oCountry->load($oDelivery->country_code);
+
+        $sTiramizooWindow = oxSession::getVar( 'sTiramizooTimeWindow' );
+        $oDelivery->after = date('c', strtotime($sTiramizooWindow));
+        $oDelivery->before = date('c', strtotime('+' . oxConfig::getInstance()->getShopConfVar('oxTiramizoo_pickup_del_offset') . 'minutes', strtotime($sTiramizooWindow)));
+
+        //change delivery before time exceed maximum delivery hour
+        if (strtotime(date('H:i', strtotime($oDelivery->before))) > strtotime(oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour'))) {
+            $oDelivery->before = date('c', strtotime(date('Y-m-d', strtotime($sTiramizooWindow)) . ' ' . oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour')));
+        }
+
 
         $oDelivery->country_code = strtolower($oCountry->oxcountry__oxisoalpha2->value);
 
@@ -176,8 +202,14 @@ class oxTiramizooApi extends TiramizooApi
 
             //article is disabled return false
             if ($oArticle->oxarticles__tiramizoo_enable->value == -1) {
-
                 return false;
+            }
+
+            //check if deliverable is set for articles with stock > 0
+            if (oxConfig::getInstance()->getShopConfVar('oxTiramizoo_articles_stock_gt_0')) {
+                if ($oArticle->oxarticles__oxstock->value <= 0) {
+                    return false;
+                }
             }
 
             //get the data from categories hierarchy
@@ -236,7 +268,21 @@ class oxTiramizooApi extends TiramizooApi
      */
     protected function _getArticleInheritData($oArticle)
     {
+        //set the defaults
+        $oxTiramizooInheritedData = array();
+
+        $oxTiramizooInheritedData['tiramizoo_enable'] = 0;
+        $oxTiramizooInheritedData['weight'] = 0;
+        $oxTiramizooInheritedData['width'] = 0;
+        $oxTiramizooInheritedData['height'] = 0;
+        $oxTiramizooInheritedData['length'] = 0;
+
         $oCategory = $oArticle->getCategory();
+
+        // if article has no assigned categories return only global settings
+        if (!$oCategory) {
+            return  $oxTiramizooInheritedData;
+        }
 
         $aCheckCategories = $this->_getParentsCategoryTree($oCategory);
 

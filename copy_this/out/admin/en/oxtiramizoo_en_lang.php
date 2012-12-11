@@ -25,7 +25,7 @@ $aLang = array(
 'oxTiramizoo_settings_title'                            => 'Tiramizoo settings',
 
 'oxTiramizoo_settings_api_url_label'                    => 'Tiramizoo URL',
-'oxTiramizoo_settings_api_url_help'                     => 'Production version probably https://api.tiramizoo.com/v1, testing version https://sandbox.tiramizoo.com/api/v1',
+'oxTiramizoo_settings_api_url_help'                     => 'Production version probably https://www.tiramizoo.com/api/v1, testing version https://sandbox.tiramizoo.com/api/v1',
 
 'oxTiramizoo_settings_api_token_label'                  => 'Tiramizoo API token',
 'oxTiramizoo_settings_api_token_help'                   => 'Can be obtained via your user profile',
@@ -72,10 +72,19 @@ $aLang = array(
 'oxTiramizoo_settings_order_to_pickup_offset_label'     => 'Order To Pickup Time offset',
 'oxTiramizoo_settings_order_to_pickup_offset_help'      => 'Preparation time for goods from ordering to pickup',
 
+'oxTiramizoo_settings_pickup_del_offset_label'          => 'Delivery time window length',
+'oxTiramizoo_settings_pickup_del_offset_help'           => 'Delivery time window length 90 minutes is minimal',
+
+'oxTiramizoo_settings_pickup_time_length_label'         => 'Pickup time window length',
+'oxTiramizoo_settings_pickup_time_length_help'          => 'Pickup time window length 90 minutes is minimal',
+
 'oxTiramizoo_is_required'                               => 'is required',
-'oxTiramizoo_pickup_hours_required_error'               => 'You must specify at least one pick up hour',
+'oxTiramizoo_pickup_hours_required_error'               => 'You must specify at least one pick up time window',
 'oxTiramizoo_payments_required_error'                   => 'You must assign at least one payment method to Tiramizoo shipping',
-'oxTiramizoo_enable_fix_errors_header'                  => 'Fix these errors, to enable tiramizoo',
+'oxTiramizoo_enable_fix_errors_header'                  => 'Fix these errors to enable tiramizoo',
+
+'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Enable only articles with stock > 0',
+'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Enable only articles with stock > 0',
 
 // Article administration -> Tiramizoo Tab
 
