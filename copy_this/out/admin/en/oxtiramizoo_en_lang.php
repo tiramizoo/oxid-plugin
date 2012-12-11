@@ -86,6 +86,14 @@ $aLang = array(
 'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Enable only articles with stock > 0',
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Enable only articles with stock > 0',
 
+'oxTiramizoo_settings_weight_label'                     => 'Weight',
+'oxTiramizoo_settings_weight_help'                      => 'This weight will be assigned for all products without specified weight. You can override it in category settings or article settings.',
+'oxTiramizoo_settings_dimensions_label'                 => 'Dimensions',
+'oxTiramizoo_settings_dimensions_help'                  => 'L-length, W - width, H - height. These dimensions will be assigned for all products without specified dimensions. You can override them in category settings or article settings.',
+
+'oxTiramizoo_settings_weight_dimensions_warning'        => 'Enter the weight and all dimensions at once. If these values are filled partially then will not propagate to articles.',
+
+
 // Article administration -> Tiramizoo Tab
 
 'oxTiramizoo_article_tab_enable_tiramizoo_label'        => 'Enable tiramizoo',
@@ -93,6 +101,26 @@ $aLang = array(
 'oxTiramizoo_article_tab_enable_inherit_value'          => 'Inherit from parent settings',
 'oxTiramizoo_article_tab_enable_yes_value'              => 'Yes',
 'oxTiramizoo_article_tab_enable_no_value'               => 'No',
+
+'oxTiramizoo_article_tab_article_effective_label'       => 'Article\'s effective values',
+
+'oxTiramizoo_article_tab_article_is_enabled'            => 'Article is enabled',
+'oxTiramizoo_article_tab_article_is_disabled'           => 'Article is disabled',
+'oxTiramizoo_article_tab_disabled_by_category_1'        => 'in tiramizoo shipping because parent category', 
+'oxTiramizoo_article_tab_disabled_by_category_2'        => 'is disabled. Please check the tiramizoo tab in category settings',
+
+'oxTiramizoo_article_tab_effective_values_warning'      => 'You have to specify dimensions and weight. You can do this in global settings, category tab or article extended tab.',
+
+'oxTiramizoo_article_tab_width_label'                   => 'Width',
+'oxTiramizoo_article_tab_height_unit'                   => 'Height',
+'oxTiramizoo_article_tab_length_unit'                   => 'Length',
+
+
+'oxTiramizoo_article_tab_weight_label'                  => 'Weight',
+'oxTiramizoo_article_tab_weight_unit'                   => 'kg',
+
+'oxTiramizoo_article_tab_dimensions_label'              => 'Dimensions',
+'oxTiramizoo_article_tab_dimensions_unit'               => 'cm',
 
 // Category administration -> Tiramizoo Tab
 

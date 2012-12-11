@@ -241,29 +241,26 @@
 
           <tr>
             <td class="edittext">
-              [{ oxmultilang ident="oxTiramizoo_category_tab_weight_label" }]
+              [{ oxmultilang ident="oxTiramizoo_settings_weight_label" }]
             </td>
             <td class="edittext">
               <input type="text" class="editinput" size="10" maxlength="10" style="width:40px;" name="confstrs[oxTiramizoo_global_weight]" value="[{$confstrs.oxTiramizoo_global_weight}]">[{ oxmultilang ident="oxTiramizoo_category_tab_weight_unit" }] 
-              [{ oxinputhelp ident="oxTiramizoo_category_tab_weight_help" }]
+              [{ oxinputhelp ident="oxTiramizoo_settings_weight_help" }]
             </td>
           </tr>
+
           <tr>
             <td class="edittext">
-              [{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_label" }]
+              [{ oxmultilang ident="oxTiramizoo_settings_dimensions_label" }]
             </td>
             <td class="edittext">
               L:&nbsp;<input type="text" class="editinput" size="3" maxlength="10" style="width:40px;" name="confstrs[oxTiramizoo_global_length]" value="[{$confstrs.oxTiramizoo_global_length}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
               W:&nbsp;<input type="text" class="editinput" size="3" maxlength="" style="width:40px;" name="confstrs[oxTiramizoo_global_width]" value="[{$confstrs.oxTiramizoo_global_width}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
               H:&nbsp;<input type="text" class="editinput" size="3" maxlength="" style="width:40px;" name="confstrs[oxTiramizoo_global_height]" value="[{$confstrs.oxTiramizoo_global_height}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
 
-              [{ oxinputhelp ident="oxTiramizoo_category_tab_dimensions_help" }]
-              
+              [{ oxinputhelp ident="oxTiramizoo_settings_dimensions_help" }]
             </td>
           </tr>
-
-
-
 
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_articles_with_stock_gt_0" }]</td>

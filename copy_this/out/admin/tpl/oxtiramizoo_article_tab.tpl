@@ -70,20 +70,24 @@ function editThis( sID )
                     <option value="1" [{if ($edit->oxarticles__tiramizoo_enable->value == 1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_yes_value" }]</option>
                     <option value="-1" [{if ($edit->oxarticles__tiramizoo_enable->value == -1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_no_value" }]</option>
                 </select>
-
+                
+                [{ oxinputhelp ident="oxTiramizoo_article_tab_enable_tiramizoo_help" }]
 
                 [{if (($inheritedData.tiramizoo_enable) && ($edit->oxarticles__tiramizoo_enable->value != -1 )) }]
-                  <span style="color:green;">Article is enabled</span>
+                  <span style="color:green;">[{ oxmultilang ident="oxTiramizoo_article_tab_article_is_enabled" }]</span>
                   [{else}]
-                  <span style="color:red;">Atrticle is disabled </span>
+                  <div>
+                  <span style="color:red;">[{ oxmultilang ident="oxTiramizoo_article_tab_article_is_disabled" }]</span>
+
+                    [{if ($disabledCategory) }]
+                      <span style="color:red;">[{ oxmultilang ident="oxTiramizoo_article_tab_disabled_by_category_1"  }] [{$disabledCategory->oxcategories__oxtitle->value }] [{ oxmultilang  ident="oxTiramizoo_article_tab_disabled_by_category_2"  }] </span>
+                    [{/if}]
+                  </div>
                 [{/if}]
 
+                
 
-                [{if ($disabledCategory) }]
-                  <span style="color:red;">because parent category [{$disabledCategory->oxcategories__oxtitle->value }] is disabled </span>
-                [{/if}]
 
-                [{ oxinputhelp ident="oxTiramizoo_article_tab_enable_tiramizoo_help" }]
             </td>
           </tr>
 
@@ -99,18 +103,18 @@ function editThis( sID )
 
 
           <tr>          
-            <td class="edittext">Article effective values</td>
+            <td class="edittext">[{ oxmultilang ident="oxTiramizoo_article_tab_article_effective_label" }]</td>
             <td class="edittext">
               <p>
 
-              Weight: [{$effectiveData->weight}] kg.<br />
-              Width: [{$effectiveData->width}] cm.<br />
-              Height: [{$effectiveData->height}] cm.<br />
-              Length: [{$effectiveData->length}] cm.<br />
+              [{oxmultilang ident="oxTiramizoo_article_tab_weight_label"}]: [{$effectiveData->weight}] [{oxmultilang ident="oxTiramizoo_article_tab_weight_unit"}].<br />
+              [{oxmultilang ident="oxTiramizoo_article_tab_width_label"}]: [{$effectiveData->width}] [{oxmultilang ident="oxTiramizoo_article_tab_dimensions_unit"}].<br />
+              [{oxmultilang ident="oxTiramizoo_article_tab_height_unit"}]: [{$effectiveData->height}] [{oxmultilang ident="oxTiramizoo_article_tab_dimensions_unit"}].<br />
+              [{oxmultilang ident="oxTiramizoo_article_tab_length_unit"}]: [{$effectiveData->length}] [{oxmultilang ident="oxTiramizoo_article_tab_dimensions_unit"}].<br />
               </p>
 
                 [{if ($warningDimensions)}]
-                  <span style="color:red;">[{$warningDimensions}]</span>
+                  <span style="color:red;">[{oxmultilang ident="oxTiramizoo_article_tab_effective_values_warning"}]</span>
                 [{/if}]
 
 
