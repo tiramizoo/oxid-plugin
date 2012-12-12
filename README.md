@@ -10,7 +10,7 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 
 *   User goes to checkout (Step 1)
 
-*   User specifies delivery address (Step 2)
+*   User specifies delivery address (Step 2) *Warning: We highly recommend to set customer's phone number as a required field. It enables courier to contact customer when necessary
 
 *   Between Step 2 and Step 3 plugin sends request to tiramizoo with items dimentions and address data to verify if package can be delivered with Tiramizoo. In case package is too big, or delivery address is outside service area tiramizoo will not appear as delivery option
 
