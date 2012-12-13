@@ -252,6 +252,17 @@
               </td>
             </tr>
 
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_package_size_label" }]</td>
+              <td valign="top" class="edittext">
+                <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_size]" value="[{$confstrs.oxTiramizoo_std_package_size}]" maxlength="100" />
+                [{ oxinputhelp ident="oxTiramizoo_settings_package_size_help" }]
+              </td>
+            </tr>
+
+
+
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_articles_with_stock_gt_0" }]</td>
               <td valign="top" class="edittext">

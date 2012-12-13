@@ -191,6 +191,9 @@ class oxTiramizooApi extends TiramizooApi
     {
         $items = array();
 
+        $useStandardPackage = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_size');
+        $standardPackageAddedToItems = 0;
+
         foreach ($oBasket->getBasketArticles() as $key => $oArticle) 
         {
             //initialize standard class
@@ -254,8 +257,22 @@ class oxTiramizooApi extends TiramizooApi
             $item->length = floatval($item->length);
             $item->quantity = floatval($item->quantity);
 
+            if ($useStandardPackage && !$standardPackageAddedToItems && ($inheritedData['tiramizoo_use_package'] && $oArticle->oxarticles__tiramizoo_use_package->value)) {
+                
+                $standardPackageAddedToItems = 1;
+
+                list($width, $height, $length) = explode('x', $useStandardPackage);
+
+                $item->width = floatval($width);
+                $item->height = floatval($height);
+                $item->length = floatval($length);
+                $item->quantity = 1;
+            }
+
             $items[] = $item;
         }
+
+        print_r($items); exit;
 
         return $items;
     }
@@ -271,6 +288,7 @@ class oxTiramizooApi extends TiramizooApi
         //set the defaults
         $oxTiramizooInheritedData = array();
 
+        $oxTiramizooInheritedData['tiramizoo_use_package'] = 0;
         $oxTiramizooInheritedData['tiramizoo_enable'] = 0;
         $oxTiramizooInheritedData['weight'] = 0;
         $oxTiramizooInheritedData['width'] = 0;
@@ -299,7 +317,7 @@ class oxTiramizooApi extends TiramizooApi
         }
 
         $oxTiramizooInheritedData['tiramizoo_enable'] = $allCategoriesAreEnabled;
-
+        $oxTiramizooInheritedData['tiramizoo_use_package'] = $oCategory->oxcategories__tiramizoo_use_package->value;
         $oxTiramizooInheritedData['weight'] = $oCategory->oxcategories__tiramizoo_weight->value;
         $oxTiramizooInheritedData['width'] = $oCategory->oxcategories__tiramizoo_width->value;
         $oxTiramizooInheritedData['height'] = $oCategory->oxcategories__tiramizoo_height->value;
@@ -322,6 +340,7 @@ class oxTiramizooApi extends TiramizooApi
         $oxTiramizooCategoryData['oxtitle'] = $oCategory->oxcategories__oxtitle->value;
         $oxTiramizooCategoryData['oxsort'] = $oCategory->oxcategories__oxsort->value;
         $oxTiramizooCategoryData['tiramizoo_enable'] = $oCategory->oxcategories__tiramizoo_enable->value;
+        $oxTiramizooCategoryData['tiramizoo_use_package'] = $oCategory->oxcategories__tiramizoo_use_package->value;
         $oxTiramizooCategoryData['tiramizoo_weight'] = $oCategory->oxcategories__tiramizoo_weight->value;
         $oxTiramizooCategoryData['tiramizoo_width'] = $oCategory->oxcategories__tiramizoo_width->value;
         $oxTiramizooCategoryData['tiramizoo_height'] = $oCategory->oxcategories__tiramizoo_height->value;
