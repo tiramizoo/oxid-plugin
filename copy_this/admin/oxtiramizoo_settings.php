@@ -35,6 +35,7 @@ class oxTiramizoo_settings extends Shop_Config
     parent::render();
 
     $this->_aViewData['oPaymentsList'] = $this->getPaymentsList();
+    $this->_aViewData['aPickupHours'] = $this->getPickupHoursAsArray();
 
     $sCurrentAdminShop = $oxConfig->getShopId();
 
@@ -68,6 +69,20 @@ class oxTiramizoo_settings extends Shop_Config
     return 'oxTiramizoo_settings.tpl';
   }
   
+
+
+
+  public function getPickupHoursAsArray()
+  {
+        $aPickupHours = array();
+
+        for ($i = 1; $i <= 6; $i++)
+        {
+            $aPickupHours[] = oxConfig::getInstance()->getShopConfVar('oxTiramizoo_shop_pickup_hour_' . $i);
+        }
+
+        return $aPickupHours;
+  }
 
   public function getPaymentsList()
   {

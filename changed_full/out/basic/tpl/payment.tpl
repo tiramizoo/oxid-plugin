@@ -17,11 +17,21 @@
               <input type="hidden" name="fnc" value="changeshipping">
 
               <div class="left">
-                <select name="sShipSet" onChange="JavaScript:document.forms.shipping.submit();">
+<!--            <select name="sShipSet" onChange="JavaScript:document.forms.shipping.submit();">
                   [{foreach key=sShipID from=$oView->getAllSets() item=oShippingSet name=ShipSetSelect}]
                     <option value="[{$sShipID}]" [{if $oShippingSet->blSelected}]SELECTED[{/if}]>[{ $oShippingSet->oxdeliveryset__oxtitle->value }]</option>
                   [{/foreach}]
                 </select>
+ -->
+
+
+
+                  [{foreach key=sShipID from=$oView->getAllSets() item=oShippingSet name=ShipSetSelect}]
+                    <input type="radio" name="sShipSet" onChange="JavaScript:document.forms.shipping.submit();" value="[{$sShipID}]"  [{if $oShippingSet->blSelected}]checked[{/if}]>  [{ $oShippingSet->oxdeliveryset__oxtitle->value }] <br />
+                  [{/foreach}]
+
+
+
                 <noscript>
                   <div>
                     <span class="btn"><input class="btn" type="submit" value="[{ oxmultilang ident="PAYMENT_UPDATESHIPPING" }]" ></span>
