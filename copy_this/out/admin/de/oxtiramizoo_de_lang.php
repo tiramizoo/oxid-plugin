@@ -87,12 +87,12 @@ $aLang = array(
 'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Enable only articles with stock > 0',
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Enable only articles with stock > 0',
 
-'oxTiramizoo_settings_weight_label'                     => 'Weight',
-'oxTiramizoo_settings_weight_help'                      => 'This weight will be assigned for all products without specified weight. You can override it in category settings or article settings.',
-'oxTiramizoo_settings_dimensions_label'                 => 'Dimensions',
-'oxTiramizoo_settings_dimensions_help'                  => 'L-length, W - width, H - height. These dimensions will be assigned for all products without specified dimensions. You can override them in category settings or article settings.',
+'oxTiramizoo_settings_weight_label'                     => 'Gewicht',
+'oxTiramizoo_settings_weight_help'                      => 'Dieses Gewicht wird allen Artikeln zugeordnet, bei denen es nicht angegeben ist. Sie können es in den Kategorie- oder Artikeleinstellungen anpassen.',
+'oxTiramizoo_settings_dimensions_label'                 => 'Abmessungen',
+'oxTiramizoo_settings_dimensions_help'                  => 'L-Länge, B - Breite, H - Höhe. Diese Abmessungen werden allen Artikeln zugeordnet, bei denen sie nicht angegeben sind. Sie können sie in den Kategorie- oder Artikeleinstellungen anpassen.',
 
-'oxTiramizoo_settings_weight_dimensions_warning'        => 'Enter the weight and all dimensions at once. If these values are filled partially then will not propagate to articles.',
+'oxTiramizoo_settings_weight_dimensions_warning'        => 'Bitte Gewicht und Abmessungen komplett angeben, ansonsten werden sie nicht angewendet.',
 
 // Article administration -> Tiramizoo Tab
 
@@ -102,23 +102,23 @@ $aLang = array(
 'oxTiramizoo_article_tab_enable_yes_value'              => 'Ja',
 'oxTiramizoo_article_tab_enable_no_value'               => 'Nein',
 
-'oxTiramizoo_article_tab_article_effective_label'       => 'Article\'s effective values',
+'oxTiramizoo_article_tab_article_effective_label'       => 'Effektive Werte des Artikels',
 
-'oxTiramizoo_article_tab_article_is_enabled'            => 'Article is enabled',
-'oxTiramizoo_article_tab_article_is_disabled'           => 'Article is disabled',
-'oxTiramizoo_article_tab_disabled_by_category'          => 'in tiramizoo shipping because parent category {Jeans} is disabled. Please check the tiramizoo tab in category settings',
+'oxTiramizoo_article_tab_article_is_enabled'            => 'Artikel ist aktiviert',
+'oxTiramizoo_article_tab_article_is_disabled'           => 'Artikel is deaktiviert',
+'oxTiramizoo_article_tab_disabled_by_category'          => 'für den Versand mit tiramizoo.com, da die übergeordnete Kategorie {Jeans} deaktiviert ist. Bitte den Reiter tiramizoo in den Kategorieeinstellungen überprüfen.',
 
-'oxTiramizoo_article_tab_effective_values_warning'      => 'You have to specify dimensions and weight. You can do this in global settings, category tab or article extended tab.',
+'oxTiramizoo_article_tab_effective_values_warning'      => 'Sie müssen Abmessungen und Gewicht angeben. Sie können dies in den allgemeinen Einstellungen, Kategorie-Reiter oder den erweiterten Einstellungen des Artikels vornehmen.',
 
-'oxTiramizoo_article_tab_width_label'                   => 'Width',
-'oxTiramizoo_article_tab_height_unit'                   => 'Height',
-'oxTiramizoo_article_tab_length_unit'                   => 'Length',
+'oxTiramizoo_article_tab_width_label'                   => 'Breite',
+'oxTiramizoo_article_tab_height_unit'                   => 'Höhe',
+'oxTiramizoo_article_tab_length_unit'                   => 'Länge',
 
 
-'oxTiramizoo_article_tab_weight_label'                  => 'Weight',
+'oxTiramizoo_article_tab_weight_label'                  => 'Gewicht',
 'oxTiramizoo_article_tab_weight_unit'                   => 'kg',
 
-'oxTiramizoo_article_tab_dimensions_label'              => 'Dimensions',
+'oxTiramizoo_article_tab_dimensions_label'              => 'Abmessungen',
 'oxTiramizoo_article_tab_dimensions_unit'               => 'cm',
 
 // Category administration -> Tiramizoo Tab
