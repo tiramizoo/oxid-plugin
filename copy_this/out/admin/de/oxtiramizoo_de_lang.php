@@ -87,14 +87,13 @@ $aLang = array(
 'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Nur Artikel mit Lagerbestand > 0 über tiramizoo versendbar machen',
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Nur Artikel mit Lagerbestand > 0 über tiramizoo versendbar machen',
 
-<<<<<<< HEAD
 'oxTiramizoo_settings_weight_label'                     => 'Gewicht',
 'oxTiramizoo_settings_weight_help'                      => 'Dieses Gewicht wird allen Artikeln zugeordnet, bei denen es nicht angegeben ist. Sie können es in den Kategorie- oder Artikeleinstellungen anpassen.',
 'oxTiramizoo_settings_dimensions_label'                 => 'Abmessungen',
 'oxTiramizoo_settings_dimensions_help'                  => 'L-Länge, B - Breite, H - Höhe. Diese Abmessungen werden allen Artikeln zugeordnet, bei denen sie nicht angegeben sind. Sie können sie in den Kategorie- oder Artikeleinstellungen anpassen.',
 
 'oxTiramizoo_settings_weight_dimensions_warning'        => 'Bitte Gewicht und Abmessungen komplett angeben, ansonsten werden sie nicht angewendet.',
-=======
+
 'oxTiramizoo_settings_enable_immediate_label'           => 'tiramizoo.com "Sofortlieferung" aktivieren',
 'oxTiramizoo_settings_enable_immediate_help'            => '"Sofortlieferung" als Versandmethode aktivieren. Dies wählt automatisch das nächste verfügbare tiramizoo.com Zeitfenster.',
 
@@ -102,8 +101,6 @@ $aLang = array(
 'oxTiramizoo_settings_enable_evening_help'              => '"Abendzustellung" als Versandmethode aktivieren. Verwendet wird hierfür das ausgewählte Zeitfenster.',
 
 'oxTiramizoo_settings_select_evening_label'             => 'Zeitfenster für Abendzustellung auswählen',
-
->>>>>>> trello.issue.18
 
 // Article administration -> Tiramizoo Tab
 

@@ -90,6 +90,7 @@ $aLang = array(
 'oxTiramizoo_settings_weight_help'                      => 'This weight will be assigned for all products without specified weight. You can override it in category settings or article settings.',
 'oxTiramizoo_settings_dimensions_label'                 => 'Dimensions',
 'oxTiramizoo_settings_dimensions_help'                  => 'L-length, W - width, H - height. These dimensions will be assigned for all products without specified dimensions. You can override them in category settings or article settings.',
+
 'oxTiramizoo_settings_enable_immediate_label'           => 'Enable Tiramizoo "Immediate delivery"',
 'oxTiramizoo_settings_enable_immediate_help'            => 'If checked add shipping method "Immediate delivery" to checkout with the first possible Tiramizoo delivery time window.',
 
