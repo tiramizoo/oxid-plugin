@@ -35,6 +35,10 @@ class oxTiramizoo_settings extends Shop_Config
     parent::render();
 
     $this->_aViewData['oPaymentsList'] = $this->getPaymentsList();
+    $this->_aViewData['aPackageSizes'] = $this->getPackageSizes();
+
+
+
 
     $sCurrentAdminShop = $oxConfig->getShopId();
 
@@ -68,6 +72,25 @@ class oxTiramizoo_settings extends Shop_Config
     return 'oxTiramizoo_settings.tpl';
   }
   
+
+    public function getPackageSizes()
+    {
+        $iMaximumPackageSizes = oxTiramizooConfig::getInstance()->getConfigParam('iMaximumPackageSizes');
+
+        $aPackageSizes = array();
+
+        for ($i=1; $i <= $iMaximumPackageSizes ; $i++) 
+        { 
+            $aPackageSize = array();
+            $aPackageSize['name'] = 'oxTiramizoo_package_size_' . $i;
+            $aPackageSize['value'] = $this->getConfig()->getShopConfVar('oxTiramizoo_package_size_' . $i);
+
+            $aPackageSizes[$i] = $aPackageSize;
+        }
+
+        return $aPackageSizes;
+    }
+
 
   public function getPaymentsList()
   {
@@ -119,6 +142,11 @@ class oxTiramizoo_settings extends Shop_Config
             }
         }
   }
+
+
+
+
+
 
     /**
     * Saves shop configuration variables

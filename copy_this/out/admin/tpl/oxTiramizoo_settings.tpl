@@ -228,15 +228,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
             <tr>
               <td>[{ oxmultilang ident="oxTiramizoo_settings_payment_methods_assigned_label" }]</td>
               <td>
@@ -251,6 +242,42 @@
                 </ul>
               </td>
             </tr>
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">Define Package size</td>
+              <td valign="top" class="edittext">
+                <input type="radio" name=confstrs[oxTiramizoo_package_strategy] /> All products fit to package 
+                <input type="radio" name=confstrs[oxTiramizoo_package_strategy] /> I have more than one package dimesnions
+
+              </td>
+            </tr>
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">Standard Package size</td>
+              <td valign="top" class="edittext">
+                <input type=text class="editinput" name=confstrs[[{$aPackage.name}]] value="[{$aPackage.value}]" maxlength="100" />
+                [{ oxinputhelp ident="oxTiramizoo_settings_package_size" }]
+              </td>
+            </tr>
+
+
+
+            [{foreach from=$aPackageSizes key=key item=aPackage}]
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{$key}] Package size</td>
+              <td valign="top" class="edittext">
+                <input type=text class="editinput" name=confstrs[[{$aPackage.name}]] value="[{$aPackage.value}]" maxlength="100" />
+                [{ oxinputhelp ident="oxTiramizoo_settings_package_size" }]
+              </td>
+            </tr>
+            [{/foreach}]
+
+
+
+
+
+
+
 
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_articles_with_stock_gt_0" }]</td>

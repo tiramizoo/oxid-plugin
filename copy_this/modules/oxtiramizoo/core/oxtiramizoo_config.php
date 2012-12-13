@@ -40,6 +40,12 @@ class oxTiramizooConfig extends oxSuperCfg
     protected $selectedDeliveryPickupHourStep = '00:30';
 
     /**
+     * maximum package sizes
+     * @var string
+     */
+    protected $iMaximumPackageSizes = 6;
+
+    /**
      * Get the instance of class
      * 
      * @return oxTiramizooHelper
