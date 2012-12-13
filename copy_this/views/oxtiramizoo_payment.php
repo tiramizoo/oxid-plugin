@@ -27,15 +27,18 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
             unset($this->_aAllSets['Tiramizoo']);
             unset($this->_aAllSets['TiramizooEvening']);
             $unsetTiramizoo = true;
-        } else if (!oxTiramizooHelper::getInstance()->isTiramizooImmediateAvailable()) {
-            unset($this->_aAllSets['Tiramizoo']);
-            $unsetTiramizoo = true;
-        } else if (!oxTiramizooHelper::getInstance()->isTiramizooEveningAvailable()) {
-            unset($this->_aAllSets['TiramizooEvening']);
-            $unsetTiramizoo = true;
+        } else {
+            if (!oxTiramizooHelper::getInstance()->isTiramizooImmediateAvailable()) {
+                unset($this->_aAllSets['Tiramizoo']);
+                $unsetTiramizoo = true;
+            }
+            if (!oxTiramizooHelper::getInstance()->isTiramizooEveningAvailable()) {
+                unset($this->_aAllSets['TiramizooEvening']);
+                $unsetTiramizoo = true;
+            }
         }
 
-        if ($unsetTiramizoo) {
+        if ($unsetTiramizoo && in_array(oxSession::getVar( 'sShipSet'), array('Tiramizoo', 'TiramizooEvening'))) {
 
             $sNewShippingMethod = key($this->_aAllSets);
 

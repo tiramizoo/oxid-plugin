@@ -193,16 +193,16 @@ class oxTiramizooHelper extends oxSuperCfg
             $oBasket = $this->getSession()->getBasket();
             $oxConfig = $this->getConfig();
 
+            if (!$this->isTiramizooImmediateAvailable() && !$this->isTiramizooEveningAvailable()) {
+                return $this->_isTiramizooImmediateAvailable = 0;
+            }
+
             $oOrder = oxNew( 'oxorder' );
             $address = $oOrder->getDelAddressInfo();
 
             $oUser = $this->getUser();
 
             $sZipCode = $address ? $address->oxaddress__oxzip->value : $oUser->oxuser__oxzip->value;
-
-            if (!$this->getConfig()->getConfigParam('oxTiramizoo_enable_module')) {
-                return $this->_isTiramizooAvailable = 0;
-            }
 
             if (!count($this->getAvailablePickupHours())) {
                 return $this->_isTiramizooAvailable = 0;
@@ -273,7 +273,14 @@ class oxTiramizooHelper extends oxSuperCfg
     {
         if ($this->_isTiramizooEveningAvailable === -1) {
 
-            if (!$this->getConfig()->getShopConfVar('oxTiramizoo_enable_evening') && $this->getConfig()->getShopConfVar('oxTiramizoo_evening_window')) {
+            if (!$this->getConfig()->getShopConfVar('oxTiramizoo_enable_evening') || !$this->getConfig()->getShopConfVar('oxTiramizoo_evening_window')) {
+                return $this->_isTiramizooEveningAvailable = 0;
+            }
+
+            //check if time is not earlier
+            $hour = date('H:i', strtotime($this->getNextAvailableDate( date('Y-m-d H:i:s') )));
+
+            if ((strtotime($hour) > strtotime($this->getConfig()->getShopConfVar('oxTiramizoo_evening_window')))) {
                 return $this->_isTiramizooEveningAvailable = 0;
             }
 

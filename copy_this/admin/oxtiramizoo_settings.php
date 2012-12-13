@@ -112,27 +112,32 @@ class oxTiramizoo_settings extends Shop_Config
   public function assignPaymentsToTiramizoo()
   {
         $aPayments  = oxConfig::getParameter( "payment" );
-        $soxId = 'Tiramizoo';
+
+        //assign payments for all shipping methods
+        $aTiramizooSoxIds = array('Tiramizoo', 'TiramizooEvening');
 
         $oDb = oxDb::getDb();
 
         foreach ( $aPayments as $sPaymentId => $isAssigned) 
         {
-            if ($isAssigned) {
-                // check if we have this entry already in
-                $sID = $oDb->getOne("SELECT oxid FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'", false, false);
-                if ( !isset( $sID) || !$sID) {
-                    $oObject = oxNew( 'oxbase' );
-                    $oObject->init( 'oxobject2payment' );
-                    $oObject->oxobject2payment__oxpaymentid = new oxField($sPaymentId);
-                    $oObject->oxobject2payment__oxobjectid  = new oxField($soxId);
-                    $oObject->oxobject2payment__oxtype      = new oxField("oxdelset");
-                    $oObject->save();
+            foreach ( $aTiramizooSoxIds as $soxId) 
+            {
+                if ($isAssigned) {
+                    // check if we have this entry already in
+                    $sID = $oDb->getOne("SELECT oxid FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'", false, false);
+                    if ( !isset( $sID) || !$sID) {
+                        $oObject = oxNew( 'oxbase' );
+                        $oObject->init( 'oxobject2payment' );
+                        $oObject->oxobject2payment__oxpaymentid = new oxField($sPaymentId);
+                        $oObject->oxobject2payment__oxobjectid  = new oxField($soxId);
+                        $oObject->oxobject2payment__oxtype      = new oxField("oxdelset");
+                        $oObject->save();
+                    }
+                } else {
+                    $oDb->Execute("DELETE FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'");
                 }
-            } else {
-                $oDb->Execute("DELETE FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'");
             }
-        }
+        }        
   }
 
     /**
@@ -208,26 +213,41 @@ class oxTiramizoo_settings extends Shop_Config
     public function saveEnableShippingMethod()
     {
         $aConfStrs = oxConfig::getParameter( "confstrs" );
-
-        $isTiramizooEnable = intval($aConfStrs['oxTiramizoo_enable_module'] == 'on');
+        $isTiramizooImmediateEnable = intval($aConfStrs['oxTiramizoo_enable_immediate'] == 'on');
+        $isTiramizooEveningEnable = intval($aConfStrs['oxTiramizoo_enable_evening'] == 'on');
 
         $errors = $this->validateEnable();
 
-        if ($isTiramizooEnable && count($errors)) {
-            $isTiramizooEnable = 0;
+        if (($isTiramizooImmediateEnable || $isTiramizooEveningEnable) && count($errors)) {
+            $isTiramizooImmediateEnable = 0;
+            $isTiramizooEveningEnable = 0;
+
             oxSession::setVar('oxTiramizoo_settings_errors', $errors);
-            $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_module', 0);
+            $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_immediate', 0);
+            $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_evening', 0);
         }
 
         $sql = "UPDATE oxdelivery
-                    SET OXACTIVE = " . $isTiramizooEnable . "
+                    SET OXACTIVE = " . $isTiramizooImmediateEnable . "
                     WHERE OXID = 'Tiramizoo';";
 
         oxDb::getDb()->Execute($sql);
 
         $sql = "UPDATE oxdeliveryset
-                    SET OXACTIVE = " . $isTiramizooEnable . "
+                    SET OXACTIVE = " . $isTiramizooImmediateEnable . "
                     WHERE OXID = 'Tiramizoo';";
+
+        oxDb::getDb()->Execute($sql);
+
+        $sql = "UPDATE oxdelivery
+                    SET OXACTIVE = " . $isTiramizooEveningEnable . "
+                    WHERE OXID = 'TiramizooEvening';";
+
+        oxDb::getDb()->Execute($sql);
+
+        $sql = "UPDATE oxdeliveryset
+                    SET OXACTIVE = " . $isTiramizooEveningEnable . "
+                    WHERE OXID = 'TiramizooEvening';";
 
         oxDb::getDb()->Execute($sql);
     }

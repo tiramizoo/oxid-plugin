@@ -295,14 +295,6 @@
               </td>
             </tr>
 
-            <tr>
-              <td valign="top" class="edittext" nowrap="">Enable Tiramizoo</td>
-              <td valign="top" class="edittext">
-                <input type="hidden"  name="confstrs[oxTiramizoo_enable_module]" value"0" />
-                <input type="checkbox" name="confstrs[oxTiramizoo_enable_module]" value"1" [{ if $confstrs.oxTiramizoo_enable_module}]checked="checked"[{ /if }]> 
-                [{ oxinputhelp ident="oxTiramizoo_settings_enable_module_help" }]
-              </td>
-            </tr>
 
             <tr>
               <td valign="top" class="edittext" width="250" nowrap="">          
