@@ -191,7 +191,13 @@ class oxTiramizooApi extends TiramizooApi
     {
         $items = array();
 
-        $useStandardPackage = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_size');
+        $stdPackageWidth = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_width');
+        $stdPackageLength = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_length');
+        $stdPackageHeight = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_height');
+        $stdPackageWeight = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_weight');
+
+        $useStandardPackage = $stdPackageWidth && $stdPackageLength && $stdPackageHeight && $stdPackageWeight;
+
         $standardPackageAddedToItems = 0;
 
         foreach ($oBasket->getBasketArticles() as $key => $oArticle) 
@@ -271,9 +277,10 @@ class oxTiramizooApi extends TiramizooApi
 
                     list($width, $height, $length) = explode('x', $useStandardPackage);
 
-                    $item->width = floatval($width);
-                    $item->height = floatval($height);
-                    $item->length = floatval($length);
+                    $item->weight = floatval($stdPackageWeight);
+                    $item->width = floatval($stdPackageWidth);
+                    $item->length = floatval($stdPackageLength);
+                    $item->height = floatval($stdPackageHeight);
                     $item->quantity = 1;
 
                     $items[] = $item;

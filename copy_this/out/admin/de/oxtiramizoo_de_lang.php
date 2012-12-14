@@ -88,8 +88,13 @@ $aLang = array(
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Nur Artikel mit Lagerbestand > 0 über tiramizoo versendbar machen',
 
 'oxTiramizoo_settings_package_size_label'               => 'Standard-Paketgröße',
-'oxTiramizoo_settings_package_size_help'                => 'Bitte geben Sie die Standard-Paketgröße in Zentimetern im folgenden Format an: BxLxH (B - Breite, L - Länge, H - Höhe), z.B. 200x100x50',
+'oxTiramizoo_settings_package_size_help'                => 'Bitte geben Sie die Standard-Paketgröße in Zentimetern im folgenden Format an: (B - Breite, L - Länge, H - Höhe)',
 
+'oxTiramizoo_settings_package_weight_label'             => 'Standard Package weight',
+'oxTiramizoo_settings_package_weight_help'              => 'Please enter a Standard Package weight',
+
+'oxTiramizoo_settings_dimensions_unit'                  => 'cm',
+'oxTiramizoo_settings_weight_unit'                      => 'kg',
 
 // Article administration -> Tiramizoo Tab
 

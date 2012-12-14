@@ -87,7 +87,13 @@ $aLang = array(
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Enable only articles with stock > 0',
 
 'oxTiramizoo_settings_package_size_label'               => 'Standard Package size',
-'oxTiramizoo_settings_package_size_help'                => 'Please enter a Standard Package size in centimeters with the following pattern: WxLxH (W - width, L - length, H - height), e.g. 200x100x50 means that the box size is 200cm width, 100cm length and 50cm height',
+'oxTiramizoo_settings_package_size_help'                => 'Please enter a Standard Package size in centimeters with the following pattern (W - width, L - length, H - height).',
+
+'oxTiramizoo_settings_package_weight_label'             => 'Standard Package weight',
+'oxTiramizoo_settings_package_weight_help'              => 'Please enter a Standard Package weight',
+
+'oxTiramizoo_settings_dimensions_unit'                  => 'cm',
+'oxTiramizoo_settings_weight_unit'                      => 'kg',
 
 
 // Article administration -> Tiramizoo Tab
