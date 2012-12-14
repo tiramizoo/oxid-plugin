@@ -202,17 +202,27 @@ class oxTiramizooApi extends TiramizooApi
             $item->width = null;
             $item->height = null;
             $item->length = null;
-
-            //article is disabled return false
-            if ($oArticle->oxarticles__tiramizoo_enable->value == -1) {
-                return false;
-            }
+            $item->quantity = $oBasket->getArtStockInBasket($oArticle->oxarticles__oxid->value);
 
             //check if deliverable is set for articles with stock > 0
             if (oxConfig::getInstance()->getShopConfVar('oxTiramizoo_articles_stock_gt_0')) {
                 if ($oArticle->oxarticles__oxstock->value <= 0) {
                     return false;
                 }
+            }
+
+            //NOTICE if article is only variant of parent article then load parent product as article 
+            if ($oArticle->oxarticles__oxparentid->value) {
+                $parentArticleId = $oArticle->oxarticles__oxparentid->value;
+                
+                $oArticleParent = oxNew( 'oxarticle' );
+                $oArticleParent->load($parentArticleId);
+                $oArticle = $oArticleParent;
+            }
+
+            //article is disabled return false
+            if ($oArticle->oxarticles__tiramizoo_enable->value == -1) {
+                return false;
             }
 
             //get the data from categories hierarchy
@@ -248,8 +258,6 @@ class oxTiramizooApi extends TiramizooApi
                 $item->length = isset($inheritedData['length']) && $inheritedData['length'] ? $inheritedData['length'] : 0;
             }
 
-            $item->quantity = $oBasket->getArtStockInBasket($oArticle->oxarticles__oxid->value);
-
             // be sure that we have properly types
             $item->weight = floatval($item->weight);
             $item->width = floatval($item->width);
@@ -257,22 +265,24 @@ class oxTiramizooApi extends TiramizooApi
             $item->length = floatval($item->length);
             $item->quantity = floatval($item->quantity);
 
-            if ($useStandardPackage && !$standardPackageAddedToItems && ($inheritedData['tiramizoo_use_package'] && $oArticle->oxarticles__tiramizoo_use_package->value)) {
-                
-                $standardPackageAddedToItems = 1;
+            if ($useStandardPackage && ($inheritedData['tiramizoo_use_package'] && $oArticle->oxarticles__tiramizoo_use_package->value)) {
+                if (!$standardPackageAddedToItems) {
+                    $standardPackageAddedToItems = 1;
 
-                list($width, $height, $length) = explode('x', $useStandardPackage);
+                    list($width, $height, $length) = explode('x', $useStandardPackage);
 
-                $item->width = floatval($width);
-                $item->height = floatval($height);
-                $item->length = floatval($length);
-                $item->quantity = 1;
+                    $item->width = floatval($width);
+                    $item->height = floatval($height);
+                    $item->length = floatval($length);
+                    $item->quantity = 1;
+
+                    $items[] = $item;
+                }
+            } else {
+                $items[] = $item;
             }
 
-            $items[] = $item;
         }
-
-        print_r($items); exit;
 
         return $items;
     }
