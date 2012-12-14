@@ -87,8 +87,8 @@ $aLang = array(
 'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Nur Artikel mit Lagerbestand > 0 über tiramizoo versendbar machen',
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Nur Artikel mit Lagerbestand > 0 über tiramizoo versendbar machen',
 
-'oxTiramizoo_settings_package_size_label'               => 'Standard Package size',
-'oxTiramizoo_settings_package_size_help'                => 'Please enter a Standard Package size in centimeters with the following pattern: WxLxH (W - width, L - length, H - height), e.g. 200x100x50 means that the box size is 200cm width, 100cm length and 50cm height',
+'oxTiramizoo_settings_package_size_label'               => 'Standard-Paketgröße',
+'oxTiramizoo_settings_package_size_help'                => 'Bitte geben Sie die Standard-Paketgröße in Zentimetern im folgenden Format an: BxLxH (B - Breite, L - Länge, H - Höhe), z.B. 200x100x50',
 
 
 // Article administration -> Tiramizoo Tab
@@ -99,9 +99,9 @@ $aLang = array(
 'oxTiramizoo_article_tab_enable_yes_value'              => 'Ja',
 'oxTiramizoo_article_tab_enable_no_value'               => 'Nein',
 
-'oxTiramizoo_article_tab_use_package_label'             => 'Individual package',
-'oxTiramizoo_article_tab_use_package_value'             => 'Yes',
-'oxTiramizoo_article_tab_use_package_help'              => 'This item will not be packaged into a box, use dimensions directly',
+'oxTiramizoo_article_tab_use_package_label'             => 'Eigene Verpackung',
+'oxTiramizoo_article_tab_use_package_value'             => 'Ja',
+'oxTiramizoo_article_tab_use_package_help'              => 'Dieser Artikel wird nicht in ein Paket verpackt, sondern die Artikel-Abmessungen direkt für die Lieferung verwendet (z.B: Fahrräder)',
 
 // Category administration -> Tiramizoo Tab
 
