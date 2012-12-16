@@ -90,8 +90,8 @@ $aLang = array(
 'oxTiramizoo_settings_package_size_label'               => 'Standard-Paketgröße',
 'oxTiramizoo_settings_package_size_help'                => 'Bitte geben Sie die Standard-Paketgröße in Zentimetern im folgenden Format an: (B - Breite, L - Länge, H - Höhe)',
 
-'oxTiramizoo_settings_package_weight_label'             => 'Standard Package weight',
-'oxTiramizoo_settings_package_weight_help'              => 'Please enter a Standard Package weight',
+'oxTiramizoo_settings_package_weight_label'             => 'Standard-Paketgewicht',
+'oxTiramizoo_settings_package_weight_help'              => 'Bitte geben Sie das Standard-Paketgewicht in kg an',
 
 'oxTiramizoo_settings_dimensions_unit'                  => 'cm',
 'oxTiramizoo_settings_weight_unit'                      => 'kg',
