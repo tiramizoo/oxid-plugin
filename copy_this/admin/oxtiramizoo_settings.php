@@ -218,6 +218,7 @@ class oxTiramizoo_settings extends Shop_Config
 
         $errors = $this->validateEnable();
 
+
         if (($isTiramizooImmediateEnable || $isTiramizooEveningEnable) && count($errors)) {
             $isTiramizooImmediateEnable = 0;
             $isTiramizooEveningEnable = 0;
@@ -225,6 +226,14 @@ class oxTiramizoo_settings extends Shop_Config
             oxSession::setVar('oxTiramizoo_settings_errors', $errors);
             $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_immediate', 0);
             $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_evening', 0);
+        }
+
+        $enableEveningErrors = $this->validateEveningDelivery();
+
+        if (count($enableEveningErrors)) {
+            $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_evening', 0);
+            $errors = array_merge($errors, $enableEveningErrors);
+            oxSession::setVar('oxTiramizoo_settings_errors', $errors);
         }
 
         $sql = "UPDATE oxdelivery
@@ -340,6 +349,26 @@ class oxTiramizoo_settings extends Shop_Config
 
         if (!$paymentsAreValid) {
             $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_payments_required_error', oxLang::getInstance()->getBaseLanguage(), true);
+        }
+
+        return $errors;
+    }
+
+
+    /**
+     * Validate if enable
+     *
+     * @return array
+     */
+    public function validateEveningDelivery()
+    {
+        $aConfStrs = oxConfig::getParameter( "confstrs" );
+        echo $isTiramizooEveningEnable = intval($aConfStrs['oxTiramizoo_enable_evening'] == 'on');
+
+        $errors = array();
+
+        if ($isTiramizooEveningEnable && !trim($aConfStrs['oxTiramizoo_evening_window'])) {
+            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_not_select_evening_error', oxLang::getInstance()->getBaseLanguage(), true);
         }
 
         return $errors;

@@ -95,6 +95,7 @@ $aLang = array(
 
 'oxTiramizoo_settings_select_evening_label'             => 'Zeitfenster für Abendzustellung auswählen',
 
+'oxTiramizoo_settings_not_select_evening_error'         => 'If You want to enable evening delivery window You have to select evening delivery window',
 
 // Article administration -> Tiramizoo Tab
 
