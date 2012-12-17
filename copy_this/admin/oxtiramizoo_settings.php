@@ -363,7 +363,7 @@ class oxTiramizoo_settings extends Shop_Config
     public function validateEveningDelivery()
     {
         $aConfStrs = oxConfig::getParameter( "confstrs" );
-        echo $isTiramizooEveningEnable = intval($aConfStrs['oxTiramizoo_enable_evening'] == 'on');
+        $isTiramizooEveningEnable = intval($aConfStrs['oxTiramizoo_enable_evening'] == 'on');
 
         $errors = array();
 
