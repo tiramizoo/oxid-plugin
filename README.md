@@ -168,6 +168,8 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 
         You can enable or disable Tiramizoo delivery for selected product
 
+    **NOTE! After first installation and every update You have to go to Tiramizoo settings page and then clear tmp folder.**
+
 # Webhooks / Checking the Tiramizoo delivery status #
 
 Go to *Order tab* to check the current delivery status. Tiramizoo sends status update each time order status is changed. Webhook url needs to be accessible for POST request.
