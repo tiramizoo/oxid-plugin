@@ -156,9 +156,11 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 
     -   At the **Administer Products -> Categories -> Category selection -> Tiramizoo tab**
 
-        Category and all parent categories need to have Tiramizoo service enabled to let containing products to be delivered by Tiramizoo service. Also dimensions form enables to specify default product dimentions which will apply to all products which have the category selected as a main category and will not have dimentions specified explicitly.
+        Product's main category and all its parents categories need to have Tiramizoo service enabled to let containing products to be delivered by Tiramizoo service. Also dimensions form enables to specify default product dimentions which will apply to all products which have the category selected as a main category and will not have dimentions specified explicitly.
 
-        products ready for delivery with tiramizoo should be available in stock, should have dimensions and weight specified and dimensions and weight can not cross specific level.
+        Please consider that inheritance of category properties that are not assigned as Main category wouldn't be apply to products they have.
+
+        Products ready for delivery with tiramizoo should be available in stock, should have dimensions and weight specified and dimensions and weight can not cross specific level.
 
         Validation of products will take place when plugin asks tiramizoo server for quotes (POST request to /quotes between step 2 to 3 in checkout process). That means, even if flag "available for tiramizoo" is set, tiramizoo service could not appear as one of delivery option in 3th step of checkout process because of validation
 
