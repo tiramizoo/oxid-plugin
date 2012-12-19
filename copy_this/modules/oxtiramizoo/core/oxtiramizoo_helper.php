@@ -278,12 +278,13 @@ class oxTiramizooHelper extends oxSuperCfg
             }
 
             //check if time is not earlier
-            $hour = date('H:i', strtotime($this->getNextAvailableDate( date('Y-m-d H:i:s') )));
+            $nextAvailableTime = strtotime($this->getNextAvailableDate( date('Y-m-d H:i:s') ));
+            $todayEveningAvailableTime = strtotime(date('Y-m-d') . ' ' . $this->getConfig()->getShopConfVar('oxTiramizoo_evening_window'));
 
-            if ((strtotime($hour) > strtotime($this->getConfig()->getShopConfVar('oxTiramizoo_evening_window')))) {
+            if ($nextAvailableTime > $todayEveningAvailableTime) {
                 return $this->_isTiramizooEveningAvailable = 0;
             }
-
+            
             $this->_isTiramizooEveningAvailable = 1;
         }
 
