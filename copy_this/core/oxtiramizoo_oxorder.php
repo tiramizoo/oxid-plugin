@@ -24,8 +24,7 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
     {
         parent::_loadFromBasket($oBasket);
 
-        if (oxSession::getVar('sShipSet') == 'Tiramizoo') {
-
+        if (in_array(oxSession::getVar('sShipSet'), array('Tiramizoo', 'TiramizooEvening'))) {
             $oxConfig = $this->getConfig();
             $oDeliveryAddress = $this->getDelAddressInfo();
             $oUser = $this->getUser();
