@@ -84,6 +84,12 @@ class oxTiramizoo_settings extends Shop_Config
             $aPackageSize = array();
             $aPackageSize['name'] = 'oxTiramizoo_package_size_' . $i;
             $aPackageSize['value'] = $this->getConfig()->getShopConfVar('oxTiramizoo_package_size_' . $i);
+            $aPackageSizeValuesArray = explode('x', $aPackageSize['value']);
+
+            $aPackageSize['width'] = $aPackageSizeValuesArray[0];
+            $aPackageSize['length'] = $aPackageSizeValuesArray[1];
+            $aPackageSize['height'] = $aPackageSizeValuesArray[2];
+            $aPackageSize['weight'] = $aPackageSizeValuesArray[3];
 
             $aPackageSizes[$i] = $aPackageSize;
         }
@@ -110,8 +116,6 @@ class oxTiramizoo_settings extends Shop_Config
         $sID = $oDb->getOne("select oxid from oxobject2payment where oxpaymentid = " . $oDb->quote( $oPayment->oxpayments__oxid->value ) . "  and oxobjectid = ".$oDb->quote( $soxId )." and oxtype = 'oxdelset'", false, false);
 
         $aPaymentList[$oPayment->oxpayments__oxid->value]['checked'] = isset($sID) && $sID;
-
-
     }  
 
     return $aPaymentList;
@@ -145,7 +149,24 @@ class oxTiramizoo_settings extends Shop_Config
 
 
 
+    public function savePackageSizes()
+    {
+        $aPackageSizes = oxConfig::getParameter("packageSizes");
 
+        $iMaximumPackageSizes = oxTiramizooConfig::getInstance()->getConfigParam('iMaximumPackageSizes');
+
+        for ($i=1; $i <= $iMaximumPackageSizes; $i++)
+        { 
+            if (intval($aPackageSizes['width'][$i]) && 
+                intval($aPackageSizes['length'][$i]) && 
+                intval($aPackageSizes['height'][$i]) && 
+                floatval($aPackageSizes['weight'][$i])) {
+                 $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_package_size_' . $i, intval($aPackageSizes['width'][$i]) . 'x' . intval($aPackageSizes['length'][$i]) . 'x' . intval($aPackageSizes['height'][$i]) . 'x' . floatval($aPackageSizes['weight'][$i]));
+            } else {
+                 $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_package_size_' . $i, '');
+            }
+        }
+    }
 
 
     /**
@@ -258,6 +279,7 @@ class oxTiramizoo_settings extends Shop_Config
         $this->assignPaymentsToTiramizoo();
 
         $this->saveEnableShippingMethod();       
+        $this->savePackageSizes();
 
         // clear cache 
         oxUtils::getInstance()->rebuildCache();

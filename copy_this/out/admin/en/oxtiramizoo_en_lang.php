@@ -83,6 +83,10 @@ $aLang = array(
 'oxTiramizoo_payments_required_error'                   => 'You must assign at least one payment method to Tiramizoo shipping',
 'oxTiramizoo_enable_fix_errors_header'                  => 'Fix these errors to enable tiramizoo',
 
+'oxTiramizoo_settings_dimensions_unit'                  => 'cm',
+'oxTiramizoo_settings_weight_unit'                      => 'kg',
+
+
 'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Enable only articles with stock > 0',
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Enable only articles with stock > 0',
 

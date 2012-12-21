@@ -40,6 +40,9 @@
         <td valign="top" class="edittext" style="padding:10px;">
          <table cellspacing="0" cellpadding="5" border="0" class="edittext" style="text-align: left;">
             
+
+
+
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_api_url_label" }]</td>
               <td valign="top" class="edittext">
@@ -224,10 +227,6 @@
               </td>
             </tr>
 
-
-
-
-
             <tr>
               <td>[{ oxmultilang ident="oxTiramizoo_settings_payment_methods_assigned_label" }]</td>
               <td>
@@ -244,11 +243,18 @@
             </tr>
 
             <tr>
+              <td valign="top" colspan="2" class="edittext">
+                <h3>Package sizes</h3>
+              </td>
+            </tr>
+
+
+            <tr>
               <td valign="top" class="edittext" nowrap="">Define Package size</td>
               <td valign="top" class="edittext">
-                <input type="radio" name=confstrs[oxTiramizoo_package_strategy] /> All products fit to package 
-                <input type="radio" name=confstrs[oxTiramizoo_package_strategy] /> I have more than one package dimesnions
-
+                <input type="radio" name=confstrs[oxTiramizoo_package_strategy] [{if ($confstrs.oxTiramizoo_package_strategy == 0)}]checked="checked"[{/if}] value="0" /> I will send all products with products dimensions <br />
+                <input type="radio" name=confstrs[oxTiramizoo_package_strategy] [{if ($confstrs.oxTiramizoo_package_strategy == 1)}]checked="checked"[{/if}] value="1" /> I have more than one package dimensions <br />
+                <input type="radio" name=confstrs[oxTiramizoo_package_strategy] [{if ($confstrs.oxTiramizoo_package_strategy == 2)}]checked="checked"[{/if}] value="2" /> All products fit to package <br />
               </td>
             </tr>
 
@@ -260,14 +266,21 @@
               </td>
             </tr>
 
-
-
             [{foreach from=$aPackageSizes key=key item=aPackage}]
-            <tr>
-              <td valign="top" class="edittext" nowrap="">[{$key}] Package size</td>
+            <tr class="oxTiramizoo_package_strategy_row oxTiramizoo_package_strategy_2">
+              <td valign="top" class="edittext" nowrap="">[{$key}] Package size and weight</td>
               <td valign="top" class="edittext">
-                <input type=text class="editinput" name=confstrs[[{$aPackage.name}]] value="[{$aPackage.value}]" maxlength="100" />
-                [{ oxinputhelp ident="oxTiramizoo_settings_package_size" }]
+
+                W: <input type=text class="editinput" name="packageSizes[width][[{$key}]]" value="[{$aPackage.width}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }],
+                
+                L: <input type=text class="editinput" name="packageSizes[length][[{$key}]]" value="[{$aPackage.length}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }],
+
+                H: <input type=text class="editinput" name="packageSizes[height][[{$key}]]" value="[{$aPackage.height}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }],
+
+                Wt: <input type=text class="editinput" name="packageSizes[weight][[{$key}]]" value="[{$aPackage.weight}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_weight_unit" }]
+
+                [{ oxinputhelp ident="oxTiramizoo_settings_package_size_help" }]
+
               </td>
             </tr>
             [{/foreach}]

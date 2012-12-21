@@ -10,7 +10,7 @@ class oxTiramizoo_setup extends Shop_Config
     /**
      * Current version of oxTiramizoo module
      */
-    const VERSION = '0.8.5';
+    const VERSION = '0.8.6';
 
     /**
      * Error message
@@ -208,12 +208,20 @@ class oxTiramizoo_setup extends Shop_Config
 
 
     /**
-     * Update database to version 0.8.1
+     * Update database to version 0.8.6
      */
     public function migration_0_8_5()
     {
         $this->addColumnToTable('oxarticles', 'TIRAMIZOO_USE_PACKAGE', 'INT(1) NOT NULL DEFAULT 0');
         $this->addColumnToTable('oxcategories', 'TIRAMIZOO_USE_PACKAGE', 'INT(1) NOT NULL DEFAULT 0');
+    }
+
+    /**
+     * Update database to version 0.8.6
+     */
+    public function migration_0_8_6()
+    {
+        $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_package_strategy', 0); 
     }
 
     /**
