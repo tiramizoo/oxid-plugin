@@ -90,6 +90,16 @@ $aLang = array(
 'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Enable only articles with stock > 0',
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Enable only articles with stock > 0',
 
+'oxTiramizoo_settings_package_size_label'               => 'Standard Package size',
+'oxTiramizoo_settings_package_size_help'                => 'Please enter a Standard Package size in centimeters with the following pattern (W - width, L - length, H - height).',
+
+'oxTiramizoo_settings_package_weight_label'             => 'Standard Package weight',
+'oxTiramizoo_settings_package_weight_help'              => 'Please enter a Standard Package weight',
+
+'oxTiramizoo_settings_dimensions_unit'                  => 'cm',
+'oxTiramizoo_settings_weight_unit'                      => 'kg',
+
+
 // Article administration -> Tiramizoo Tab
 
 'oxTiramizoo_article_tab_enable_tiramizoo_label'        => 'Enable tiramizoo',
@@ -97,6 +107,12 @@ $aLang = array(
 'oxTiramizoo_article_tab_enable_inherit_value'          => 'Inherit from parent settings',
 'oxTiramizoo_article_tab_enable_yes_value'              => 'Yes',
 'oxTiramizoo_article_tab_enable_no_value'               => 'No',
+
+'oxTiramizoo_article_tab_use_package_label'             => 'Individual package',
+'oxTiramizoo_article_tab_use_package_value'             => 'Yes',
+'oxTiramizoo_article_tab_use_package_help'              => 'This item will not be packaged into a box, use dimensions directly',
+
+
 
 // Category administration -> Tiramizoo Tab
 
@@ -113,6 +129,10 @@ $aLang = array(
 'oxTiramizoo_category_tab_dimensions_label'             => 'Dimensions',
 'oxTiramizoo_category_tab_dimensions_unit'              => 'cm',
 'oxTiramizoo_category_tab_dimensions_help'              => 'L-length, W - width, H - height. These dimensions will be assigned to all products in this category without dimensions specified',
+
+'oxTiramizoo_category_tab_use_package_label'            => 'Articles has individual package',
+'oxTiramizoo_category_tab_use_package_value'            => 'Yes',
+'oxTiramizoo_category_tab_use_package_help'             => 'Items in this category will not be packaged into a box, use dimensions directly',
 
 // Order administration -> Tiramizoo Tab
 'oxTiramizoo_order_tab_status_label'                    => 'Tiramizoo status',

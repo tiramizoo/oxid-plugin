@@ -242,6 +242,29 @@
               </td>
             </tr>
 
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_package_size_label" }]</td>
+              <td valign="top" class="edittext">
+
+                W: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_width]" value="[{$confstrs.oxTiramizoo_std_package_width}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
+                
+                L: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_length]" value="[{$confstrs.oxTiramizoo_std_package_length}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
+
+                H: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_height]" value="[{$confstrs.oxTiramizoo_std_package_height}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
+
+                [{ oxinputhelp ident="oxTiramizoo_settings_package_size_help" }]
+              </td>
+            </tr>
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_package_weight_label" }]</td>
+              <td valign="top" class="edittext">
+                <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_weight]" value="[{$confstrs.oxTiramizoo_std_package_weight}]" maxlength="100" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_weight_unit" }]
+                [{ oxinputhelp ident="oxTiramizoo_settings_package_weight_help" }]
+              </td>
+            </tr>
+
             <tr>
               <td valign="top" colspan="2" class="edittext">
                 <h3>Package sizes</h3>
