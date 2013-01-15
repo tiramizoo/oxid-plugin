@@ -48,6 +48,18 @@ function loadLang(obj)
 
           <tr>
             <td class="edittext">
+              [{ oxmultilang ident="oxTiramizoo_category_tab_use_package_label" }]
+            </td>
+            <td class="edittext">
+                <input type="hidden" name="editval[oxcategories__tiramizoo_use_package]" value="1" />
+                <input type="checkbox" name="editval[oxcategories__tiramizoo_use_package]" value="0" [{if ($edit->oxcategories__tiramizoo_use_package->value == 0)}]checked="checked"[{/if}] />
+                [{ oxmultilang ident="oxTiramizoo_category_tab_use_package_value" }]
+                [{ oxinputhelp ident="oxTiramizoo_category_tab_use_package_help" }]
+            </td>
+          </tr>
+
+          <tr>
+            <td class="edittext">
               [{ oxmultilang ident="oxTiramizoo_category_tab_weight_label" }]
             </td>
             <td class="edittext">

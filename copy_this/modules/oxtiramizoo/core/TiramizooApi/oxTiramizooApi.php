@@ -195,6 +195,15 @@ class oxTiramizooApi extends TiramizooApi
     {
         $items = array();
 
+        $stdPackageWidth = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_width');
+        $stdPackageLength = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_length');
+        $stdPackageHeight = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_height');
+        $stdPackageWeight = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_weight');
+
+        $useStandardPackage = $stdPackageWidth && $stdPackageLength && $stdPackageHeight && $stdPackageWeight;
+
+        $standardPackageAddedToItems = 0;
+
         foreach ($oBasket->getBasketArticles() as $key => $oArticle) 
         {
             //initialize standard class
@@ -203,6 +212,7 @@ class oxTiramizooApi extends TiramizooApi
             $item->width = null;
             $item->height = null;
             $item->length = null;
+            $item->quantity = $oBasket->getArtStockInBasket($oArticle->oxarticles__oxid->value);
 
             //article is disabled return false
             if ($oArticle->oxarticles__tiramizoo_enable->value == -1) {
@@ -214,6 +224,20 @@ class oxTiramizooApi extends TiramizooApi
                 if ($oArticle->oxarticles__oxstock->value <= 0) {
                     return false;
                 }
+            }
+
+            //NOTICE if article is only variant of parent article then load parent product as article 
+            if ($oArticle->oxarticles__oxparentid->value) {
+                $parentArticleId = $oArticle->oxarticles__oxparentid->value;
+                
+                $oArticleParent = oxNew( 'oxarticle' );
+                $oArticleParent->load($parentArticleId);
+                $oArticle = $oArticleParent;
+            }
+
+            //article is disabled return false
+            if ($oArticle->oxarticles__tiramizoo_enable->value == -1) {
+                return false;
             }
 
             //get the data from categories hierarchy
@@ -250,7 +274,24 @@ class oxTiramizooApi extends TiramizooApi
             $item->length = floatval($item->length);
             $item->quantity = floatval($item->quantity);
 
-            $items[] = $item;
+            if ($useStandardPackage && ($inheritedData['tiramizoo_use_package'] && $oArticle->oxarticles__tiramizoo_use_package->value)) {
+                if (!$standardPackageAddedToItems) {
+                    $standardPackageAddedToItems = 1;
+
+                    list($width, $height, $length) = explode('x', $useStandardPackage);
+
+                    $item->weight = floatval($stdPackageWeight);
+                    $item->width = floatval($stdPackageWidth);
+                    $item->length = floatval($stdPackageLength);
+                    $item->height = floatval($stdPackageHeight);
+                    $item->quantity = 1;
+
+                    $items[] = $item;
+                }
+            } else {
+                $items[] = $item;
+            }
+
         }
 
         return $items;

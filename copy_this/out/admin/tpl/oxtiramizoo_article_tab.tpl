@@ -90,6 +90,20 @@ function editThis( sID )
             </td>
           </tr>
 
+
+          <tr>
+            <td class="edittext">
+              [{ oxmultilang ident="oxTiramizoo_article_tab_use_package_label" }]
+            </td>
+            <td class="edittext">
+                <input type="hidden" name="editval[oxarticles__tiramizoo_use_package]" value="1" />
+                <input type="checkbox" name="editval[oxarticles__tiramizoo_use_package]" value="0" [{if ($edit->oxarticles__tiramizoo_use_package->value == 0)}]checked="checked"[{/if}] />
+                [{ oxmultilang ident="oxTiramizoo_article_tab_use_package_value" }]
+                [{ oxinputhelp ident="oxTiramizoo_article_tab_use_package_help" }]
+            </td>
+          </tr>
+
+
           <tr>          
             <td class="edittext"></td>
             <td class="edittext">
