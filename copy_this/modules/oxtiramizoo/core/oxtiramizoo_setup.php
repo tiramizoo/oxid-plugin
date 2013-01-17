@@ -10,7 +10,7 @@ class oxTiramizoo_setup extends Shop_Config
     /**
      * Current version of oxTiramizoo module
      */
-    const VERSION = '0.8.1';
+    const VERSION = '0.8.5';
 
     /**
      * Error message
@@ -204,6 +204,68 @@ class oxTiramizoo_setup extends Shop_Config
             $result = $this->executeSQL($sql);
 
         }
+    }
+
+    /**
+     * Update database to version 0.8.3
+     */
+    public function migration_0_8_3()
+    {
+
+        $this->executeSQL("INSERT IGNORE INTO `oxdelivery` SET
+                            OXID = 'TiramizooEvening',
+                            OXSHOPID = 'oxbaseshop',
+                            OXACTIVE = 0,
+                            OXACTIVEFROM = '0000-00-00 00:00:00',
+                            OXACTIVETO = '0000-00-00 00:00:00',
+                            OXTITLE = 'Tiramizoo Evening',
+                            OXTITLE_1 = 'Tiramizoo Evening',
+                            OXTITLE_2 = 'Tiramizoo Evening',
+                            OXTITLE_3 = 'Tiramizoo Evening',
+                            OXADDSUMTYPE = 'abs',
+                            OXADDSUM = 7.90,
+                            OXDELTYPE = 'p',
+                            OXPARAM = 0,
+                            OXPARAMEND = 999999,
+                            OXFIXED = 0,
+                            OXSORT = 2,
+                            OXFINALIZE = 1;");
+
+        $this->executeSQL("INSERT IGNORE INTO `oxdeliveryset` SET
+                            OXID = 'TiramizooEvening',
+                            OXSHOPID = 'oxbaseshop',
+                            OXACTIVE = 0,
+                            OXACTIVEFROM = '0000-00-00 00:00:00',
+                            OXACTIVETO = '0000-00-00 00:00:00',
+                            OXTITLE = 'Tiramizoo Evening',
+                            OXTITLE_1 = 'Tiramizoo Evening',
+                            OXTITLE_2 = 'Tiramizoo Evening',
+                            OXTITLE_3 = 'Tiramizoo Evening',
+                            OXPOS = 2;");
+
+        $this->executeSQL("INSERT IGNORE INTO `oxdel2delset` SET
+                            OXID = MD5(CONCAT('TiramizooEvening', 'TiramizooEvening')),
+                            OXDELID = 'TiramizooEvening',
+                            OXDELSETID = 'TiramizooEvening';");
+
+
+        $this->executeSQL("UPDATE `oxdelivery` SET
+                            OXTITLE = 'Tiramizoo Immediate'
+                            WHERE OXID = 'Tiramizoo';");
+
+
+        $this->executeSQL("UPDATE `oxdeliveryset` SET
+                            OXTITLE = 'Tiramizoo Immediate'
+                            WHERE OXID = 'Tiramizoo';");
+    }
+
+    /**
+     * Update database to version 0.8.5
+     */
+    public function migration_0_8_5()
+    {
+        $this->addColumnToTable('oxarticles', 'TIRAMIZOO_USE_PACKAGE', 'INT(1) NOT NULL DEFAULT 1');
+        $this->addColumnToTable('oxcategories', 'TIRAMIZOO_USE_PACKAGE', 'INT(1) NOT NULL DEFAULT 1');
     }
 
     /**

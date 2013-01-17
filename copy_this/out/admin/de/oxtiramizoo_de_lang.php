@@ -87,6 +87,31 @@ $aLang = array(
 'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Nur Artikel mit Lagerbestand > 0 über tiramizoo versendbar machen',
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Nur Artikel mit Lagerbestand > 0 über tiramizoo versendbar machen',
 
+'oxTiramizoo_settings_weight_label'                     => 'Gewicht',
+'oxTiramizoo_settings_weight_help'                      => 'Dieses Gewicht wird allen Artikeln zugeordnet, bei denen es nicht angegeben ist. Sie können es in den Kategorie- oder Artikeleinstellungen anpassen.',
+'oxTiramizoo_settings_dimensions_label'                 => 'Abmessungen',
+'oxTiramizoo_settings_dimensions_help'                  => 'L-Länge, B - Breite, H - Höhe. Diese Abmessungen werden allen Artikeln zugeordnet, bei denen sie nicht angegeben sind. Sie können sie in den Kategorie- oder Artikeleinstellungen anpassen.',
+
+'oxTiramizoo_settings_weight_dimensions_warning'        => 'Bitte Gewicht und Abmessungen komplett angeben, ansonsten werden sie nicht angewendet.',
+
+'oxTiramizoo_settings_enable_immediate_label'           => 'tiramizoo.com "Sofortlieferung" aktivieren',
+'oxTiramizoo_settings_enable_immediate_help'            => '"Sofortlieferung" als Versandmethode aktivieren. Dies wählt automatisch das nächste verfügbare tiramizoo.com Zeitfenster.',
+
+'oxTiramizoo_settings_enable_evening_label'             => 'tiramizoo.com "Abendzustellung" aktivieren',
+'oxTiramizoo_settings_enable_evening_help'              => '"Abendzustellung" als Versandmethode aktivieren. Verwendet wird hierfür das ausgewählte Zeitfenster.',
+
+'oxTiramizoo_settings_select_evening_label'             => 'Zeitfenster für Abendzustellung auswählen',
+
+'oxTiramizoo_settings_not_select_evening_error'         => 'Sie müssen ein Zeitfenster für die Abendzustellung auswählen, um diese zu aktivieren',
+'oxTiramizoo_settings_package_size_label'               => 'Standard-Paketgröße',
+'oxTiramizoo_settings_package_size_help'                => 'Bitte geben Sie die Standard-Paketgröße in Zentimetern im folgenden Format an: (B - Breite, L - Länge, H - Höhe)',
+
+'oxTiramizoo_settings_package_weight_label'             => 'Standard-Paketgewicht',
+'oxTiramizoo_settings_package_weight_help'              => 'Bitte geben Sie das Standard-Paketgewicht in kg an',
+
+'oxTiramizoo_settings_dimensions_unit'                  => 'cm',
+'oxTiramizoo_settings_weight_unit'                      => 'kg',
+
 // Article administration -> Tiramizoo Tab
 
 'oxTiramizoo_article_tab_enable_tiramizoo_label'        => 'Tiramizoo aktivieren',
@@ -94,6 +119,28 @@ $aLang = array(
 'oxTiramizoo_article_tab_enable_inherit_value'          => 'Aus Kategorie übernehmen',
 'oxTiramizoo_article_tab_enable_yes_value'              => 'Ja',
 'oxTiramizoo_article_tab_enable_no_value'               => 'Nein',
+
+'oxTiramizoo_article_tab_article_effective_label'       => 'Effektive Werte des Artikels',
+
+'oxTiramizoo_article_tab_article_is_enabled'            => 'Artikel ist aktiviert',
+'oxTiramizoo_article_tab_article_is_disabled'           => 'Artikel is deaktiviert',
+'oxTiramizoo_article_tab_disabled_by_category'          => 'für den Versand mit tiramizoo.com, da die übergeordnete Kategorie {Jeans} deaktiviert ist. Bitte den Reiter tiramizoo in den Kategorieeinstellungen überprüfen.',
+
+'oxTiramizoo_article_tab_effective_values_warning'      => 'Sie müssen Abmessungen und Gewicht angeben. Sie können dies in den allgemeinen Einstellungen, Kategorie-Reiter oder den erweiterten Einstellungen des Artikels vornehmen.',
+
+'oxTiramizoo_article_tab_width_label'                   => 'Breite',
+'oxTiramizoo_article_tab_height_unit'                   => 'Höhe',
+'oxTiramizoo_article_tab_length_unit'                   => 'Länge',
+
+
+'oxTiramizoo_article_tab_weight_label'                  => 'Gewicht',
+'oxTiramizoo_article_tab_weight_unit'                   => 'kg',
+
+'oxTiramizoo_article_tab_dimensions_label'              => 'Abmessungen',
+'oxTiramizoo_article_tab_dimensions_unit'               => 'cm',
+'oxTiramizoo_article_tab_use_package_label'             => 'Eigene Verpackung',
+'oxTiramizoo_article_tab_use_package_value'             => 'Ja',
+'oxTiramizoo_article_tab_use_package_help'              => 'Dieser Artikel wird nicht in ein Paket verpackt, sondern die Artikel-Abmessungen direkt für die Lieferung verwendet (z.B: Fahrräder)',
 
 // Category administration -> Tiramizoo Tab
 
@@ -110,6 +157,11 @@ $aLang = array(
 'oxTiramizoo_category_tab_dimensions_label'             => 'Abmessungen',
 'oxTiramizoo_category_tab_dimensions_unit'              => 'cm',
 'oxTiramizoo_category_tab_dimensions_help'              => 'L - Länge, W - Breite, H - Höhe. Diese Abmessungen werden allen Produkten dieser Kategorie zugeordnet, bei denen keine angegeben wurden',
+
+'oxTiramizoo_category_tab_use_package_label'            => 'Articles has individual package',
+'oxTiramizoo_category_tab_use_package_value'            => 'Yes',
+'oxTiramizoo_category_tab_use_package_help'             => 'Items in this category will not be packaged into a box, use dimensions directly',
+
 
 // Order administration -> Tiramizoo Tab
 // 

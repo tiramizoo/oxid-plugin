@@ -4,6 +4,10 @@ if ( !class_exists('TiramizooApi') ) {
     require_once 'TiramizooApi.php';
 }
 
+if ( !class_exists('oxTiramizooArticleHelper') ) {
+    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_articlehelper.php';
+}
+
 /**
  * oxTiramizoo API class used to connection with Tiramizoo API. Main functionality
  * are getting quotes, sending order and build API data.
@@ -191,6 +195,15 @@ class oxTiramizooApi extends TiramizooApi
     {
         $items = array();
 
+        $stdPackageWidth = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_width');
+        $stdPackageLength = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_length');
+        $stdPackageHeight = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_height');
+        $stdPackageWeight = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_weight');
+
+        $useStandardPackage = $stdPackageWidth && $stdPackageLength && $stdPackageHeight && $stdPackageWeight;
+
+        $standardPackageAddedToItems = 0;
+
         foreach ($oBasket->getBasketArticles() as $key => $oArticle) 
         {
             //initialize standard class
@@ -199,6 +212,7 @@ class oxTiramizooApi extends TiramizooApi
             $item->width = null;
             $item->height = null;
             $item->length = null;
+            $item->quantity = $oBasket->getArtStockInBasket($oArticle->oxarticles__oxid->value);
 
             //article is disabled return false
             if ($oArticle->oxarticles__tiramizoo_enable->value == -1) {
@@ -212,8 +226,22 @@ class oxTiramizooApi extends TiramizooApi
                 }
             }
 
+            //NOTICE if article is only variant of parent article then load parent product as article 
+            if ($oArticle->oxarticles__oxparentid->value) {
+                $parentArticleId = $oArticle->oxarticles__oxparentid->value;
+                
+                $oArticleParent = oxNew( 'oxarticle' );
+                $oArticleParent->load($parentArticleId);
+                $oArticle = $oArticleParent;
+            }
+
+            //article is disabled return false
+            if ($oArticle->oxarticles__tiramizoo_enable->value == -1) {
+                return false;
+            }
+
             //get the data from categories hierarchy
-            $inheritedData = $this->_getArticleInheritData($oArticle);
+            $inheritedData = oxTiramizooArticleHelper::getInstance()->getArticleInheritData($oArticle);
 
             if ($oArticle->oxarticles__tiramizoo_enable->value == 0) {
                 if (isset($inheritedData['tiramizoo_enable']) && (!($inheritedData['tiramizoo_enable']))) {
@@ -221,27 +249,19 @@ class oxTiramizooApi extends TiramizooApi
                 }            
             }
 
-            if ($oArticle->oxarticles__oxweight->value) {
-                $item->weight = $oArticle->oxarticles__oxweight->value;
+            //article override dimensions and weight but only if all parameters are specified
+            if ($oArticle->oxarticles__oxweight->value && 
+                $oArticle->oxarticles__oxwidth->value &&
+                $oArticle->oxarticles__oxheight->value && 
+                $oArticle->oxarticles__oxlength->value) {
+                    $item->weight = $oArticle->oxarticles__oxweight->value;
+                    $item->width = $oArticle->oxarticles__oxwidth->value * 100;
+                    $item->height = $oArticle->oxarticles__oxheight->value * 100;
+                    $item->length = $oArticle->oxarticles__oxlength->value * 100;
             } else {
                 $item->weight = isset($inheritedData['weight']) && $inheritedData['weight'] ? $inheritedData['weight'] : 0;
-            }
-
-            if ($oArticle->oxarticles__oxwidth->value) {
-                $item->width = $oArticle->oxarticles__oxwidth->value * 100;
-            } else {
                 $item->width = isset($inheritedData['width']) && $inheritedData['width'] ? $inheritedData['width'] : 0;
-            }
-
-            if ($oArticle->oxarticles__oxheight->value) {
-                $item->height = $oArticle->oxarticles__oxheight->value * 100;
-            } else {
                 $item->height = isset($inheritedData['height']) && $inheritedData['height'] ? $inheritedData['height'] : 0;
-            }
-
-            if ($oArticle->oxarticles__oxlength->value) {
-                $item->length = $oArticle->oxarticles__oxlength->value * 100;
-            } else {
                 $item->length = isset($inheritedData['length']) && $inheritedData['length'] ? $inheritedData['length'] : 0;
             }
 
@@ -254,84 +274,26 @@ class oxTiramizooApi extends TiramizooApi
             $item->length = floatval($item->length);
             $item->quantity = floatval($item->quantity);
 
-            $items[] = $item;
+            if ($useStandardPackage && ($inheritedData['tiramizoo_use_package'] && $oArticle->oxarticles__tiramizoo_use_package->value)) {
+                if (!$standardPackageAddedToItems) {
+                    $standardPackageAddedToItems = 1;
+
+                    list($width, $height, $length) = explode('x', $useStandardPackage);
+
+                    $item->weight = floatval($stdPackageWeight);
+                    $item->width = floatval($stdPackageWidth);
+                    $item->length = floatval($stdPackageLength);
+                    $item->height = floatval($stdPackageHeight);
+                    $item->quantity = 1;
+
+                    $items[] = $item;
+                }
+            } else {
+                $items[] = $item;
+            }
+
         }
 
         return $items;
-    }
-
-    /**
-     * Get product data (enable, weight, dimensions) from main category or parents
-     * 
-     * @param  oxArticle $oArticle
-     * @return array
-     */
-    protected function _getArticleInheritData($oArticle)
-    {
-        //set the defaults
-        $oxTiramizooInheritedData = array();
-
-        $oxTiramizooInheritedData['tiramizoo_enable'] = 0;
-        $oxTiramizooInheritedData['weight'] = 0;
-        $oxTiramizooInheritedData['width'] = 0;
-        $oxTiramizooInheritedData['height'] = 0;
-        $oxTiramizooInheritedData['length'] = 0;
-
-        $oCategory = $oArticle->getCategory();
-
-        // if article has no assigned categories return only global settings
-        if (!$oCategory) {
-            return  $oxTiramizooInheritedData;
-        }
-
-        $aCheckCategories = $this->_getParentsCategoryTree($oCategory);
-
-        $oxTiramizooInheritedData = array();
-
-        $allCategoriesAreEnabled = true;
-
-        foreach ($aCheckCategories as $aCategoryData) 
-        {
-            if (!isset($aCategoryData['tiramizoo_enable']) || !(intval($aCategoryData['tiramizoo_enable']) > 0)) {
-                $allCategoriesAreEnabled = false;
-                break;
-            }
-        }
-
-        $oxTiramizooInheritedData['tiramizoo_enable'] = $allCategoriesAreEnabled;
-
-        $oxTiramizooInheritedData['weight'] = $oCategory->oxcategories__tiramizoo_weight->value;
-        $oxTiramizooInheritedData['width'] = $oCategory->oxcategories__tiramizoo_width->value;
-        $oxTiramizooInheritedData['height'] = $oCategory->oxcategories__tiramizoo_height->value;
-        $oxTiramizooInheritedData['length'] = $oCategory->oxcategories__tiramizoo_length->value;
-
-        return $oxTiramizooInheritedData;
-    }
-
-    /**
-     * Recursive method for getting array of arrays product data (enable, weight, dimensions)
-     * 
-     * @param  oxCategory $oCategory
-     * @param  array  $returnCategories
-     * @return array Array of categories hierarchy
-     */
-    protected function _getParentsCategoryTree($oCategory, $returnCategories = array())
-    {
-        $oxTiramizooCategoryData = array();
-        $oxTiramizooCategoryData['oxid'] = $oCategory->oxcategories__oxid->value;
-        $oxTiramizooCategoryData['oxtitle'] = $oCategory->oxcategories__oxtitle->value;
-        $oxTiramizooCategoryData['oxsort'] = $oCategory->oxcategories__oxsort->value;
-        $oxTiramizooCategoryData['tiramizoo_enable'] = $oCategory->oxcategories__tiramizoo_enable->value;
-        $oxTiramizooCategoryData['tiramizoo_weight'] = $oCategory->oxcategories__tiramizoo_weight->value;
-        $oxTiramizooCategoryData['tiramizoo_width'] = $oCategory->oxcategories__tiramizoo_width->value;
-        $oxTiramizooCategoryData['tiramizoo_height'] = $oCategory->oxcategories__tiramizoo_height->value;
-        $oxTiramizooCategoryData['tiramizoo_length'] = $oCategory->oxcategories__tiramizoo_length->value;
-
-        array_unshift($returnCategories, $oxTiramizooCategoryData);
-        if ($parentCategory = $oCategory->getParentCategory()) {
-            $returnCategories = $this->_getParentsCategoryTree($parentCategory, $returnCategories);
-        }
-
-        return $returnCategories;
     }
 }
