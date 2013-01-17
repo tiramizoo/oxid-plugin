@@ -43,6 +43,7 @@ class oxTiramizooArticleHelper extends oxSuperCfg
         //set the defaults
         $oxTiramizooInheritedData = array();
 
+        $oxTiramizooInheritedData['tiramizoo_use_package'] = 1;
         $oxTiramizooInheritedData['tiramizoo_enable'] = 0;
         $oxTiramizooInheritedData['weight'] = 0;
         $oxTiramizooInheritedData['width'] = 0;
@@ -52,7 +53,7 @@ class oxTiramizooArticleHelper extends oxSuperCfg
         $oxConfig = oxConfig::getInstance();
 
         // get from tiramizoo settings centimeters and kilograms
-        $oxTiramizooInheritedData['tiramizoo_enable'] = $oxConfig->getShopConfVar('oxTiramizoo_enable_module') == 'on';
+        $oxTiramizooInheritedData['tiramizoo_enable'] = ($oxConfig->getShopConfVar('oxTiramizoo_enable_immediate') == 'on') || ($oxConfig->getShopConfVar('oxTiramizoo_enable_evening') == 'on');
         $oxTiramizooInheritedData['weight'] = floatval($oxConfig->getShopConfVar('oxTiramizoo_global_weight'));
         $oxTiramizooInheritedData['width'] = floatval($oxConfig->getShopConfVar('oxTiramizoo_global_width'));
         $oxTiramizooInheritedData['height'] = floatval($oxConfig->getShopConfVar('oxTiramizoo_global_height'));
@@ -69,9 +70,14 @@ class oxTiramizooArticleHelper extends oxSuperCfg
 
         foreach ($aCheckCategories as $aCategoryData) 
         {   
-            //if some category in category parent tree is disabled the wole subtree is disabled
+            //if some category in category parent tree is disabled the whole subtree is disabled
             if (($aCategoryData['tiramizoo_enable']) == -1) {
                 $oxTiramizooInheritedData['tiramizoo_enable'] = 0;
+            }
+
+            //if some category in category parent tree disabled use std package the whole subtree don't use std package
+            if (($aCategoryData['tiramizoo_use_package']) == -1) {
+                $oxTiramizooInheritedData['tiramizoo_use_package'] = 0;
             }
 
             //category can override dimensions and weight but only all or nothing
