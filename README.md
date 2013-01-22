@@ -6,11 +6,11 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 
 # Checkout flow #
 
-*   User adds items to basket (All items added by user have to have tiramizoo service enabled, directly or by category)
+*   User adds items to basket (All items added by user have to have tiramizoo service enabled, directly or by parent category)
 
-*   User go to checkout (Step 1)
+*   User goes to checkout (Step 1)
 
-*   User specify delivery address (Step 2)
+*   User specifies delivery address (Step 2) *Warning: We highly recommend to set customer's phone number as a required field. It enables courier to contact customer when necessary
 
 *   Between Step 2 and Step 3 plugin sends request to tiramizoo with items dimentions and address data to verify if package can be delivered with Tiramizoo. In case package is too big, or delivery address is outside service area tiramizoo will not appear as delivery option
 
@@ -75,11 +75,11 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
     Add Tiramizoo tracking url after showing selected delivery method [see in the basic template](https://github.com/tiramizoo/oxid-plugin/blob/4.3.2/changed_full/out/basic/tpl/email_order_cust_plain.tpl#L123)
 
     ```
-    [{* oxtiramizoo BEGIN *}]    
+    [{* oxtiramizoo BEGIN *}]
     [{if $order->oxorder__tiramizoo_tracking_url->value }]
       Tracking URL: [{$order->oxorder__tiramizoo_tracking_url->value}]
     [{/if}]
-    [{* oxtiramizoo END *}]    
+    [{* oxtiramizoo END *}]
     ```
 
     **file: out/basic/tpl/payment.tpl**
@@ -107,7 +107,7 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
     ```
 
     **file: out/basic/tpl/order.tpl**
-    
+
     Put these lines after showing selected delivery method
     [see in the basic template](https://github.com/tiramizoo/oxid-plugin/blob/4.3.2/changed_full/out/basic/tpl/order.tpl#L480)
 
@@ -128,15 +128,39 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 
         Tiramizoo API token - Can be obtained via your user profile, Production version [https://www.tiramizoo.com/](https://www.tiramizoo.com/), testing version [https://sandbox.tiramizoo.com/](https://sandbox.tiramizoo.com/)
 
-        Shop informations
+        Shop URL - Shop URL address, required for webhooks
 
-        Time window delivery
+        Pickup street address - Shop street name
+
+        Pickup city - Shop city name
+
+        Pickup Postal Code - Shop postal code
+
+        Pickup Country Code - Shop country code (Germany - de)
+
+        Pickup Name - Shop name, could include name of responsible person (example: "Tiramizoo GmbH / Gregor Melhorn")
+
+        Pickup Phone Number - Shop phone number
+
+        Pickup email - Shop email address
+
+        Order To Pickup Time offset - Time required by Shop to prepare package
+
+        Delivery time window length - Number of minutes client is available to receive a package at delivery address.
+
+        Pickup time window length - Number of minutes Shop is available for courier to pickup a package at pickup address
+
+        1st - 6th pick up hour - Hour when pickup starts, Shop can define up to 6 pickup hours. Courier is obligated to pickup package between pickup hour and pickup hour + pickup time window lenght (example: pickup hour: 10:00, pickup time window lenght: 30min, effective pickup window is: 10:00 - 10:30)
+
+        Tiramizoo payment methods assigned - Payment methods which are available for tiramizoo service. *Warning: Payment on delivery is currently not supported by Tiramizoo.
 
     -   At the **Administer Products -> Categories -> Category selection -> Tiramizoo tab**
 
-        Category and all parent categories need to have Tiramizoo service enabled to let containing products to be delivered by Tiramizoo service. Also dimensions form enables to specify default product dimentions which will apply to all products which have the category selected as a main category and will not have dimentions specified explicitly.
+        Product's main category and all its parents categories need to have Tiramizoo service enabled to let containing products to be delivered by Tiramizoo service. Also dimensions form enables to specify default product dimentions which will apply to all products which have the category selected as a main category and will not have dimentions specified explicitly.
 
-        products ready for delivery with tiramizoo should be available in stock, should have dimensions and weight specified and dimensions and weight can not cross specific level.
+        Please consider that inheritance of category properties that are not assigned as Main category wouldn't be apply to products they have.
+
+        Products ready for delivery with tiramizoo should be available in stock, should have dimensions and weight specified and dimensions and weight can not cross specific level.
 
         Validation of products will take place when plugin asks tiramizoo server for quotes (POST request to /quotes between step 2 to 3 in checkout process). That means, even if flag "available for tiramizoo" is set, tiramizoo service could not appear as one of delivery option in 3th step of checkout process because of validation
 
@@ -144,6 +168,8 @@ Module works with following OXID eSales versions: 4.3.2+, versions 4.4.x, 4.5.x 
 
         You can enable or disable Tiramizoo delivery for selected product
 
-# Checking the Tiramizoo delivery status #
+    **NOTE! After first installation and every update You have to go to Tiramizoo settings page and then clear tmp folder.**
 
-Go to *Order tab* to check the current delivery status
+# Webhooks / Checking the Tiramizoo delivery status #
+
+Go to *Order tab* to check the current delivery status. Tiramizoo sends status update each time order status is changed. Webhook url needs to be accessible for POST request.

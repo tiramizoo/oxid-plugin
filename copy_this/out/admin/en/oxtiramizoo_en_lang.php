@@ -90,6 +90,21 @@ $aLang = array(
 'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Enable only articles with stock > 0',
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Enable only articles with stock > 0',
 
+'oxTiramizoo_settings_weight_label'                     => 'Weight',
+'oxTiramizoo_settings_weight_help'                      => 'This weight will be assigned for all products without specified weight. You can override it in category settings or article settings.',
+'oxTiramizoo_settings_dimensions_label'                 => 'Dimensions',
+'oxTiramizoo_settings_dimensions_help'                  => 'L-length, W - width, H - height. These dimensions will be assigned for all products without specified dimensions. You can override them in category settings or article settings.',
+
+'oxTiramizoo_settings_enable_immediate_label'           => 'Enable Tiramizoo "Immediate delivery"',
+'oxTiramizoo_settings_enable_immediate_help'            => 'If checked add shipping method "Immediate delivery" to checkout with the first possible Tiramizoo delivery time window.',
+
+'oxTiramizoo_settings_enable_evening_label'             => 'Enable Tiramizoo "Evening delivery"',
+'oxTiramizoo_settings_enable_evening_help'              => 'If checked and time window selected add shipping method "Evening delivery" to checkout with the selected Tiramizoo delivery time window.',
+'oxTiramizoo_settings_weight_dimensions_warning'        => 'Enter the weight and all dimensions at once. If these values are filled partially then will not propagate to articles.',
+
+'oxTiramizoo_settings_select_evening_label'             => 'Select evening delivery window',
+
+'oxTiramizoo_settings_not_select_evening_error'         => 'If You want to enable evening delivery window You have to select evening delivery window',
 'oxTiramizoo_settings_package_size_label'               => 'Standard Package size',
 'oxTiramizoo_settings_package_size_help'                => 'Please enter a Standard Package size in centimeters with the following pattern (W - width, L - length, H - height).',
 
@@ -99,6 +114,24 @@ $aLang = array(
 'oxTiramizoo_settings_dimensions_unit'                  => 'cm',
 'oxTiramizoo_settings_weight_unit'                      => 'kg',
 
+'oxTiramizoo_settings_package_sizes_heading'    		=> 'Package sizes',
+
+'oxTiramizoo_settings_package_sizes_strategy_1_label'  	=> 'All products have individual dimensions',
+'oxTiramizoo_settings_package_sizes_strategy_2_label'   => 'Specific dimensions of packages',
+'oxTiramizoo_settings_package_sizes_strategy_3_label'  	=> 'All products should fit to one package',
+
+'oxTiramizoo_settings_package_std_size_weight_label'  	=> 'Standard Package size and weight',
+'oxTiramizoo_settings_package_std_size_weight_help'  	=> 'Every order will be packed to the box with following dimensions. L-length, W - width, H - height, Wt - weight.',
+
+'oxTiramizoo_settings_package_size_and_weight_label'  	=> 'Package size and weight',
+'oxTiramizoo_settings_package_size_and_weight_help'  	=> 'Define package dimensions. L-length, W - width, H - height, Wt - weight.',
+
+'oxTiramizoo_settings_dimensions_short_width_label'  	=> 'W',
+'oxTiramizoo_settings_dimensions_short_length_label'  	=> 'L',
+'oxTiramizoo_settings_dimensions_short_height_label'  	=> 'H',
+'oxTiramizoo_settings_dimensions_short_weight_label'  	=> 'Wt',
+
+
 
 // Article administration -> Tiramizoo Tab
 
@@ -107,6 +140,26 @@ $aLang = array(
 'oxTiramizoo_article_tab_enable_inherit_value'          => 'Inherit from parent settings',
 'oxTiramizoo_article_tab_enable_yes_value'              => 'Yes',
 'oxTiramizoo_article_tab_enable_no_value'               => 'No',
+
+'oxTiramizoo_article_tab_article_effective_label'       => 'Article\'s effective values',
+
+'oxTiramizoo_article_tab_article_is_enabled'            => 'Article is enabled',
+'oxTiramizoo_article_tab_article_is_disabled'           => 'Article is disabled',
+'oxTiramizoo_article_tab_disabled_by_category_1'        => 'in tiramizoo shipping because parent category', 
+'oxTiramizoo_article_tab_disabled_by_category_2'        => 'is disabled. Please check the tiramizoo tab in category settings',
+
+'oxTiramizoo_article_tab_effective_values_warning'      => 'You have to specify dimensions and weight. You can do this in global settings, category tab or article extended tab.',
+
+'oxTiramizoo_article_tab_width_label'                   => 'Width',
+'oxTiramizoo_article_tab_height_unit'                   => 'Height',
+'oxTiramizoo_article_tab_length_unit'                   => 'Length',
+
+
+'oxTiramizoo_article_tab_weight_label'                  => 'Weight',
+'oxTiramizoo_article_tab_weight_unit'                   => 'kg',
+
+'oxTiramizoo_article_tab_dimensions_label'              => 'Dimensions',
+'oxTiramizoo_article_tab_dimensions_unit'               => 'cm',
 
 'oxTiramizoo_article_tab_use_package_label'             => 'Individual package',
 'oxTiramizoo_article_tab_use_package_value'             => 'Yes',
