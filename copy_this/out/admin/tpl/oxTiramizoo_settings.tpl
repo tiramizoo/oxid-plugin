@@ -40,6 +40,9 @@
         <td valign="top" class="edittext" style="padding:10px;">
          <table cellspacing="0" cellpadding="5" border="0" class="edittext" style="text-align: left;">
             
+
+
+
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_api_url_label" }]</td>
               <td valign="top" class="edittext">
@@ -224,6 +227,7 @@
               </td>
             </tr>
 
+
             <tr>
               <td>[{ oxmultilang ident="oxTiramizoo_settings_payment_methods_assigned_label" }]</td>
               <td>
@@ -278,47 +282,93 @@
               [{ oxinputhelp ident="oxTiramizoo_settings_dimensions_help" }]
             </td>
           </tr>
+         
+            <tr>
+              <td valign="top" colspan="2" class="edittext">
+                <h3>[{ oxmultilang ident="oxTiramizoo_settings_package_sizes_heading" }]</h3>
+              </td>
+            </tr>
 
-            <script>
-                var helloWorld = function(e) {
-                  var elements = YAHOO.util.Dom.getElementsByClassName('oxTiramizoo-shop-pickup-hour');
-                  
-                  for (var i in elements) {
-                    if (i == 0) continue;
 
-                    YAHOO.util.Dom.get('oxTiramizoo-evening-window').getElementsByTagName('option')[i].text = elements[i - 1].value;
-                    YAHOO.util.Dom.get('oxTiramizoo-evening-window').getElementsByTagName('option')[i].value = elements[i - 1].value;
-                  };
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">Define Package size</td>
+              <td valign="top" class="edittext" id="selectPackageStrategyRadiosCell">
+                <input class="selectPackageStrategyRadios" type="radio" name=confstrs[oxTiramizoo_package_strategy] [{if ($confstrs.oxTiramizoo_package_strategy == 0)}]checked="checked"[{/if}] value="0" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_1_label" }]<br />
+                <input class="selectPackageStrategyRadios" type="radio" name=confstrs[oxTiramizoo_package_strategy] [{if ($confstrs.oxTiramizoo_package_strategy == 1)}]checked="checked"[{/if}] value="1" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_2_label" }]<br />
+                <input class="selectPackageStrategyRadios" type="radio" name=confstrs[oxTiramizoo_package_strategy] [{if ($confstrs.oxTiramizoo_package_strategy == 2)}]checked="checked"[{/if}] value="2" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_3_label" }]<br />
+              </td>
+            </tr>
+
+            <script type="text/javascript">
+            (function() {
+                var Dom = YAHOO.util.Dom,
+                    Event = YAHOO.util.Event;
+
+                var initPackage = function() {
+
+                    var selectPackageStrategyRadios = YAHOO.util.Dom.getElementsByClassName('selectPackageStrategyRadios');
+                    Event.addListener(selectPackageStrategyRadios, 'click', selectPackageStrategy);
                 }
 
-                var elements = YAHOO.util.Dom.getElementsByClassName('oxTiramizoo-shop-pickup-hour');
+                var selectPackageStrategy = function() {
+                  var input = YAHOO.util.Dom.getElementsBy(function (el) {
+                                  return (el.name === 'confstrs[oxTiramizoo_package_strategy]' && el.checked);
+                              }, 'input', 'selectPackageStrategyRadiosCell', null, null, null, true);
 
-                YAHOO.util.Event.addListener(elements, "click", helloWorld);
+                  var packageStrategyId = input.value;
 
+                  var oxTiramizoo_package_strategy_rows = YAHOO.util.Dom.getElementsByClassName('oxTiramizoo_package_strategy_row');
+                  YAHOO.util.Dom.setStyle(oxTiramizoo_package_strategy_rows, 'display', 'none');
+
+                  var oxTiramizoo_package_strategy_rows_to_show = YAHOO.util.Dom.getElementsByClassName('oxTiramizoo_package_strategy_' + packageStrategyId);
+                  YAHOO.util.Dom.setStyle(oxTiramizoo_package_strategy_rows_to_show, 'display', 'table-row');
+
+                }
+
+                Event.addListener(window, 'load', initPackage);
+
+            })();
             </script>
 
-
-            <tr>
-              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_package_size_label" }]</td>
+            <tr class="oxTiramizoo_package_strategy_row oxTiramizoo_package_strategy_2" [{if ($confstrs.oxTiramizoo_package_strategy != 2)}]style="display:none;"[{/if}]>
+              <td valign="top" class="edittext" nowrap="">[{oxmultilang ident="oxTiramizoo_settings_package_std_size_weight_label"}]</td>
               <td valign="top" class="edittext">
 
-                W: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_width]" value="[{$confstrs.oxTiramizoo_std_package_width}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
+                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_width_label"}]: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_width]" value="[{$confstrs.oxTiramizoo_std_package_width}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
                 
-                L: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_length]" value="[{$confstrs.oxTiramizoo_std_package_length}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
+                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_length_label"}]: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_length]" value="[{$confstrs.oxTiramizoo_std_package_length}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
 
-                H: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_height]" value="[{$confstrs.oxTiramizoo_std_package_height}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
+                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_height_label"}]: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_height]" value="[{$confstrs.oxTiramizoo_std_package_height}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
 
-                [{ oxinputhelp ident="oxTiramizoo_settings_package_size_help" }]
+                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_weight_label"}]: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_weight]" value="[{$confstrs.oxTiramizoo_std_package_weight}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_weight_unit" }]
+
+                [{ oxinputhelp ident="oxTiramizoo_settings_package_std_size_weight_help" }]
+
               </td>
             </tr>
 
-            <tr>
-              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_package_weight_label" }]</td>
+ 
+
+            [{foreach from=$aPackageSizes key=key item=aPackage}]
+            <tr class="oxTiramizoo_package_strategy_row oxTiramizoo_package_strategy_1" [{if ($confstrs.oxTiramizoo_package_strategy != 1)}]style="display:none;"[{/if}]>
+              <td valign="top" class="edittext" nowrap="">[{$key}] [{oxmultilang ident="oxTiramizoo_settings_package_size_and_weight_label"}]</td>
               <td valign="top" class="edittext">
-                <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_weight]" value="[{$confstrs.oxTiramizoo_std_package_weight}]" maxlength="100" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_weight_unit" }]
-                [{ oxinputhelp ident="oxTiramizoo_settings_package_weight_help" }]
+
+                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_width_label"}]: <input type=text class="editinput" name="packageSizes[width][[{$key}]]" value="[{$aPackage.width}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }],
+                
+                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_length_label"}]: <input type=text class="editinput" name="packageSizes[length][[{$key}]]" value="[{$aPackage.length}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }],
+
+                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_height_label"}]: <input type=text class="editinput" name="packageSizes[height][[{$key}]]" value="[{$aPackage.height}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }],
+
+                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_weight_label"}]: <input type=text class="editinput" name="packageSizes[weight][[{$key}]]" value="[{$aPackage.weight}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_weight_unit" }]
+
+                [{ oxinputhelp ident="oxTiramizoo_settings_package_size_and_weight_help" }]
+
               </td>
             </tr>
+            [{/foreach}]
+
 
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_articles_with_stock_gt_0" }]</td>

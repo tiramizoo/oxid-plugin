@@ -291,4 +291,46 @@ class oxTiramizooHelper extends oxSuperCfg
         return $this->_isTiramizooEveningAvailable;
     }
 
+
+    public function getPackageSizes()
+    {
+        $iMaximumPackageSizes = oxTiramizooConfig::getInstance()->getConfigParam('iMaximumPackageSizes');
+
+        $aPackageSizes = array();
+
+        for ($i=1; $i <= $iMaximumPackageSizes ; $i++) 
+        { 
+            $aPackageSize = array();
+            $aPackageSize['name'] = 'oxTiramizoo_package_size_' . $i;
+            $aPackageSize['value'] = oxConfig::getInstance()->getShopConfVar('oxTiramizoo_package_size_' . $i);
+
+            $aPackageSizeValuesArray = explode('x', $aPackageSize['value']);
+
+            $aPackageSize['width'] = $aPackageSizeValuesArray[0];
+            $aPackageSize['length'] = $aPackageSizeValuesArray[1];
+            $aPackageSize['height'] = $aPackageSizeValuesArray[2];
+            $aPackageSize['weight'] = $aPackageSizeValuesArray[3];
+
+            $aPackageSizes[$i] = $aPackageSize;
+        }
+
+        return $aPackageSizes;
+    }
+
+
+    public function getPackageSizesSortedByVolume() 
+    {
+        $aPackageSizes = $this->getPackageSizes();
+        $aPackageSizesSorted = array();
+
+        foreach ($aPackageSizes as $key => $aPackageSize) {
+            $volume = $aPackageSize['width'] * $aPackageSize['length'] * $aPackageSize['height'];
+            $aPackageSizesSorted[$volume] = $aPackageSize;
+        }
+
+        ksort($aPackageSizesSorted);
+
+        return $aPackageSizesSorted;
+    }
+
 }

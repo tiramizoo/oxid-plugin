@@ -10,7 +10,7 @@ class oxTiramizoo_setup extends Shop_Config
     /**
      * Current version of oxTiramizoo module
      */
-    const VERSION = '0.8.5';
+    const VERSION = '0.8.6';
 
     /**
      * Error message
@@ -204,6 +204,14 @@ class oxTiramizoo_setup extends Shop_Config
             $result = $this->executeSQL($sql);
 
         }
+    }
+
+    /**
+     * Update database to version 0.8.6
+     */
+    public function migration_0_8_6()
+    {
+        $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_package_strategy', 0); 
     }
 
     /**

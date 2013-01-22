@@ -8,6 +8,14 @@ if ( !class_exists('oxTiramizooArticleHelper') ) {
     require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_articlehelper.php';
 }
 
+if ( !class_exists('pudzian') ) {
+    require_once getShopBasePath() . '/modules/oxtiramizoo/lib/pudzian/pudzian.php';
+}
+
+if ( !class_exists('packIntoBoxes') ) {
+    require_once getShopBasePath() . '/modules/oxtiramizoo/lib/packIntoBoxes.php';
+}
+
 /**
  * oxTiramizoo API class used to connection with Tiramizoo API. Main functionality
  * are getting quotes, sending order and build API data.
@@ -195,14 +203,30 @@ class oxTiramizooApi extends TiramizooApi
     {
         $items = array();
 
-        $stdPackageWidth = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_width');
-        $stdPackageLength = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_length');
-        $stdPackageHeight = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_height');
-        $stdPackageWeight = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_weight');
+        $sPackageStrategy = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_package_strategy');
 
-        $useStandardPackage = $stdPackageWidth && $stdPackageLength && $stdPackageHeight && $stdPackageWeight;
+        $useStandardPackage = false;
 
-        $standardPackageAddedToItems = 0;
+
+        if ($sPackageStrategy == 1) {
+            $aPackageSizes = oxTiramizooHelper::getInstance()->getPackageSizesSortedByVolume();
+
+            if (count($aPackageSizes)) {
+                $useAutoFittingToPackage = 1;
+                $aAutoFitPackageItems = array();
+            }
+        } else if ($sPackageStrategy == 2) {
+
+            $stdPackageWidth = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_width');
+            $stdPackageLength = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_length');
+            $stdPackageHeight = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_height');
+            $stdPackageWeight = oxconfig::getInstance()->getShopConfVar('oxTiramizoo_std_package_weight');
+
+            $useStandardPackage = $stdPackageWidth && $stdPackageLength && $stdPackageHeight && $stdPackageWeight;
+
+            $standardPackageAddedToItems = 0;
+        }
+
 
         foreach ($oBasket->getBasketArticles() as $key => $oArticle) 
         {
@@ -288,11 +312,46 @@ class oxTiramizooApi extends TiramizooApi
 
                     $items[] = $item;
                 }
+            } else if ($useAutoFittingToPackage && ($inheritedData['tiramizoo_use_package'] && $oArticle->oxarticles__tiramizoo_use_package->value)) {
+                for ($i=0; $i < $item->quantity; $i++) {
+                   $aAutoFitPackageItems[] = (array)$item;
+                }
             } else {
                 $items[] = $item;
             }
 
         }
+
+        if ($useAutoFittingToPackage) {
+
+                $packIntoBoxes = new packIntoBoxes($aAutoFitPackageItems, $aPackageSizes);
+                $packIntoBoxes->pack();
+
+                foreach($packIntoBoxes->getPackedItems() as $key => $package) 
+                {
+                    $item = new stdClass();
+                    $item->weight = floatval($package['package']['weight']);
+                    $item->width = floatval($package['package']['width']);
+                    $item->length = floatval($package['package']['length']);
+                    $item->height = floatval($package['package']['height']);
+                    $item->quantity = 1;
+
+                    $items[] = $item;
+                }
+
+                foreach($packIntoBoxes->getIndividualPackageItems() as $key => $itemIndividual) 
+                {
+                    $item = new stdClass();
+                    $item->weight = floatval($itemIndividual['weight']);
+                    $item->width = floatval($itemIndividual['width']);
+                    $item->length = floatval($itemIndividual['length']);
+                    $item->height = floatval($itemIndividual['height']);
+                    $item->quantity = 1;
+
+                    $items[] = $item;
+                }
+
+        } 
 
         return $items;
     }

@@ -8,6 +8,11 @@ if ( !class_exists('oxTiramizooSetup') ) {
     require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_setup.php';
 }
 
+if ( !class_exists('oxTiramizooHelper') ) {
+    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_helper.php';
+}
+
+
 /**
  * Tiramizoo settings
  *
@@ -35,6 +40,7 @@ class oxTiramizoo_settings extends Shop_Config
     parent::render();
 
     $this->_aViewData['oPaymentsList'] = $this->getPaymentsList();
+    $this->_aViewData['aPackageSizes'] = oxTiramizooHelper::getInstance()->getPackageSizes();
     $this->_aViewData['aPickupHours'] = $this->getPickupHoursAsArray();
 
     $sCurrentAdminShop = $oxConfig->getShopId();
@@ -68,9 +74,6 @@ class oxTiramizoo_settings extends Shop_Config
 
     return 'oxTiramizoo_settings.tpl';
   }
-  
-
-
 
   public function getPickupHoursAsArray()
   {
@@ -137,6 +140,27 @@ class oxTiramizoo_settings extends Shop_Config
             }
         }        
   }
+
+
+
+    public function savePackageSizes()
+    {
+        $aPackageSizes = oxConfig::getParameter("packageSizes");
+
+        $iMaximumPackageSizes = oxTiramizooConfig::getInstance()->getConfigParam('iMaximumPackageSizes');
+
+        for ($i=1; $i <= $iMaximumPackageSizes; $i++)
+        { 
+            if (intval($aPackageSizes['width'][$i]) && 
+                intval($aPackageSizes['length'][$i]) && 
+                intval($aPackageSizes['height'][$i]) && 
+                floatval($aPackageSizes['weight'][$i])) {
+                 $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_package_size_' . $i, intval($aPackageSizes['width'][$i]) . 'x' . intval($aPackageSizes['length'][$i]) . 'x' . intval($aPackageSizes['height'][$i]) . 'x' . floatval($aPackageSizes['weight'][$i]));
+            } else {
+                 $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_package_size_' . $i, '');
+            }
+        }
+    }
 
     /**
     * Saves shop configuration variables
@@ -272,6 +296,7 @@ class oxTiramizoo_settings extends Shop_Config
         $this->assignPaymentsToTiramizoo();
 
         $this->saveEnableShippingMethod();       
+        $this->savePackageSizes();
 
         // clear cache 
         oxUtils::getInstance()->rebuildCache();
