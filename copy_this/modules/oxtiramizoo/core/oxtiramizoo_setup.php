@@ -10,7 +10,7 @@ class oxTiramizoo_setup extends Shop_Config
     /**
      * Current version of oxTiramizoo module
      */
-    const VERSION = '0.8.5';
+    const VERSION = '0.8.7';
 
     /**
      * Error message
@@ -267,6 +267,51 @@ class oxTiramizoo_setup extends Shop_Config
         $this->addColumnToTable('oxarticles', 'TIRAMIZOO_USE_PACKAGE', 'INT(1) NOT NULL DEFAULT 1');
         $this->addColumnToTable('oxcategories', 'TIRAMIZOO_USE_PACKAGE', 'INT(1) NOT NULL DEFAULT 1');
     }
+
+    /**
+     * Update database to version 0.8.7
+     */
+    public function migration_0_8_7()
+    {
+
+        $this->executeSQL("INSERT IGNORE INTO `oxdelivery` SET
+                            OXID = 'TiramizooSelectTime',
+                            OXSHOPID = 'oxbaseshop',
+                            OXACTIVE = 0,
+                            OXACTIVEFROM = '0000-00-00 00:00:00',
+                            OXACTIVETO = '0000-00-00 00:00:00',
+                            OXTITLE = 'Tiramizoo Select Time',
+                            OXTITLE_1 = 'Tiramizoo Select Time',
+                            OXTITLE_2 = 'Tiramizoo Select Time',
+                            OXTITLE_3 = 'Tiramizoo Select Time',
+                            OXADDSUMTYPE = 'abs',
+                            OXADDSUM = 7.90,
+                            OXDELTYPE = 'p',
+                            OXPARAM = 0,
+                            OXPARAMEND = 999999,
+                            OXFIXED = 0,
+                            OXSORT = 3,
+                            OXFINALIZE = 1;");
+
+        $this->executeSQL("INSERT IGNORE INTO `oxdeliveryset` SET
+                            OXID = 'TiramizooSelectTime',
+                            OXSHOPID = 'oxbaseshop',
+                            OXACTIVE = 0,
+                            OXACTIVEFROM = '0000-00-00 00:00:00',
+                            OXACTIVETO = '0000-00-00 00:00:00',
+                            OXTITLE = 'Tiramizoo Select Time',
+                            OXTITLE_1 = 'Tiramizoo Select Time',
+                            OXTITLE_2 = 'Tiramizoo Select Time',
+                            OXTITLE_3 = 'Tiramizoo Select Time',
+                            OXPOS = 3;");
+
+        $this->executeSQL("INSERT IGNORE INTO `oxdel2delset` SET
+                            OXID = MD5(CONCAT('TiramizooSelectTime', 'TiramizooSelectTime')),
+                            OXDELID = 'TiramizooSelectTime',
+                            OXDELSETID = 'TiramizooSelectTime';");
+    }
+
+
 
     /**
      * Execute sql query

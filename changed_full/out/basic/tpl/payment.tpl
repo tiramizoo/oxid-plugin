@@ -24,10 +24,47 @@
                 </select>
  -->
 
-
-
                   [{foreach key=sShipID from=$oView->getAllSets() item=oShippingSet name=ShipSetSelect}]
                     <input type="radio" name="sShipSet" onChange="JavaScript:document.forms.shipping.submit();" value="[{$sShipID}]"  [{if $oShippingSet->blSelected}]checked[{/if}]>  [{ $oShippingSet->oxdeliveryset__oxtitle->value }] <br />
+
+
+                  [{* oxtiramizoo BEGIN *}]
+                  [{if ($isTiramizooSelectTimeShippingMethod && ($sShipID == 'TiramizooSelectTime')) }]
+                  <div style="margin-left:20px;">
+                      <select id="tiramizooSelectDate" onchange="JavaScript:showTiramizooTimeWindows();">
+                          [{foreach from=$aTiramizooSelectTimeWindows item=aDeliveryDate}]
+                              <option value="[{$aDeliveryDate.date}]" [{if ($sTiramizooSelectedDate == $aDeliveryDate.date)}] selected="selected" [{/if}]>[{$aDeliveryDate.label}]</option>
+                          [{/foreach}]
+                      </select>
+
+                      [{foreach key=key from=$aTiramizooSelectTimeWindows item=sDeliveryDate}]
+                        <div class="tiramizooSelectDateTimeWrapper" id="tiramizooSelectDateTime-[{$sDeliveryDate.date}]" [{if (!$sDeliveryDate.active) }] style="display:none;" [{/if}]>
+                          [{foreach from=$sDeliveryDate.timeWindows item=aTimeWindow}]
+                              <input type="radio" name="sTiramizooTimeWindow" value="[{$aTimeWindow.timeWindowDate}]" onChange="JavaScript:document.forms.shipping.submit();" [{if (!$aTimeWindow.enable) }] disabled="true" [{/if}] [{if ($sTiramizooTimeWindow == $aTimeWindow.timeWindowDate) }] checked="checked" [{/if}] />
+                              <span [{if (!$aTimeWindow.enable) }] style="color:#666;" [{/if}]>[{$aTimeWindow.timeWindowLabel}]</span> <br />
+                          [{/foreach}]
+                        </div>
+                      [{/foreach}]
+                  </div>
+
+                  <script type="text/javascript">
+                    function showTiramizooTimeWindows() {
+                        var selectDateObject = document.getElementById("tiramizooSelectDate");
+                        var selectedDate = selectDateObject.options[selectDateObject.selectedIndex].value;
+                        
+                        var tiramizooSelectDateTimeWrappers = document.getElementsByClassName('tiramizooSelectDateTimeWrapper');
+                        for (i = 0; i < tiramizooSelectDateTimeWrappers.length; i++){
+                            tiramizooSelectDateTimeWrappers[i].style.display = 'none';
+                        }
+
+                        var tiramizooSelectedDateTimeWrapper = document.getElementById('tiramizooSelectDateTime-' + selectedDate);
+                        tiramizooSelectedDateTimeWrapper.style.display = 'block';
+                    }
+                  </script>
+                  [{/if}]
+                  [{* oxtiramizoo END *}]
+
+
                   [{/foreach}]
 
 
