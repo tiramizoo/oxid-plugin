@@ -67,7 +67,19 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
     {
         $oxTiramizooHelper = oxTiramizooHelper::getInstance();
 
+        $result = oxTiramizooApi::getInstance()->getAvailableWorkingHours('de', '40211', '40211');
+        print_r($result); 
+        $result = oxTiramizooHelper::getShopAvailableDates();
+        print_r($result); 
+
+
+        exit;
+
+
         if ($oxTiramizooHelper->isTiramizooAvailable()) {
+
+
+
             $oBasket = $this->getSession()->getBasket();
             $this->_aViewData['isTiramizooCurrentShippingMethod'] = $oBasket->getShippingId() == 'Tiramizoo';
             $this->_aViewData['aTiramizooAvailableDeliveryHours'] = $oxTiramizooHelper->getAvailableDeliveryHours();

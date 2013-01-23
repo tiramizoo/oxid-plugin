@@ -8,6 +8,10 @@ if ( !class_exists('oxTiramizooSetup') ) {
     require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_setup.php';
 }
 
+if ( !class_exists('oxTiramizooHelper') ) {
+    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_helper.php';
+}
+
 /**
  * Tiramizoo settings
  *
@@ -63,6 +67,10 @@ class oxTiramizoo_settings extends Shop_Config
         oxSession::setVar('oxTiramizoo_settings_errors', null);
     }
 
+    $this->_aViewData['aExcludeDates'] = oxTiramizooHelper::getExcludeDates();
+    $this->_aViewData['aIncludeDates'] = oxTiramizooHelper::getIncludeDates();
+
+
     $this->_aViewData['version'] = oxTiramizoo_setup::VERSION;
 
     return 'oxTiramizoo_settings.tpl';
@@ -94,8 +102,8 @@ class oxTiramizoo_settings extends Shop_Config
     return $aPaymentList;
   }
 
-  public function assignPaymentsToTiramizoo()
-  {
+    public function assignPaymentsToTiramizoo()
+    {
         $aPayments  = oxConfig::getParameter( "payment" );
         $soxId = 'Tiramizoo';
 
@@ -118,7 +126,7 @@ class oxTiramizoo_settings extends Shop_Config
                 $oDb->Execute("DELETE FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'");
             }
         }
-  }
+    }
 
     /**
     * Saves shop configuration variables
@@ -218,6 +226,17 @@ class oxTiramizoo_settings extends Shop_Config
     }
 
 
+    public function saveDates()
+    {
+        $oxConfig = $this->getConfig();
+                
+        $aIncludeDates = oxConfig::getParameter( "include_date" );
+        $aExcludeDates = oxConfig::getParameter( "exclude_date" );
+
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_exclude_days', implode(',', $aExcludeDates));
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_include_days', implode(',', $aIncludeDates));
+    }
+
     /**
      * Saves main user parameters.
      *
@@ -230,6 +249,7 @@ class oxTiramizoo_settings extends Shop_Config
         $this->assignPaymentsToTiramizoo();
 
         $this->saveEnableShippingMethod();       
+        $this->saveDates();
 
         // clear cache 
         oxUtils::getInstance()->rebuildCache();

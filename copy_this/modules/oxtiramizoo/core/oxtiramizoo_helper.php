@@ -4,6 +4,9 @@ if ( !class_exists('oxTiramizooConfig') ) {
     require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_config.php';
 }
 
+if ( !class_exists('oxTiramizooApi') ) {
+    require_once getShopBasePath() . '/modules/oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php';
+}
 /**
  * This class contains static methods used for calculating pickup and delivery hours
  *
@@ -36,6 +39,102 @@ class oxTiramizooHelper extends oxSuperCfg
      * @var integer
      */
     protected $_isTiramizooAvailable = -1;
+
+    public static function getExcludeDates()
+    {
+        $sExcludeDates = oxConfig::getInstance()->getShopConfVar('oxTiramizoo_exclude_days');
+
+        return $sExcludeDates ? explode(',', $sExcludeDates) : array();
+    }
+
+    public static function getIncludeDates()
+    {
+        $sIncludeDates = oxConfig::getInstance()->getShopConfVar('oxTiramizoo_include_days');
+
+        return $sIncludeDates ? explode(',', $sIncludeDates) : array();
+    }
+
+    public static function getShopAvailableDates()
+    {
+        $iCountNextDates = 7;
+        $aAvailableDates = array();
+
+        $start = strtotime(date('Y-m-d'));
+        $dates=array();
+
+        for($i = 1; $i<=$iCountNextDates; $i++)
+        {
+            array_push($aAvailableDates, date('Y-m-d', strtotime("+$i day", $start)));
+        }
+
+        //skip dates with day of week not checked in settings
+        $aShopAvailableDaysOfWeek = oxTiramizooHelper::getShopAvailableDaysOfWeek();
+        foreach ($aAvailableDates as $key => $sDate) 
+        {
+            if (!in_array(date('w', strtotime($sDate)), $aShopAvailableDaysOfWeek)) {
+                unset($aAvailableDates[$key]);
+            }
+        }
+
+        //exclude dates from exclude dates list
+        $aExcludeDates = oxTiramizooHelper::getExcludeDates();
+        foreach ($aAvailableDates as $key => $sDate) 
+        {
+            if (in_array($sDate, $aExcludeDates)) {
+                unset($aAvailableDates[$key]);
+            }
+        }
+
+        //Include Additional dates from include list
+        $aIncludeDates = oxTiramizooHelper::getIncludeDates();
+        foreach ($aIncludeDates as $key => $sDate) 
+        {
+            if ((strtotime($sDate) >= $start) && (strtotime($sDate) <= strtotime("+$iCountNextDates day", $start)) && !in_array($sDate, $aAvailableDates)) {
+                array_push($aAvailableDates, $sDate);
+            }
+        }
+
+        sort($aAvailableDates);
+
+        return $aAvailableDates;
+    }
+
+    public static function getShopAvailableDaysOfWeek()
+    {
+        $oxConfig = oxConfig::getInstance();
+        
+        $aAvailableDayOfWeek = array();
+
+        if ($oxConfig->getShopConfVar('oxTiramizoo_works_mon')) {
+            $aAvailableDaysOfWeek[] = 1;
+        }
+
+        if ($oxConfig->getShopConfVar('oxTiramizoo_works_tue')) {
+            $aAvailableDaysOfWeek[] = 2;
+        }
+
+        if ($oxConfig->getShopConfVar('oxTiramizoo_works_wed')) {
+            $aAvailableDaysOfWeek[] = 3;
+        }
+
+        if ($oxConfig->getShopConfVar('oxTiramizoo_works_thu')) {
+            $aAvailableDaysOfWeek[] = 4;
+        }
+
+        if ($oxConfig->getShopConfVar('oxTiramizoo_works_fri')) {
+            $aAvailableDaysOfWeek[] = 5;
+        }
+
+        if ($oxConfig->getShopConfVar('oxTiramizoo_works_sat')) {
+            $aAvailableDaysOfWeek[] = 6;
+        }
+
+        if ($oxConfig->getShopConfVar('oxTiramizoo_works_sun')) {
+            $aAvailableDaysOfWeek[] = 0;
+        }
+
+        return $aAvailableDaysOfWeek;
+    }
 
     /**
      * Convert date time to more readable string
