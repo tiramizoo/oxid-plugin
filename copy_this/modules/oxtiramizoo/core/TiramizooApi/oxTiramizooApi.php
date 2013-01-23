@@ -71,6 +71,8 @@ class oxTiramizooApi extends TiramizooApi
         return $result;
     }
 
+    protected $_aAvailableWorkungHours = null;
+
     /**
      * Get working services hours
      * 
@@ -87,9 +89,12 @@ class oxTiramizooApi extends TiramizooApi
         $data['pickup_postal_code'] = $sPickupCode;
         $data['delivery_postal_code'] = $sDeliveryCode;
 
-        $result = null;
-        $this->requestGet('service_availability', $data, $result);
-        return $result;
+        if ($this->_aAvailableWorkungHours === null) {
+            $result = null;
+            $this->requestGet('service_availability', $data, $this->_aAvailableWorkungHours);
+        }
+
+        return $this->_aAvailableWorkungHours;
     }
 
     /**

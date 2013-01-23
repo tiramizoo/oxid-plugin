@@ -67,22 +67,30 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
     {
         $oxTiramizooHelper = oxTiramizooHelper::getInstance();
 
-        $result = oxTiramizooApi::getInstance()->getAvailableWorkingHours('de', '40211', '40211');
-        print_r($result); 
-        $result = oxTiramizooHelper::getShopAvailableDates();
-        print_r($result); 
-
-
-        exit;
-
-
         if ($oxTiramizooHelper->isTiramizooAvailable()) {
 
-
-
+            $oxConfig = oxConfig::getInstance();
             $oBasket = $this->getSession()->getBasket();
+
+            $oUser = $this->getUser();
+            $sZipCode = $oUser->oxuser__oxzip->value;
+
+            $sSelectedAddressId = $oUser->getSelectedAddressId();
+
+            if($sSelectedAddressId) {
+                $oDeliveryAddress = $oUser->getUserAddresses($sSelectedAddressI);
+                $sZipCode = $oDeliveryAddress->oxaddress__oxzip->value;
+
+            }
+
+            $oxTiramizooHelper->setDeliveryPostalCode($sZipCode);
+
+
             $this->_aViewData['isTiramizooCurrentShippingMethod'] = $oBasket->getShippingId() == 'Tiramizoo';
             $this->_aViewData['aTiramizooAvailableDeliveryHours'] = $oxTiramizooHelper->getAvailableDeliveryHours();
+
+            // print_r($this->_aViewData['aTiramizooAvailableDeliveryHours']); exit;
+
             $this->_aViewData['sTiramizooSelectedDeliveryTime'] = $oxTiramizooHelper->getSelectedTimeWindow();
         }
 
