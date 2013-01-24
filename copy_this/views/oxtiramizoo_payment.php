@@ -22,6 +22,7 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         $this->_aAllSets = parent::getAllSets();
 
         $unsetTiramizoo = false;
+        $resetShippingMethod = false;
 
         if (!oxTiramizooHelper::getInstance()->isTiramizooAvailable()) {
             unset($this->_aAllSets['Tiramizoo']);
@@ -31,19 +32,24 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         } else {
             if (!oxTiramizooHelper::getInstance()->isTiramizooImmediateAvailable()) {
                 unset($this->_aAllSets['Tiramizoo']);
-                $unsetTiramizoo = true;
+                if (oxSession::getVar( 'sShipSet') == 'Tiramizoo') {
+                    $resetShippingMethod = true;
+                }
             }
             if (!oxTiramizooHelper::getInstance()->isTiramizooEveningAvailable()) {
                 unset($this->_aAllSets['TiramizooEvening']);
-                $unsetTiramizoo = true;
-            }
+                if (oxSession::getVar( 'sShipSet') == 'TiramizooEvening') {
+                    $resetShippingMethod = true;
+                }            }
             if (!oxTiramizooHelper::getInstance()->isTiramizooSelectTimeAvailable()) {
                 unset($this->_aAllSets['TiramizooSelectTime']);
-                $unsetTiramizoo = true;
+                if (oxSession::getVar( 'sShipSet') == 'TiramizooSelectTime') {
+                    $resetShippingMethod = true;
+                }            
             }
         }
 
-        if ($unsetTiramizoo && in_array(oxSession::getVar( 'sShipSet'), array('Tiramizoo', 'TiramizooEvening', 'TiramizooSelectTime'))) {
+        if ($unsetTiramizoo && in_array(oxSession::getVar( 'sShipSet'), array('Tiramizoo', 'TiramizooEvening', 'TiramizooSelectTime')) || $resetShippingMethod)  {
 
             $sNewShippingMethod = key($this->_aAllSets);
 
@@ -85,6 +91,7 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         $oxTiramizooHelper = oxTiramizooHelper::getInstance();
 
 
+        
 
         if ($oxTiramizooHelper->isTiramizooAvailable()) {
 
