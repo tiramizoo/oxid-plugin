@@ -57,6 +57,9 @@ $aLang = array(
 'oxTiramizoo_settings_enable_module_label'              => 'Enable Tiramizoo',
 'oxTiramizoo_settings_enable_module_help'               => 'If the tiramizoo shipping option should be enabled',
 
+'oxTiramizoo_settings_enable_select_time_label'			=> 'Enable Tiramizoo Select Time',
+
+
 'oxTiramizoo_settings_pickup_hour_1_label'              => '1st pick up hour',
 'oxTiramizoo_settings_pickup_hour_2_label'              => '2nd pick up hour',
 'oxTiramizoo_settings_pickup_hour_3_label'              => '3rd pick up hour',

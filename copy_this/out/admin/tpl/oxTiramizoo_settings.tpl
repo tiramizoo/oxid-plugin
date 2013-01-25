@@ -696,6 +696,15 @@
               </td>
             </tr>
 
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_enable_select_time_label" }]</td>
+              <td valign="top" class="edittext">
+                <input type="hidden"  name="confstrs[oxTiramizoo_enable_select_time]" value"0" />
+                <input type="checkbox" name="confstrs[oxTiramizoo_enable_select_time]" value"1" [{ if $confstrs.oxTiramizoo_enable_select_time}]checked="checked"[{ /if }]> 
+                [{ oxinputhelp ident="oxTiramizoo_settings_enable_select_time_help" }]
+              </td>
+            </tr>
+
 
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_enable_evening_label" }]</td>
