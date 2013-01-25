@@ -22,6 +22,7 @@ class oxTiramizooHelper extends oxSuperCfg
     protected static $_instance = null;
 
     protected $_sDeliveryPostalcode = '';
+    protected $_oUser = null;
 
 
     /**
@@ -139,6 +140,27 @@ class oxTiramizooHelper extends oxSuperCfg
         return $aAvailableDaysOfWeek;
     }
 
+    public function setUser($oUser)
+    {
+        $this->_oUser = $oUser;
+    }
+
+    public function getDeliveryPostalCode()
+    {
+        $oUser = $this->_oUser;
+        $sZipCode = $oUser->oxuser__oxzip->value;
+
+        $sSelectedAddressId = $oUser->getSelectedAddressId();
+
+        if($sSelectedAddressId) {
+            $oDeliveryAddress = $oUser->getUserAddresses($sSelectedAddressI);
+            $sZipCode = $oDeliveryAddress->oxaddress__oxzip->value;
+        }
+        $this->setDeliveryPostalCode($sZipCode);
+
+        return $this->_sDeliveryPostalcode;
+    }
+
     public function setDeliveryPostalCode($sDeliveryPostalcode)
     {
         $this->_sDeliveryPostalcode = $sDeliveryPostalcode;
@@ -147,7 +169,7 @@ class oxTiramizooHelper extends oxSuperCfg
     public function getTiramizooAvailableWorkingHours()
     {
         $oxConfig = oxConfig::getInstance();
-        $result = oxTiramizooApi::getInstance()->getAvailableWorkingHours($oxConfig->getShopConfVar('oxTiramizoo_shop_country_code'), $oxConfig->getShopConfVar('oxTiramizoo_shop_postal_code'), $this->_sDeliveryPostalcode);
+        $result = oxTiramizooApi::getInstance()->getAvailableWorkingHours($oxConfig->getShopConfVar('oxTiramizoo_shop_country_code'), $oxConfig->getShopConfVar('oxTiramizoo_shop_postal_code'), $this->getDeliveryPostalCode());
 
         return (array)$result['response'];
     }
