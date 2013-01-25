@@ -79,10 +79,11 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
     {
         $oxTiramizooHelper = oxTiramizooHelper::getInstance();
 
-        if ($oxTiramizooHelper->isTiramizooAvailable()) {
-            $oBasket = $this->getSession()->getBasket();
-            
+        $oxTiramizooHelper->setUser($this->getUser());
 
+        if ($oxTiramizooHelper->isTiramizooAvailable()) {
+
+            $oBasket = $this->getSession()->getBasket();
 
             //$this->_aViewData['isTiramizooCurrentShippingMethod'] = $oBasket->getShippingId() == 'Tiramizoo';
             //$this->_aViewData['aTiramizooAvailableDeliveryHours'] = $oxTiramizooHelper->getAvailableDeliveryHours();
@@ -94,7 +95,6 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
             } else if (($oBasket->getShippingId() == 'TiramizooEvening') && $oxTiramizooHelper->isTiramizooEveningAvailable()) {
                 oxSession::setVar( 'sTiramizooTimeWindow',  date('Y-m-d') . ' ' . $this->getConfig()->getShopConfVar('oxTiramizoo_evening_window'));
             }
-            
         }
 
         return parent::render();

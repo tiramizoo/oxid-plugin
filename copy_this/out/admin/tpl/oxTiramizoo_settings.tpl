@@ -12,7 +12,22 @@
 
 <style type="text/css">
   .editinput {width:240px;}
+
+  ul li {background: transparent;}
+  .delete_date {color: #888;}
 </style>
+
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/modules/oxtiramizoo/src/yui/build/calendar/assets/skins/sam/calendar.css">
+ 
+<!-- Dependencies -->
+<script src="/modules/oxtiramizoo/src/yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+<script src="/modules/oxtiramizoo/src/yui/build/event-delegate/event-delegate.js"></script>
+<!-- Source file -->
+<script src="/modules/oxtiramizoo/src/yui/build/calendar/calendar-min.js"></script>
 
 <div id=liste>
   
@@ -41,6 +56,9 @@
          <table cellspacing="0" cellpadding="5" border="0" class="edittext" style="text-align: left;">
             
 
+<tr>
+  <td colspan="2"><h3>Api connection settings</h3></td>
+</tr>  
 
 
             <tr>
@@ -125,6 +143,14 @@
               </td>
             </tr>
 
+
+
+
+<tr>
+  <td colspan="2"><h3>Defining pickup and delivery times</h3></td>
+</tr>  
+
+
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_order_to_pickup_offset_label" }]</td>
               <td valign="top" class="edittext">
@@ -148,6 +174,9 @@
                 [{ oxinputhelp ident="oxTiramizoo_settings_pickup_time_length_help" }]
               </td>
             </tr>
+
+
+
 
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_1_label" }]</td>
@@ -226,6 +255,281 @@
                 [{ oxinputhelp ident="oxTiramizoo_settings_pickup_hours_help" }]
               </td>
             </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+<tr>
+  <td colspan="2"><h3>[{ oxmultilang ident="oxTiramizoo_settings_opening_hours_heading" }]</h3></td>
+</tr>  
+
+
+
+            <tr>
+              <td>[{oxmultilang ident="oxTiramizoo_settings_working_days_label"}]</td>
+              <td>
+                <ul>
+
+
+                     <li>
+                        <input type="hidden" name="confstrs[oxTiramizoo_works_mon]" value="0" />
+                        <input type="checkbox" name="confstrs[oxTiramizoo_works_mon]" value="1" [{if ($confstrs.oxTiramizoo_works_mon)}]checked="checked"[{/if}] />
+                        [{oxmultilang ident="oxTiramizoo_settings_monday"}]
+                     </li>
+                     <li>
+                        <input type="hidden" name="confstrs[oxTiramizoo_works_tue]" value="0" />
+                        <input type="checkbox" name="confstrs[oxTiramizoo_works_tue]" value="1" [{if ($confstrs.oxTiramizoo_works_tue)}]checked="checked"[{/if}] />
+                        [{oxmultilang ident="oxTiramizoo_settings_tuesday"}]
+                     </li>
+                     <li>
+                        <input type="hidden" name="confstrs[oxTiramizoo_works_wed]" value="0" />
+                        <input type="checkbox" name="confstrs[oxTiramizoo_works_wed]" value="1" [{if ($confstrs.oxTiramizoo_works_wed)}]checked="checked"[{/if}] />
+                        [{oxmultilang ident="oxTiramizoo_settings_wedensday"}]
+                     </li>
+                     <li>
+                        <input type="hidden" name="confstrs[oxTiramizoo_works_thu]" value="0" />
+                        <input type="checkbox" name="confstrs[oxTiramizoo_works_thu]" value="1" [{if ($confstrs.oxTiramizoo_works_thu)}]checked="checked"[{/if}] />
+                        [{oxmultilang ident="oxTiramizoo_settings_thursday"}]
+                     </li>
+                     <li>
+                        <input type="hidden" name="confstrs[oxTiramizoo_works_fri]" value="0" />
+                        <input type="checkbox" name="confstrs[oxTiramizoo_works_fri]" value="1" [{if ($confstrs.oxTiramizoo_works_fri)}]checked="checked"[{/if}] />
+                        [{oxmultilang ident="oxTiramizoo_settings_friday"}]
+                     </li>
+                     <li>
+                        <input type="hidden" name="confstrs[oxTiramizoo_works_sat]" value="0" />
+                        <input type="checkbox" name="confstrs[oxTiramizoo_works_sat]" value="1" [{if ($confstrs.oxTiramizoo_works_sat)}]checked="checked"[{/if}] />
+                        [{oxmultilang ident="oxTiramizoo_settings_saturday"}]
+                     </li>
+                     <li>
+                        <input type="hidden" name="confstrs[oxTiramizoo_works_sun]" value="0" />
+                        <input type="checkbox" name="confstrs[oxTiramizoo_works_sun]" value="1" [{if ($confstrs.oxTiramizoo_works_sun)}]checked="checked"[{/if}] />
+                        [{oxmultilang ident="oxTiramizoo_settings_sunday"}]
+                     </li>
+
+                </ul>
+              </td>
+            </tr>
+
+
+
+            <tr>
+              <td>[{oxmultilang ident="oxTiramizoo_settings_exclude_days_label"}]</td>
+              <td>
+                <ul id="ExcludeDatesList" style="max-height:140px; overflow: auto;">                
+                    [{foreach from=$aExcludeDates item=sDate}]
+                    <li id="exclude-date-[{$sDate}]">
+                      <input type="hidden" value="[{$sDate}]" name="exclude_date[]"/>
+                      <span>[{$sDate}]</span>
+                      <a class="delete_date" href="#" title="Remove date">[x]</a>
+                    </li>
+                    [{/foreach}]
+                </ul>
+              </td>
+            </tr>
+
+
+            <tr>
+              <td>[{oxmultilang ident="oxTiramizoo_settings_include_days_label"}]</td>
+              <td>
+                <ul id="IncludeDatesList" style="max-height:140px; overflow: auto;">
+                    [{foreach from=$aIncludeDates item=sDate}]
+                    <li id="include-date-[{$sDate}]">
+                      <input type="hidden" value="[{$sDate}]" name="include_date[]"/>
+                      <span>[{$sDate}]</span>
+                      <a class="delete_date" href="#" title="Remove date">[x]</a>
+                    </li>
+                    [{/foreach}]
+                </ul>
+              </td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>
+                <div class="yui-skin-sam">
+                  
+
+
+                  <input type="text" name="cal1Date1" id="cal1Date1" autocomplete="off" size="16" /> 
+                  <button id="ExcludeDate">[{oxmultilang ident="oxTiramizoo_settings_exclude_day_caption"}]</button>
+                  <button id="IncludeDate">[{oxmultilang ident="oxTiramizoo_settings_include_day_caption"}]</button>
+
+                  <div id="cal1Container" style="display:none;"></div>
+
+
+
+                  <script type="text/javascript">
+                  (function() {
+                      var Dom = YAHOO.util.Dom,
+                          Event = YAHOO.util.Event,
+                          cal1,
+                          over_cal = false,
+                          cur_field = '';
+
+                      var init = function() {
+                          cal1 = new YAHOO.widget.Calendar("cal1","cal1Container");
+                          cal1.selectEvent.subscribe(getDate, cal1, true);
+                          cal1.renderEvent.subscribe(setupListeners, cal1, true);
+                          Event.addListener(['cal1Date1'], 'focus', showCal);
+                          Event.addListener(['cal1Date1'], 'blur', hideCal);
+                          Event.addListener(['ExcludeDate'], 'click', excludeDate );
+                          Event.addListener(['IncludeDate'], 'click', includeDate );
+
+                          var delete_dates = YAHOO.util.Dom.getElementsByClassName('delete_date');
+                          Event.addListener(delete_dates, 'click', deleteDateItem);
+
+
+
+                          cal1.render();
+                      }
+
+                      var setupListeners = function() {
+                          Event.addListener('cal1Container', 'mouseover', function() {
+                              over_cal = true;
+                          });
+                          Event.addListener('cal1Container', 'mouseout', function() {
+                              over_cal = false;
+                          });
+                      }
+
+                      var sortUnorderedList = function(ul) {
+                        ul = document.getElementById(ul);
+
+                        if(!ul) return;
+
+                        var list = ul.getElementsByTagName("LI");
+                        var values = [];
+
+                        for(var i = 0, l = list.length; i < l; i++)
+                          values.push(list[i].innerHTML);
+
+                        values.sort();
+
+                        for(var i = 0; i < list.length; i++)
+                          list[i].innerHTML = values[i];
+                      }
+
+
+
+                      var getDate = function() {
+                              var calDate = this.getSelectedDates()[0];
+                              calDate = calDate.getFullYear() + '-' + (calDate.getMonth() + 1 <= 9 ? '0' : '' ) + (calDate.getMonth() + 1) + '-' + (calDate.getDate() <= 9 ? '0' : '' ) + calDate.getDate();
+                              cur_field.value = calDate;            
+                              over_cal = false;
+                              hideCal();
+                      }
+
+
+                      var deleteDateItem = function(e) {
+                        var link = Dom.get(e.target);
+                        var liItem = link.parentNode; 
+
+                        liItem.parentNode.removeChild(liItem);
+
+                        Event.preventDefault(e); 
+                      }
+
+                      var excludeDate = function(e) {
+                        var date = Dom.get('cal1Date1').value;
+                        if (date && (!Dom.get('exclude-date-' + date))) {
+
+                          var html = '<input type="hidden" value="' + date + '" name="exclude_date[]"/>';
+                          html += '<span>' + date + '</span> ';
+                          html += '<a class="delete_date" href="#" title="Remove date">[x]</a>';
+                              
+                          var li = document.createElement("li");
+                          li.innerHTML = html;
+                          Dom.setAttribute(li, 'id', 'exclude-date-' + date);
+
+                          Dom.get('ExcludeDatesList').appendChild(li);
+                          sortUnorderedList('ExcludeDatesList');
+
+                          var delete_dates = Dom.get('ExcludeDatesList').getElementsByClassName('delete_date');
+                          Event.addListener(delete_dates, 'click', deleteDateItem);
+                         }
+
+                        Dom.get('cal1Date1').value = '';
+                        Event.preventDefault(e); 
+                      }
+
+
+                      var includeDate = function(e) {
+                        var date = Dom.get('cal1Date1').value;
+                        if (date && (!Dom.get('include-date-' + date))) {
+                         
+                          var html = '<input type="hidden" value="' + date + '" name="include_date[]"/>';
+                          html += '<span>' + date + '</span> ';
+                          html += '<a class="delete_date" href="#" title="Remove date">[x]</a>';
+                              
+                          var li = document.createElement("li");
+                          li.innerHTML = html;
+                          Dom.setAttribute(li, 'id', 'include-date-' + date);
+
+                          Dom.get('IncludeDatesList').appendChild(li);
+                          sortUnorderedList('IncludeDatesList');
+
+                          var delete_dates = Dom.get('ExcludeDatesList').getElementsByClassName('delete_date');
+                          Event.addListener(delete_dates, 'click', deleteDateItem);
+                        }
+
+                        Dom.get('cal1Date1').value = '';
+                        Event.preventDefault(e); 
+                      }
+
+
+                      var showCal = function(ev) {
+                          var tar = Event.getTarget(ev);
+                          cur_field = tar;
+                      
+                          var xy = Dom.getXY(tar),
+                              date = Dom.get(tar).value;
+                          if (date) {
+                              cal1.cfg.setProperty('selected', date);
+                              cal1.cfg.setProperty('pagedate', new Date(date), true);
+                          } else {
+                              cal1.cfg.setProperty('selected', '');
+                              cal1.cfg.setProperty('pagedate', new Date(), true);
+                          }
+                          cal1.render();
+                          Dom.setStyle('cal1Container', 'display', 'block');
+                          xy[1] = xy[1] + 20;
+                          Dom.setXY('cal1Container', xy);
+                      }
+
+                      var hideCal = function() {
+                          if (!over_cal) {
+                              Dom.setStyle('cal1Container', 'display', 'none');
+                          }
+                      }
+
+                      Event.addListener(window, 'load', init);
+
+                  })();
+                  </script>
+
+                </div>
+
+              </td>
+            </tr>
+
+
+
+
+
+<tr>
+  <td colspan="2"><h3>Available payment methods</h3></td>
+</tr>  
+
+
 
 
             <tr>
@@ -369,6 +673,10 @@
             </tr>
             [{/foreach}]
 
+
+<tr>
+  <td colspan="2"><h3>Enabling shipping method</h3></td>
+</tr>  
 
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_articles_with_stock_gt_0" }]</td>

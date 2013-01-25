@@ -10,7 +10,7 @@ class oxTiramizoo_setup extends Shop_Config
     /**
      * Current version of oxTiramizoo module
      */
-    const VERSION = '0.8.6';
+    const VERSION = '0.8.8';
 
     /**
      * Error message
@@ -202,7 +202,6 @@ class oxTiramizoo_setup extends Shop_Config
                         SET TIRAMIZOO_ENABLE = 1 
                         WHERE TIRAMIZOO_ENABLE = 0;";
             $result = $this->executeSQL($sql);
-
         }
     }
 
@@ -215,6 +214,24 @@ class oxTiramizoo_setup extends Shop_Config
     }
 
     /**
+     * Update database to version 0.8.8
+     */
+    public function migration_0_8_8()
+    {
+        $oxConfig = $this->getConfig();
+        
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_mon', 1);
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_tue', 1);
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_wed', 1);
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_thu', 1);
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_fri', 1);
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_sat', 0);
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_sun', 0);
+
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_exclude_days', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_include_days', '');
+    }
+    /*
      * Update database to version 0.8.3
      */
     public function migration_0_8_3()

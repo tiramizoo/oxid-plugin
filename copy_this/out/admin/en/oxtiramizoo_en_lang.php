@@ -90,6 +90,7 @@ $aLang = array(
 'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Enable only articles with stock > 0',
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Enable only articles with stock > 0',
 
+
 'oxTiramizoo_settings_weight_label'                     => 'Weight',
 'oxTiramizoo_settings_weight_help'                      => 'This weight will be assigned for all products without specified weight. You can override it in category settings or article settings.',
 'oxTiramizoo_settings_dimensions_label'                 => 'Dimensions',
@@ -132,6 +133,22 @@ $aLang = array(
 'oxTiramizoo_settings_dimensions_short_weight_label'  	=> 'Wt',
 
 
+'oxTiramizoo_settings_opening_hours_heading'         	=> 'Opening hours, holidays, dates exclude, include, weekends',
+'oxTiramizoo_settings_working_days_label'         		=> 'Working days',
+
+'oxTiramizoo_settings_monday'         					=> 'Monday',
+'oxTiramizoo_settings_tuesday'         					=> 'Tuesday',
+'oxTiramizoo_settings_wedensday'         				=> 'Wedensday',
+'oxTiramizoo_settings_thursday'         				=> 'Thursday',
+'oxTiramizoo_settings_friday'         					=> 'Friday',
+'oxTiramizoo_settings_saturday'         				=> 'Saturday',
+'oxTiramizoo_settings_sunday'         					=> 'Sunday',
+
+'oxTiramizoo_settings_exclude_days_label'         		=> 'Exclude dates',
+'oxTiramizoo_settings_include_days_label'         		=> 'Include dates',
+
+'oxTiramizoo_settings_exclude_day_caption'         		=> 'Exclude date',
+'oxTiramizoo_settings_include_day_caption'         		=> 'Include date',
 
 // Article administration -> Tiramizoo Tab
 

@@ -83,6 +83,32 @@ class oxTiramizooApi extends TiramizooApi
         return $result;
     }
 
+    protected $_aAvailableWorkungHours = null;
+
+    /**
+     * Get working services hours
+     * 
+     * @param string $sCountryCode
+     * @param string $sPickupCode
+     * @param string $sDeliveryCode
+     * @return mixed Array with status code of request and response data
+     */
+    public function getAvailableWorkingHours($sCountryCode, $sPickupCode, $sDeliveryCode)
+    {
+        $data = array();
+        
+        $data['country_code'] = $sCountryCode;
+        $data['pickup_postal_code'] = $sPickupCode;
+        $data['delivery_postal_code'] = $sDeliveryCode;
+
+        if ($this->_aAvailableWorkungHours === null) {
+            $result = null;
+            $this->requestGet('service_availability', $data, $this->_aAvailableWorkungHours);
+        }
+
+        return $this->_aAvailableWorkungHours;
+    }
+
     /**
      * Build description from product's names. Used for build partial data to send order API request
      * 
