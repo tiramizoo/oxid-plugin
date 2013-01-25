@@ -103,7 +103,7 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
             $this->_aViewData['isTiramizooSelectTimeShippingMethod'] = $oBasket->getShippingId() == 'TiramizooSelectTime';
 
             $this->_aViewData['sTiramizooTimeWindow'] = oxSession::getVar('sTiramizooTimeWindow');
-            $this->_aViewData['sTiramizooSelectedDate'] = $sTiramizooSelectedDate= date('Y-m-d', strtotime(oxSession::getVar('sTiramizooTimeWindow')));
+            $this->_aViewData['sTiramizooSelectedDate'] = $sTiramizooSelectedDate = oxSession::getVar('sTiramizooTimeWindow') ? date('Y-m-d', strtotime(oxSession::getVar('sTiramizooTimeWindow'))) : null;
             
 
             if ($oBasket->getShippingId() == 'TiramizooSelectTime') {
