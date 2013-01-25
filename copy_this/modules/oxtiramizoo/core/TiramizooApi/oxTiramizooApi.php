@@ -328,6 +328,22 @@ class oxTiramizooApi extends TiramizooApi
                 $packIntoBoxes = new packIntoBoxes($aAutoFitPackageItems, $aPackageSizes);
                 $packIntoBoxes->pack();
 
+                if ($packIntoBoxes->getIndividualPackageItems()) {
+                    throw new oxTiramizoo_NotAvailableException();
+                }
+
+                // foreach($packIntoBoxes->getIndividualPackageItems() as $key => $itemIndividual) 
+                // {
+                //     $item = new stdClass();
+                //     $item->weight = floatval($itemIndividual['weight']);
+                //     $item->width = floatval($itemIndividual['width']);
+                //     $item->length = floatval($itemIndividual['length']);
+                //     $item->height = floatval($itemIndividual['height']);
+                //     $item->quantity = 1;
+
+                //     $items[] = $item;
+                // }
+                
                 foreach($packIntoBoxes->getPackedItems() as $key => $package) 
                 {
                     $item = new stdClass();
@@ -340,17 +356,6 @@ class oxTiramizooApi extends TiramizooApi
                     $items[] = $item;
                 }
 
-                foreach($packIntoBoxes->getIndividualPackageItems() as $key => $itemIndividual) 
-                {
-                    $item = new stdClass();
-                    $item->weight = floatval($itemIndividual['weight']);
-                    $item->width = floatval($itemIndividual['width']);
-                    $item->length = floatval($itemIndividual['length']);
-                    $item->height = floatval($itemIndividual['height']);
-                    $item->quantity = 1;
-
-                    $items[] = $item;
-                }
 
         } 
 
