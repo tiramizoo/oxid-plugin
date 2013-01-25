@@ -39,6 +39,7 @@ class oxTiramizoo_settings extends Shop_Config
     parent::render();
 
     $this->_aViewData['oPaymentsList'] = $this->getPaymentsList();
+    $this->_aViewData['aPickupHours'] = $this->getPickupHoursAsArray();
 
     $sCurrentAdminShop = $oxConfig->getShopId();
 
@@ -77,6 +78,20 @@ class oxTiramizoo_settings extends Shop_Config
   }
   
 
+
+
+  public function getPickupHoursAsArray()
+  {
+        $aPickupHours = array();
+
+        for ($i = 1; $i <= 6; $i++)
+        {
+            $aPickupHours[] = oxConfig::getInstance()->getShopConfVar('oxTiramizoo_shop_pickup_hour_' . $i);
+        }
+
+        return $aPickupHours;
+  }
+
   public function getPaymentsList()
   {
     $oxPaymentList = new Payment_List();
@@ -95,8 +110,6 @@ class oxTiramizoo_settings extends Shop_Config
         $sID = $oDb->getOne("select oxid from oxobject2payment where oxpaymentid = " . $oDb->quote( $oPayment->oxpayments__oxid->value ) . "  and oxobjectid = ".$oDb->quote( $soxId )." and oxtype = 'oxdelset'", false, false);
 
         $aPaymentList[$oPayment->oxpayments__oxid->value]['checked'] = isset($sID) && $sID;
-
-
     }  
 
     return $aPaymentList;
@@ -105,28 +118,34 @@ class oxTiramizoo_settings extends Shop_Config
     public function assignPaymentsToTiramizoo()
     {
         $aPayments  = oxConfig::getParameter( "payment" );
-        $soxId = 'Tiramizoo';
+
+        //assign payments for all shipping methods
+        $aTiramizooSoxIds = array('Tiramizoo', 'TiramizooEvening');
 
         $oDb = oxDb::getDb();
 
         foreach ( $aPayments as $sPaymentId => $isAssigned) 
         {
-            if ($isAssigned) {
-                // check if we have this entry already in
-                $sID = $oDb->getOne("SELECT oxid FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'", false, false);
-                if ( !isset( $sID) || !$sID) {
-                    $oObject = oxNew( 'oxbase' );
-                    $oObject->init( 'oxobject2payment' );
-                    $oObject->oxobject2payment__oxpaymentid = new oxField($sPaymentId);
-                    $oObject->oxobject2payment__oxobjectid  = new oxField($soxId);
-                    $oObject->oxobject2payment__oxtype      = new oxField("oxdelset");
-                    $oObject->save();
+            foreach ( $aTiramizooSoxIds as $soxId) 
+            {
+                if ($isAssigned) {
+                    // check if we have this entry already in
+                    $sID = $oDb->getOne("SELECT oxid FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'", false, false);
+                    if ( !isset( $sID) || !$sID) {
+                        $oObject = oxNew( 'oxbase' );
+                        $oObject->init( 'oxobject2payment' );
+                        $oObject->oxobject2payment__oxpaymentid = new oxField($sPaymentId);
+                        $oObject->oxobject2payment__oxobjectid  = new oxField($soxId);
+                        $oObject->oxobject2payment__oxtype      = new oxField("oxdelset");
+                        $oObject->save();
+                    }
+                } else {
+                    $oDb->Execute("DELETE FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'");
                 }
-            } else {
-                $oDb->Execute("DELETE FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'");
             }
         }
     }
+
 
     /**
     * Saves shop configuration variables
@@ -201,26 +220,50 @@ class oxTiramizoo_settings extends Shop_Config
     public function saveEnableShippingMethod()
     {
         $aConfStrs = oxConfig::getParameter( "confstrs" );
-
-        $isTiramizooEnable = intval($aConfStrs['oxTiramizoo_enable_module'] == 'on');
+        $isTiramizooImmediateEnable = intval($aConfStrs['oxTiramizoo_enable_immediate'] == 'on');
+        $isTiramizooEveningEnable = intval($aConfStrs['oxTiramizoo_enable_evening'] == 'on');
 
         $errors = $this->validateEnable();
 
-        if ($isTiramizooEnable && count($errors)) {
-            $isTiramizooEnable = 0;
+
+        if (($isTiramizooImmediateEnable || $isTiramizooEveningEnable) && count($errors)) {
+            $isTiramizooImmediateEnable = 0;
+            $isTiramizooEveningEnable = 0;
+
             oxSession::setVar('oxTiramizoo_settings_errors', $errors);
-            $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_module', 0);
+            $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_immediate', 0);
+            $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_evening', 0);
+        }
+
+        $enableEveningErrors = $this->validateEveningDelivery();
+
+        if (count($enableEveningErrors)) {
+            $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_evening', 0);
+            $errors = array_merge($errors, $enableEveningErrors);
+            oxSession::setVar('oxTiramizoo_settings_errors', $errors);
         }
 
         $sql = "UPDATE oxdelivery
-                    SET OXACTIVE = " . $isTiramizooEnable . "
+                    SET OXACTIVE = " . $isTiramizooImmediateEnable . "
                     WHERE OXID = 'Tiramizoo';";
 
         oxDb::getDb()->Execute($sql);
 
         $sql = "UPDATE oxdeliveryset
-                    SET OXACTIVE = " . $isTiramizooEnable . "
+                    SET OXACTIVE = " . $isTiramizooImmediateEnable . "
                     WHERE OXID = 'Tiramizoo';";
+
+        oxDb::getDb()->Execute($sql);
+
+        $sql = "UPDATE oxdelivery
+                    SET OXACTIVE = " . $isTiramizooEveningEnable . "
+                    WHERE OXID = 'TiramizooEvening';";
+
+        oxDb::getDb()->Execute($sql);
+
+        $sql = "UPDATE oxdeliveryset
+                    SET OXACTIVE = " . $isTiramizooEveningEnable . "
+                    WHERE OXID = 'TiramizooEvening';";
 
         oxDb::getDb()->Execute($sql);
     }
@@ -325,6 +368,26 @@ class oxTiramizoo_settings extends Shop_Config
 
         if (!$paymentsAreValid) {
             $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_payments_required_error', oxLang::getInstance()->getBaseLanguage(), true);
+        }
+
+        return $errors;
+    }
+
+
+    /**
+     * Validate if enable
+     *
+     * @return array
+     */
+    public function validateEveningDelivery()
+    {
+        $aConfStrs = oxConfig::getParameter( "confstrs" );
+        $isTiramizooEveningEnable = intval($aConfStrs['oxTiramizoo_enable_evening'] == 'on');
+
+        $errors = array();
+
+        if ($isTiramizooEveningEnable && !trim($aConfStrs['oxTiramizoo_evening_window'])) {
+            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_not_select_evening_error', oxLang::getInstance()->getBaseLanguage(), true);
         }
 
         return $errors;

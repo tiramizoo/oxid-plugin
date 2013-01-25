@@ -180,7 +180,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_1_label" }]</td>
               <td valign="top" class="edittext">
-                <select name=oxTiramizoo_shop_pickup_hour[]>
+                <select name=oxTiramizoo_shop_pickup_hour[] class="oxTiramizoo-shop-pickup-hour">
                   <option value="">[{ oxmultilang ident="oxTiramizoo_pickup_hour_not_specified" }]</option>
                   [{foreach from=$aAvailablePickupHours item=aAvailablePickupHour}]
                     <option value="[{$aAvailablePickupHour}]" [{if ($confstrs.oxTiramizoo_shop_pickup_hour_1 == $aAvailablePickupHour)}]selected="selected"[{/if}]>[{$aAvailablePickupHour}]</option>
@@ -193,7 +193,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_2_label" }]</td>
               <td valign="top" class="edittext">
-                <select name=oxTiramizoo_shop_pickup_hour[]>
+                <select name=oxTiramizoo_shop_pickup_hour[] class="oxTiramizoo-shop-pickup-hour">
                   <option value="">[{ oxmultilang ident="oxTiramizoo_pickup_hour_not_specified" }]</option>
                   [{foreach from=$aAvailablePickupHours item=aAvailablePickupHour}]
                     <option value="[{$aAvailablePickupHour}]" [{if ($confstrs.oxTiramizoo_shop_pickup_hour_2 == $aAvailablePickupHour)}]selected="selected"[{/if}]>[{$aAvailablePickupHour}]</option>
@@ -206,7 +206,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_3_label" }]</td>
               <td valign="top" class="edittext">
-                <select name=oxTiramizoo_shop_pickup_hour[]>
+                <select name=oxTiramizoo_shop_pickup_hour[] class="oxTiramizoo-shop-pickup-hour">
                   <option value="">[{ oxmultilang ident="oxTiramizoo_pickup_hour_not_specified" }]</option>
                   [{foreach from=$aAvailablePickupHours item=aAvailablePickupHour}]
                     <option value="[{$aAvailablePickupHour}]" [{if ($confstrs.oxTiramizoo_shop_pickup_hour_3 == $aAvailablePickupHour)}]selected="selected"[{/if}]>[{$aAvailablePickupHour}]</option>
@@ -219,7 +219,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_4_label" }]</td>
               <td valign="top" class="edittext">
-                <select name=oxTiramizoo_shop_pickup_hour[]>
+                <select name=oxTiramizoo_shop_pickup_hour[] class="oxTiramizoo-shop-pickup-hour">
                   <option value="">[{ oxmultilang ident="oxTiramizoo_pickup_hour_not_specified" }]</option>
                   [{foreach from=$aAvailablePickupHours item=aAvailablePickupHour}]
                     <option value="[{$aAvailablePickupHour}]" [{if ($confstrs.oxTiramizoo_shop_pickup_hour_4 == $aAvailablePickupHour)}]selected="selected"[{/if}]>[{$aAvailablePickupHour}]</option>
@@ -232,7 +232,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_5_label" }]</td>
               <td valign="top" class="edittext">
-                <select name=oxTiramizoo_shop_pickup_hour[]>
+                <select name=oxTiramizoo_shop_pickup_hour[] class="oxTiramizoo-shop-pickup-hour">
                   <option value="">[{ oxmultilang ident="oxTiramizoo_pickup_hour_not_specified" }]</option>
                   [{foreach from=$aAvailablePickupHours item=aAvailablePickupHour}]
                     <option value="[{$aAvailablePickupHour}]" [{if ($confstrs.oxTiramizoo_shop_pickup_hour_5 == $aAvailablePickupHour)}]selected="selected"[{/if}]>[{$aAvailablePickupHour}]</option>
@@ -245,7 +245,7 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_pickup_hour_6_label" }]</td>
               <td valign="top" class="edittext">
-                <select name=oxTiramizoo_shop_pickup_hour[]>
+                <select name=oxTiramizoo_shop_pickup_hour[] class="oxTiramizoo-shop-pickup-hour">
                   <option value="">[{ oxmultilang ident="oxTiramizoo_pickup_hour_not_specified" }]</option>
                   [{foreach from=$aAvailablePickupHours item=aAvailablePickupHour}]
                     <option value="[{$aAvailablePickupHour}]" [{if ($confstrs.oxTiramizoo_shop_pickup_hour_6 == $aAvailablePickupHour)}]selected="selected"[{/if}]>[{$aAvailablePickupHour}]</option>
@@ -532,19 +532,99 @@
 
 
 
-
             <tr>
               <td>[{ oxmultilang ident="oxTiramizoo_settings_payment_methods_assigned_label" }]</td>
               <td>
                 <ul>
                   [{foreach from=$oPaymentsList key=sPaymentId item=aPayment}]
-                     <li>
+                     <li style="background:transparent;">
                         <input type="hidden" name="payment[[{$sPaymentId}]]" value="0" />
                         <input type="checkbox" name="payment[[{$sPaymentId}]]" value="1" [{if ($aPayment.checked)}]checked="checked"[{/if}] />
                         [{$aPayment.desc}]
                      </li>
                   [{/foreach}]                
                 </ul>
+              </td>
+            </tr>
+            <script>
+                var helloWorld = function(e) {
+                  var elements = YAHOO.util.Dom.getElementsByClassName('oxTiramizoo-shop-pickup-hour');
+                  
+                  for (var i in elements) {
+                    if (i == 0) continue;
+
+                    YAHOO.util.Dom.get('oxTiramizoo-evening-window').getElementsByTagName('option')[i].text = elements[i - 1].value;
+                    YAHOO.util.Dom.get('oxTiramizoo-evening-window').getElementsByTagName('option')[i].value = elements[i - 1].value;
+                  };
+                }
+
+                var elements = YAHOO.util.Dom.getElementsByClassName('oxTiramizoo-shop-pickup-hour');
+
+                YAHOO.util.Event.addListener(elements, "click", helloWorld);
+
+            </script>
+
+          <tr>
+            <td class="edittext">
+              [{ oxmultilang ident="oxTiramizoo_settings_weight_label" }]
+            </td>
+            <td class="edittext">
+              <input type="text" class="editinput" size="10" maxlength="10" style="width:40px;" name="confstrs[oxTiramizoo_global_weight]" value="[{$confstrs.oxTiramizoo_global_weight}]">[{ oxmultilang ident="oxTiramizoo_category_tab_weight_unit" }] 
+              [{ oxinputhelp ident="oxTiramizoo_settings_weight_help" }]
+            </td>
+          </tr>
+
+          <tr>
+            <td class="edittext">
+              [{ oxmultilang ident="oxTiramizoo_settings_dimensions_label" }]
+            </td>
+            <td class="edittext">
+              L:&nbsp;<input type="text" class="editinput" size="3" maxlength="10" style="width:40px;" name="confstrs[oxTiramizoo_global_length]" value="[{$confstrs.oxTiramizoo_global_length}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
+              W:&nbsp;<input type="text" class="editinput" size="3" maxlength="" style="width:40px;" name="confstrs[oxTiramizoo_global_width]" value="[{$confstrs.oxTiramizoo_global_width}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
+              H:&nbsp;<input type="text" class="editinput" size="3" maxlength="" style="width:40px;" name="confstrs[oxTiramizoo_global_height]" value="[{$confstrs.oxTiramizoo_global_height}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
+
+              [{ oxinputhelp ident="oxTiramizoo_settings_dimensions_help" }]
+            </td>
+          </tr>
+
+            <script>
+                var helloWorld = function(e) {
+                  var elements = YAHOO.util.Dom.getElementsByClassName('oxTiramizoo-shop-pickup-hour');
+                  
+                  for (var i in elements) {
+                    if (i == 0) continue;
+
+                    YAHOO.util.Dom.get('oxTiramizoo-evening-window').getElementsByTagName('option')[i].text = elements[i - 1].value;
+                    YAHOO.util.Dom.get('oxTiramizoo-evening-window').getElementsByTagName('option')[i].value = elements[i - 1].value;
+                  };
+                }
+
+                var elements = YAHOO.util.Dom.getElementsByClassName('oxTiramizoo-shop-pickup-hour');
+
+                YAHOO.util.Event.addListener(elements, "click", helloWorld);
+
+            </script>
+
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_package_size_label" }]</td>
+              <td valign="top" class="edittext">
+
+                W: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_width]" value="[{$confstrs.oxTiramizoo_std_package_width}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
+                
+                L: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_length]" value="[{$confstrs.oxTiramizoo_std_package_length}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
+
+                H: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_height]" value="[{$confstrs.oxTiramizoo_std_package_height}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
+
+                [{ oxinputhelp ident="oxTiramizoo_settings_package_size_help" }]
+              </td>
+            </tr>
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_package_weight_label" }]</td>
+              <td valign="top" class="edittext">
+                <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_weight]" value="[{$confstrs.oxTiramizoo_std_package_weight}]" maxlength="100" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_weight_unit" }]
+                [{ oxinputhelp ident="oxTiramizoo_settings_package_weight_help" }]
               </td>
             </tr>
 
@@ -560,15 +640,36 @@
                 [{ oxinputhelp ident="oxTiramizoo_settings_articles_with_stock_gt_0_help" }]
               </td>
             </tr>
-            
+
             <tr>
-              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_enable_module_label" }]</td>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_enable_immediate_label" }]</td>
               <td valign="top" class="edittext">
-                <input type="hidden"  name="confstrs[oxTiramizoo_enable_module]" value"0" />
-                <input type="checkbox" name="confstrs[oxTiramizoo_enable_module]" value"1" [{ if $confstrs.oxTiramizoo_enable_module}]checked="checked"[{ /if }]> 
-                [{ oxinputhelp ident="oxTiramizoo_settings_enable_module_help" }]
+                <input type="hidden"  name="confstrs[oxTiramizoo_enable_immediate]" value"0" />
+                <input type="checkbox" name="confstrs[oxTiramizoo_enable_immediate]" value"1" [{ if $confstrs.oxTiramizoo_enable_immediate}]checked="checked"[{ /if }]> 
+                [{ oxinputhelp ident="oxTiramizoo_settings_enable_immediate_help" }]
               </td>
             </tr>
+
+
+            <tr>
+              <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_enable_evening_label" }]</td>
+              <td valign="top" class="edittext">
+                <input type="hidden"  name="confstrs[oxTiramizoo_enable_evening]" value"0" />
+                <input type="checkbox" name="confstrs[oxTiramizoo_enable_evening]" value"1" [{ if $confstrs.oxTiramizoo_enable_evening}]checked="checked"[{ /if }]> 
+
+                [{ oxmultilang ident="oxTiramizoo_settings_select_evening_label" }]
+                <input type="hidden"  name="confstrs[oxTiramizoo_evening_window]" value"0" />
+                <select name="confstrs[oxTiramizoo_evening_window]" id="oxTiramizoo-evening-window">
+                  <option value="">Not specified</option>
+                  [{foreach from=$aPickupHours item=sPickupHour}]
+                     <option value="[{$sPickupHour}]" [{if ($sPickupHour == $confstrs.oxTiramizoo_evening_window)}]selected="selected"[{/if}]>[{$sPickupHour}]</option>
+                  [{/foreach}]    
+                </select>
+                
+                [{ oxinputhelp ident="oxTiramizoo_settings_enable_evening_help" }]
+              </td>
+            </tr>
+
 
             <tr>
               <td valign="top" class="edittext" width="250" nowrap="">          
