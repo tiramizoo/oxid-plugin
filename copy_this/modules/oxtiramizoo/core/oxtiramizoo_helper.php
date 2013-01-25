@@ -440,7 +440,11 @@ class oxTiramizooHelper extends oxSuperCfg
 
             require_once getShopBasePath() . '/modules/oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php';
 
-            $data->items = oxTiramizooApi::getInstance()->buildItemsData($oBasket);
+            try {
+                $data->items = oxTiramizooApi::getInstance()->buildItemsData($oBasket);
+            } catch (oxTiramizoo_NotAvailableException $e) {
+                return $this->_isTiramizooAvailable = 0;
+            }
 
             $result = oxTiramizooApi::getInstance()->getQuotes($data);
 
