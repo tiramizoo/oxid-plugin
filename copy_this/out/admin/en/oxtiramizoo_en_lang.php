@@ -111,7 +111,7 @@ $aLang = array(
 'oxTiramizoo_settings_dimensions_unit'                  => 'cm',
 'oxTiramizoo_settings_weight_unit'                      => 'kg',
 
-'oxTiramizoo_settings_opening_hours_heading'         	=> 'Opening hours, holidays, dates exclude, include, weekends',
+'oxTiramizoo_settings_opening_hours_heading'         	=> 'Opening times',
 'oxTiramizoo_settings_working_days_label'         		=> 'Working days',
 
 'oxTiramizoo_settings_monday'         					=> 'Monday',

@@ -112,6 +112,24 @@ $aLang = array(
 'oxTiramizoo_settings_dimensions_unit'                  => 'cm',
 'oxTiramizoo_settings_weight_unit'                      => 'kg',
 
+
+'oxTiramizoo_settings_opening_hours_heading'         	=> 'Öffnungszeiten',
+'oxTiramizoo_settings_working_days_label'         		=> 'Arbeitstage',
+
+'oxTiramizoo_settings_monday'         					=> 'Montag',
+'oxTiramizoo_settings_tuesday'         					=> 'Dienstag',
+'oxTiramizoo_settings_wedensday'         				=> 'Mittwoch',
+'oxTiramizoo_settings_thursday'         				=> 'Donnerstag',
+'oxTiramizoo_settings_friday'         					=> 'Freitag',
+'oxTiramizoo_settings_saturday'         				=> 'Samstag',
+'oxTiramizoo_settings_sunday'         					=> 'Sonntag',
+
+'oxTiramizoo_settings_exclude_days_label'         		=> 'Ausschließen termine',
+'oxTiramizoo_settings_include_days_label'         		=> 'Enthalten termine',
+
+'oxTiramizoo_settings_exclude_day_caption'         		=> 'Ausschließen datum',
+'oxTiramizoo_settings_include_day_caption'         		=> 'Beinhalten datum',
+
 // Article administration -> Tiramizoo Tab
 
 'oxTiramizoo_article_tab_enable_tiramizoo_label'        => 'Tiramizoo aktivieren',
