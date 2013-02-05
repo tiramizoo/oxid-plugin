@@ -22,23 +22,34 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         $this->_aAllSets = parent::getAllSets();
 
         $unsetTiramizoo = false;
+        $resetShippingMethod = false;
 
         if (!oxTiramizooHelper::getInstance()->isTiramizooAvailable()) {
             unset($this->_aAllSets['Tiramizoo']);
             unset($this->_aAllSets['TiramizooEvening']);
+            unset($this->_aAllSets['TiramizooSelectTime']);
             $unsetTiramizoo = true;
         } else {
             if (!oxTiramizooHelper::getInstance()->isTiramizooImmediateAvailable()) {
                 unset($this->_aAllSets['Tiramizoo']);
-                $unsetTiramizoo = true;
+                if (oxSession::getVar( 'sShipSet') == 'Tiramizoo') {
+                    $resetShippingMethod = true;
+                }
             }
             if (!oxTiramizooHelper::getInstance()->isTiramizooEveningAvailable()) {
                 unset($this->_aAllSets['TiramizooEvening']);
-                $unsetTiramizoo = true;
+                if (oxSession::getVar( 'sShipSet') == 'TiramizooEvening') {
+                    $resetShippingMethod = true;
+                }            }
+            if (!oxTiramizooHelper::getInstance()->isTiramizooSelectTimeAvailable()) {
+                unset($this->_aAllSets['TiramizooSelectTime']);
+                if (oxSession::getVar( 'sShipSet') == 'TiramizooSelectTime') {
+                    $resetShippingMethod = true;
+                }            
             }
         }
 
-        if ($unsetTiramizoo && in_array(oxSession::getVar( 'sShipSet'), array('Tiramizoo', 'TiramizooEvening'))) {
+        if ($unsetTiramizoo && in_array(oxSession::getVar( 'sShipSet'), array('Tiramizoo', 'TiramizooEvening', 'TiramizooSelectTime')) || $resetShippingMethod)  {
 
             $sNewShippingMethod = key($this->_aAllSets);
 
@@ -88,7 +99,33 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
             //$this->_aViewData['isTiramizooCurrentShippingMethod'] = $oBasket->getShippingId() == 'Tiramizoo';
             //$this->_aViewData['aTiramizooAvailableDeliveryHours'] = $oxTiramizooHelper->getAvailableDeliveryHours();
             //$this->_aViewData['sTiramizooSelectedDeliveryTime'] = $oxTiramizooHelper->getSelectedTimeWindow();
+            $this->_aViewData['isTiramizooSelectTimeShippingMethod'] = $oBasket->getShippingId() == 'TiramizooSelectTime';
+
+            $this->_aViewData['sTiramizooTimeWindow'] = oxSession::getVar('sTiramizooTimeWindow');
+            $this->_aViewData['sTiramizooSelectedDate'] = $sTiramizooSelectedDate = oxSession::getVar('sTiramizooTimeWindow') ? date('Y-m-d', strtotime(oxSession::getVar('sTiramizooTimeWindow'))) : null;
             
+
+            if ($oBasket->getShippingId() == 'TiramizooSelectTime') {
+                $this->_aViewData['aTiramizooSelectTimeWindows'] = $oxTiramizooHelper->getNext7DaysAvailableWindows();
+
+                foreach ($this->_aViewData['aTiramizooSelectTimeWindows'] as $key => $value) 
+                {
+                    if ($sTiramizooSelectedDate) {
+                        if ($sTiramizooSelectedDate == $value['date']) {
+                            $this->_aViewData['aTiramizooSelectTimeWindows'][$key]['active'] = 1;
+                        } else {
+                            $this->_aViewData['aTiramizooSelectTimeWindows'][$key]['active'] = 0;
+                        }
+                    } else {
+                        if ($key == 0) {
+                            $this->_aViewData['aTiramizooSelectTimeWindows'][$key]['active'] = 1;
+                        } else {
+                            $this->_aViewData['aTiramizooSelectTimeWindows'][$key]['active'] = 0;
+                        }
+                    }
+                }
+            }
+
             if (($oBasket->getShippingId() == 'Tiramizoo') && $oxTiramizooHelper->isTiramizooImmediateAvailable()) {
                 $dateTime = $oxTiramizooHelper->getNextAvailableDate( date('Y-m-d H:i:s'));
                 oxSession::setVar( 'sTiramizooTimeWindow',  $dateTime);

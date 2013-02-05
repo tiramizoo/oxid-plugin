@@ -120,7 +120,7 @@ class oxTiramizoo_settings extends Shop_Config
         $aPayments  = oxConfig::getParameter( "payment" );
 
         //assign payments for all shipping methods
-        $aTiramizooSoxIds = array('Tiramizoo', 'TiramizooEvening');
+        $aTiramizooSoxIds = array('Tiramizoo', 'TiramizooEvening', 'TiramizooSelectTime');
 
         $oDb = oxDb::getDb();
 
@@ -222,17 +222,19 @@ class oxTiramizoo_settings extends Shop_Config
         $aConfStrs = oxConfig::getParameter( "confstrs" );
         $isTiramizooImmediateEnable = intval($aConfStrs['oxTiramizoo_enable_immediate'] == 'on');
         $isTiramizooEveningEnable = intval($aConfStrs['oxTiramizoo_enable_evening'] == 'on');
+        $isTiramizooSelectTimeEnable = intval($aConfStrs['oxTiramizoo_enable_select_time'] == 'on');
 
         $errors = $this->validateEnable();
 
-
-        if (($isTiramizooImmediateEnable || $isTiramizooEveningEnable) && count($errors)) {
+        if (($isTiramizooImmediateEnable || $isTiramizooEveningEnable || $isTiramizooSelectTimeEnable) && count($errors)) {
             $isTiramizooImmediateEnable = 0;
             $isTiramizooEveningEnable = 0;
+            $isTiramizooSelectTimeEnable = 0;
 
             oxSession::setVar('oxTiramizoo_settings_errors', $errors);
             $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_immediate', 0);
             $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_evening', 0);
+            $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_select_time', 0);
         }
 
         $enableEveningErrors = $this->validateEveningDelivery();
@@ -266,6 +268,20 @@ class oxTiramizoo_settings extends Shop_Config
                     WHERE OXID = 'TiramizooEvening';";
 
         oxDb::getDb()->Execute($sql);
+
+
+        $sql = "UPDATE oxdelivery
+                    SET OXACTIVE = " . $isTiramizooSelectTimeEnable . "
+                    WHERE OXID = 'TiramizooSelectTime';";
+
+        oxDb::getDb()->Execute($sql);
+
+        $sql = "UPDATE oxdeliveryset
+                    SET OXACTIVE = " . $isTiramizooSelectTimeEnable . "
+                    WHERE OXID = 'TiramizooSelectTime';";
+
+        oxDb::getDb()->Execute($sql);
+
     }
 
 
