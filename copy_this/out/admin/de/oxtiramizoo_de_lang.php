@@ -57,6 +57,9 @@ $aLang = array(
 'oxTiramizoo_settings_enable_module_label'              => 'Tiramizoo aktivieren',
 'oxTiramizoo_settings_enable_module_help'               => 'Bieten Sie tiramizoo.com als Lieferoption an',
 
+'oxTiramizoo_settings_enable_select_time_label'			=> 'tiramizoo.com "Festes Abholzeitfenster" aktivieren',
+
+
 'oxTiramizoo_settings_pickup_hour_1_label'              => 'Beginn 1. Abholzeitfenster',
 'oxTiramizoo_settings_pickup_hour_2_label'              => 'Beginn 2. Abholzeitfenster',
 'oxTiramizoo_settings_pickup_hour_3_label'              => 'Beginn 3. Abholzeitfenster',
