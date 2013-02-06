@@ -259,6 +259,11 @@ class oxTiramizooApi extends TiramizooApi
                 $oArticle = $oArticleParent;
             }
 
+            //reload object with all columns
+            $oArticleTmp = oxNew( 'oxarticle' );
+            $oArticleTmp->load($oArticle->oxarticles__oxid->value);
+            $oArticle = $oArticleTmp;
+
             //article is disabled return false
             if ($oArticle->oxarticles__tiramizoo_enable->value == -1) {
                 return false;
@@ -331,18 +336,6 @@ class oxTiramizooApi extends TiramizooApi
                 if ($packIntoBoxes->getIndividualPackageItems()) {
                     throw new oxTiramizoo_NotAvailableException();
                 }
-
-                // foreach($packIntoBoxes->getIndividualPackageItems() as $key => $itemIndividual) 
-                // {
-                //     $item = new stdClass();
-                //     $item->weight = floatval($itemIndividual['weight']);
-                //     $item->width = floatval($itemIndividual['width']);
-                //     $item->length = floatval($itemIndividual['length']);
-                //     $item->height = floatval($itemIndividual['height']);
-                //     $item->quantity = 1;
-
-                //     $items[] = $item;
-                // }
                 
                 foreach($packIntoBoxes->getPackedItems() as $key => $package) 
                 {
