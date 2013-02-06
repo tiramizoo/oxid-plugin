@@ -112,22 +112,22 @@ $aLang = array(
 'oxTiramizoo_settings_dimensions_unit'                  => 'cm',
 'oxTiramizoo_settings_weight_unit'                      => 'kg',
 
-'oxTiramizoo_settings_package_sizes_heading'    		=> 'Package sizes',
+'oxTiramizoo_settings_package_sizes_heading'    		=> 'Paketgrößen',
 
-'oxTiramizoo_settings_package_sizes_strategy_1_label'  	=> 'All products have individual dimensions',
-'oxTiramizoo_settings_package_sizes_strategy_2_label'   => 'Specific dimensions of packages',
-'oxTiramizoo_settings_package_sizes_strategy_3_label'  	=> 'All products should fit to one package',
+'oxTiramizoo_settings_package_sizes_strategy_1_label'  	=> 'Alle Produkte haben eigene Abmessungen',
+'oxTiramizoo_settings_package_sizes_strategy_2_label'   => 'Paketgrößen angeben',
+'oxTiramizoo_settings_package_sizes_strategy_3_label'  	=> 'Standardpaketgröße für alle Artikel',
 
-'oxTiramizoo_settings_package_std_size_weight_label'  	=> 'Standard Package size and weight',
-'oxTiramizoo_settings_package_std_size_weight_help'  	=> 'Every order will be packed to the box with following dimensions. L-length, W - width, H - height, Wt - weight.',
+'oxTiramizoo_settings_package_std_size_weight_label'  	=> 'Standard-Paketgröße und -gewicht',
+'oxTiramizoo_settings_package_std_size_weight_help'  	=> 'Jede Lieferung wird in ein Paket mit den folgenden Abmessungen verpackt. L - Länge, B - Breite, H - Höhe, G - Gewicht.',
 
-'oxTiramizoo_settings_package_size_and_weight_label'  	=> 'Package size and weight',
-'oxTiramizoo_settings_package_size_and_weight_help'  	=> 'Define package dimensions. L-length, W - width, H - height, Wt - weight.',
+'oxTiramizoo_settings_package_size_and_weight_label'  	=> 'Paketgröße und Gewicht',
+'oxTiramizoo_settings_package_size_and_weight_help'  	=> 'Paketgröße angeben. L - Länge, B - Breite, H - Höhe, G - Gewicht.',
 
-'oxTiramizoo_settings_dimensions_short_width_label'  	=> 'W',
+'oxTiramizoo_settings_dimensions_short_width_label'  	=> 'B',
 'oxTiramizoo_settings_dimensions_short_length_label'  	=> 'L',
 'oxTiramizoo_settings_dimensions_short_height_label'  	=> 'H',
-'oxTiramizoo_settings_dimensions_short_weight_label'  	=> 'Wt',
+'oxTiramizoo_settings_dimensions_short_weight_label'  	=> 'G',
 
 
 // Article administration -> Tiramizoo Tab
