@@ -57,6 +57,9 @@ $aLang = array(
 'oxTiramizoo_settings_enable_module_label'              => 'Tiramizoo aktivieren',
 'oxTiramizoo_settings_enable_module_help'               => 'Bieten Sie tiramizoo.com als Lieferoption an',
 
+'oxTiramizoo_settings_enable_select_time_label'			=> 'tiramizoo.com "Festes Abholzeitfenster" aktivieren',
+
+
 'oxTiramizoo_settings_pickup_hour_1_label'              => 'Beginn 1. Abholzeitfenster',
 'oxTiramizoo_settings_pickup_hour_2_label'              => 'Beginn 2. Abholzeitfenster',
 'oxTiramizoo_settings_pickup_hour_3_label'              => 'Beginn 3. Abholzeitfenster',
@@ -129,6 +132,22 @@ $aLang = array(
 'oxTiramizoo_settings_dimensions_short_height_label'  	=> 'H',
 'oxTiramizoo_settings_dimensions_short_weight_label'  	=> 'Wt',
 
+'oxTiramizoo_settings_opening_hours_heading'         	=> 'Öffnungszeiten',
+'oxTiramizoo_settings_working_days_label'         		=> 'Arbeitstage',
+
+'oxTiramizoo_settings_monday'         					=> 'Montag',
+'oxTiramizoo_settings_tuesday'         					=> 'Dienstag',
+'oxTiramizoo_settings_wedensday'         				=> 'Mittwoch',
+'oxTiramizoo_settings_thursday'         				=> 'Donnerstag',
+'oxTiramizoo_settings_friday'         					=> 'Freitag',
+'oxTiramizoo_settings_saturday'         				=> 'Samstag',
+'oxTiramizoo_settings_sunday'         					=> 'Sonntag',
+
+'oxTiramizoo_settings_exclude_days_label'         		=> 'Ausschließen termine',
+'oxTiramizoo_settings_include_days_label'         		=> 'Enthalten termine',
+
+'oxTiramizoo_settings_exclude_day_caption'         		=> 'Ausschließen datum',
+'oxTiramizoo_settings_include_day_caption'         		=> 'Beinhalten datum',
 
 // Article administration -> Tiramizoo Tab
 

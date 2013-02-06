@@ -51,7 +51,6 @@ class oxTiramizooHelper extends oxSuperCfg
     }
 
 
-    
     public static function getExcludeDates()
     {
         $sExcludeDates = oxConfig::getInstance()->getShopConfVar('oxTiramizoo_exclude_days');
@@ -189,15 +188,14 @@ class oxTiramizooHelper extends oxSuperCfg
         $sPickupHour = date('H:i', strtotime($dateTime));
         $sDate = date('Y-m-d', strtotime($dateTime));
 
+        $orderOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
+
         if (!$this->isDateWindowAvailable($sDate)) {
             return false;
         }
 
         $aTiramizooWorkingHours = $this->getTiramizooAvailableWorkingHours();
         $aTiramizooWorkingHoursThisDay = $aTiramizooWorkingHours[$sDate];
-
-        $orderOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
-
 
         $maximumDeliveryHour = oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour');
         $minimumDeliveryHour = oxTiramizooConfig::getInstance()->getConfigParam('minimumDeliveryHour');
@@ -263,8 +261,6 @@ class oxTiramizooHelper extends oxSuperCfg
 
         return true;
     }
-
-
 
 
     /**

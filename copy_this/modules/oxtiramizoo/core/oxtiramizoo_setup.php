@@ -205,32 +205,6 @@ class oxTiramizoo_setup extends Shop_Config
         }
     }
 
-    /**
-     * Update database to version 0.8.6
-     */
-    public function migration_0_8_6()
-    {
-        $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_package_strategy', 0); 
-    }
-
-    /**
-     * Update database to version 0.8.8
-     */
-    public function migration_0_8_8()
-    {
-        $oxConfig = $this->getConfig();
-        
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_mon', 1);
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_tue', 1);
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_wed', 1);
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_thu', 1);
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_fri', 1);
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_sat', 0);
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_sun', 0);
-
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_exclude_days', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_include_days', '');
-    }
     /*
      * Update database to version 0.8.3
      */
@@ -293,6 +267,27 @@ class oxTiramizoo_setup extends Shop_Config
         $this->addColumnToTable('oxcategories', 'TIRAMIZOO_USE_PACKAGE', 'INT(1) NOT NULL DEFAULT 1');
     }
 
+
+    /**
+     * Update database to version 0.8.6
+     */
+    public function migration_0_8_6()
+    {
+        $oxConfig = $this->getConfig();
+        
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_mon', 1);
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_tue', 1);
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_wed', 1);
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_thu', 1);
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_fri', 1);
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_sat', 0);
+        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_sun', 0);
+
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_exclude_days', '');
+        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_include_days', '');
+    }
+
+
     /**
      * Update database to version 0.8.7
      */
@@ -305,10 +300,10 @@ class oxTiramizoo_setup extends Shop_Config
                             OXACTIVE = 0,
                             OXACTIVEFROM = '0000-00-00 00:00:00',
                             OXACTIVETO = '0000-00-00 00:00:00',
-                            OXTITLE = 'Tiramizoo Select Time',
-                            OXTITLE_1 = 'Tiramizoo Select Time',
-                            OXTITLE_2 = 'Tiramizoo Select Time',
-                            OXTITLE_3 = 'Tiramizoo Select Time',
+                            OXTITLE = 'Tiramizoo Festes Abholzeitfenster',
+                            OXTITLE_1 = 'Tiramizoo Fixed time window',
+                            OXTITLE_2 = 'Tiramizoo Festes Abholzeitfenster',
+                            OXTITLE_3 = 'Tiramizoo Festes Abholzeitfenster',
                             OXADDSUMTYPE = 'abs',
                             OXADDSUM = 7.90,
                             OXDELTYPE = 'p',
@@ -324,10 +319,10 @@ class oxTiramizoo_setup extends Shop_Config
                             OXACTIVE = 0,
                             OXACTIVEFROM = '0000-00-00 00:00:00',
                             OXACTIVETO = '0000-00-00 00:00:00',
-                            OXTITLE = 'Tiramizoo Select Time',
-                            OXTITLE_1 = 'Tiramizoo Select Time',
-                            OXTITLE_2 = 'Tiramizoo Select Time',
-                            OXTITLE_3 = 'Tiramizoo Select Time',
+                            OXTITLE = 'Tiramizoo Festes Abholzeitfenster',
+                            OXTITLE_1 = 'Tiramizoo Fixed time window',
+                            OXTITLE_2 = 'Tiramizoo Festes Abholzeitfenster',
+                            OXTITLE_3 = 'Tiramizoo Festes Abholzeitfenster',
                             OXPOS = 3;");
 
         $this->executeSQL("INSERT IGNORE INTO `oxdel2delset` SET
@@ -336,7 +331,13 @@ class oxTiramizoo_setup extends Shop_Config
                             OXDELSETID = 'TiramizooSelectTime';");
     }
 
-
+    /**
+     * Update database to version 0.8.8
+     */
+    public function migration_0_8_8()
+    {
+        $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_package_strategy', 0); 
+    }
 
     /**
      * Execute sql query

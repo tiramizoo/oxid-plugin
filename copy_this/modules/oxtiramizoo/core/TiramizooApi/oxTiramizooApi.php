@@ -149,6 +149,12 @@ class oxTiramizooApi extends TiramizooApi
         $oPickup->after = date('c', strtotime($sTiramizooWindow));
         $oPickup->before = date('c', strtotime('+' . $oxConfig->getShopConfVar('oxTiramizoo_pickup_time_length') . 'minutes', strtotime($sTiramizooWindow)));
 
+        //check if pickup is not longer than delivery if yes use delivery as pickup
+        $pickupWindowLengthInMinutes =  $oxConfig->getShopConfVar('oxTiramizoo_pickup_time_length') >  $oxConfig->getShopConfVar('oxTiramizoo_pickup_del_offset') ? $oxConfig->getShopConfVar('oxTiramizoo_pickup_del_offset') : $oxConfig->getShopConfVar('oxTiramizoo_pickup_time_length');
+
+        $oPickup->before = date('c', strtotime('+' . $pickupWindowLengthInMinutes . 'minutes', strtotime($sTiramizooWindow)));
+
+
         //change pickup before time exceed maximum delivery hour
         if (strtotime(date('H:i', strtotime($oPickup->before))) > strtotime(oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour'))) {
             $oPickup->before = date('c', strtotime(date('Y-m-d', strtotime($sTiramizooWindow)) . ' ' . oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour')));
