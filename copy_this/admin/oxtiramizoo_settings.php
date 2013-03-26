@@ -36,6 +36,10 @@
     */
     public function render()
     {
+        // for test only
+        oxTiramizooApi::getInstance()->synchronizeServiceAreas(80639);
+        $serviceAreasResponse = oxTiramizooConfig::getInstance()->getShopConfVar('service_areas_80639');
+
         $oxConfig  = $this->getConfig();
         parent::render();
 
@@ -243,6 +247,23 @@
         oxDb::getDb()->Execute($sql);
 
     }
+
+    /**
+     * Saves main user parameters.
+     *
+     * @return mixed
+     */
+    public function synchronize()
+    {
+        // synchronizing config params
+        oxTiramizooConfig::getInstance()->synchronizeAll();
+
+        // clear cache 
+        oxUtils::getInstance()->rebuildCache();
+    
+        return 'oxtiramizoo_settings';
+    }
+
 
     /**
      * Saves main user parameters.

@@ -110,6 +110,21 @@ class oxTiramizooApi extends TiramizooApi
     }
 
     /**
+     * Get service areas
+     * 
+     * @param string $sPickupCode
+     * @return mixed Array with status code of request and response data
+     */
+    public function getAvailableServiceAreas($sPostalCode)
+    {
+        $response = null;
+
+        $this->requestGet('service_areas/' . $sPostalCode, array(), $response);
+
+        return $response;
+    }
+
+    /**
      * Build description from product's names. Used for build partial data to send order API request
      * 
      * @param  oxBasket $oBasket
@@ -125,6 +140,46 @@ class oxTiramizooApi extends TiramizooApi
 
         //string should be contains at least 255 chars
         return substr(implode($itemNames, ', '), 0, 255);
+    }
+
+    /**
+     * Synchronize service areas for one postal code
+     * 
+     * @param string $sPostalCode postal code parameter to getting time windows from API
+     */
+    public function synchronizeServiceAreas($sPostalCode)
+    {
+        $response = $this->getAvailableServiceAreas($sPostalCode);
+
+        if ($response['http_status'] != 200) {
+            throw new oxTiramizoo_ApiException("Can't connect to Tiramizoo API", 1);
+        }
+
+        oxTiramizooConfig::getInstance()->saveShopConfVar('aarr', 'service_areas_' . $sPostalCode, oxTiramizooHelper::getInstance()->objectToArray($response['response']));
+    }
+
+    /**
+     * Synchronize whole config for all retail locations
+     */
+    public function synchronizeConfiguration()
+    {
+        throw new oxTiramizoo_ApiException("Not implemented yet", 1);
+    }
+
+    /**
+     * Synchronize retail package sizes information
+     */
+    public function synchronizePackageSizes()
+    {
+        throw new oxTiramizoo_ApiException("Not implemented yet", 1);
+    }
+
+    /**
+     * Synchronize retail location information
+     */
+    public function synchronizeRetailLocation()
+    {
+        throw new oxTiramizoo_ApiException("Not implemented yet", 1);
     }
 
     /**

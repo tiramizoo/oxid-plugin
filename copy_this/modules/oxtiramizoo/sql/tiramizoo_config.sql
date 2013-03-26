@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS `oxtiramizooconfig` (
+  `OXID` char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+  `OXSHOPID` char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+  `OXVARNAME` varchar(64) NOT NULL DEFAULT '',
+  `OXVARTYPE` varchar(4) NOT NULL DEFAULT '',
+  `OXVARVALUE` blob NOT NULL,
+  `OXLASTSYNC` datetime NOT NULL,
+  `OXGROUP` varchar(32) NOT NULL DEFAULT ''
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+ALTER TABLE  `oxtiramizooconfig` ADD PRIMARY KEY (  `OXID` );

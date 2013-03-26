@@ -180,14 +180,14 @@ class oxTiramizooHelper extends oxSuperCfg
 
 
 
-    function object_to_array($data)
+    function objectToArray($data)
     {
         if (is_array($data) || is_object($data))
         {
             $result = array();
             foreach ($data as $key => $value)
             {
-                $result[$key] = $this->object_to_array($value);
+                $result[$key] = $this->objectToArray($value);
             }
             return $result;
         }
@@ -199,7 +199,7 @@ class oxTiramizooHelper extends oxSuperCfg
         //@TODO: Change postal code to properly variable
         $aAvailableServiceAreas = oxTiramizooApi::getInstance()->getAvailableServiceAreas(80639);
 
-        $aTimeWindows = $this->object_to_array($aAvailableServiceAreas['response']->time_windows);
+        $aTimeWindows = $this->objectToArray($aAvailableServiceAreas['response']->time_windows);
 
         //sort by delivery from date
         foreach ($aTimeWindows as $oldKey => $aTimeWindow) 
@@ -308,7 +308,6 @@ class oxTiramizooHelper extends oxSuperCfg
             if (!$this->getConfig()->getShopConfVar('oxTiramizoo_enable_immediate')) {
                 return $this->_isTiramizooImmediateAvailable = 0;
             }
-            
 
             if (!count($this->getAvailableDeliveryHours())) {
                 return $this->_isTiramizooImmediateAvailable = 0;
@@ -381,7 +380,7 @@ class oxTiramizooHelper extends oxSuperCfg
 
     public function getPackageSizes()
     {
-        echo $iMaximumPackageSizes = oxTiramizooConfig::getInstance()->getConfigParam('iMaximumPackageSizes', 6);
+        $iMaximumPackageSizes = oxTiramizooConfig::getInstance()->getConfigParam('iMaximumPackageSizes', 6);
 
         $aPackageSizes = array();
 

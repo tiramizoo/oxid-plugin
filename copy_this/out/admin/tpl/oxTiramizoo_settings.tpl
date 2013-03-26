@@ -209,6 +209,26 @@
       </tr>
     </table>
     </form>
+
+
+
+    <h3>Synchronize the all configuration</h3>
+
+  
+    <form name="myedit" id="myedit" action="[{$oViewConf->getSelfLink()}]" method="post">
+      [{$oViewConf->getHiddenSid()}]
+      <input type="hidden" name="cl" value="[{$oViewConf->getActiveClassName()}]">
+      <input type="hidden" name="fnc" value="synchronize">
+      <input type="hidden" name="oxid" value="[{$oxid}]">
+      <input type="hidden" name="editval[oxshops__oxid]" value="[{$oxid}]">
+      <input type="submit" value="Synchronize" />
+    </form>
+
+
+
+
+
+
   [{include file="pagenavisnippet.tpl"}]
 </div>
 [{include file="pagetabsnippet.tpl"}]
