@@ -51,102 +51,6 @@ class oxTiramizooHelper extends oxSuperCfg
     }
 
 
-    public static function getExcludeDates()
-    {
-        $sExcludeDates = oxConfig::getInstance()->getShopConfVar('oxTiramizoo_exclude_days');
-
-        return $sExcludeDates ? explode(',', $sExcludeDates) : array();
-    }
-
-    public static function getIncludeDates()
-    {
-        $sIncludeDates = oxConfig::getInstance()->getShopConfVar('oxTiramizoo_include_days');
-
-        return $sIncludeDates ? explode(',', $sIncludeDates) : array();
-    }
-
-    public static function getShopAvailableDates()
-    {
-        $iCountNextDates = 7;
-        $aAvailableDates = array();
-
-        $start = strtotime(date('Y-m-d'));
-        $dates=array();
-
-        for($i = 1; $i<=$iCountNextDates; $i++)
-        {
-            array_push($aAvailableDates, date('Y-m-d', strtotime("+$i day", $start)));
-        }
-
-        //skip dates with day of week not checked in settings
-        $aShopAvailableDaysOfWeek = oxTiramizooHelper::getShopAvailableDaysOfWeek();
-        foreach ($aAvailableDates as $key => $sDate) 
-        {
-            if (!in_array(date('w', strtotime($sDate)), $aShopAvailableDaysOfWeek)) {
-                unset($aAvailableDates[$key]);
-            }
-        }
-
-        //exclude dates from exclude dates list
-        $aExcludeDates = oxTiramizooHelper::getExcludeDates();
-        foreach ($aAvailableDates as $key => $sDate) 
-        {
-            if (in_array($sDate, $aExcludeDates)) {
-                unset($aAvailableDates[$key]);
-            }
-        }
-
-        //Include Additional dates from include list
-        $aIncludeDates = oxTiramizooHelper::getIncludeDates();
-        foreach ($aIncludeDates as $key => $sDate) 
-        {
-            if ((strtotime($sDate) >= $start) && (strtotime($sDate) <= strtotime("+$iCountNextDates day", $start)) && !in_array($sDate, $aAvailableDates)) {
-                array_push($aAvailableDates, $sDate);
-            }
-        }
-
-        sort($aAvailableDates);
-
-        return $aAvailableDates;
-    }
-
-    public static function getShopAvailableDaysOfWeek()
-    {
-        $oxConfig = oxConfig::getInstance();
-        
-        $aAvailableDayOfWeek = array();
-
-        if ($oxConfig->getShopConfVar('oxTiramizoo_works_mon')) {
-            $aAvailableDaysOfWeek[] = 1;
-        }
-
-        if ($oxConfig->getShopConfVar('oxTiramizoo_works_tue')) {
-            $aAvailableDaysOfWeek[] = 2;
-        }
-
-        if ($oxConfig->getShopConfVar('oxTiramizoo_works_wed')) {
-            $aAvailableDaysOfWeek[] = 3;
-        }
-
-        if ($oxConfig->getShopConfVar('oxTiramizoo_works_thu')) {
-            $aAvailableDaysOfWeek[] = 4;
-        }
-
-        if ($oxConfig->getShopConfVar('oxTiramizoo_works_fri')) {
-            $aAvailableDaysOfWeek[] = 5;
-        }
-
-        if ($oxConfig->getShopConfVar('oxTiramizoo_works_sat')) {
-            $aAvailableDaysOfWeek[] = 6;
-        }
-
-        if ($oxConfig->getShopConfVar('oxTiramizoo_works_sun')) {
-            $aAvailableDaysOfWeek[] = 0;
-        }
-
-        return $aAvailableDaysOfWeek;
-    }
-
     public function setUser($oUser)
     {
         $this->_oUser = $oUser;
@@ -173,94 +77,7 @@ class oxTiramizooHelper extends oxSuperCfg
         $this->_sDeliveryPostalcode = $sDeliveryPostalcode;
     }
 
-    public function getTiramizooAvailableWorkingHours()
-    {
-        $oxConfig = oxConfig::getInstance();
-        $result = oxTiramizooApi::getInstance()->getAvailableWorkingHours($oxConfig->getShopConfVar('oxTiramizoo_shop_country_code'), $oxConfig->getShopConfVar('oxTiramizoo_shop_postal_code'), $this->getDeliveryPostalCode());
 
-        return (array)$result['response'];
-    }
-
-    public function isTimeWindowAvailable($dateTime)
-    {
-        $oxConfig = $this->getConfig();
-
-        $sPickupHour = date('H:i', strtotime($dateTime));
-        $sDate = date('Y-m-d', strtotime($dateTime));
-
-        $orderOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
-
-        if (!$this->isDateWindowAvailable($sDate)) {
-            return false;
-        }
-
-        $aTiramizooWorkingHours = $this->getTiramizooAvailableWorkingHours();
-        $aTiramizooWorkingHoursThisDay = $aTiramizooWorkingHours[$sDate];
-
-        $maximumDeliveryHour = oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour');
-        $minimumDeliveryHour = oxTiramizooConfig::getInstance()->getConfigParam('minimumDeliveryHour');
-
-        //false if today earlier
-        if (strtotime(date('Y-m-d')) == strtotime($sDate)) {
-            if (strtotime(date('H:i')) >= (strtotime($sPickupHour) - ($orderOffsetTime * 60))) {
-                return false;
-            }
-        }
-
-        if (isset($aTiramizooWorkingHoursThisDay->to) && isset($aTiramizooWorkingHoursThisDay->to->hours) && isset($aTiramizooWorkingHoursThisDay->to->minutes)) {
-            $maximumTiramizooWorkingHour = $aTiramizooWorkingHoursThisDay->to->hours . ':' . $aTiramizooWorkingHoursThisDay->to->minutes;
-
-            if(strtotime($maximumDeliveryHour) > strtotime($maximumTiramizooWorkingHour)) {
-                $maximumDeliveryHour = $maximumTiramizooWorkingHour;
-            }
-        }
-
-        if (isset($aTiramizooWorkingHoursThisDay->from) && isset($aTiramizooWorkingHoursThisDay->from->hours) && isset($aTiramizooWorkingHoursThisDay->from->minutes)) {
-            $minimumTiramizooWorkingHour = $aTiramizooWorkingHoursThisDay->from->hours . ':' . $aTiramizooWorkingHoursThisDay->from->minutes;
-            if(strtotime($minimumDeliveryHour) > strtotime($minimumTiramizooWorkingHour)) {
-                $minimumDeliveryHour = $minimumTiramizooWorkingHour;
-            }        
-        }
-
-        $minimumDeliveryLengthInMinutes = (strtotime(oxTiramizooConfig::getInstance()->getConfigParam('minimumDeliveryWindowLength')) - strtotime('00:00')) / 60;
-
-        $minimumDeliveryBeforeTime = strtotime('+' . $minimumDeliveryLengthInMinutes . 'minutes', strtotime($sPickupHour));
-
-        //check if not exceed the maximum delivery hour
-        if ($minimumDeliveryBeforeTime > strtotime($maximumDeliveryHour)) {
-            return false;
-        }
-
-        //check if not earlier than minimum delivery hour
-        if (strtotime($sPickupHour) < strtotime($minimumDeliveryHour)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function isDateWindowAvailable($sDate)
-    {
-        $aTiramizooWorkingHours = $this->getTiramizooAvailableWorkingHours();
-
-        if (!in_array($sDate, array_keys($aTiramizooWorkingHours))) {
-            return false;
-        }
-
-        if (in_array($sDate, oxTiramizooHelper::getIncludeDates())) {
-            return true;
-        }
-
-        if (!in_array(date('w', strtotime($sDate)), oxTiramizooHelper::getShopAvailableDaysOfWeek())) {
-            return false;
-        }
-
-        if (in_array($sDate, oxTiramizooHelper::getExcludeDates())) {
-            return false;
-        }
-
-        return true;
-    }
 
 
     /**
@@ -303,103 +120,6 @@ class oxTiramizooHelper extends oxSuperCfg
         return oxSession::getVar( 'sTiramizooTimeWindow' );
     }
 
-    /**
-     * Get available delivery windows to present in cart
-     * 
-     * @return array
-     */
-    public function getAvailableDeliveryHours()
-    {
-        $oxConfig = $this->getConfig();
-
-        $aAvailableDeliveryHours = array();
-        
-        $orderOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
-        $deliveryOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
-
-        $dateTime = date('Y-m-d H:i', strtotime('+' . $orderOffsetTime . ' minutes', strtotime(date('Y-m-d H:i'))));
-        
-        $itertator = 0;
-        while ($itertator++ < 6)
-        {
-            $dateTime = $this->getNextAvailableDate($dateTime);
-
-            if (!$dateTime) {
-                break;
-            }
-
-            $aAvailableDeliveryHours[$dateTime] = oxTiramizooHelper::getLabelDeliveryWindow($dateTime);
-
-            //set as default time window if not setted before or the time window was expired
-            if (($itertator == 1) && (!oxSession::hasVar( 'sTiramizooTimeWindow' ) || strtotime(oxSession::getVar( 'sTiramizooTimeWindow' )) < strtotime($dateTime))) {
-                oxSession::setVar( 'sTiramizooTimeWindow',  $dateTime);
-            }
-        }
-
-        return $aAvailableDeliveryHours;
-    }
-
-    /**
-     * Get available pikup hours from config
-     * 
-     * @return array Array of datetimes
-     */
-    public function getAvailablePickupHours()
-    {
-        $aAvailablePickupHours = array();
-
-        $oxConfig = oxConfig::getInstance();
-
-        for ($i = 1; $i <= 6 ; $i++) 
-        {
-            if ($pickupHour = $oxConfig->getShopConfVar('oxTiramizoo_shop_pickup_hour_' . $i)) {
-                $aAvailablePickupHours[] = $pickupHour;
-            }
-        }
-
-        return $aAvailablePickupHours;
-    }
-
-    /**
-     * Get next available pickup date excluding weekends
-     * 
-     * @param  string $dateTime Date time
-     * @return string Next date time
-     */
-    public function getNextAvailableDate($fromDateTime)
-    {
-        $oxConfig = $this->getConfig();
-
-        $orderOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
-
-        $fromHour = date('H:i', strtotime($fromDateTime));
-        $fromDate = date('Y-m-d', strtotime($fromDateTime));
-        $fromDayNum = date('w', strtotime($fromDateTime));
-
-        //check if not exceed the maximum delivery hour
-        $minimumDeliveryLengthInMinutes = (strtotime(oxTiramizooConfig::getInstance()->getConfigParam('minimumDeliveryWindowLength')) - strtotime('00:00')) / 60;
-
-        $goToNextDate = false;
-
-        if ($this->isDateWindowAvailable($fromDate)) {
-            foreach ($this->getAvailablePickupHours() as $sAvailablePickupHour) 
-            {
-                $newDateTime = $fromDate . ' ' . $sAvailablePickupHour;
-
-                if ($this->isTimeWindowAvailable($newDateTime) && (strtotime($fromHour) < strtotime($sAvailablePickupHour))) {
-                    return $newDateTime;
-                }
-            }
-        }
-
-        //break if checking more than 14 days because of infinite loop
-        if (strtotime(date('Y-m-d', strtotime('+1days', strtotime(date('Y-m-d'))))) < strtotime($fromDate)) {
-            return false;
-        }
-
-        $nextDateTime = date('Y-m-d', strtotime('+1days', strtotime($fromDateTime))) . ' 00:00';
-        return $this->getNextAvailableDate($nextDateTime);
-    }
 
     /**
      * Validate basket data to decide if can be delivered by tiramizoo 
@@ -424,9 +144,6 @@ class oxTiramizooHelper extends oxSuperCfg
 
             $sZipCode = $address ? $address->oxaddress__oxzip->value : $oUser->oxuser__oxzip->value;
 
-            if (!count($this->getAvailablePickupHours())) {
-                return $this->_isTiramizooAvailable = 0;
-            }
 
             //check if Tiramizoo can deliver this basket
             $data = new stdClass();
@@ -462,20 +179,38 @@ class oxTiramizooHelper extends oxSuperCfg
     }
 
 
-    public function getNext7AvailableDates()
+
+    function object_to_array($data)
     {
-        $iCountNextDates = 7;
-        $aAvailableDates = array();
-
-        $start = strtotime(date('Y-m-d'));
-        $dates=array();
-
-        for($i = 0; $i<$iCountNextDates; $i++)
+        if (is_array($data) || is_object($data))
         {
-            array_push($aAvailableDates, date('Y-m-d', strtotime("+$i day", $start)));
+            $result = array();
+            foreach ($data as $key => $value)
+            {
+                $result[$key] = $this->object_to_array($value);
+            }
+            return $result;
+        }
+        return $data;
+    }
+
+    public function getAvailableTimeWindows()
+    {
+        //@TODO: Change postal code to properly variable
+        $aAvailableServiceAreas = oxTiramizooApi::getInstance()->getAvailableServiceAreas(80639);
+
+        $aTimeWindows = $this->object_to_array($aAvailableServiceAreas['response']->time_windows);
+
+        //sort by delivery from date
+        foreach ($aTimeWindows as $oldKey => $aTimeWindow) 
+        {
+            $aTimeWindows[strtotime($aTimeWindow['delivery']['from'])] = $aTimeWindow;
+            unset($aTimeWindows[$oldKey]);
         }
 
-        return $aAvailableDates;
+        ksort($aTimeWindows);
+
+        return $aTimeWindows ? $aTimeWindows : array();
     }
 
     public function getNext7DaysAvailableWindows()
@@ -483,54 +218,83 @@ class oxTiramizooHelper extends oxSuperCfg
         if ($this->_next7DaysAvailableWindows == null) {
 
             $oxConfig = oxConfig::getInstance();
-            $aNext7Dates = $this->getNext7AvailableDates();
+
+
+            $aTimeWindows = $this->getAvailableTimeWindows();
+
+
             $aNext7DaysAvailableWindows = array();
             $deliveryOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
 
-            foreach ($aNext7Dates as $sDate) 
+            $sCurrentDate = null;
+
+            foreach ($aTimeWindows as $aTimeWindow) 
             {
-                if (!$this->isDateWindowAvailable($sDate)) {
-                    continue;
+                $sNewCurrentDate = date('Y-m-d', strtotime($aTimeWindow['delivery']['from']));
+
+                if($sCurrentDate != $sNewCurrentDate) {
+                    $aNext7DaysAvailableWindows[] = array('date' => $sNewCurrentDate, 'label' => $sNewCurrentDate, 'timeWindows' => array());
+
+                    if (strtotime(date('Y-m-d', strtotime($sNewCurrentDate))) ==  strtotime(date('Y-m-d'))) {
+                        $aNext7DaysAvailableWindows[count($aNext7DaysAvailableWindows) - 1]['label'] = oxLang::getInstance()->translateString('oxTiramizoo_Today', oxLang::getInstance()->getBaseLanguage(), false);
+                    } else if (strtotime(date('Y-m-d', strtotime($sNewCurrentDate))) ==  strtotime(date('Y-m-d', strtotime('+1days', strtotime(date('Y-m-d')))))){
+                        $aNext7DaysAvailableWindows[count($aNext7DaysAvailableWindows) - 1]['label'] = oxLang::getInstance()->translateString('oxTiramizoo_Tomorrow', oxLang::getInstance()->getBaseLanguage(), false);
+                    }
                 }
 
-                $aDate = array('date' => $sDate, 'label' => $sDate, 'timeWindows' => array());
+                $sCurrentDate = $sNewCurrentDate;
 
-                if (strtotime(date('Y-m-d', strtotime($sDate))) ==  strtotime(date('Y-m-d'))) {
-                    $aDate['label'] = oxLang::getInstance()->translateString('oxTiramizoo_Today', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($sDate));
-                } else if (strtotime(date('Y-m-d', strtotime($sDate))) ==  strtotime(date('Y-m-d', strtotime('+1days', strtotime(date('Y-m-d')))))){
-                    $aDate['label'] = oxLang::getInstance()->translateString('oxTiramizoo_Tomorrow', oxLang::getInstance()->getBaseLanguage(), false) . strtotime('Y-m-d', strtotime($sDate));
+                $aTimeWindow['timeWindowLabel'] = date('H:i', strtotime($aTimeWindow['delivery']['from'])) . ' - ' . date('H:i', strtotime($aTimeWindow['delivery']['to']));
+                $aTimeWindow['enable'] = true;
+
+                //@TODO: Change valid procedure
+                if ((strtotime($aTimeWindow['delivery']['to']) < strtotime("now")) && (strtotime($aTimeWindow['pickup']['to']) < strtotime("now"))) {
+                    $aTimeWindow['enable'] = false;
                 }
 
-                foreach ($this->getAvailablePickupHours() as $sAvailablePickupHour) 
-                {
-                    $newDateTime = $sDate . ' ' . $sAvailablePickupHour;
-
-                    $enable = true;
-                    if (!$this->isTimeWindowAvailable($newDateTime)) {
-                        $enable = false;
-                    } 
-
-
-                    $deliveryBefore = date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($sAvailablePickupHour)));
-
-                    $aDate['timeWindows'][] = array('pickupHour' => $sAvailablePickupHour, 
-                                                   'timeWindowLabel' => $sAvailablePickupHour . ' - ' . $deliveryBefore,
-                                                   'timeWindowDate' => $sDate . ' ' . $sAvailablePickupHour,
-                                                   'enable' => $enable);
-                }
-
-                if (count($aDate['timeWindows'])) {
-                    $aNext7DaysAvailableWindows[] = $aDate;
-                }
+                $aNext7DaysAvailableWindows[count($aNext7DaysAvailableWindows) - 1]['timeWindows'][] = $aTimeWindow;
             }
+
 
             $this->_next7DaysAvailableWindows = $aNext7DaysAvailableWindows;
         }
 
-        return $this->_next7DaysAvailableWindows;
+        return $this->_next7DaysAvailableWindows;    
     }
 
+    public function getFirstAvailableTimeWindow()
+    {
+        $aTimeWindows = $this->getAvailableTimeWindows();
 
+        foreach ($aTimeWindows as $aTimeWindow) 
+        {
+            if ((strtotime($aTimeWindow['delivery']['to']) >= strtotime("now")) && (strtotime($aTimeWindow['pickup']['to']) >= strtotime("now"))) {
+                return $aTimeWindow['delivery']['from'];
+            }
+        }
+
+        return null;
+    }
+
+    public function isTimeWindowDeliveryFromAvailable($sDate)
+    {
+        $aTimeWindows = $this->getAvailableTimeWindows();
+
+        foreach ($aTimeWindows as $aTimeWindow) 
+        {
+            if (strtotime($sDate) == strtotime($aTimeWindow['delivery']['from'])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getEveningTimeWindow()
+    {
+        //@TODO: Rewrite when this can get by API 
+        return $this->getFirstAvailableTimeWindow();
+    }
 
     /**
      * Validate basket data to decide if can be delivered by tiramizoo 
@@ -545,13 +309,12 @@ class oxTiramizooHelper extends oxSuperCfg
                 return $this->_isTiramizooImmediateAvailable = 0;
             }
             
-            $hour = date('H:i', strtotime($this->getNextAvailableDate( date('Y-m-d H:i:s') )));
 
             if (!count($this->getAvailableDeliveryHours())) {
                 return $this->_isTiramizooImmediateAvailable = 0;
             }
 
-            if ($this->isTiramizooEveningAvailable() && (strtotime($hour) == strtotime($this->getConfig()->getShopConfVar('oxTiramizoo_evening_window')))) {
+            if ($this->isTiramizooEveningAvailable()) {
                 return $this->_isTiramizooImmediateAvailable = 0;
             }
 
@@ -575,8 +338,6 @@ class oxTiramizooHelper extends oxSuperCfg
             }
 
             //check if time is not earlier
-            $nextAvailableTime = strtotime($this->getNextAvailableDate( date('Y-m-d H:i:s') ));
-            $todayEveningAvailableTime = strtotime(date('Y-m-d') . ' ' . $this->getConfig()->getShopConfVar('oxTiramizoo_evening_window'));
 
             if (!count($this->getAvailableDeliveryHours())) {
                 return $this->_isTiramizooEveningAvailable = 0;
@@ -620,7 +381,7 @@ class oxTiramizooHelper extends oxSuperCfg
 
     public function getPackageSizes()
     {
-        $iMaximumPackageSizes = oxTiramizooConfig::getInstance()->getConfigParam('iMaximumPackageSizes');
+        echo $iMaximumPackageSizes = oxTiramizooConfig::getInstance()->getConfigParam('iMaximumPackageSizes', 6);
 
         $aPackageSizes = array();
 

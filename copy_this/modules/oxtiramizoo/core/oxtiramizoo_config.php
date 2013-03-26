@@ -15,37 +15,6 @@ class oxTiramizooConfig extends oxSuperCfg
     protected static $_instance = null;
 
     /**
-     * minimum delivery time
-     * @var string
-     */
-    protected $minimumDeliveryHour = '8:00';
-
-    /**
-     * maximum delivery time default is 20:00 but in the Munich we can set up to 22:00
-     * @var string
-     */
-    protected $maximumDeliveryHour = '20:00';
-
-    /**
-     * minimum delivery window length
-     * 
-     * @var string
-     */
-    protected $minimumDeliveryWindowLength = '01:30';
-
-    /**
-     * pickup hour step
-     * @var string
-     */
-    protected $selectedDeliveryPickupHourStep = '00:30';
-
-    /**
-     * maximum package sizes
-     * @var string
-     */
-    protected $iMaximumPackageSizes = 6;
-
-    /**
      * Get the instance of class
      * 
      * @return oxTiramizooHelper
@@ -61,8 +30,7 @@ class oxTiramizooConfig extends oxSuperCfg
 
     public function __construct()
     {
-        // load tiramizoo config
-        include getShopBasePath() . '/modules/oxtiramizoo/config.inc.php';
+
     }
 
     /**
@@ -72,13 +40,12 @@ class oxTiramizooConfig extends oxSuperCfg
      *
      * @return mixed
      */
-    public function getConfigParam( $sName )
+    public function getConfigParam( $sName, $bDefaultValue = false )
     {
         if ( isset( $this->$sName ) ) {
             return $this->$sName;
         }
 
-        return false;
+        return $defaultValue;
     }
-
 }

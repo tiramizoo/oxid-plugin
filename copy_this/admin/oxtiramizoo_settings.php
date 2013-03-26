@@ -1,118 +1,76 @@
 <?php
 
-if ( !class_exists('oxTiramizooConfig') ) {
-    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_config.php';
-}
-
-if ( !class_exists('oxTiramizooSetup') ) {
-    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_setup.php';
-}
-
-if ( !class_exists('oxTiramizooHelper') ) {
-    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_helper.php';
-}
-
-
-/**
- * Tiramizoo settings
- *
- * @package: oxTiramizoo
- */
-class oxTiramizoo_settings extends Shop_Config
-{
- 
-  public function init()
-  {
-      $oxTiramizooSetup = new oxTiramizoo_setup();
-      $oxTiramizooSetup->install();
-
-      return parent::Init();
-  }
-
-  /**
-   * Executes parent method parent::render() and returns name of template
-   *
-   * @return string
-   */
-  public function render()
-  {
-    $oxConfig  = $this->getConfig();
-    parent::render();
-
-    $this->_aViewData['oPaymentsList'] = $this->getPaymentsList();
-    $this->_aViewData['aPackageSizes'] = oxTiramizooHelper::getInstance()->getPackageSizes();
-    $this->_aViewData['aPickupHours'] = $this->getPickupHoursAsArray();
-
-    $sCurrentAdminShop = $oxConfig->getShopId();
-
-    //create an empty array
-    $this->_aViewData['aAvailablePickupHours'] = array();
-
-    $minimumPickupHour = oxTiramizooConfig::getInstance()->getConfigParam('minimumDeliveryHour');
-    $minimumDeliveryLengthInMinutes = (strtotime(oxTiramizooConfig::getInstance()->getConfigParam('minimumDeliveryWindowLength')) - strtotime('00:00')) / 60;
-
-    $maximumPickupHour = date('H:i', strtotime('-' . $minimumDeliveryLengthInMinutes . 'minutes', strtotime(oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour'))));
-
-    $currentPickupHour = strtotime($minimumPickupHour);
-
-    $this->_aViewData['aAvailablePickupHours'][] = date('H:i', $currentPickupHour);
-
-    $selectedDeliveryPickupHourStepInMinutes = (strtotime(oxTiramizooConfig::getInstance()->getConfigParam('selectedDeliveryPickupHourStep')) - strtotime('00:00')) / 60;
-
-    // do if maximum pickup hour is not occured
-    while($currentPickupHour < strtotime($maximumPickupHour)) {
-      $currentPickupHour = strtotime('+' . $selectedDeliveryPickupHourStepInMinutes . 'minutes', $currentPickupHour);
-      $this->_aViewData['aAvailablePickupHours'][] = date('H:i', $currentPickupHour);
+    if ( !class_exists('oxTiramizooConfig') ) {
+        require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_config.php';
     }
 
-    if (count(oxSession::getVar('oxTiramizoo_settings_errors'))) {
-        $this->_aViewData['aErrors'] = oxSession::getVar('oxTiramizoo_settings_errors');
-        oxSession::setVar('oxTiramizoo_settings_errors', null);
+    if ( !class_exists('oxTiramizooSetup') ) {
+        require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_setup.php';
     }
 
-    $this->_aViewData['aExcludeDates'] = oxTiramizooHelper::getExcludeDates();
-    $this->_aViewData['aIncludeDates'] = oxTiramizooHelper::getIncludeDates();
+    if ( !class_exists('oxTiramizooHelper') ) {
+        require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_helper.php';
+    }
 
 
-    $this->_aViewData['version'] = oxTiramizoo_setup::VERSION;
-
-    return 'oxTiramizoo_settings.tpl';
-  }
-
-  public function getPickupHoursAsArray()
-  {
-        $aPickupHours = array();
-
-        for ($i = 1; $i <= 6; $i++)
-        {
-            $aPickupHours[] = oxConfig::getInstance()->getShopConfVar('oxTiramizoo_shop_pickup_hour_' . $i);
-        }
-
-        return $aPickupHours;
-  }
-
-  public function getPaymentsList()
-  {
-    $oxPaymentList = new Payment_List();
-    //added 4.3.2
-    $oxPaymentList->init();
-
-    $aPaymentList = array();
-    $soxId = 'Tiramizoo';
-    $oDb = oxDb::getDb();
-
-    foreach ($oxPaymentList->getItemList() as $key => $oPayment) 
+    /**
+    * Tiramizoo settings
+    *
+    * @package: oxTiramizoo
+    */
+    class oxTiramizoo_settings extends Shop_Config
     {
-        $aPaymentList[$oPayment->oxpayments__oxid->value] = array();
-        $aPaymentList[$oPayment->oxpayments__oxid->value]['desc'] = $oPayment->oxpayments__oxdesc->value;
 
-        $sID = $oDb->getOne("select oxid from oxobject2payment where oxpaymentid = " . $oDb->quote( $oPayment->oxpayments__oxid->value ) . "  and oxobjectid = ".$oDb->quote( $soxId )." and oxtype = 'oxdelset'", false, false);
+    public function init()
+    {
+        $oxTiramizooSetup = new oxTiramizoo_setup();
+        $oxTiramizooSetup->install();
 
-        $aPaymentList[$oPayment->oxpayments__oxid->value]['checked'] = isset($sID) && $sID;
-    }  
+        return parent::Init();
+    }
 
-    return $aPaymentList;
-  }
+    /**
+    * Executes parent method parent::render() and returns name of template
+    *
+    * @return string
+    */
+    public function render()
+    {
+        $oxConfig  = $this->getConfig();
+        parent::render();
+
+        $this->_aViewData['oPaymentsList'] = $this->getPaymentsList();
+        $this->_aViewData['aPackageSizes'] = oxTiramizooHelper::getInstance()->getPackageSizes();
+
+        $sCurrentAdminShop = $oxConfig->getShopId();
+
+        $this->_aViewData['version'] = oxTiramizoo_setup::VERSION;
+
+        return 'oxTiramizoo_settings.tpl';
+    }
+
+    public function getPaymentsList()
+    {
+        $oxPaymentList = new Payment_List();
+        //added 4.3.2
+        $oxPaymentList->init();
+
+        $aPaymentList = array();
+        $soxId = 'Tiramizoo';
+        $oDb = oxDb::getDb();
+
+        foreach ($oxPaymentList->getItemList() as $key => $oPayment) 
+        {
+            $aPaymentList[$oPayment->oxpayments__oxid->value] = array();
+            $aPaymentList[$oPayment->oxpayments__oxid->value]['desc'] = $oPayment->oxpayments__oxdesc->value;
+
+            $sID = $oDb->getOne("select oxid from oxobject2payment where oxpaymentid = " . $oDb->quote( $oPayment->oxpayments__oxid->value ) . "  and oxobjectid = ".$oDb->quote( $soxId )." and oxtype = 'oxdelset'", false, false);
+
+            $aPaymentList[$oPayment->oxpayments__oxid->value]['checked'] = isset($sID) && $sID;
+        }  
+
+        return $aPaymentList;
+    }
 
     public function assignPaymentsToTiramizoo()
     {
@@ -148,24 +106,6 @@ class oxTiramizoo_settings extends Shop_Config
 
 
 
-    public function savePackageSizes()
-    {
-        $aPackageSizes = oxConfig::getParameter("packageSizes");
-
-        $iMaximumPackageSizes = oxTiramizooConfig::getInstance()->getConfigParam('iMaximumPackageSizes');
-
-        for ($i=1; $i <= $iMaximumPackageSizes; $i++)
-        { 
-            if (intval($aPackageSizes['width'][$i]) && 
-                intval($aPackageSizes['length'][$i]) && 
-                intval($aPackageSizes['height'][$i]) && 
-                floatval($aPackageSizes['weight'][$i])) {
-                 $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_package_size_' . $i, intval($aPackageSizes['width'][$i]) . 'x' . intval($aPackageSizes['length'][$i]) . 'x' . intval($aPackageSizes['height'][$i]) . 'x' . floatval($aPackageSizes['weight'][$i]));
-            } else {
-                 $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_package_size_' . $i, '');
-            }
-        }
-    }
 
     /**
     * Saves shop configuration variables
@@ -302,18 +242,6 @@ class oxTiramizoo_settings extends Shop_Config
 
         oxDb::getDb()->Execute($sql);
 
-    }
-
-
-    public function saveDates()
-    {
-        $oxConfig = $this->getConfig();
-                
-        $aIncludeDates = oxConfig::getParameter( "include_date" );
-        $aExcludeDates = oxConfig::getParameter( "exclude_date" );
-
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_exclude_days', implode(',', $aExcludeDates));
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_include_days', implode(',', $aIncludeDates));
     }
 
     /**
