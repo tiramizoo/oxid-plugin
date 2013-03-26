@@ -13,6 +13,28 @@ if ( !class_exists('oxTiramizooApi') ) {
  */
 class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
 {
+
+    /**
+     * Returns order delivery expenses price object
+     *
+     * @return oxprice
+     */
+    public function getOrderDeliveryPrice()
+    {
+        $this->_oDelPrice = parent::getOrderDeliveryPrice();
+
+        if (in_array(oxSession::getVar('sShipSet'), array('Tiramizoo', 'TiramizooEvening', 'TiramizooSelectTime'))) {
+            
+            $sTiramizooDeliveryType = oxSession::getVar('sTiramizooDeliveryType');
+            $sTiramizooDeliveryType = $sTiramizooDeliveryType ? $sTiramizooDeliveryType : '';
+
+            $this->_oDelPrice->setPrice( $this->oxorder__oxdelcost->value );
+        }
+
+        return $this->_oDelPrice;
+    }
+
+
     /**
      * Load data from basket. Build order data and send order to API. If response status is not 201
      * throw an exception.

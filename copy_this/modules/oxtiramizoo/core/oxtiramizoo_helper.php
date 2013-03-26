@@ -309,9 +309,6 @@ class oxTiramizooHelper extends oxSuperCfg
                 return $this->_isTiramizooImmediateAvailable = 0;
             }
 
-            if (!count($this->getAvailableDeliveryHours())) {
-                return $this->_isTiramizooImmediateAvailable = 0;
-            }
 
             if ($this->isTiramizooEveningAvailable()) {
                 return $this->_isTiramizooImmediateAvailable = 0;
@@ -335,18 +332,6 @@ class oxTiramizooHelper extends oxSuperCfg
             if (!$this->getConfig()->getShopConfVar('oxTiramizoo_enable_evening') || !$this->getConfig()->getShopConfVar('oxTiramizoo_evening_window')) {
                 return $this->_isTiramizooEveningAvailable = 0;
             }
-
-            //check if time is not earlier
-
-            if (!count($this->getAvailableDeliveryHours())) {
-                return $this->_isTiramizooEveningAvailable = 0;
-            }
-
-            if ($nextAvailableTime > $todayEveningAvailableTime) {
-                return $this->_isTiramizooEveningAvailable = 0;
-            }
-            
-
 
             $this->_isTiramizooEveningAvailable = 1;
         }
