@@ -9,7 +9,7 @@
 /**
  * Metadata version
  */
-$sMetadataVersion = '0.2.9';
+$sMetadataVersion = '0.2.12';
 
 /**
  * Module information
@@ -42,7 +42,10 @@ $aModule = array(
                             'oxTiramizoo_setup'                 => 'oxtiramizoo/core/oxtiramizoo_setup.php',
                             'oxTiramizooApi'                    => 'oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php',
                             'TiramizooApi'                      => 'oxtiramizoo/core/TiramizooApi/TiramizooApi.php',
-                            'oxTiramizooEvents'                 => 'oxtiramizoo/core/oxTiramizoo_events.php',
+                            'oxTiramizooEvents'                 => 'oxtiramizoo/core/oxtiramizoo_events.php',
+                            'oxTiramizooConfig'                 => 'oxtiramizoo/core/oxtiramizoo_config.php',
+                            'oxTiramizooArticleHelper'          => 'oxtiramizoo/core/oxtiramizoo_articlehelper.php',
+                            'oxTiramizooHelper'                 => 'oxtiramizoo/core/oxtiramizoo_helper.php',
 
                             /* exception */
                             'oxTiramizoo_ApiException'          => 'oxtiramizoo/core/exception/oxtiramizoo_apiexception.php',

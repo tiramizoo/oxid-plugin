@@ -1,12 +1,5 @@
 <?php
 
-if ( !class_exists('oxTiramizooConfig') ) {
-    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_config.php';
-}
-
-if ( !class_exists('oxTiramizooApi') ) {
-    require_once getShopBasePath() . '/modules/oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php';
-}
 
 /**
  * This class contains static methods used for calculating pickup and delivery hours

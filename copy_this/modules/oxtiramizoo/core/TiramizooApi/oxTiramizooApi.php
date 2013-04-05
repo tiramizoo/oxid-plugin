@@ -1,21 +1,5 @@
 <?php
 
-if ( !class_exists('TiramizooApi') ) {
-    require_once 'TiramizooApi.php';
-}
-
-if ( !class_exists('oxTiramizooArticleHelper') ) {
-    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_articlehelper.php';
-}
-
-if ( !class_exists('pudzian') ) {
-    require_once getShopBasePath() . '/modules/oxtiramizoo/lib/pudzian/pudzian.php';
-}
-
-if ( !class_exists('packIntoBoxes') ) {
-    require_once getShopBasePath() . '/modules/oxtiramizoo/lib/packIntoBoxes.php';
-}
-
 /**
  * oxTiramizoo API class used to connection with Tiramizoo API. Main functionality
  * are getting quotes, sending order and build API data.

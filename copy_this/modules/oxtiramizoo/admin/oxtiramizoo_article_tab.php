@@ -1,13 +1,5 @@
 <?php
 
-if ( !class_exists('oxTiramizooConfig') ) {
-    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_config.php';
-}
-
-if ( !class_exists('oxTiramizooArticleHelper') ) {
-    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_articlehelper.php';
-}
-
 /**
  * Tiramizoo product tab
  *

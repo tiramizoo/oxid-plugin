@@ -1,8 +1,5 @@
 <?php
 
-if ( !class_exists('oxTiramizooHelper') ) {
-    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_helper.php';
-}
 
 /**
  * Tiramizoo Order view. Extends to proccess Tiramizoo delivery

@@ -1,12 +1,5 @@
 <?php
 
-if ( !class_exists('oxTiramizooHelper') ) {
-    require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_helper.php';
-}
-
-if ( !class_exists('oxTiramizooApi') ) {
-    require_once getShopBasePath() . '/modules/oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php';
-}
 
 /**
  * Extends oxorder class. Overrides method to allow send order to the API

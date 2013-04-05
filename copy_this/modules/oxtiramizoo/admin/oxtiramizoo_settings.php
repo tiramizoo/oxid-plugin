@@ -1,24 +1,12 @@
 <?php
 
-    if ( !class_exists('oxTiramizooConfig') ) {
-        require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_config.php';
-    }
-
-    if ( !class_exists('oxTiramizooSetup') ) {
-        require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_setup.php';
-    }
-
-    if ( !class_exists('oxTiramizooHelper') ) {
-        require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_helper.php';
-    }
-
-    /**
-    * Tiramizoo settings
-    *
-    * @package: oxTiramizoo
-    */
-    class oxTiramizoo_settings extends Shop_Config
-    {
+/**
+* Tiramizoo settings
+*
+* @package: oxTiramizoo
+*/
+class oxTiramizoo_settings extends Shop_Config
+{
 
     public function init()
     {
