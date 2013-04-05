@@ -120,6 +120,7 @@ class oxTiramizooConfig extends oxConfig
 
     public function synchronizeTimeWindows()
     {
+        //@ToDo: aPickuPostalCodes is fake from fixturews in database
         $aPickupPostalCodes = $this->getShopConfVar('aPickupPostalCodes');
 
         foreach ($aPickupPostalCodes as $sPickupPostalCode) 

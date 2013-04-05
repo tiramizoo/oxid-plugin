@@ -32,10 +32,11 @@
     */
     public function render()
     {
+        // $aConfigData = oxTiramizooApi::getInstance()->getRemoteConfiguration();
+        // print_r($aConfigData);
 
-        $serviceAreasResponse = oxTiramizooConfig::getInstance()->getShopConfVar('service_areas_70197');
-
-        print_r($serviceAreasResponse);
+        // $aConfigData = oxTiramizooConfig::getInstance()->getShopConfVar('discounts_enabled');
+        // print_r($aConfigData);
 
         die('OK');
     }

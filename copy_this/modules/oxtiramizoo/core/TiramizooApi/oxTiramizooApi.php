@@ -32,6 +32,17 @@ class oxTiramizooApi extends TiramizooApi
     protected static $_instance = null;
 
     /**
+     * @var mixed used for lazy loading
+     **/
+    protected $_aAvailableWorkingHours = null;
+
+    /**
+     * @var mixed used for lazy loading
+     **/
+    protected $_aRemoteConfiguration = null;
+
+
+    /**
      * Create the API object with api token and url get from appliaction config
      */
     protected function __construct()
@@ -83,7 +94,22 @@ class oxTiramizooApi extends TiramizooApi
         return $result;
     }
 
-    protected $_aAvailableWorkungHours = null;
+    /**
+     * Get configuration
+     * 
+     * @return mixed Array with status code of request and response data
+     */
+    public function getRemoteConfiguration()
+    {
+        $data = array();
+        
+        if ($this->_aRemoteConfiguration === null) {
+            $result = null;
+            $this->requestGet('configuration', $data, $this->_aRemoteConfiguration);
+        }
+
+        return $this->_aRemoteConfiguration;
+    }
 
     /**
      * Get working services hours
@@ -101,12 +127,12 @@ class oxTiramizooApi extends TiramizooApi
         $data['pickup_postal_code'] = $sPickupCode;
         $data['delivery_postal_code'] = $sDeliveryCode;
 
-        if ($this->_aAvailableWorkungHours === null) {
+        if ($this->_aAvailableWorkingHours === null) {
             $result = null;
-            $this->requestGet('service_availability', $data, $this->_aAvailableWorkungHours);
+            $this->requestGet('service_availability', $data, $this->_aAvailableWorkingHours);
         }
 
-        return $this->_aAvailableWorkungHours;
+        return $this->_aAvailableWorkingHours;
     }
 
     /**
@@ -163,7 +189,25 @@ class oxTiramizooApi extends TiramizooApi
      */
     public function synchronizeConfiguration()
     {
-        throw new oxTiramizoo_ApiException("Not implemented yet", 1);
+        $response = $this->getRemoteConfiguration();
+
+        if ($response['http_status'] != 200) {
+            throw new oxTiramizoo_ApiException("Can't connect to Tiramizoo API", 1);
+        }
+
+        $aResponse = oxTiramizooHelper::getInstance()->objectToArray($response['response']);
+
+        foreach ($aResponse as $configIndex => $configValue) 
+        {
+            //@ToDo: better check
+            if(is_array($configValue)) {
+                $variableType = 'aarr';
+            } else {
+                $variableType = 'str';
+            }
+
+            oxTiramizooConfig::getInstance()->saveShopConfVar($variableType, $configIndex, $configValue);
+        }
     }
 
     /**
