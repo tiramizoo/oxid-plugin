@@ -12,7 +12,6 @@
         require_once getShopBasePath() . '/modules/oxtiramizoo/core/oxtiramizoo_helper.php';
     }
 
-
     /**
     * Tiramizoo settings
     *
@@ -36,15 +35,18 @@
     */
     public function render()
     {
+
         // for test only
-        oxTiramizooApi::getInstance()->synchronizeServiceAreas(80639);
-        $serviceAreasResponse = oxTiramizooConfig::getInstance()->getShopConfVar('service_areas_80639');
+        // oxTiramizooApi::getInstance()->synchronizeServiceAreas(80639);
+        // $serviceAreasResponse = oxTiramizooConfig::getInstance()->getShopConfVar('service_areas_80639');
 
         $oxConfig  = $this->getConfig();
         parent::render();
 
         $this->_aViewData['oPaymentsList'] = $this->getPaymentsList();
-        $this->_aViewData['aPackageSizes'] = oxTiramizooHelper::getInstance()->getPackageSizes();
+        // $this->_aViewData['aPackageSizes'] = oxTiramizooHelper::getInstance()->getPackageSizes();
+
+        // var_dump($this->_aViewData['oPaymentsList']);
 
         $sCurrentAdminShop = $oxConfig->getShopId();
 
@@ -118,6 +120,8 @@
     */
     public function saveConfVars()
     {
+
+
         $oxConfig = $this->getConfig();
 
         $aConfBools = oxConfig::getParameter( "confbools" );
@@ -259,7 +263,7 @@
         oxTiramizooConfig::getInstance()->synchronizeAll();
 
         // clear cache 
-        oxUtils::getInstance()->rebuildCache();
+        // oxUtils::getInstance()->rebuildCache();
     
         return 'oxtiramizoo_settings';
     }
@@ -272,16 +276,14 @@
      */
     public function save()
     {
+
         // saving config params
         $this->saveConfVars();
+        $this->saveEnableShippingMethod();       
         $this->assignPaymentsToTiramizoo();
 
-        $this->saveEnableShippingMethod();       
-        $this->savePackageSizes();
-        $this->saveDates();
-
         // clear cache 
-        oxUtils::getInstance()->rebuildCache();
+        //oxUtils::getInstance()->rebuildCache();
     
         return 'oxtiramizoo_settings';
     }
@@ -335,14 +337,6 @@
             $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_shop_email_address_label', oxLang::getInstance()->getBaseLanguage(), true) . ' ' . oxLang::getInstance()->translateString('oxTiramizoo_is_required', oxLang::getInstance()->getBaseLanguage(), true);
         }
 
-        if (!trim($aConfStrs['oxTiramizoo_order_pickup_offset'])) {
-            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_order_to_pickup_offset_label', oxLang::getInstance()->getBaseLanguage(), true) . ' ' . oxLang::getInstance()->translateString('oxTiramizoo_is_required', oxLang::getInstance()->getBaseLanguage(), true);
-        }
-
-        if (!count($aPickupHours)) {
-            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_pickup_hours_required_error', oxLang::getInstance()->getBaseLanguage(), true);
-
-        }
 
         $paymentsAreValid = 0;
         foreach ($aPayments as $paymentName => $paymentIsEnable) 

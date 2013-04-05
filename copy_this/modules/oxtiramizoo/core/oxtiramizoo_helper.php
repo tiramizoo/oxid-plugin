@@ -121,62 +121,6 @@ class oxTiramizooHelper extends oxSuperCfg
     }
 
 
-    /**
-     * Validate basket data to decide if can be delivered by tiramizoo 
-     * 
-     * @return bool
-     */
-    public function isTiramizooAvailable() 
-    {
-        if ($this->_isTiramizooAvailable === -1) {
-
-            $oBasket = $this->getSession()->getBasket();
-            $oxConfig = $this->getConfig();
-
-            if (!$this->isTiramizooImmediateAvailable() && !$this->isTiramizooEveningAvailable() && !$this->isTiramizooSelectTimeAvailable()) {
-                return $this->_isTiramizooImmediateAvailable = 0;
-            }
-
-            $oOrder = oxNew( 'oxorder' );
-            $address = $oOrder->getDelAddressInfo();
-
-            $oUser = $this->getUser();
-
-            $sZipCode = $address ? $address->oxaddress__oxzip->value : $oUser->oxuser__oxzip->value;
-
-
-            //check if Tiramizoo can deliver this basket
-            $data = new stdClass();
-            $data->pickup_postal_code = $this->getConfig()->getConfigParam('oxTiramizoo_shop_postal_code');
-            $data->delivery_postal_code = $sZipCode;
-            $data->items = array();
-
-            require_once getShopBasePath() . '/modules/oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php';
-
-            try {
-                $data->items = oxTiramizooApi::getInstance()->buildItemsData($oBasket);
-            } catch (oxTiramizoo_NotAvailableException $e) {
-                return $this->_isTiramizooAvailable = 0;
-            }
-
-            $result = oxTiramizooApi::getInstance()->getQuotes($data);
-
-            if (!in_array($result['http_status'], array(200))) {
-                
-                // Uncomment to debug
-                // echo '<div>';
-                // echo json_encode($data);
-                // echo json_encode($result);
-                // echo '</div>';
-
-                return $this->_isTiramizooAvailable = 0;
-            }
-
-            $this->_isTiramizooAvailable = 1;
-        }
-
-        return $this->_isTiramizooAvailable;
-    }
 
 
 
@@ -301,8 +245,75 @@ class oxTiramizooHelper extends oxSuperCfg
      * 
      * @return bool
      */
+    public function isTiramizooAvailable() 
+    {
+        //@ToDo: validate
+        return 1;
+
+        
+        if ($this->_isTiramizooAvailable === -1) {
+
+            $oBasket = $this->getSession()->getBasket();
+            $oxConfig = $this->getConfig();
+
+            if (!$this->isTiramizooImmediateAvailable() && !$this->isTiramizooEveningAvailable() && !$this->isTiramizooSelectTimeAvailable()) {
+                return $this->_isTiramizooImmediateAvailable = 0;
+            }
+
+            $oOrder = oxNew( 'oxorder' );
+            $address = $oOrder->getDelAddressInfo();
+
+            $oUser = $this->getUser();
+
+            $sZipCode = $address ? $address->oxaddress__oxzip->value : $oUser->oxuser__oxzip->value;
+
+
+            //check if Tiramizoo can deliver this basket
+            $data = new stdClass();
+            $data->pickup_postal_code = $this->getConfig()->getConfigParam('oxTiramizoo_shop_postal_code');
+            $data->delivery_postal_code = $sZipCode;
+            $data->items = array();
+
+            require_once getShopBasePath() . '/modules/oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php';
+
+            try {
+                $data->items = oxTiramizooApi::getInstance()->buildItemsData($oBasket);
+            } catch (oxTiramizoo_NotAvailableException $e) {
+                return $this->_isTiramizooAvailable = 0;
+            }
+
+            $result = oxTiramizooApi::getInstance()->getQuotes($data);
+
+            if (!in_array($result['http_status'], array(200))) {
+                
+                // Uncomment to debug
+                // echo '<div>';
+                // echo json_encode($data);
+                // echo json_encode($result);
+                // echo '</div>';
+
+                return $this->_isTiramizooAvailable = 0;
+            }
+
+            $this->_isTiramizooAvailable = 1;
+        }
+
+        return $this->_isTiramizooAvailable;
+    }
+
+
+
+    /**
+     * Validate basket data to decide if can be delivered by tiramizoo 
+     * 
+     * @return bool
+     */
     public function isTiramizooImmediateAvailable() 
     {
+        //@ToDo: validate
+        return 1;
+
+
         if ($this->_isTiramizooImmediateAvailable === -1) {
 
             if (!$this->getConfig()->getShopConfVar('oxTiramizoo_enable_immediate')) {

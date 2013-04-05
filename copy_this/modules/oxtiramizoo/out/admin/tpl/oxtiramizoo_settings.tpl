@@ -143,6 +143,27 @@
               </td>
             </tr> 
 
+<tr>
+  <td colspan="2"><h3>Available payment methods</h3></td>
+</tr>  
+
+
+
+
+            <tr>
+              <td>[{ oxmultilang ident="oxTiramizoo_settings_payment_methods_assigned_label" }]</td>
+              <td>
+                <ul>
+                  [{foreach from=$oPaymentsList key=sPaymentId item=aPayment}]
+                     <li style="background:transparent;">
+                        <input type="hidden" name="payment[[{$sPaymentId}]]" value="0" />
+                        <input type="checkbox" name="payment[[{$sPaymentId}]]" value="1" [{if ($aPayment.checked)}]checked="checked"[{/if}] />
+                        [{$aPayment.desc}]
+                     </li>
+                  [{/foreach}]                
+                </ul>
+              </td>
+            </tr>
 
 
 <tr>

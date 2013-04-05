@@ -40,7 +40,8 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
                 unset($this->_aAllSets['TiramizooEvening']);
                 if (oxSession::getVar( 'sShipSet') == 'TiramizooEvening') {
                     $resetShippingMethod = true;
-                }            }
+                } 
+            }
             if (!oxTiramizooHelper::getInstance()->isTiramizooSelectTimeAvailable()) {
                 unset($this->_aAllSets['TiramizooSelectTime']);
                 if (oxSession::getVar( 'sShipSet') == 'TiramizooSelectTime') {
@@ -127,7 +128,9 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
             }
 
             if (($oBasket->getShippingId() == 'Tiramizoo') && $oxTiramizooHelper->isTiramizooImmediateAvailable()) {
-                $dateTime = $oxTiramizooHelper->getNextAvailableDate( date('Y-m-d H:i:s'));
+               // $dateTime = $oxTiramizooHelper->getNextAvailableDate( date('Y-m-d H:i:s'));
+                //@ToDo: change it test only
+                $dateTime = date('Y-m-d H:i:s');
                 oxSession::setVar( 'sTiramizooTimeWindow',  $dateTime);
             } else if (($oBasket->getShippingId() == 'TiramizooEvening') && $oxTiramizooHelper->isTiramizooEveningAvailable()) {
                 oxSession::setVar( 'sTiramizooTimeWindow',  date('Y-m-d') . ' ' . $this->getConfig()->getShopConfVar('oxTiramizoo_evening_window'));

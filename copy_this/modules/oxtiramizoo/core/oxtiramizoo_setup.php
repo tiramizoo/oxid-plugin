@@ -44,8 +44,8 @@ class oxTiramizoo_setup extends Shop_Config
 
         } catch(oxException $e) {
             $errorMessage = $e->getMessage . "<ul><li>" . implode("</li><li>", $this->_migrationErrors) . "</li></ul>";
-            echo $errorMessage;
-            exit;
+            // echo $errorMessage;
+            // exit;
         }
     }
 
@@ -119,12 +119,12 @@ class oxTiramizoo_setup extends Shop_Config
         $this->addColumnToTable('oxcategories', 'TIRAMIZOO_LENGTH', 'FLOAT NOT NULL DEFAULT 0');
         $this->addColumnToTable('oxcategories', 'TIRAMIZOO_WEIGHT', 'FLOAT NOT NULL DEFAULT 0');
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdel2delset` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
                             OXID = MD5(CONCAT('Tiramizoo', 'Tiramizoo')),
                             OXDELID = 'Tiramizoo',
                             OXDELSETID = 'Tiramizoo';");
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdelivery` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
                             OXID = 'Tiramizoo',
                             OXSHOPID = 'oxbaseshop',
                             OXACTIVE = 0,
@@ -143,7 +143,7 @@ class oxTiramizoo_setup extends Shop_Config
                             OXSORT = 1,
                             OXFINALIZE = 1;");
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdeliveryset` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdeliveryset SET
                             OXID = 'Tiramizoo',
                             OXSHOPID = 'oxbaseshop',
                             OXACTIVE = 0,
@@ -211,7 +211,7 @@ class oxTiramizoo_setup extends Shop_Config
     public function migration_0_8_3()
     {
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdelivery` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
                             OXID = 'TiramizooEvening',
                             OXSHOPID = 'oxbaseshop',
                             OXACTIVE = 0,
@@ -230,7 +230,7 @@ class oxTiramizoo_setup extends Shop_Config
                             OXSORT = 2,
                             OXFINALIZE = 1;");
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdeliveryset` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdeliveryset SET
                             OXID = 'TiramizooEvening',
                             OXSHOPID = 'oxbaseshop',
                             OXACTIVE = 0,
@@ -242,18 +242,18 @@ class oxTiramizoo_setup extends Shop_Config
                             OXTITLE_3 = 'Tiramizoo Evening',
                             OXPOS = 2;");
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdel2delset` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
                             OXID = MD5(CONCAT('TiramizooEvening', 'TiramizooEvening')),
                             OXDELID = 'TiramizooEvening',
                             OXDELSETID = 'TiramizooEvening';");
 
 
-        $this->executeSQL("UPDATE `oxdelivery` SET
+        $this->executeSQL("UPDATE oxdelivery SET
                             OXTITLE = 'Tiramizoo Immediate'
                             WHERE OXID = 'Tiramizoo';");
 
 
-        $this->executeSQL("UPDATE `oxdeliveryset` SET
+        $this->executeSQL("UPDATE oxdeliveryset SET
                             OXTITLE = 'Tiramizoo Immediate'
                             WHERE OXID = 'Tiramizoo';");
     }
@@ -294,7 +294,7 @@ class oxTiramizoo_setup extends Shop_Config
     public function migration_0_8_7()
     {
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdelivery` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
                             OXID = 'TiramizooSelectTime',
                             OXSHOPID = 'oxbaseshop',
                             OXACTIVE = 0,
@@ -313,7 +313,7 @@ class oxTiramizoo_setup extends Shop_Config
                             OXSORT = 3,
                             OXFINALIZE = 1;");
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdeliveryset` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdeliveryset SET
                             OXID = 'TiramizooSelectTime',
                             OXSHOPID = 'oxbaseshop',
                             OXACTIVE = 0,
@@ -325,7 +325,7 @@ class oxTiramizoo_setup extends Shop_Config
                             OXTITLE_3 = 'Tiramizoo Festes Abholzeitfenster',
                             OXPOS = 3;");
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdel2delset` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
                             OXID = MD5(CONCAT('TiramizooSelectTime', 'TiramizooSelectTime')),
                             OXDELID = 'TiramizooSelectTime',
                             OXDELSETID = 'TiramizooSelectTime';");
@@ -344,7 +344,7 @@ class oxTiramizoo_setup extends Shop_Config
      */
     public function migration_0_8_9()
     {
-        $this->executeSQL("INSERT IGNORE INTO `oxdelivery` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
                             OXID = 'TiramizooStandardDelivery',
                             OXSHOPID = 'oxbaseshop',
                             OXACTIVE = 1,
@@ -363,7 +363,7 @@ class oxTiramizoo_setup extends Shop_Config
                             OXSORT = 5,
                             OXFINALIZE = 1;");
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdelivery` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
                             OXID = 'TiramizooExpressDelivery',
                             OXSHOPID = 'oxbaseshop',
                             OXACTIVE = 1,
@@ -382,7 +382,7 @@ class oxTiramizoo_setup extends Shop_Config
                             OXSORT = 6,
                             OXFINALIZE = 1;");
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdelivery` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
                             OXID = 'TiramizooStandardWeekendDelivery',
                             OXSHOPID = 'oxbaseshop',
                             OXACTIVE = 1,
@@ -401,7 +401,7 @@ class oxTiramizoo_setup extends Shop_Config
                             OXSORT = 7,
                             OXFINALIZE = 1;");
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdelivery` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
                             OXID = 'TiramizooNewDelivery',
                             OXSHOPID = 'oxbaseshop',
                             OXACTIVE = 1,
@@ -420,25 +420,41 @@ class oxTiramizoo_setup extends Shop_Config
                             OXSORT = 8,
                             OXFINALIZE = 1;");
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdel2delset` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
                             OXID = MD5(CONCAT('TiramizooStandardDelivery', 'TiramizooSelectTime')),
                             OXDELID = 'TiramizooStandardDelivery',
                             OXDELSETID = 'TiramizooSelectTime';");
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdel2delset` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
                             OXID = MD5(CONCAT('TiramizooExpressDelivery', 'TiramizooSelectTime')),
                             OXDELID = 'TiramizooExpressDelivery',
                             OXDELSETID = 'TiramizooSelectTime';");
 
-        $this->executeSQL("INSERT IGNORE INTO `oxdel2delset` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
                             OXID = MD5(CONCAT('TiramizooStandardWeekendDelivery', 'TiramizooSelectTime')),
                             OXDELID = 'TiramizooStandardWeekendDelivery',
                             OXDELSETID = 'TiramizooSelectTime';");
         
-        $this->executeSQL("INSERT IGNORE INTO `oxdel2delset` SET
+        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
                             OXID = MD5(CONCAT('TiramizooNewDelivery', 'TiramizooSelectTime')),
                             OXDELID = 'TiramizooNewDelivery',
                             OXDELSETID = 'TiramizooSelectTime';");
+
+
+        $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooconfig (
+                              OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                              OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+                              OXVARNAME varchar(64) NOT NULL DEFAULT '',
+                              OXVARTYPE varchar(4) NOT NULL DEFAULT '',
+                              OXVARVALUE blob NOT NULL,
+                              OXLASTSYNC datetime NOT NULL,
+                              OXGROUP varchar(32) NOT NULL DEFAULT '',
+                              PRIMARY KEY (OXID)
+                            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+
+
+
+        
     }
 
 
