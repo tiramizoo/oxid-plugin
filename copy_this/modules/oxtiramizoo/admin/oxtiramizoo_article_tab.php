@@ -20,8 +20,6 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
         $this->_aViewData['edit'] = $oArticle = oxNew( 'oxarticle' );
 
 
-
-
         $soxId = oxConfig::getParameter( 'oxid' );
 
 
@@ -29,6 +27,7 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
             // load object
             $oArticle->load( $soxId );
         }
+        $this->_aViewData['oxTiramizooArticleExtended'] = oxtiramizooarticleextended::findOneByFiltersOrCreate(array('oxarticleid' => $oArticle->getId()));
 
 
         $this->_aViewData['inheritedData'] = oxTiramizooArticleHelper::getInstance()->getArticleInheritData($oArticle);
@@ -47,7 +46,7 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
 
 
 
-        return "oxtiramizoo_article_tab.tpl";
+        return "oxTiramizoo_article_tab.tpl";
     }
 
     /**
@@ -57,13 +56,20 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
      */
     public function save()
     {
-        $soxId      = oxConfig::getParameter( "oxid");
-        $aParams    = oxConfig::getParameter( "editval");
+
+        $soxId   = oxConfig::getParameter( "oxid");
+        $aParams = oxConfig::getParameter( "oxTiramizooArticleExtended");
 
         $oArticle = oxNew( "oxarticle" );
-        $oArticle->loadInLang( $this->_iEditLang, $soxId);
-        $oArticle->assign( $aParams);
-        $oArticle->save();
+
+        if ( $soxId != "-1" ) {
+            $oArticle = oxNew( "oxarticle" );
+            $oxTiramizooArticleExtended = oxtiramizooarticleextended::findOneByFiltersOrCreate(array('oxarticleid' => $soxId));
+            $aParams['oxarticleid'] = $soxId;
+
+            $oxTiramizooArticleExtended->assign( $aParams );
+            $oxTiramizooArticleExtended->save();
+        }
 
     }
 

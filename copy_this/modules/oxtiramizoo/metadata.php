@@ -9,7 +9,7 @@
 /**
  * Metadata version
  */
-$sMetadataVersion = '0.2.12';
+$sMetadataVersion = '0.2.23';
 
 /**
  * Module information
@@ -36,9 +36,9 @@ $aModule = array(
 
     'files'        =>   array(
                             'oxTiramizoo_settings'              => 'oxtiramizoo/admin/oxtiramizoo_settings.php',
-                            'oxTiramizoo_article_tab'           => 'oxtiramizoo/admin/oxtiramizoo_article_tab.php',
-                            'oxTiramizoo_category_tab'          => 'oxtiramizoo/admin/oxtiramizoo_category_tab.php',
-                            'oxTiramizoo_order_tab'             => 'oxtiramizoo/admin/oxtiramizoo_order_tab.php',
+                            'oxTiramizoo_Article_tab'           => 'oxtiramizoo/admin/oxtiramizoo_article_tab.php',
+                            'oxTiramizoo_Category_tab'          => 'oxtiramizoo/admin/oxtiramizoo_category_tab.php',
+                            'oxTiramizoo_Order_Tab'             => 'oxtiramizoo/admin/oxtiramizoo_order_tab.php',
                             'oxTiramizoo_setup'                 => 'oxtiramizoo/core/oxtiramizoo_setup.php',
                             'oxTiramizooApi'                    => 'oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php',
                             'TiramizooApi'                      => 'oxtiramizoo/core/TiramizooApi/TiramizooApi.php',
@@ -46,6 +46,15 @@ $aModule = array(
                             'oxTiramizooConfig'                 => 'oxtiramizoo/core/oxtiramizoo_config.php',
                             'oxTiramizooArticleHelper'          => 'oxtiramizoo/core/oxtiramizoo_articlehelper.php',
                             'oxTiramizooHelper'                 => 'oxtiramizoo/core/oxtiramizoo_helper.php',
+
+                            /* models */
+                            'oxtiramizooretaillocation'         => 'oxtiramizoo/models/oxtiramizoo_retaillocation.php',
+                            'oxtiramizooretaillocationconfig'   => 'oxtiramizoo/models/oxtiramizoo_retaillocationconfig.php',
+
+                            'oxtiramizooarticleextended'        => 'oxtiramizoo/models/oxtiramizoo_articleextended.php',
+                            'oxtiramizoocategoryextended'       => 'oxtiramizoo/models/oxtiramizoo_categoryextended.php',
+                            'oxtiramizooorderextended'          => 'oxtiramizoo/models/oxtiramizoo_orderextended.php',
+
 
                             /* exception */
                             'oxTiramizoo_ApiException'          => 'oxtiramizoo/core/exception/oxtiramizoo_apiexception.php',

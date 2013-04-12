@@ -50,7 +50,9 @@ class oxTiramizoo_Category_Tab extends oxAdminDetails
             }
         }
 
-        return "oxtiramizoo_category_tab.tpl";
+        $this->_aViewData['oxTiramizooCategoryExtended'] = oxtiramizoocategoryextended::findOneByFiltersOrCreate(array('oxcategoryid' => $oCategory->getId()));
+
+        return "oxTiramizoo_category_tab.tpl";
     }
 
     /**
@@ -62,24 +64,20 @@ class oxTiramizoo_Category_Tab extends oxAdminDetails
     {
         $myConfig  = $this->getConfig();
 
-
-        $soxId      = oxConfig::getParameter( "oxid");
-        $aParams    = oxConfig::getParameter( "editval");
-
- //       print_r($aParams); exit;
-
+        $soxId   = oxConfig::getParameter( "oxid");
+        $aParams = oxConfig::getParameter( "oxTiramizooCategoryExtended");
 
         $oCategory = oxNew( "oxcategory" );
 
-
         if ( $soxId != "-1" ) {
             $oCategory->load( $soxId );
-        } else {
-            $aParams['oxcategories__oxid'] = null;
+            $aParams['oxcategoryid'] = $soxId;
         }
 
-        $oCategory->assign( $aParams );
-        $oCategory->save();
+        $oxTiramizooCategoryExtended = oxtiramizoocategoryextended::findOneByFiltersOrCreate(array('oxcategoryid' => $oCategory->getId()));
+
+        $oxTiramizooCategoryExtended->assign( $aParams );
+        $oxTiramizooCategoryExtended->save();
 
         // set oxid if inserted
         if ( $soxId == "-1") {

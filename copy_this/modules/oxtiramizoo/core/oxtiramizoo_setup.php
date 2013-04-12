@@ -10,7 +10,7 @@ class oxTiramizoo_setup extends Shop_Config
     /**
      * Current version of oxTiramizoo module
      */
-    const VERSION = '0.8.9';
+    const VERSION = '0.9.0';
 
     /**
      * Error message
@@ -23,41 +23,38 @@ class oxTiramizoo_setup extends Shop_Config
      */
     public function install()
     {
-        $oxConfig = $this->getConfig();
+        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
 
-        $currentInstalledVersion = $oxConfig->getConfigParam('oxTiramizoo_version');
-        $tiramizooIsInstalled = $oxConfig->getConfigParam('oxTiramizoo_is_installed');
+        $currentInstalledVersion = $oxTiramizooConfig->getShopConfVar('oxTiramizoo_version');
+        $tiramizooIsInstalled = $oxTiramizooConfig->getShopConfVar('oxTiramizoo_is_installed');
 
         try 
         { 
             if (!$tiramizooIsInstalled || !$currentInstalledVersion) {
 
                 $this->runMigrations();
-                $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 1);
-                oxUtils::getInstance()->rebuildCache();
+                $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 1);
 
             } else if ($tiramizooIsInstalled && (version_compare(oxTiramizoo_setup::VERSION, $currentInstalledVersion) !== 0)) {
                 
-                $this->runMigrations(oxTiramizoo_setup::VERSION);
-                oxUtils::getInstance()->rebuildCache();
+                $this->runMigrations();
             }
 
         } catch(oxException $e) {
             $errorMessage = $e->getMessage . "<ul><li>" . implode("</li><li>", $this->_migrationErrors) . "</li></ul>";
-            // echo $errorMessage;
-            // exit;
+            echo $errorMessage;
+            exit;
         }
+
+        
     }
 
     /**
      * This method executes all migration methods newer than already installed version and older than new version
-     * 
-     * @param  string $version Version of this package
      */
-    public function runMigrations($version = null)
+    public function runMigrations()
     {
-        $currentInstalledVersion = $this->getConfig()->getConfigParam('oxTiramizoo_version');
-
+        $currentInstalledVersion = oxTiramizooConfig::getInstance()->getShopConfVar('oxTiramizoo_version') ? oxTiramizooConfig::getInstance()->getShopConfVar('oxTiramizoo_version') : '0.0.0';
         $methodsName = get_class_methods(__CLASS__);
 
         $migrationsMethods = array();
@@ -83,7 +80,7 @@ class oxTiramizoo_setup extends Shop_Config
                         throw new oxException('You need to manually run this sql statements to update database to version: ' . $methodVersion);
                     }
 
-                    $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_version', $methodVersion);                    
+                    oxTiramizooConfig::getInstance()->saveShopConfVar( "str", 'oxTiramizoo_version', $methodVersion);                    
                 }
             }
         }
@@ -91,13 +88,14 @@ class oxTiramizoo_setup extends Shop_Config
 
     public function stopMigrationsIfErrors($migrationVersion)
     {
-        $oxConfig = $this->getConfig();
+        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
+
         if (count($this->_migrationErrors)) {
             //disable tiramizoo if db errors
-            $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
+            $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
             return true;
         } else {
-            $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_update_errors', '');
+            $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_update_errors', '');
             return false;
         }
     }
@@ -107,22 +105,13 @@ class oxTiramizoo_setup extends Shop_Config
      */
     public function migration_0_8_0()
     {
-        $this->addColumnToTable('oxorder', 'TIRAMIZOO_TRACKING_URL', 'VARCHAR(255) NOT NULL');
-        $this->addColumnToTable('oxorder', 'TIRAMIZOO_STATUS', 'TINYINT NOT NULL');
-        $this->addColumnToTable('oxorder', 'TIRAMIZOO_PARAMS', 'TEXT NOT NULL');
-        $this->addColumnToTable('oxorder', 'TIRAMIZOO_WEBHOOK_RESPONSE', 'TEXT NOT NULL');
-        $this->addColumnToTable('oxorder', 'TIRAMIZOO_EXTERNAL_ID', 'VARCHAR(40) NOT NULL');
-        $this->addColumnToTable('oxarticles', 'TIRAMIZOO_ENABLE', 'INT(1) NOT NULL DEFAULT 0');
-        $this->addColumnToTable('oxcategories', 'TIRAMIZOO_ENABLE', 'INT(1) NOT NULL DEFAULT 0');
-        $this->addColumnToTable('oxcategories', 'TIRAMIZOO_WIDTH', 'FLOAT NOT NULL DEFAULT 0');
-        $this->addColumnToTable('oxcategories', 'TIRAMIZOO_HEIGHT', 'FLOAT NOT NULL DEFAULT 0');
-        $this->addColumnToTable('oxcategories', 'TIRAMIZOO_LENGTH', 'FLOAT NOT NULL DEFAULT 0');
-        $this->addColumnToTable('oxcategories', 'TIRAMIZOO_WEIGHT', 'FLOAT NOT NULL DEFAULT 0');
+
 
         $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
                             OXID = MD5(CONCAT('Tiramizoo', 'Tiramizoo')),
                             OXDELID = 'Tiramizoo',
                             OXDELSETID = 'Tiramizoo';");
+
 
         $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
                             OXID = 'Tiramizoo',
@@ -143,6 +132,7 @@ class oxTiramizoo_setup extends Shop_Config
                             OXSORT = 1,
                             OXFINALIZE = 1;");
 
+
         $this->executeSQL("INSERT IGNORE INTO oxdeliveryset SET
                             OXID = 'Tiramizoo',
                             OXSHOPID = 'oxbaseshop',
@@ -156,54 +146,88 @@ class oxTiramizoo_setup extends Shop_Config
                             OXPOS = 1;");
 
 
-        $oxConfig = $this->getConfig();
+        $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooconfig (
+                              OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                              OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+                              OXVARNAME varchar(64) NOT NULL DEFAULT '',
+                              OXVARTYPE varchar(4) NOT NULL DEFAULT '',
+                              OXVARVALUE blob NOT NULL,
+                              OXLASTSYNC datetime NOT NULL,
+                              PRIMARY KEY (OXID)
+                            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/api/v1'); 
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_api_token', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_address', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_postal_code', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_city', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_country_code', 'de');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_contact_name', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_phone_number', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_email_address', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_order_pickup_offset', 30);
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_del_offset', 90);
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_1', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_2', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_3', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_4', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_5', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_pickup_hour_6', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_price', "7.90");
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 0);
+
+        $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooretaillocation (
+                              OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                              OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+                              OXNAME varchar(128) NOT NULL DEFAULT '',
+                              OXAPITOKEN varchar(128) NOT NULL DEFAULT '',
+                              PRIMARY KEY (OXID)
+                           ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+
+
+        $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooretaillocationconfig (
+                              OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                              OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+                              OXVARNAME varchar(128) NOT NULL DEFAULT '',
+                              OXVARTYPE varchar(4) NOT NULL DEFAULT '',
+                              OXVARVALUE TEXT NOT NULL,
+                              OXLASTSYNC datetime NOT NULL,
+                              OXRETAILLOCATIONID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                              PRIMARY KEY (OXID)
+                           ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+
+
+
+        $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooarticleextended (
+                              OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                              TIRAMIZOO_ENABLE INT(1) NOT NULL DEFAULT 0,
+                              TIRAMIZOO_USE_PACKAGE INT(1) NOT NULL DEFAULT 1,
+                              OXARTICLEID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                              PRIMARY KEY (OXID)
+                           ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+
+
+        $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizoocategoryextended (
+                              OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                              TIRAMIZOO_ENABLE INT(1) NOT NULL DEFAULT 1,
+                              TIRAMIZOO_WIDTH FLOAT NOT NULL DEFAULT 0,
+                              TIRAMIZOO_HEIGHT FLOAT NOT NULL DEFAULT 0,
+                              TIRAMIZOO_LENGTH FLOAT NOT NULL DEFAULT 0,
+                              TIRAMIZOO_WEIGHT FLOAT NOT NULL DEFAULT 0,
+                              TIRAMIZOO_USE_PACKAGE INT(1) NOT NULL DEFAULT 1,
+                              OXCATEGORYID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                              PRIMARY KEY (OXID)
+                           ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+
+
+        $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooorderextended (
+                              OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                              TIRAMIZOO_STATUS VARCHAR(255),
+                              TIRAMIZOO_TRACKING_URL VARCHAR(1024) NOT NULL,
+                              TIRAMIZOO_PARAMS TEXT NOT NULL,
+                              TIRAMIZOO_WEBHOOK_RESPONSE TEXT NOT NULL,
+                              TIRAMIZOO_EXTERNAL_ID VARCHAR(40) NOT NULL,
+                              OXORDERID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                              PRIMARY KEY (OXID)
+                           ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+
+
+        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
+
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/api/v1'); 
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
+        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_price', "7.90");
+        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
+        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 0);
+        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_evening', 0);
+        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_immediate', 0);
+        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_select_time', 0);
+        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_articles_stock_gt_0', 0);
+
     }
 
-    /**
-     * Update database to version 0.8.1
-     */
-    public function migration_0_8_1()
-    {
-        if ($this->columnExistsInTable('TIRAMIZOO_STATUS', 'oxorder')) {
-            $sql = "ALTER TABLE oxorder MODIFY TIRAMIZOO_STATUS VARCHAR(255);";
-            $result = $this->executeSQL($sql);
-            $sql = "UPDATE oxorder 
-                        SET TIRAMIZOO_STATUS = 'processing' 
-                        WHERE TIRAMIZOO_STATUS IN (0, 1);";
-            $result = $this->executeSQL($sql);
-        }
 
-        if ($this->columnExistsInTable('TIRAMIZOO_ENABLE', 'oxcategories')) {
-            $sql = "ALTER TABLE oxcategories MODIFY TIRAMIZOO_ENABLE INT(1) NOT NULL DEFAULT 1;";
-            $result = $this->executeSQL($sql);
-            $sql = "UPDATE oxcategories 
-                        SET TIRAMIZOO_ENABLE = 1 
-                        WHERE TIRAMIZOO_ENABLE = 0;";
-            $result = $this->executeSQL($sql);
-        }
-    }
 
     /*
      * Update database to version 0.8.3
@@ -259,36 +283,6 @@ class oxTiramizoo_setup extends Shop_Config
     }
 
     /**
-     * Update database to version 0.8.5
-     */
-    public function migration_0_8_5()
-    {
-        $this->addColumnToTable('oxarticles', 'TIRAMIZOO_USE_PACKAGE', 'INT(1) NOT NULL DEFAULT 1');
-        $this->addColumnToTable('oxcategories', 'TIRAMIZOO_USE_PACKAGE', 'INT(1) NOT NULL DEFAULT 1');
-    }
-
-
-    /**
-     * Update database to version 0.8.6
-     */
-    public function migration_0_8_6()
-    {
-        $oxConfig = $this->getConfig();
-        
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_mon', 1);
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_tue', 1);
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_wed', 1);
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_thu', 1);
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_fri', 1);
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_sat', 0);
-        $oxConfig->saveShopConfVar( "bool", 'oxTiramizoo_works_sun', 0);
-
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_exclude_days', '');
-        $oxConfig->saveShopConfVar( "str", 'oxTiramizoo_include_days', '');
-    }
-
-
-    /**
      * Update database to version 0.8.7
      */
     public function migration_0_8_7()
@@ -336,13 +330,14 @@ class oxTiramizoo_setup extends Shop_Config
      */
     public function migration_0_8_8()
     {
-        $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_package_strategy', 0); 
+        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
+        $oxTiramizooConfig->saveShopConfVar( "num", 'oxTiramizoo_package_strategy', 0);
     }
 
     /**
      * Update database to version 0.8.9
      */
-    public function migration_0_8_9()
+    public function migration_0_9_0()
     {
         $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
                             OXID = 'TiramizooStandardDelivery',
@@ -440,21 +435,6 @@ class oxTiramizoo_setup extends Shop_Config
                             OXDELID = 'TiramizooNewDelivery',
                             OXDELSETID = 'TiramizooSelectTime';");
 
-
-        $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooconfig (
-                              OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-                              OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
-                              OXVARNAME varchar(64) NOT NULL DEFAULT '',
-                              OXVARTYPE varchar(4) NOT NULL DEFAULT '',
-                              OXVARVALUE blob NOT NULL,
-                              OXLASTSYNC datetime NOT NULL,
-                              OXGROUP varchar(32) NOT NULL DEFAULT '',
-                              PRIMARY KEY (OXID)
-                            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
-
-
-
-        
     }
 
 

@@ -29,11 +29,15 @@ class oxTiramizoo_Order_Tab extends oxAdminDetails
             $this->_aViewData["edit"] =  $oOrder;
 
 
+            $oxTiramizooOrderExtended = oxtiramizooorderextended::findOneByFilters(array('oxorderid' => $oOrder->getId()));
+            $this->_aViewData["oxTiramizooOrderExtended"] =  $oxTiramizooOrderExtended;
+
+
             $this->_aViewData["aTiramizooWebhookResponse"] = unserialize(base64_decode($oOrder->oxorder__tiramizoo_webhook_response->value));
             $this->_aViewData["aTiramizooParams"] = unserialize(base64_decode($oOrder->oxorder__tiramizoo_params->value));
         }
 
-        return "oxtiramizoo_order_tab.tpl";
+        return "oxTiramizoo_order_tab.tpl";
     }
 
 }

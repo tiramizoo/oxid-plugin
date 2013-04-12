@@ -14,6 +14,7 @@ class oxTiramizoo_settings extends Shop_Config
         $oxTiramizooSetup->install();
 
         return parent::Init();
+
     }
 
     /**
@@ -27,18 +28,29 @@ class oxTiramizoo_settings extends Shop_Config
         // for test only
         // oxTiramizooApi::getInstance()->synchronizeServiceAreas(80639);
         // $serviceAreasResponse = oxTiramizooConfig::getInstance()->getShopConfVar('service_areas_80639');
-
-        $oxConfig  = $this->getConfig();
+        
         parent::render();
 
-        $this->_aViewData['oPaymentsList'] = $this->getPaymentsList();
-        // $this->_aViewData['aPackageSizes'] = oxTiramizooHelper::getInstance()->getPackageSizes();
+        $oxConfig = $this->getConfig();
 
-        // var_dump($this->_aViewData['oPaymentsList']);
+        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
+
+        $this->_aViewData['oPaymentsList'] = $this->getPaymentsList();
 
         $sCurrentAdminShop = $oxConfig->getShopId();
 
+        $aShopConfVars = $oxTiramizooConfig->getShopConfVars();
+            
+        $this->_aViewData['confstrs'] = $aShopConfVars['confstrs'];
+        $this->_aViewData['confarrs'] = $aShopConfVars['confarrs'];
+        $this->_aViewData['confaarrs'] = $aShopConfVars['confaarrs'];
+        $this->_aViewData['confselects'] = $aShopConfVars['confselects'];
+        $this->_aViewData['confbools'] = $aShopConfVars['confbools'];
+        $this->_aViewData['confnum'] = $aShopConfVars['confnum'];
+
         $this->_aViewData['version'] = oxTiramizoo_setup::VERSION;
+
+        $this->_aViewData['aRetailLocations'] = oxtiramizooretaillocation::getAll();
 
         return 'oxTiramizoo_settings.tpl';
     }
@@ -108,49 +120,23 @@ class oxTiramizoo_settings extends Shop_Config
     */
     public function saveConfVars()
     {
-
-
-        $oxConfig = $this->getConfig();
+        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
 
         $aConfBools = oxConfig::getParameter( "confbools" );
         $aConfStrs  = oxConfig::getParameter( "confstrs" );
         $aConfArrs  = oxConfig::getParameter( "confarrs" );
         $aConfAarrs = oxConfig::getParameter( "confaarrs" );
-
-        $aPickupHoursVars = oxConfig::getParameter( "oxTiramizoo_shop_pickup_hour" );
-
-        $iPickupHourIterator = 1;
-        $aPickupKeys = array();
-
-        foreach ($aPickupHoursVars as $sPickupHour) 
-        {
-            $aPickupKeys[] = intval(str_replace(':', '', $sPickupHour));
-        }
-
-        $aPickupHours = array_combine($aPickupKeys, $aPickupHoursVars);
-        ksort($aPickupHours);
-
-        foreach ($aPickupHours as $sPickupHour) 
-        {
-            if (trim($sPickupHour)) {
-                $aConfStrs['oxTiramizoo_shop_pickup_hour_' . $iPickupHourIterator++] = trim($sPickupHour);
-            }
-        }
-
-        for ($iPickupHourIterator; $iPickupHourIterator <= 6; $iPickupHourIterator++)
-        {
-            $aConfStrs['oxTiramizoo_shop_pickup_hour_' . $iPickupHourIterator++] = '';
-        }
+        $aConfNums  = oxConfig::getParameter( "confnum" );
 
         if ( is_array( $aConfBools ) ) {
           foreach ( $aConfBools as $sVarName => $sVarVal ) {
-              $oxConfig->saveShopConfVar( "bool", $sVarName, $sVarVal);
+              $oxTiramizooConfig->saveShopConfVar( "bool", $sVarName, $sVarVal);
           }
         }
 
         if ( is_array( $aConfStrs ) ) {
           foreach ( $aConfStrs as $sVarName => $sVarVal ) {
-            $oxConfig->saveShopConfVar( "str", $sVarName, $sVarVal);
+            $oxTiramizooConfig->saveShopConfVar( "str", $sVarName, $sVarVal);
           }
         }
 
@@ -159,13 +145,19 @@ class oxTiramizoo_settings extends Shop_Config
             if ( !is_array( $aVarVal ) ) {
               $aVarVal = $this->_multilineToArray($aVarVal);
             }
-            $oxConfig->saveShopConfVar("arr", $sVarName, $aVarVal);
+            $oxTiramizooConfig->saveShopConfVar("arr", $sVarName, $aVarVal);
           }
         }
 
         if ( is_array( $aConfAarrs ) ) {
           foreach ( $aConfAarrs as $sVarName => $aVarVal ) {
-            $oxConfig->saveShopConfVar( "aarr", $sVarName, $this->_multilineToAarray( $aVarVal ));
+            $oxTiramizooConfig->saveShopConfVar( "aarr", $sVarName, $this->_multilineToAarray( $aVarVal ));
+          }
+        }
+
+        if ( is_array( $aConfNums ) ) {
+          foreach ( $aConfNums as $sVarName => $aVarVal ) {
+            $oxTiramizooConfig->saveShopConfVar( "num", $sVarName, $aVarVal );
           }
         }
     }
@@ -248,11 +240,17 @@ class oxTiramizoo_settings extends Shop_Config
     public function synchronize()
     {
         // synchronizing config params
-        oxTiramizooConfig::getInstance()->synchronizeAll();
+
+        $aApiKeys = oxtiramizooretaillocation::getAll(); 
+
+
+        foreach ($aApiKeys as $oTiramizooRetailLocation) 
+        {
+            oxTiramizooConfig::getInstance()->synchronizeAll( $oTiramizooRetailLocation->getApiToken() );
+        }
 
         // clear cache 
         // oxUtils::getInstance()->rebuildCache();
-    
         return 'oxtiramizoo_settings';
     }
 
@@ -264,15 +262,58 @@ class oxTiramizoo_settings extends Shop_Config
      */
     public function save()
     {
-
         // saving config params
         $this->saveConfVars();
         $this->saveEnableShippingMethod();       
         $this->assignPaymentsToTiramizoo();
-
+ 
         // clear cache 
         //oxUtils::getInstance()->rebuildCache();
     
+        return 'oxtiramizoo_settings';
+    }
+
+
+    public function addNewLocation()
+    {
+
+        $sApiToken = trim(oxConfig::getParameter('api_token'));
+        $oTiramizooRetailLocation = oxNew('oxtiramizooretaillocation');
+
+        
+        if ($sOxid = $oTiramizooRetailLocation->getOxidByApiToken( $sApiToken )) 
+        {
+            $oTiramizooRetailLocation->load( $sOxid );            
+        }
+
+        //@ToDo: change this
+        $oTiramizooRetailLocation->oxtiramizooretaillocation__oxname = new oxField(date('Y-m-d H:i:s'));
+        $oTiramizooRetailLocation->oxtiramizooretaillocation__oxapitoken = new oxField( $sApiToken );
+
+        $oTiramizooRetailLocation->save();
+
+        try
+        {
+            oxTiramizooApi::getApiInstance( $sApiToken )->getRemoteConfiguration();
+
+        } catch (oxTiramizoo_ApiException $e) {
+            $oTiramizooRetailLocation->delete();
+
+            return 'oxtiramizoo_settings';
+        }
+
+        oxTiramizooConfig::getInstance()->synchronizeAll( $sApiToken );
+    }
+
+    public function removeLocation()
+    {
+        $sApiToken = oxConfig::getParameter('api_token');
+        $oTiramizooRetailLocation = oxNew('oxtiramizooretaillocation');
+        if ($oTiramizooRetailLocation = oxtiramizooretaillocation::findOneByFilters( array('oxapitoken' => $sApiToken) )) 
+        {
+            $oTiramizooRetailLocation->delete();            
+        }
+
         return 'oxtiramizoo_settings';
     }
 

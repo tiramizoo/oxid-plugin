@@ -16,6 +16,13 @@ class oxTiramizooApi extends TiramizooApi
     protected static $_instance = null;
 
     /**
+     * Singleton instance
+     * 
+     * @var oxTiramizooApi
+     */
+    protected static $_instances = null;
+
+    /**
      * @var mixed used for lazy loading
      **/
     protected $_aAvailableWorkingHours = null;
@@ -29,11 +36,24 @@ class oxTiramizooApi extends TiramizooApi
     /**
      * Create the API object with api token and url get from appliaction config
      */
-    protected function __construct()
+    protected function __construct( $sApiKey )
     {
-        $tiramizooApiUrl = oxConfig::getInstance()->getShopConfVar('oxTiramizoo_api_url');
-        $tiramizooApiToken = oxConfig::getInstance()->getShopConfVar('oxTiramizoo_api_token');
-        parent::__construct($tiramizooApiUrl, $tiramizooApiToken);
+        $tiramizooApiUrl = oxTiramizooConfig::getInstance()->getShopConfVar('oxTiramizoo_api_url');
+        parent::__construct($tiramizooApiUrl, $sApiKey);
+    }
+
+    /**
+     * Get the instance of class
+     * 
+     * @return oxTiramizooApi
+     */
+    public static function getApiInstance( $sApiKey )
+    {
+        if ( !isset(self::$_instances[$sApiKey]) && !self::$_instances[$sApiKey] instanceof oxTiramizooApi ) {
+            self::$_instances[$sApiKey] = new oxTiramizooApi( $sApiKey );
+        }
+
+        return self::$_instances[$sApiKey];
     }
 
     /**
@@ -83,13 +103,17 @@ class oxTiramizooApi extends TiramizooApi
      * 
      * @return mixed Array with status code of request and response data
      */
-    public function getRemoteConfiguration()
+    public function getRemoteConfiguration( $sApiKey = null )
     {
         $data = array();
         
         if ($this->_aRemoteConfiguration === null) {
             $result = null;
             $this->requestGet('configuration', $data, $this->_aRemoteConfiguration);
+        }
+
+        if ($this->_aRemoteConfiguration['http_status'] != 200) {
+            throw new oxTiramizoo_ApiException("Can't connect to Tiramizoo API", 1);
         }
 
         return $this->_aRemoteConfiguration;
@@ -174,10 +198,6 @@ class oxTiramizooApi extends TiramizooApi
     public function synchronizeConfiguration()
     {
         $response = $this->getRemoteConfiguration();
-
-        if ($response['http_status'] != 200) {
-            throw new oxTiramizoo_ApiException("Can't connect to Tiramizoo API", 1);
-        }
 
         $aResponse = oxTiramizooHelper::getInstance()->objectToArray($response['response']);
 

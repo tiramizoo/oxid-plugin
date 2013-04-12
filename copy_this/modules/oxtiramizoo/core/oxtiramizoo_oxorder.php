@@ -40,7 +40,7 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
         parent::_loadFromBasket($oBasket);
 
         if (in_array(oxSession::getVar('sShipSet'), array('Tiramizoo', 'TiramizooEvening', 'TiramizooSelectTime'))) {
-            $oxConfig = $this->getConfig();
+            $oxTiramizooConfig = oxTiramizooConfig::getInstance();
             $oDeliveryAddress = $this->getDelAddressInfo();
             $oUser = $this->getUser();
             $oxTiramizooApi = oxTiramizooApi::getInstance();
@@ -48,11 +48,11 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
 
             $tiramizooData = new stdClass();
 
-            $tiramizooData->pickup = $oxTiramizooApi->buildPickupObject( $oxConfig, oxSession::getVar( 'sTiramizooTimeWindow' ) );
+            $tiramizooData->pickup = $oxTiramizooApi->buildPickupObject( $oxTiramizooConfig, oxSession::getVar( 'sTiramizooTimeWindow' ) );
             $tiramizooData->delivery = $oxTiramizooApi->buildDeliveryObject( $oUser, $oDeliveryAddress );
             $tiramizooData->description = $oxTiramizooApi->buildDescription( $oBasket );
             $tiramizooData->external_id = md5(time());
-            $tiramizooData->web_hook_url = trim($oxConfig->getShopConfVar('oxTiramizoo_shop_url'), '/') . '/modules/oxtiramizoo/api.php';
+            $tiramizooData->web_hook_url = trim($oxTiramizooConfig->getShopConfVar('oxTiramizoo_shop_url'), '/') . '/modules/oxtiramizoo/api.php';
             $tiramizooData->items = $oxTiramizooApi->buildItemsData( $oBasket );
 
             $tiramizooResult = $oxTiramizooApi->sendOrder($tiramizooData);

@@ -1,5 +1,7 @@
 <?php
 
+
+
 /**
  * This class contains tiramizoo config
  *
@@ -30,93 +32,34 @@ class oxTiramizooConfig extends oxConfig
 
     public function __construct()
     {
-        // old var names used before changes:
-
-        // oxTiramizoo_shop_phone_number 
-        // oxTiramizoo_version 
-        // oxTiramizoo_shop_pickup_hour_1 
-        // oxTiramizoo_works_sat 
-        // oxTiramizoo_works_sun
-        // oxTiramizoo_package_strategy
-        // oxTiramizoo_shop_contact_name
-        // oxTiramizoo_shop_city
-        // oxTiramizoo_shop_country_code
-        // oxTiramizoo_shop_country_label
-        // oxTiramizoo_pickup_del_offset
-        // oxTiramizoo_evening_window
-        // oxTiramizoo_shop_pickup_hour_4
-        // oxTiramizoo_global_length
-        // oxTiramizoo_global_width
-        // oxTiramizoo_global_height
-        // oxTiramizoo_global_weight
-        // oxTiramizoo_order_pickup_offset
-        // oxTiramizoo_shop_postal_code
-        // oxTiramizoo_price
-        // oxTiramizoo_api_token
-        // oxTiramizoo_enable_evening
-        // oxTiramizoo_enable_immediate
-        // oxTiramizoo_enable_select_time
-        // oxTiramizoo_shop_email_address
-        // oxTiramizoo_shop_address
-        // oxTiramizoo_shop_pickup_hour_2
-        // oxTiramizoo_shop_pickup_hour_3
-        // oxTiramizoo_pickup_time_length
-        // oxTiramizoo_is_installed
-        // oxTiramizoo_works_mon
-        // oxTiramizoo_works_tue
-        // oxTiramizoo_works_wed
-        // oxTiramizoo_works_thu
-        // oxTiramizoo_works_fri
-        // oxTiramizoo_api_url
-        // oxTiramizoo_shop_url
-        // oxTiramizoo_pickup_hour_1
-        // oxTiramizoo_pickup_hour_2
-        // oxTiramizoo_pickup_hour_3
-        // oxTiramizoo_pickup_hour_4
-        // oxTiramizoo_pickup_hour_5
-        // oxTiramizoo_pickup_hour_6
-        // oxTiramizoo_enable_module
-        // oxTiramizoo_shop_pickup_hour_5
-        // oxTiramizoo_articles_stock_gt_0
-        // oxTiramizoo_shop_pickup_hour_6
-        // oxTiramizoo_update_errors
-        // oxTiramizoo_exclude_days
-        // oxTiramizoo_include_days
-        // oxTiramizoo_std_package_width
-        // oxTiramizoo_std_package_length
-        // oxTiramizoo_std_package_height
-        // oxTiramizoo_std_package_weight
-        // oxTiramizoo_package_size_1
-        // oxTiramizoo_package_size_2
-        // oxTiramizoo_package_size_3
-        // oxTiramizoo_package_size_4
-        // oxTiramizoo_package_size_5
-        // oxTiramizoo_package_size_6
-
-        // new var names used before changes:
-
-        // oxTiramizoo_service_areas
-
 
     }
 
     /**
      * Synchronize all possible configs
      */
-    public function synchronizeAll()
+    public function synchronizeAll( $sApiKey = null )
     {
-        $oxTiramizooApi = oxTiramizooApi::getInstance();
-
+        $oxTiramizooApi = oxTiramizooApi::getApiInstance( $sApiKey );
         try {
-            $oxTiramizooApi->synchronizeConfiguration();
-            $oxTiramizooApi->synchronizeRetailLocation();
-            $oxTiramizooApi->synchronizePackageSizes();
+
+            $aRemoteConfiguration = $oxTiramizooApi->getRemoteConfiguration();
+            $oRetailLocation = oxtiramizooretaillocation::findOneByFilters( array('oxapitoken' => $sApiKey) );
+            $oRetailLocation->synchronizeConfiguration( $aRemoteConfiguration );
+
+            // $oxTiramizooApi->synchronizeRetailLocation($sApiKey);
+            // $oxTiramizooApi->synchronizePackageSizes($sApiKey);
         } catch (oxTiramizoo_ApiException $e) {
             echo $e->getMessage();
+            //@ToDo: handle errors?
         }
 
-        $this->synchronizeTimeWindows();
+        //$this->synchronizeTimeWindows();
     }
+
+
+
+
 
     public function synchronizeTimeWindows()
     {
@@ -175,8 +118,19 @@ class oxTiramizooConfig extends oxConfig
         }
 
         $oDb = oxDb::getDb();
-        $sQ = "delete from oxtiramizooconfig where oxshopid = '$sShopId' and oxvarname = '$sVarName'";
-        $oDb->execute( $sQ );
+
+        $rs = $oDb->Execute(
+                "select oxid
+                from oxtiramizooconfig
+                where oxvarname = '$sVarName' AND oxshopid = '$sShopId'"
+        );
+
+        $sOxid = null;
+
+        if ($rs != false && $rs->recordCount() > 0) {
+            list($sOxid) = $rs->fields;
+        }
+
 
         $sNewOXIDdQuoted  = $oDb->quote(oxUtilsObject::getInstance()->generateUID());
         $sShopIdQuoted    = $oDb->quote($sShopId);
@@ -185,11 +139,87 @@ class oxTiramizooConfig extends oxConfig
         $sVarValueQuoted  = $oDb->quote($sValue);
         $sConfigKeyQuoted = $oDb->quote($this->getConfigParam('sConfigKey'));
 
-        $sQ = "insert into oxtiramizooconfig (oxid, oxshopid, oxvarname, oxvartype, oxvarvalue, oxlastsync)
+        if ($sOxid) {
+            $sQ = "UPDATE oxtiramizooconfig SET oxvarvalue = ENCODE( $sVarValueQuoted, $sConfigKeyQuoted), oxlastsync = NOW() where oxvarname = '$sVarName' AND oxshopid = '$sShopId'";
+        } else {
+            $sQ = "insert into oxtiramizooconfig (oxid, oxshopid, oxvarname, oxvartype, oxvarvalue, oxlastsync)
                values($sNewOXIDdQuoted, $sShopIdQuoted, $sVarNameQuoted, $sVarTypeQuoted, ENCODE( $sVarValueQuoted, $sConfigKeyQuoted), NOW())";
+        }
 
         $oDb->execute( $sQ );
     }
+
+
+
+
+
+    public function setConfVarGroup( $sVarName, $sGroup = null )
+    {
+        if ($sVarName && ($sGroup !== null)) 
+        {
+            $oDb = oxDb::getDb();
+
+            $sQ = "UPDATE oxtiramizooconfig SET oxgroup = '$sGroup' WHERE oxvarname = '$sVarName';";
+            $oDb->execute( $sQ );
+        }
+    }
+
+
+
+    public function getShopConfVars( $sShopId = null )
+    {
+        if ( !$sShopId ) {
+            $sShopId = $this->getShopId();
+        }
+
+        $aTypeArray = array("bool"   => 'confbools',
+                            "str"    => 'confstrs',
+                            "arr"    => 'confarrs',
+                            "aarr"   => 'confaarrs',
+                            "select" => 'confselects',
+                            "num"    => 'confnum');
+
+        $oDb = oxDb::getDb();
+        $sQ  = "select oxvarname, oxvartype, DECODE( oxvarvalue, '".$this->getConfigParam( 'sConfigKey' )."') as oxvarvalue from oxtiramizooconfig where oxshopid = '$sShopId'";
+        $oRs = $oDb->Execute( $sQ );
+
+        $aValues = array('confbools' => array(),
+                         'confstrs' => array(),
+                         'confarrs' => array(),
+                         'confaarrs' => array(),
+                         'confselects' => array(),
+                         'confnum' => array());
+
+
+        if ( $oRs != false && $oRs->recordCount() > 0 ) {
+            while (!$oRs->EOF) {
+                
+                list($sVarName, $sVarType, $sVarVal) = $oRs->fields;
+
+                    switch ( $sVarType ) {  
+                    case 'arr':
+                    case 'aarr':
+                        $sValue =  unserialize( $sVarVal );
+                        break;
+                    case 'bool':
+                        $sValue =  ( $sVarVal == 'true' || $sVarVal == '1' );
+                        break;
+                    default:
+                        $sValue = $sVarVal;
+                        break;
+                }
+
+                $aValues[$aTypeArray[$sVarType]][$sVarName] = $sValue;
+
+                $oRs->moveNext();
+            }
+        }
+
+        return $aValues;
+    }
+
+
+
 
     /**
      * Retrieves shop configuration parameters from DB.
@@ -211,8 +241,9 @@ class oxTiramizooConfig extends oxConfig
 
         $sValue = null;
         if ( $oRs != false && $oRs->recordCount() > 0 ) {
-            $sVarType = $oRs->fields['oxvartype'];
-            $sVarVal  = $oRs->fields['oxvarvalue'];
+
+            list($sVarType, $sVarVal) = $oRs->fields;
+
             switch ( $sVarType ) {
                 case 'arr':
                 case 'aarr':
@@ -226,6 +257,7 @@ class oxTiramizooConfig extends oxConfig
                     break;
             }
         }
+
         return $sValue;
     }
 

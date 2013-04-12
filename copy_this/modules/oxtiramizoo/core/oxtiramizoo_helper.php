@@ -81,10 +81,10 @@ class oxTiramizooHelper extends oxSuperCfg
      */
     public static function getLabelDeliveryWindow($dateTime)
     {
-        $oxConfig = oxConfig::getInstance();
+        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
 
-        $orderOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
-        $deliveryOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
+        $orderOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_order_pickup_offset');
+        $deliveryOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
 
         $deliveryBefore = date('H:i', strtotime('+' . $deliveryOffsetTime . 'minutes', strtotime($dateTime)));
 
@@ -154,14 +154,14 @@ class oxTiramizooHelper extends oxSuperCfg
     {
         if ($this->_next7DaysAvailableWindows == null) {
 
-            $oxConfig = oxConfig::getInstance();
+            $oxTiramizooConfig = oxTiramizooConfig::getInstance();
 
 
             $aTimeWindows = $this->getAvailableTimeWindows();
 
 
             $aNext7DaysAvailableWindows = array();
-            $deliveryOffsetTime = (int)$oxConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
+            $deliveryOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
 
             $sCurrentDate = null;
 
@@ -247,7 +247,7 @@ class oxTiramizooHelper extends oxSuperCfg
         if ($this->_isTiramizooAvailable === -1) {
 
             $oBasket = $this->getSession()->getBasket();
-            $oxConfig = $this->getConfig();
+            $oxTiramizooConfig = oxTiramizooConfig::getInstance();
 
             if (!$this->isTiramizooImmediateAvailable() && !$this->isTiramizooEveningAvailable() && !$this->isTiramizooSelectTimeAvailable()) {
                 return $this->_isTiramizooImmediateAvailable = 0;
@@ -377,7 +377,7 @@ class oxTiramizooHelper extends oxSuperCfg
         { 
             $aPackageSize = array();
             $aPackageSize['name'] = 'oxTiramizoo_package_size_' . $i;
-            $aPackageSize['value'] = oxConfig::getInstance()->getShopConfVar('oxTiramizoo_package_size_' . $i);
+            $aPackageSize['value'] = oxTiramizooConfig::getInstance()->getShopConfVar('oxTiramizoo_package_size_' . $i);
 
             $aPackageSizeValuesArray = explode('x', $aPackageSize['value']);
 

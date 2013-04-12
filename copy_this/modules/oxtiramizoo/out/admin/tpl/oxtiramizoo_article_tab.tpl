@@ -65,14 +65,15 @@ function editThis( sID )
               [{ oxmultilang ident="oxTiramizoo_article_tab_enable_tiramizoo_label" }]
             </td>
             <td class="edittext">
-                <select name="editval[oxarticles__tiramizoo_enable]">
-                    <option value="1" [{if ($edit->oxarticles__tiramizoo_enable->value == 1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_yes_value" }]</option>
-                    <option value="-1" [{if ($edit->oxarticles__tiramizoo_enable->value == -1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_no_value" }]</option>
+
+                <select name="oxTiramizooArticleExtended[oxtiramizooarticleextended__tiramizoo_enable]">
+                    <option value="1" [{if ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_enable->value == 1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_yes_value" }]</option>
+                    <option value="-1" [{if ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_enable->value == -1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_no_value" }]</option>
                 </select>
                 
                 [{ oxinputhelp ident="oxTiramizoo_article_tab_enable_tiramizoo_help" }]
 
-                [{if (($inheritedData.tiramizoo_enable) && ($edit->oxarticles__tiramizoo_enable->value != -1 )) }]
+                [{if (($inheritedData.tiramizoo_enable) && ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_enable->value != -1 )) }]
                   <span style="color:green;">[{ oxmultilang ident="oxTiramizoo_article_tab_article_is_enabled" }]</span>
                   [{else}]
                   <div>
@@ -96,8 +97,8 @@ function editThis( sID )
               [{ oxmultilang ident="oxTiramizoo_article_tab_use_package_label" }]
             </td>
             <td class="edittext">
-                <input type="hidden" name="editval[oxarticles__tiramizoo_use_package]" value="1" />
-                <input type="checkbox" name="editval[oxarticles__tiramizoo_use_package]" value="0" [{if ($edit->oxarticles__tiramizoo_use_package->value == 0)}]checked="checked"[{/if}] />
+                <input type="hidden" name="oxTiramizooArticleExtended[oxtiramizooarticleextended__tiramizoo_use_package]" value="1" />
+                <input type="checkbox" name="oxTiramizooArticleExtended[oxtiramizooarticleextended__tiramizoo_use_package]" value="0" [{if ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_use_package->value == 0)}]checked="checked"[{/if}] />
                 [{ oxmultilang ident="oxTiramizoo_article_tab_use_package_value" }]
                 [{ oxinputhelp ident="oxTiramizoo_article_tab_use_package_help" }]
             </td>
