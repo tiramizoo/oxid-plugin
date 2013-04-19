@@ -65,7 +65,7 @@ function editThis( sID )
               [{ oxmultilang ident="oxTiramizoo_article_tab_enable_tiramizoo_label" }]
             </td>
             <td class="edittext">
-
+              
                 <select name="oxTiramizooArticleExtended[oxtiramizooarticleextended__tiramizoo_enable]">
                     <option value="1" [{if ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_enable->value == 1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_yes_value" }]</option>
                     <option value="-1" [{if ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_enable->value == -1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_no_value" }]</option>

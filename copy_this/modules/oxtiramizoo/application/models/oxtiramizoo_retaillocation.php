@@ -166,6 +166,38 @@ class oxtiramizooretaillocation extends oxBase {
         }
     }
 
+    public function synchronizeServiceAreas($aAvaialbleServiceAreas)
+    {
+        $response = $aAvaialbleServiceAreas;
+
+        if ($response['http_status'] != 200) {
+            throw new oxTiramizoo_ApiException("Can't connect to Tiramizoo API", 1);
+        }
+
+        $aResponse = oxTiramizooHelper::getInstance()->objectToArray($response['response']);
+
+        foreach ($aResponse as $sConfigIndex => $sVarVal) 
+        {
+            //@ToDo: better choose type
+            if(is_array($sVarVal)) {
+                $sVarType = 'aarr';
+            } else {
+                $sVarType = 'str';
+            }
+
+            $sValue  = $sVarVal ;
+
+            $sOxRetailLocationConfig = oxtiramizooretaillocationconfig::findOneByFiltersOrCreate(array('oxretaillocationid' => $this->getId(), 'oxvarname' => $sConfigIndex));
+
+            $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarname = new oxField($sConfigIndex);
+            $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvartype = new oxField($sVarType);
+            $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarvalue = new oxField( base64_encode( serialize( $sValue ) ) );
+            $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxretaillocationid = new oxField($this->getId());
+            $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxlastsync = new oxField(date('Y-m-d H:i:s'));
+
+            $sOxRetailLocationConfig->save();
+        }
+    }
 
     public function delete()
     {

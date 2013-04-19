@@ -16,7 +16,7 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
     {
         $this->_oDelPrice = parent::getOrderDeliveryPrice();
 
-        if (in_array(oxSession::getVar('sShipSet'), array('Tiramizoo', 'TiramizooEvening', 'TiramizooSelectTime'))) {
+        if (in_array(oxSession::getVar('sShipSet'), array('Tiramizoo'))) {
             
             $sTiramizooDeliveryType = oxSession::getVar('sTiramizooDeliveryType');
             $sTiramizooDeliveryType = $sTiramizooDeliveryType ? $sTiramizooDeliveryType : '';

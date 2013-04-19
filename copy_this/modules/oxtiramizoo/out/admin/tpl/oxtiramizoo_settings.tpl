@@ -278,54 +278,45 @@
               <td colspan="2"><h3>Retail locations</h3></td>
             </tr>  
 
+          [{if $aRetailLocations|@count}]
+              [{foreach from=$aRetailLocations item=oRetaiLocation}]
+              <tr>
+                  <td coslpan="2"> 
 
-            [{foreach from=$aRetailLocations item=oRetaiLocation}]
-            <tr>
-              <td coslpan="2"> 
+                      <form name="myedit" id="myedit" action="[{$oViewConf->getSelfLink()}]" method="post">
+                          [{$oViewConf->getHiddenSid()}]
 
-                <form name="myedit" id="myedit" action="[{$oViewConf->getSelfLink()}]" method="post">
-                  [{$oViewConf->getHiddenSid()}]
+                          [{$oRetaiLocation->getConfVar('account_name')}] [{ $oRetaiLocation->getApiToken() }]  
 
-                  [{$oRetaiLocation->getApiToken()}]
+<!--                           <br /><br />
+                          [{$oRetaiLocation->getConfVar('postal_codes')|@print_r}]<br />
+                          [{$oRetaiLocation->getConfVar('time_windows')|@print_r}]<br />
+ -->
 
-                  <input type="hidden" name="cl" value="[{$oViewConf->getActiveClassName()}]">
-                  <input type="hidden" name="fnc" value="removeLocation">
-                  <input type="hidden" name="api_token" value="[{$oRetaiLocation->getApiToken()}]">
-                  <input type="hidden" name="oxid" value="[{$oxid}]">
-                  <input type="hidden" name="editval[oxshops__oxid]" value="[{$oxid}]">
-                  <input type="submit" value="detach this api" />
-                </form>
-              </td>
-            </tr>
 
-            <tr>
-              <td coslpan="2">
-                [{ $oRetaiLocation->getConfVar('custom_time_windows')|print_r }]
-              </td>
-            </tr>
+                          <input type="hidden" name="cl" value="[{$oViewConf->getActiveClassName()}]">
+                          <input type="hidden" name="fnc" value="removeLocation">
+                          <input type="hidden" name="api_token" value="[{$oRetaiLocation->getApiToken()}]">
+                          <input type="hidden" name="oxid" value="[{$oxid}]">
+                          <input type="hidden" name="editval[oxshops__oxid]" value="[{$oxid}]">
+                          <input type="submit" value="detach this api" />
 
-            <tr>
-              <td coslpan="2">
-                [{ $oRetaiLocation->getConfVar('package_presets')|print_r }]
-              </td>
-            </tr>
-            
-            <tr>
-              <td coslpan="2">
-                [{ $oRetaiLocation->getConfVar('invoice_contact')|print_r }]
-              </td>
-            </tr>
-            
-            <tr>
-              <td coslpan="2">
-                [{ $oRetaiLocation->getConfVar('currency') }]
-              </td>
-            </tr>
+                          <a target="_top" href="[{$oRetaiLocation->getConfVar('dashboard_url')}]">Go to dashboard</a>
+                          
+                      </form>
 
 
 
-            [{/foreach}]
-
+                  </td>
+              </tr>
+              [{/foreach}]
+          [{else}]
+              <tr>
+                  <td>
+                      There is no API tokens yet            
+                  </td>
+              </tr>  
+          [{/if}]
 
 
 
@@ -338,7 +329,7 @@
 
 
 
-    <h3>Synchronize the all configuration</h3>
+    <h3>Synchronize all configuration</h3>
 
   
     <form name="myedit" id="myedit" action="[{$oViewConf->getSelfLink()}]" method="post">

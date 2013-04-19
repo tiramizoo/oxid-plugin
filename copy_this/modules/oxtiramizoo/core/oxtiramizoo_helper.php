@@ -10,7 +10,7 @@ class oxTiramizooHelper extends oxSuperCfg
 {
     /**
      * Singleton instance
-     * 
+     *     
      * @var oxTiramizooApi
      */
     protected static $_instance = null;
@@ -24,11 +24,7 @@ class oxTiramizooHelper extends oxSuperCfg
     protected $_isTiramizooAvailable = -1;
     protected $_isTiramizooImmediateAvailable = -1;
     protected $_isTiramizooEveningAvailable = -1;
-    protected $_isTiramizooSelectTimeAvailable = -1;
 
-    protected $_next7DaysAvailableWindows = null;
-
-    
     /**
      * Get the instance of class
      * 
@@ -51,17 +47,6 @@ class oxTiramizooHelper extends oxSuperCfg
 
     public function getDeliveryPostalCode()
     {
-        $oUser = $this->_oUser;
-        $sZipCode = $oUser->oxuser__oxzip->value;
-
-        $sSelectedAddressId = $oUser->getSelectedAddressId();
-
-        if($sSelectedAddressId) {
-            $oDeliveryAddress = $oUser->getUserAddresses($sSelectedAddressI);
-            $sZipCode = $oDeliveryAddress->oxaddress__oxzip->value;
-        }
-        $this->setDeliveryPostalCode($sZipCode);
-
         return $this->_sDeliveryPostalcode;
     }
 
@@ -69,8 +54,6 @@ class oxTiramizooHelper extends oxSuperCfg
     {
         $this->_sDeliveryPostalcode = $sDeliveryPostalcode;
     }
-
-
 
 
     /**
@@ -114,10 +97,7 @@ class oxTiramizooHelper extends oxSuperCfg
     }
 
 
-
-
-
-    function objectToArray($data)
+    public function objectToArray($data)
     {
         if (is_array($data) || is_object($data))
         {
@@ -131,12 +111,46 @@ class oxTiramizooHelper extends oxSuperCfg
         return $data;
     }
 
+    public function getApiToken()
+    {
+        $sDeliveryPostalcode = $this->getDeliveryPostalCode();
+
+        $aRetailLocations = oxtiramizooretaillocation::getAll();
+
+        foreach ($aRetailLocations as $oRetailLocation) 
+        {
+            $aAvailablePostalCodes = $oRetailLocation->getConfVar('postal_codes');
+
+            if (in_array($sDeliveryPostalcode, $aAvailablePostalCodes)) {
+                return $oRetailLocation->getApiToken();
+            }
+        }
+
+        //@TODO: catch this exception
+        throw new oxTiramizoo_NotAvailableException('This postal code id not supported');
+    }
+
+    public function getTiramizooApi()
+    {
+        return oxTiramizooApi::getApiInstance($this->getApiToken());
+    }
+
+    public function getRetailLocation()
+    {
+        $oRetailLocation = oxtiramizooretaillocation::findOneByFilters(array('oxapitoken' => $this->getApiToken()));
+
+        if (!$oRetailLocation) {
+            throw new oxTiramizoo_NotAvailableException('This postal code id not supported');
+        }
+
+        return $oRetailLocation;
+    }
+
     public function getAvailableTimeWindows()
     {
         //@TODO: Change postal code to properly variable
-        $aAvailableServiceAreas = oxTiramizooApi::getInstance()->getAvailableServiceAreas(80639);
+        $aTimeWindows = $this->getRetailLocation()->getConfVar('time_windows');
 
-        $aTimeWindows = $this->objectToArray($aAvailableServiceAreas['response']->time_windows);
 
         //sort by delivery from date
         foreach ($aTimeWindows as $oldKey => $aTimeWindow) 
@@ -150,54 +164,6 @@ class oxTiramizooHelper extends oxSuperCfg
         return $aTimeWindows ? $aTimeWindows : array();
     }
 
-    public function getNext7DaysAvailableWindows()
-    {
-        if ($this->_next7DaysAvailableWindows == null) {
-
-            $oxTiramizooConfig = oxTiramizooConfig::getInstance();
-
-
-            $aTimeWindows = $this->getAvailableTimeWindows();
-
-
-            $aNext7DaysAvailableWindows = array();
-            $deliveryOffsetTime = (int)$oxTiramizooConfig->getShopConfVar('oxTiramizoo_pickup_del_offset');
-
-            $sCurrentDate = null;
-
-            foreach ($aTimeWindows as $aTimeWindow) 
-            {
-                $sNewCurrentDate = date('Y-m-d', strtotime($aTimeWindow['delivery']['from']));
-
-                if($sCurrentDate != $sNewCurrentDate) {
-                    $aNext7DaysAvailableWindows[] = array('date' => $sNewCurrentDate, 'label' => $sNewCurrentDate, 'timeWindows' => array());
-
-                    if (strtotime(date('Y-m-d', strtotime($sNewCurrentDate))) ==  strtotime(date('Y-m-d'))) {
-                        $aNext7DaysAvailableWindows[count($aNext7DaysAvailableWindows) - 1]['label'] = oxLang::getInstance()->translateString('oxTiramizoo_Today', oxLang::getInstance()->getBaseLanguage(), false);
-                    } else if (strtotime(date('Y-m-d', strtotime($sNewCurrentDate))) ==  strtotime(date('Y-m-d', strtotime('+1days', strtotime(date('Y-m-d')))))){
-                        $aNext7DaysAvailableWindows[count($aNext7DaysAvailableWindows) - 1]['label'] = oxLang::getInstance()->translateString('oxTiramizoo_Tomorrow', oxLang::getInstance()->getBaseLanguage(), false);
-                    }
-                }
-
-                $sCurrentDate = $sNewCurrentDate;
-
-                $aTimeWindow['timeWindowLabel'] = date('H:i', strtotime($aTimeWindow['delivery']['from'])) . ' - ' . date('H:i', strtotime($aTimeWindow['delivery']['to']));
-                $aTimeWindow['enable'] = true;
-
-                //@TODO: Change valid procedure
-                if ((strtotime($aTimeWindow['delivery']['to']) < strtotime("now")) && (strtotime($aTimeWindow['pickup']['to']) < strtotime("now"))) {
-                    $aTimeWindow['enable'] = false;
-                }
-
-                $aNext7DaysAvailableWindows[count($aNext7DaysAvailableWindows) - 1]['timeWindows'][] = $aTimeWindow;
-            }
-
-
-            $this->_next7DaysAvailableWindows = $aNext7DaysAvailableWindows;
-        }
-
-        return $this->_next7DaysAvailableWindows;    
-    }
 
     public function getFirstAvailableTimeWindow()
     {
@@ -241,15 +207,22 @@ class oxTiramizooHelper extends oxSuperCfg
     public function isTiramizooAvailable() 
     {
         //@ToDo: validate
-        return 1;
 
-        
         if ($this->_isTiramizooAvailable === -1) {
+
+            try {
+                $oRetailLocation = $this->getRetailLocation();
+            } catch(Exception $e) {
+                echo $e->getMessage(); exit;
+                return 0;
+            }
+
+            return 1;
 
             $oBasket = $this->getSession()->getBasket();
             $oxTiramizooConfig = oxTiramizooConfig::getInstance();
 
-            if (!$this->isTiramizooImmediateAvailable() && !$this->isTiramizooEveningAvailable() && !$this->isTiramizooSelectTimeAvailable()) {
+            if (!$this->isTiramizooImmediateAvailable() && !$this->isTiramizooEveningAvailable()) {
                 return $this->_isTiramizooImmediateAvailable = 0;
             }
 
@@ -294,8 +267,6 @@ class oxTiramizooHelper extends oxSuperCfg
         return $this->_isTiramizooAvailable;
     }
 
-
-
     /**
      * Validate basket data to decide if can be delivered by tiramizoo 
      * 
@@ -331,6 +302,9 @@ class oxTiramizooHelper extends oxSuperCfg
      */
     public function isTiramizooEveningAvailable() 
     {
+        //@TODO: check
+        return 0;
+
         if ($this->_isTiramizooEveningAvailable === -1) {
 
             if (!$this->getConfig()->getShopConfVar('oxTiramizoo_enable_evening') || !$this->getConfig()->getShopConfVar('oxTiramizoo_evening_window')) {
@@ -343,28 +317,66 @@ class oxTiramizooHelper extends oxSuperCfg
         return $this->_isTiramizooEveningAvailable;
     }
 
+
+
     /**
-     * Validate basket data to decide if can be delivered by tiramizoo 
+     * Build delivery object from user data. Used for build partial data 
+     * to send order API request
      * 
-     * @return bool
+     * @param  oxUser $oUser
+     * @param  mixed $oDeliveryAddress oxAddress if filled by user or null
+     * @return stdClass Delivery object
      */
-    public function isTiramizooSelectTimeAvailable() 
+    public function buildDeliveryObject(oxUser $oUser, $oDeliveryAddress)
     {
-        if ($this->_isTiramizooSelectTimeAvailable === -1) {
+        $oDelivery = new stdClass();
 
-            if (!$this->getConfig()->getShopConfVar('oxTiramizoo_enable_select_time')) {
-                return $this->_isTiramizooSelectTimeAvailable = 0;
+        $oDelivery->email = $oUser->oxuser__oxusername->value; 
+
+        if ($oDeliveryAddress)  {
+            $oDelivery->address_line_1 = $oDeliveryAddress->oxaddress__oxstreet->value . ' ' . $oDeliveryAddress->oxaddress__oxstreetnr->value;
+            $oDelivery->city = $oDeliveryAddress->oxaddress__oxcity->value;
+            $oDelivery->postal_code = $oDeliveryAddress->oxaddress__oxzip->value;
+            $oDelivery->country_code = $oDeliveryAddress->oxaddress__oxcountryid->value;
+            $oDelivery->phone_number = $oDeliveryAddress->oxaddress__oxfon->value;
+            
+            $oDelivery->name = $oDeliveryAddress->oxaddress__oxfname->value . ' ' . $oDeliveryAddress->oxaddress__oxlname->value;
+
+            if ($oDeliveryAddress->oxaddress__oxcompany->value) {
+                $oDelivery->name = $oDeliveryAddress->oxaddress__oxcompany->value . ' / ' . $oDelivery->name;
             }
 
-            if (!count($this->getNext7DaysAvailableWindows())) {
-                return $this->_isTiramizooSelectTimeAvailable = 0;
+        } else {
+            $oDelivery->address_line_1 = $oUser->oxuser__oxstreet->value . ' ' . $oUser->oxuser__oxstreetnr->value;
+            $oDelivery->city = $oUser->oxuser__oxcity->value;
+            $oDelivery->postal_code = $oUser->oxuser__oxzip->value;
+            $oDelivery->country_code = $oUser->oxuser__oxcountryid->value;
+            $oDelivery->phone_number = $oUser->oxuser__oxfon->value;
+            
+            $oDelivery->name = $oUser->oxuser__oxfname->value . ' ' . $oUser->oxuser__oxlname->value;
+
+            if ($oUser->oxuser__oxcompany->value) {
+                $oDelivery->name = $oUser->oxuser__oxcompany->value . ' / ' . $oDelivery->name;
             }
-
-
-            $this->_isTiramizooSelectTimeAvailable = 1;
         }
 
-        return $this->_isTiramizooSelectTimeAvailable;
+        //get country code
+        $oCountry = oxNew('oxcountry');
+        $oCountry->load($oDelivery->country_code);
+
+        $sTiramizooWindow = oxSession::getVar( 'sTiramizooTimeWindow' );
+        $oDelivery->after = date('c', strtotime($sTiramizooWindow));
+        $oDelivery->before = date('c', strtotime('+' . oxConfig::getInstance()->getShopConfVar('oxTiramizoo_pickup_del_offset') . 'minutes', strtotime($sTiramizooWindow)));
+
+        //change delivery before time exceed maximum delivery hour
+        if (strtotime(date('H:i', strtotime($oDelivery->before))) > strtotime(oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour'))) {
+            $oDelivery->before = date('c', strtotime(date('Y-m-d', strtotime($sTiramizooWindow)) . ' ' . oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour')));
+        }
+
+
+        $oDelivery->country_code = strtolower($oCountry->oxcountry__oxisoalpha2->value);
+
+        return $oDelivery;
     }
 
     public function getPackageSizes()

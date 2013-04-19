@@ -38,17 +38,31 @@ class oxTiramizooConfig extends oxConfig
     /**
      * Synchronize all possible configs
      */
-    public function synchronizeAll( $sApiKey = null )
+    public function synchronizeAll( $sApiToken = null )
     {
-        $oxTiramizooApi = oxTiramizooApi::getApiInstance( $sApiKey );
+        $oxTiramizooApi = oxTiramizooApi::getApiInstance( $sApiToken );
         try {
 
             $aRemoteConfiguration = $oxTiramizooApi->getRemoteConfiguration();
-            $oRetailLocation = oxtiramizooretaillocation::findOneByFilters( array('oxapitoken' => $sApiKey) );
+            $oRetailLocation = oxtiramizooretaillocation::findOneByFilters( array('oxapitoken' => $sApiToken) );
             $oRetailLocation->synchronizeConfiguration( $aRemoteConfiguration );
 
-            // $oxTiramizooApi->synchronizeRetailLocation($sApiKey);
-            // $oxTiramizooApi->synchronizePackageSizes($sApiKey);
+            $aPickupAddress = $oRetailLocation->getConfVar('pickup_contact');
+
+
+            $startDate = date('c', strtotime(date('Y-m-d')));
+            $endDate = date('c', strtotime('+2 days', date('Y-m-d')));
+
+            $aRangeDates = array('express_from' => $startDate, 
+                                 'express_to' => $endDate,
+                                 'standard_from' => $startDate,
+                                 'standard_to' => $endDate);
+
+
+            //@todo: only for 2 days express_from from API
+            $aAvaialbleServiceAreas = $oxTiramizooApi->getAvailableServiceAreas($aPickupAddress['postal_code'], $aRangeDates);
+            $oRetailLocation->synchronizeServiceAreas($aAvaialbleServiceAreas);
+
         } catch (oxTiramizoo_ApiException $e) {
             echo $e->getMessage();
             //@ToDo: handle errors?
@@ -236,6 +250,7 @@ class oxTiramizooConfig extends oxConfig
         }
 
         $oDb = oxDb::getDb(true);
+
         $sQ  = "select oxvartype, DECODE( oxvarvalue, '".$this->getConfigParam( 'sConfigKey' )."') as oxvarvalue from oxtiramizooconfig where oxshopid = '$sShopId' and oxvarname = ".$oDb->quote($sVarName);
         $oRs = $oDb->Execute( $sQ );
 

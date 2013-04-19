@@ -9,7 +9,7 @@
 /**
  * Metadata version
  */
-$sMetadataVersion = '0.2.23';
+$sMetadataVersion = '0.2.33';
 
 /**
  * Module information
@@ -30,15 +30,18 @@ $aModule = array(
 
     'extend'       =>   array(
                             'oxorder'       => 'oxtiramizoo/core/oxtiramizoo_oxorder',
-                            'order'         => 'oxtiramizoo/views/oxtiramizoo_order',
-                            'payment'       => 'oxtiramizoo/views/oxtiramizoo_payment',
+                            'order'         => 'oxtiramizoo/application/controllers/oxtiramizoo_order',
+                            'payment'       => 'oxtiramizoo/application/controllers/oxtiramizoo_payment',
+                            // 'oxShopControl' => 'oxtiramizoo/application/controllers/oxtiramizoo_oxshopcontrol',
                         ),
+
 
     'files'        =>   array(
                             'oxTiramizoo_settings'              => 'oxtiramizoo/admin/oxtiramizoo_settings.php',
                             'oxTiramizoo_Article_tab'           => 'oxtiramizoo/admin/oxtiramizoo_article_tab.php',
                             'oxTiramizoo_Category_tab'          => 'oxtiramizoo/admin/oxtiramizoo_category_tab.php',
                             'oxTiramizoo_Order_Tab'             => 'oxtiramizoo/admin/oxtiramizoo_order_tab.php',
+
                             'oxTiramizoo_setup'                 => 'oxtiramizoo/core/oxtiramizoo_setup.php',
                             'oxTiramizooApi'                    => 'oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php',
                             'TiramizooApi'                      => 'oxtiramizoo/core/TiramizooApi/TiramizooApi.php',
@@ -47,13 +50,21 @@ $aModule = array(
                             'oxTiramizooArticleHelper'          => 'oxtiramizoo/core/oxtiramizoo_articlehelper.php',
                             'oxTiramizooHelper'                 => 'oxtiramizoo/core/oxtiramizoo_helper.php',
 
-                            /* models */
-                            'oxtiramizooretaillocation'         => 'oxtiramizoo/models/oxtiramizoo_retaillocation.php',
-                            'oxtiramizooretaillocationconfig'   => 'oxtiramizoo/models/oxtiramizoo_retaillocationconfig.php',
+                            'oxTiramizoo_Webhook'               => 'oxtiramizoo/application/controllers/oxtiramizoo_webhook.php',           
+                            'oxTiramizoo_Cron'                  => 'oxtiramizoo/application/controllers/oxtiramizoo_cron.php',
 
-                            'oxtiramizooarticleextended'        => 'oxtiramizoo/models/oxtiramizoo_articleextended.php',
-                            'oxtiramizoocategoryextended'       => 'oxtiramizoo/models/oxtiramizoo_categoryextended.php',
-                            'oxtiramizooorderextended'          => 'oxtiramizoo/models/oxtiramizoo_orderextended.php',
+                            'oxTiramizoo_ScheduleJobManager'    => 'oxtiramizoo/core/oxtiramizoo_schedulejobmanager.php',
+                            'oxTiramizoo_ScheduleJob'           => 'oxtiramizoo/core/oxtiramizoo_schedulejob.php',
+                            'oxTiramizoo_SendOrderJob'          => 'oxtiramizoo/core/oxtiramizoo_sendorderjob.php',
+                            'oxTiramizoo_SyncConfigJob'         => 'oxtiramizoo/core/oxtiramizoo_syncconfigjob.php',
+
+                            /* models */
+                            'oxtiramizooretaillocation'         => 'oxtiramizoo/application/models/oxtiramizoo_retaillocation.php',
+                            'oxtiramizooretaillocationconfig'   => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationconfig.php',
+                            'oxtiramizoorjob'                   => 'oxtiramizoo/application/models/oxtiramizoo_job.php',
+                            'oxtiramizooarticleextended'        => 'oxtiramizoo/application/models/oxtiramizoo_articleextended.php',
+                            'oxtiramizoocategoryextended'       => 'oxtiramizoo/application/models/oxtiramizoo_categoryextended.php',
+                            'oxtiramizooorderextended'          => 'oxtiramizoo/application/models/oxtiramizoo_orderextended.php',
 
 
                             /* exception */

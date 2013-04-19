@@ -14,7 +14,6 @@ class oxTiramizoo_settings extends Shop_Config
         $oxTiramizooSetup->install();
 
         return parent::Init();
-
     }
 
     /**
@@ -24,11 +23,6 @@ class oxTiramizoo_settings extends Shop_Config
     */
     public function render()
     {
-
-        // for test only
-        // oxTiramizooApi::getInstance()->synchronizeServiceAreas(80639);
-        // $serviceAreasResponse = oxTiramizooConfig::getInstance()->getShopConfVar('service_areas_80639');
-        
         parent::render();
 
         $oxConfig = $this->getConfig();
@@ -40,7 +34,7 @@ class oxTiramizoo_settings extends Shop_Config
         $sCurrentAdminShop = $oxConfig->getShopId();
 
         $aShopConfVars = $oxTiramizooConfig->getShopConfVars();
-            
+        
         $this->_aViewData['confstrs'] = $aShopConfVars['confstrs'];
         $this->_aViewData['confarrs'] = $aShopConfVars['confarrs'];
         $this->_aViewData['confaarrs'] = $aShopConfVars['confaarrs'];
@@ -58,7 +52,6 @@ class oxTiramizoo_settings extends Shop_Config
     public function getPaymentsList()
     {
         $oxPaymentList = new Payment_List();
-        //added 4.3.2
         $oxPaymentList->init();
 
         $aPaymentList = array();
@@ -108,10 +101,6 @@ class oxTiramizoo_settings extends Shop_Config
             }
         }
     }
-
-
-
-
 
     /**
     * Saves shop configuration variables
@@ -168,68 +157,45 @@ class oxTiramizoo_settings extends Shop_Config
     public function saveEnableShippingMethod()
     {
         $aConfStrs = oxConfig::getParameter( "confstrs" );
-        $isTiramizooImmediateEnable = intval($aConfStrs['oxTiramizoo_enable_immediate'] == 'on');
-        $isTiramizooEveningEnable = intval($aConfStrs['oxTiramizoo_enable_evening'] == 'on');
-        $isTiramizooSelectTimeEnable = intval($aConfStrs['oxTiramizoo_enable_select_time'] == 'on');
+
+        $isTiramizooEnable = oxTiramizooConfig::getInstance()->getShopConfVar('oxTiramizoo_enable');
 
         $errors = $this->validateEnable();
 
-        if (($isTiramizooImmediateEnable || $isTiramizooEveningEnable || $isTiramizooSelectTimeEnable) && count($errors)) {
-            $isTiramizooImmediateEnable = 0;
-            $isTiramizooEveningEnable = 0;
-            $isTiramizooSelectTimeEnable = 0;
-
-            oxSession::setVar('oxTiramizoo_settings_errors', $errors);
-            $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_immediate', 0);
-            $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_evening', 0);
-            $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_select_time', 0);
-        }
-
-        $enableEveningErrors = $this->validateEveningDelivery();
-
-        if (count($enableEveningErrors)) {
-            $this->getConfig()->saveShopConfVar( "str", 'oxTiramizoo_enable_evening', 0);
-            $errors = array_merge($errors, $enableEveningErrors);
-            oxSession::setVar('oxTiramizoo_settings_errors', $errors);
+        if (count($errors)) {
+            oxSession::setVar('oxTiramizoo_enable', $errors);
+            $isTiramizooEnable = 0;
         }
 
         $sql = "UPDATE oxdelivery
-                    SET OXACTIVE = " . $isTiramizooImmediateEnable . "
-                    WHERE OXID = 'Tiramizoo';";
-
-        oxDb::getDb()->Execute($sql);
-
-        $sql = "UPDATE oxdeliveryset
-                    SET OXACTIVE = " . $isTiramizooImmediateEnable . "
-                    WHERE OXID = 'Tiramizoo';";
+                    SET OXACTIVE = " . $isTiramizooEnable . "
+                    WHERE OXID = 'TiramizooStandardDelivery';";
 
         oxDb::getDb()->Execute($sql);
 
         $sql = "UPDATE oxdelivery
-                    SET OXACTIVE = " . $isTiramizooEveningEnable . "
-                    WHERE OXID = 'TiramizooEvening';";
+                    SET OXACTIVE = " . $isTiramizooEnable . "
+                    WHERE OXID = 'TiramizooExpressDelivery';";
 
         oxDb::getDb()->Execute($sql);
-
-        $sql = "UPDATE oxdeliveryset
-                    SET OXACTIVE = " . $isTiramizooEveningEnable . "
-                    WHERE OXID = 'TiramizooEvening';";
-
-        oxDb::getDb()->Execute($sql);
-
 
         $sql = "UPDATE oxdelivery
-                    SET OXACTIVE = " . $isTiramizooSelectTimeEnable . "
-                    WHERE OXID = 'TiramizooSelectTime';";
+                    SET OXACTIVE = " . $isTiramizooEnable . "
+                    WHERE OXID = 'TiramizooStandardWeekendDelivery';";
+
+        oxDb::getDb()->Execute($sql);
+
+        $sql = "UPDATE oxdelivery
+                    SET OXACTIVE = " . $isTiramizooEnable . "
+                    WHERE OXID = 'TiramizooNewDelivery';";
 
         oxDb::getDb()->Execute($sql);
 
         $sql = "UPDATE oxdeliveryset
-                    SET OXACTIVE = " . $isTiramizooSelectTimeEnable . "
-                    WHERE OXID = 'TiramizooSelectTime';";
+                    SET OXACTIVE = " . $isTiramizooEnable . "
+                    WHERE OXID = 'Tiramizoo';";
 
         oxDb::getDb()->Execute($sql);
-
     }
 
     /**
@@ -401,5 +367,21 @@ class oxTiramizoo_settings extends Shop_Config
 
         return $errors;
     }
+
+
+
+    public function test()
+    {
+
+        $aRetailLocations = oxtiramizooretaillocation::getAll();
+
+        foreach ($aRetailLocations as $oRetailLocation) 
+        {
+            print_r($oRetailLocation->getConfVar('pickup_contact'));
+        }
+
+        exit;
+    }
+
 
 }

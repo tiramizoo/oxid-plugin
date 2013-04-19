@@ -45,8 +45,6 @@ class oxTiramizoo_setup extends Shop_Config
             echo $errorMessage;
             exit;
         }
-
-        
     }
 
     /**
@@ -103,341 +101,146 @@ class oxTiramizoo_setup extends Shop_Config
     /**
      * Update database to version 0.8.0 
      */
-    public function migration_0_8_0()
+    public function migration_0_9_0()
     {
-
-
-        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
-                            OXID = MD5(CONCAT('Tiramizoo', 'Tiramizoo')),
-                            OXDELID = 'Tiramizoo',
-                            OXDELSETID = 'Tiramizoo';");
-
-
-        $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
-                            OXID = 'Tiramizoo',
-                            OXSHOPID = 'oxbaseshop',
-                            OXACTIVE = 0,
-                            OXACTIVEFROM = '0000-00-00 00:00:00',
-                            OXACTIVETO = '0000-00-00 00:00:00',
-                            OXTITLE = 'Tiramizoo',
-                            OXTITLE_1 = 'Tiramizoo',
-                            OXTITLE_2 = 'Tiramizoo',
-                            OXTITLE_3 = 'Tiramizoo',
-                            OXADDSUMTYPE = 'abs',
-                            OXADDSUM = 7.90,
-                            OXDELTYPE = 'p',
-                            OXPARAM = 0,
-                            OXPARAMEND = 999999,
-                            OXFIXED = 0,
-                            OXSORT = 1,
-                            OXFINALIZE = 1;");
-
-
-        $this->executeSQL("INSERT IGNORE INTO oxdeliveryset SET
-                            OXID = 'Tiramizoo',
-                            OXSHOPID = 'oxbaseshop',
-                            OXACTIVE = 0,
-                            OXACTIVEFROM = '0000-00-00 00:00:00',
-                            OXACTIVETO = '0000-00-00 00:00:00',
-                            OXTITLE = 'Tiramizoo',
-                            OXTITLE_1 = 'Tiramizoo',
-                            OXTITLE_2 = 'Tiramizoo',
-                            OXTITLE_3 = 'Tiramizoo',
-                            OXPOS = 1;");
-
-
         $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooconfig (
-                              OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-                              OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
-                              OXVARNAME varchar(64) NOT NULL DEFAULT '',
-                              OXVARTYPE varchar(4) NOT NULL DEFAULT '',
-                              OXVARVALUE blob NOT NULL,
-                              OXLASTSYNC datetime NOT NULL,
-                              PRIMARY KEY (OXID)
+                                OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                                OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+                                OXVARNAME varchar(64) NOT NULL DEFAULT '',
+                                OXVARTYPE varchar(4) NOT NULL DEFAULT '',
+                                OXVARVALUE blob NOT NULL,
+                                OXLASTSYNC datetime NOT NULL,
+                                PRIMARY KEY (OXID)
                             ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
-
         $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooretaillocation (
-                              OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-                              OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
-                              OXNAME varchar(128) NOT NULL DEFAULT '',
-                              OXAPITOKEN varchar(128) NOT NULL DEFAULT '',
-                              PRIMARY KEY (OXID)
+                                OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                                OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+                                OXNAME varchar(128) NOT NULL DEFAULT '',
+                                OXAPITOKEN varchar(128) NOT NULL DEFAULT '',
+                                PRIMARY KEY (OXID)
                            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
-
 
         $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooretaillocationconfig (
-                              OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-                              OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
-                              OXVARNAME varchar(128) NOT NULL DEFAULT '',
-                              OXVARTYPE varchar(4) NOT NULL DEFAULT '',
-                              OXVARVALUE TEXT NOT NULL,
-                              OXLASTSYNC datetime NOT NULL,
-                              OXRETAILLOCATIONID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-                              PRIMARY KEY (OXID)
+                                OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                                OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+                                OXVARNAME varchar(128) NOT NULL DEFAULT '',
+                                OXVARTYPE varchar(4) NOT NULL DEFAULT '',
+                                OXVARVALUE TEXT NOT NULL,
+                                OXLASTSYNC datetime NOT NULL,
+                                OXRETAILLOCATIONID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                                PRIMARY KEY (OXID)
                            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
-
-
 
         $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooarticleextended (
-                              OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-                              TIRAMIZOO_ENABLE INT(1) NOT NULL DEFAULT 0,
-                              TIRAMIZOO_USE_PACKAGE INT(1) NOT NULL DEFAULT 1,
-                              OXARTICLEID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-                              PRIMARY KEY (OXID)
+                                OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                                TIRAMIZOO_ENABLE INT(1) NOT NULL DEFAULT 0,
+                                TIRAMIZOO_USE_PACKAGE INT(1) NOT NULL DEFAULT 1,
+                                OXARTICLEID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                                PRIMARY KEY (OXID)
                            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
-
 
         $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizoocategoryextended (
-                              OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-                              TIRAMIZOO_ENABLE INT(1) NOT NULL DEFAULT 1,
-                              TIRAMIZOO_WIDTH FLOAT NOT NULL DEFAULT 0,
-                              TIRAMIZOO_HEIGHT FLOAT NOT NULL DEFAULT 0,
-                              TIRAMIZOO_LENGTH FLOAT NOT NULL DEFAULT 0,
-                              TIRAMIZOO_WEIGHT FLOAT NOT NULL DEFAULT 0,
-                              TIRAMIZOO_USE_PACKAGE INT(1) NOT NULL DEFAULT 1,
-                              OXCATEGORYID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-                              PRIMARY KEY (OXID)
+                                OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                                TIRAMIZOO_ENABLE INT(1) NOT NULL DEFAULT 1,
+                                TIRAMIZOO_WIDTH FLOAT NOT NULL DEFAULT 0,
+                                TIRAMIZOO_HEIGHT FLOAT NOT NULL DEFAULT 0,
+                                TIRAMIZOO_LENGTH FLOAT NOT NULL DEFAULT 0,
+                                TIRAMIZOO_WEIGHT FLOAT NOT NULL DEFAULT 0,
+                                TIRAMIZOO_USE_PACKAGE INT(1) NOT NULL DEFAULT 1,
+                                OXCATEGORYID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                                PRIMARY KEY (OXID)
                            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
-
 
         $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooorderextended (
-                              OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-                              TIRAMIZOO_STATUS VARCHAR(255),
-                              TIRAMIZOO_TRACKING_URL VARCHAR(1024) NOT NULL,
-                              TIRAMIZOO_PARAMS TEXT NOT NULL,
-                              TIRAMIZOO_WEBHOOK_RESPONSE TEXT NOT NULL,
-                              TIRAMIZOO_EXTERNAL_ID VARCHAR(40) NOT NULL,
-                              OXORDERID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
-                              PRIMARY KEY (OXID)
+                                OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                                TIRAMIZOO_STATUS VARCHAR(255),
+                                TIRAMIZOO_TRACKING_URL VARCHAR(1024) NOT NULL,
+                                TIRAMIZOO_PARAMS TEXT NOT NULL,
+                                TIRAMIZOO_WEBHOOK_RESPONSE TEXT NOT NULL,
+                                TIRAMIZOO_EXTERNAL_ID VARCHAR(40) NOT NULL,
+                                OXORDERID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
+                                PRIMARY KEY (OXID)
                            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
+        $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizoojob (
+                                OXID int(11) NOT NULL AUTO_INCREMENT,
+                                OXJOBTYPE varchar(32),
+                                OXPARAMS text NOT NULL DEFAULT '',
+                                OXCREATEDAT datetime,
+                                OXRUNAFTER datetime,
+                                OXRUNBEFORE datetime,
+                                OXREPEATCOUNTER INT(11) NOT NULL DEFAULT 0,
+                                OXEXTERNALID char(32),
+                                OXSTATE varchar(32) NOT NULL DEFAULT 'new',
+                                OXLASTERROR varchar(32),
+                                PRIMARY KEY (OXID)
+                          ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+
+        $this->executeSQL("INSERT IGNORE INTO oxdeliveryset SET
+                                OXID = 'Tiramizoo',
+                                OXSHOPID = 'oxbaseshop',
+                                OXACTIVE = 0,
+                                OXACTIVEFROM = '0000-00-00 00:00:00',
+                                OXACTIVETO = '0000-00-00 00:00:00',
+                                OXTITLE = 'Tiramizoo',
+                                OXTITLE_1 = 'Tiramizoo',
+                                OXTITLE_2 = 'Tiramizoo',
+                                OXTITLE_3 = 'Tiramizoo',
+                                OXPOS = 1;");
+
+         $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
+                                OXID = 'TiramizooStandardDelivery',
+                                OXSHOPID = 'oxbaseshop',
+                                OXACTIVE = 1,
+                                OXACTIVEFROM = '0000-00-00 00:00:00',
+                                OXACTIVETO = '0000-00-00 00:00:00',
+                                OXTITLE = 'Tiramizoo Standard Delivery',
+                                OXTITLE_1 = 'Tiramizoo Standard Delivery',
+                                OXTITLE_2 = 'Tiramizoo Standard Delivery',
+                                OXTITLE_3 = 'Tiramizoo Standard Delivery',
+                                OXADDSUMTYPE = 'abs',
+                                OXADDSUM = 8,
+                                OXDELTYPE = 'p',
+                                OXPARAM = 0,
+                                OXPARAMEND = 999999,
+                                OXFIXED = 0,
+                                OXSORT = 5,
+                                OXFINALIZE = 1;");
+
+        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
+                                OXID = MD5(CONCAT('TiramizooStandardDelivery', 'Tiramizoo')),
+                                OXDELID = 'TiramizooStandardDelivery',
+                                OXDELSETID = 'Tiramizoo';");
+
+        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
+                                OXID = MD5(CONCAT('TiramizooExpressDelivery', 'Tiramizoo')),
+                                OXDELID = 'TiramizooExpressDelivery',
+                                OXDELSETID = 'Tiramizoo';");
+
+        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
+                                OXID = MD5(CONCAT('TiramizooStandardWeekendDelivery', 'Tiramizoo')),
+                                OXDELID = 'TiramizooStandardWeekendDelivery',
+                                OXDELSETID = 'Tiramizoo';");
+        
+        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
+                                OXID = MD5(CONCAT('TiramizooNewDelivery', 'Tiramizoo')),
+                                OXDELID = 'TiramizooNewDelivery',
+                                OXDELSETID = 'Tiramizoo';");
 
         $oxTiramizooConfig = oxTiramizooConfig::getInstance();
 
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/api/v1'); 
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_price', "7.90");
-        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
+        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable', 0);
         $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 0);
         $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_evening', 0);
         $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_immediate', 0);
         $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_select_time', 0);
         $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_articles_stock_gt_0', 0);
-
-    }
-
-
-
-    /*
-     * Update database to version 0.8.3
-     */
-    public function migration_0_8_3()
-    {
-
-        $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
-                            OXID = 'TiramizooEvening',
-                            OXSHOPID = 'oxbaseshop',
-                            OXACTIVE = 0,
-                            OXACTIVEFROM = '0000-00-00 00:00:00',
-                            OXACTIVETO = '0000-00-00 00:00:00',
-                            OXTITLE = 'Tiramizoo Evening',
-                            OXTITLE_1 = 'Tiramizoo Evening',
-                            OXTITLE_2 = 'Tiramizoo Evening',
-                            OXTITLE_3 = 'Tiramizoo Evening',
-                            OXADDSUMTYPE = 'abs',
-                            OXADDSUM = 7.90,
-                            OXDELTYPE = 'p',
-                            OXPARAM = 0,
-                            OXPARAMEND = 999999,
-                            OXFIXED = 0,
-                            OXSORT = 2,
-                            OXFINALIZE = 1;");
-
-        $this->executeSQL("INSERT IGNORE INTO oxdeliveryset SET
-                            OXID = 'TiramizooEvening',
-                            OXSHOPID = 'oxbaseshop',
-                            OXACTIVE = 0,
-                            OXACTIVEFROM = '0000-00-00 00:00:00',
-                            OXACTIVETO = '0000-00-00 00:00:00',
-                            OXTITLE = 'Tiramizoo Evening',
-                            OXTITLE_1 = 'Tiramizoo Evening',
-                            OXTITLE_2 = 'Tiramizoo Evening',
-                            OXTITLE_3 = 'Tiramizoo Evening',
-                            OXPOS = 2;");
-
-        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
-                            OXID = MD5(CONCAT('TiramizooEvening', 'TiramizooEvening')),
-                            OXDELID = 'TiramizooEvening',
-                            OXDELSETID = 'TiramizooEvening';");
-
-
-        $this->executeSQL("UPDATE oxdelivery SET
-                            OXTITLE = 'Tiramizoo Immediate'
-                            WHERE OXID = 'Tiramizoo';");
-
-
-        $this->executeSQL("UPDATE oxdeliveryset SET
-                            OXTITLE = 'Tiramizoo Immediate'
-                            WHERE OXID = 'Tiramizoo';");
-    }
-
-    /**
-     * Update database to version 0.8.7
-     */
-    public function migration_0_8_7()
-    {
-
-        $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
-                            OXID = 'TiramizooSelectTime',
-                            OXSHOPID = 'oxbaseshop',
-                            OXACTIVE = 0,
-                            OXACTIVEFROM = '0000-00-00 00:00:00',
-                            OXACTIVETO = '0000-00-00 00:00:00',
-                            OXTITLE = 'Tiramizoo Festes Abholzeitfenster',
-                            OXTITLE_1 = 'Tiramizoo Fixed time window',
-                            OXTITLE_2 = 'Tiramizoo Festes Abholzeitfenster',
-                            OXTITLE_3 = 'Tiramizoo Festes Abholzeitfenster',
-                            OXADDSUMTYPE = 'abs',
-                            OXADDSUM = 7.90,
-                            OXDELTYPE = 'p',
-                            OXPARAM = 0,
-                            OXPARAMEND = 999999,
-                            OXFIXED = 0,
-                            OXSORT = 3,
-                            OXFINALIZE = 1;");
-
-        $this->executeSQL("INSERT IGNORE INTO oxdeliveryset SET
-                            OXID = 'TiramizooSelectTime',
-                            OXSHOPID = 'oxbaseshop',
-                            OXACTIVE = 0,
-                            OXACTIVEFROM = '0000-00-00 00:00:00',
-                            OXACTIVETO = '0000-00-00 00:00:00',
-                            OXTITLE = 'Tiramizoo Festes Abholzeitfenster',
-                            OXTITLE_1 = 'Tiramizoo Fixed time window',
-                            OXTITLE_2 = 'Tiramizoo Festes Abholzeitfenster',
-                            OXTITLE_3 = 'Tiramizoo Festes Abholzeitfenster',
-                            OXPOS = 3;");
-
-        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
-                            OXID = MD5(CONCAT('TiramizooSelectTime', 'TiramizooSelectTime')),
-                            OXDELID = 'TiramizooSelectTime',
-                            OXDELSETID = 'TiramizooSelectTime';");
-    }
-
-    /**
-     * Update database to version 0.8.8
-     */
-    public function migration_0_8_8()
-    {
-        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
         $oxTiramizooConfig->saveShopConfVar( "num", 'oxTiramizoo_package_strategy', 0);
     }
-
-    /**
-     * Update database to version 0.8.9
-     */
-    public function migration_0_9_0()
-    {
-        $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
-                            OXID = 'TiramizooStandardDelivery',
-                            OXSHOPID = 'oxbaseshop',
-                            OXACTIVE = 1,
-                            OXACTIVEFROM = '0000-00-00 00:00:00',
-                            OXACTIVETO = '0000-00-00 00:00:00',
-                            OXTITLE = 'Tiramizoo Standard Delivery',
-                            OXTITLE_1 = 'Tiramizoo Standard Delivery',
-                            OXTITLE_2 = 'Tiramizoo Standard Delivery',
-                            OXTITLE_3 = 'Tiramizoo Standard Delivery',
-                            OXADDSUMTYPE = 'abs',
-                            OXADDSUM = 7.90,
-                            OXDELTYPE = 'p',
-                            OXPARAM = 0,
-                            OXPARAMEND = 999999,
-                            OXFIXED = 0,
-                            OXSORT = 5,
-                            OXFINALIZE = 1;");
-
-        $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
-                            OXID = 'TiramizooExpressDelivery',
-                            OXSHOPID = 'oxbaseshop',
-                            OXACTIVE = 1,
-                            OXACTIVEFROM = '0000-00-00 00:00:00',
-                            OXACTIVETO = '0000-00-00 00:00:00',
-                            OXTITLE = 'Tiramizoo Express Delivery',
-                            OXTITLE_1 = 'Tiramizoo Express Delivery',
-                            OXTITLE_2 = 'Tiramizoo Express Delivery',
-                            OXTITLE_3 = 'Tiramizoo Express Delivery',
-                            OXADDSUMTYPE = 'abs',
-                            OXADDSUM = 10,
-                            OXDELTYPE = 'p',
-                            OXPARAM = 0,
-                            OXPARAMEND = 999999,
-                            OXFIXED = 0,
-                            OXSORT = 6,
-                            OXFINALIZE = 1;");
-
-        $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
-                            OXID = 'TiramizooStandardWeekendDelivery',
-                            OXSHOPID = 'oxbaseshop',
-                            OXACTIVE = 1,
-                            OXACTIVEFROM = '0000-00-00 00:00:00',
-                            OXACTIVETO = '0000-00-00 00:00:00',
-                            OXTITLE = 'Tiramizoo Weekend Delivery',
-                            OXTITLE_1 = 'Tiramizoo Weekend Delivery',
-                            OXTITLE_2 = 'Tiramizoo Weekend Delivery',
-                            OXTITLE_3 = 'Tiramizoo Weekend Delivery',
-                            OXADDSUMTYPE = 'abs',
-                            OXADDSUM = 13,
-                            OXDELTYPE = 'p',
-                            OXPARAM = 0,
-                            OXPARAMEND = 999999,
-                            OXFIXED = 0,
-                            OXSORT = 7,
-                            OXFINALIZE = 1;");
-
-        $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
-                            OXID = 'TiramizooNewDelivery',
-                            OXSHOPID = 'oxbaseshop',
-                            OXACTIVE = 1,
-                            OXACTIVEFROM = '0000-00-00 00:00:00',
-                            OXACTIVETO = '0000-00-00 00:00:00',
-                            OXTITLE = 'Tiramizoo New Delivery',
-                            OXTITLE_1 = 'Tiramizoo New Delivery',
-                            OXTITLE_2 = 'Tiramizoo New Delivery',
-                            OXTITLE_3 = 'Tiramizoo New Delivery',
-                            OXADDSUMTYPE = 'abs',
-                            OXADDSUM = 15,
-                            OXDELTYPE = 'p',
-                            OXPARAM = 0,
-                            OXPARAMEND = 999999,
-                            OXFIXED = 0,
-                            OXSORT = 8,
-                            OXFINALIZE = 1;");
-
-        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
-                            OXID = MD5(CONCAT('TiramizooStandardDelivery', 'TiramizooSelectTime')),
-                            OXDELID = 'TiramizooStandardDelivery',
-                            OXDELSETID = 'TiramizooSelectTime';");
-
-        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
-                            OXID = MD5(CONCAT('TiramizooExpressDelivery', 'TiramizooSelectTime')),
-                            OXDELID = 'TiramizooExpressDelivery',
-                            OXDELSETID = 'TiramizooSelectTime';");
-
-        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
-                            OXID = MD5(CONCAT('TiramizooStandardWeekendDelivery', 'TiramizooSelectTime')),
-                            OXDELID = 'TiramizooStandardWeekendDelivery',
-                            OXDELSETID = 'TiramizooSelectTime';");
-        
-        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
-                            OXID = MD5(CONCAT('TiramizooNewDelivery', 'TiramizooSelectTime')),
-                            OXDELID = 'TiramizooNewDelivery',
-                            OXDELSETID = 'TiramizooSelectTime';");
-
-    }
-
-
 
     /**
      * Execute sql query

@@ -32,14 +32,13 @@ class oxTiramizooApi extends TiramizooApi
      **/
     protected $_aRemoteConfiguration = null;
 
-
     /**
      * Create the API object with api token and url get from appliaction config
      */
-    protected function __construct( $sApiKey )
+    protected function __construct( $sApiToken )
     {
         $tiramizooApiUrl = oxTiramizooConfig::getInstance()->getShopConfVar('oxTiramizoo_api_url');
-        parent::__construct($tiramizooApiUrl, $sApiKey);
+        parent::__construct($tiramizooApiUrl, $sApiToken);
     }
 
     /**
@@ -47,13 +46,13 @@ class oxTiramizooApi extends TiramizooApi
      * 
      * @return oxTiramizooApi
      */
-    public static function getApiInstance( $sApiKey )
+    public static function getApiInstance( $sApiToken )
     {
-        if ( !isset(self::$_instances[$sApiKey]) && !self::$_instances[$sApiKey] instanceof oxTiramizooApi ) {
-            self::$_instances[$sApiKey] = new oxTiramizooApi( $sApiKey );
+        if ( !isset(self::$_instances[$sApiToken]) && !self::$_instances[$sApiToken] instanceof oxTiramizooApi ) {
+            self::$_instances[$sApiToken] = new oxTiramizooApi( $sApiToken );
         }
 
-        return self::$_instances[$sApiKey];
+        return self::$_instances[$sApiToken];
     }
 
     /**
@@ -103,7 +102,7 @@ class oxTiramizooApi extends TiramizooApi
      * 
      * @return mixed Array with status code of request and response data
      */
-    public function getRemoteConfiguration( $sApiKey = null )
+    public function getRemoteConfiguration( $sApiToken = null )
     {
         $data = array();
         
@@ -130,7 +129,7 @@ class oxTiramizooApi extends TiramizooApi
     public function getAvailableWorkingHours($sCountryCode, $sPickupCode, $sDeliveryCode)
     {
         $data = array();
-        
+
         $data['country_code'] = $sCountryCode;
         $data['pickup_postal_code'] = $sPickupCode;
         $data['delivery_postal_code'] = $sDeliveryCode;
@@ -149,11 +148,11 @@ class oxTiramizooApi extends TiramizooApi
      * @param string $sPickupCode
      * @return mixed Array with status code of request and response data
      */
-    public function getAvailableServiceAreas($sPostalCode)
+    public function getAvailableServiceAreas($sPostalCode, $aRangeDates = array())
     {
         $response = null;
 
-        $this->requestGet('service_areas/' . $sPostalCode, array(), $response);
+        $this->requestGet('service_areas/' . $sPostalCode, $aRangeDates = array(), $response);
 
         return $response;
     }
@@ -181,9 +180,9 @@ class oxTiramizooApi extends TiramizooApi
      * 
      * @param string $sPostalCode postal code parameter to getting time windows from API
      */
-    public function synchronizeServiceAreas($sPostalCode)
+    public function synchronizeServiceAreas($sPostalCode, $aRangeDates = array())
     {
-        $response = $this->getAvailableServiceAreas($sPostalCode);
+        $response = $this->getAvailableServiceAreas($sPostalCode, $aRangeDates = array());
 
         if ($response['http_status'] != 200) {
             throw new oxTiramizoo_ApiException("Can't connect to Tiramizoo API", 1);
@@ -266,65 +265,7 @@ class oxTiramizooApi extends TiramizooApi
         return $oPickup;
     }
 
-    /**
-     * Build delivery object from user data. Used for build partial data 
-     * to send order API request
-     * 
-     * @param  oxUser $oUser
-     * @param  mixed $oDeliveryAddress oxAddress if filled by user or null
-     * @return stdClass Delivery object
-     */
-    public function buildDeliveryObject(oxUser $oUser, $oDeliveryAddress)
-    {
-        $oDelivery = new stdClass();
 
-        $oDelivery->email = $oUser->oxuser__oxusername->value; 
-
-        if ($oDeliveryAddress)  {
-            $oDelivery->address_line_1 = $oDeliveryAddress->oxaddress__oxstreet->value . ' ' . $oDeliveryAddress->oxaddress__oxstreetnr->value;
-            $oDelivery->city = $oDeliveryAddress->oxaddress__oxcity->value;
-            $oDelivery->postal_code = $oDeliveryAddress->oxaddress__oxzip->value;
-            $oDelivery->country_code = $oDeliveryAddress->oxaddress__oxcountryid->value;
-            $oDelivery->phone_number = $oDeliveryAddress->oxaddress__oxfon->value;
-            
-            $oDelivery->name = $oDeliveryAddress->oxaddress__oxfname->value . ' ' . $oDeliveryAddress->oxaddress__oxlname->value;
-
-            if ($oDeliveryAddress->oxaddress__oxcompany->value) {
-                $oDelivery->name = $oDeliveryAddress->oxaddress__oxcompany->value . ' / ' . $oDelivery->name;
-            }
-
-        } else {
-            $oDelivery->address_line_1 = $oUser->oxuser__oxstreet->value . ' ' . $oUser->oxuser__oxstreetnr->value;
-            $oDelivery->city = $oUser->oxuser__oxcity->value;
-            $oDelivery->postal_code = $oUser->oxuser__oxzip->value;
-            $oDelivery->country_code = $oUser->oxuser__oxcountryid->value;
-            $oDelivery->phone_number = $oUser->oxuser__oxfon->value;
-            
-            $oDelivery->name = $oUser->oxuser__oxfname->value . ' ' . $oUser->oxuser__oxlname->value;
-
-            if ($oUser->oxuser__oxcompany->value) {
-                $oDelivery->name = $oUser->oxuser__oxcompany->value . ' / ' . $oDelivery->name;
-            }
-        }
-
-        //get country code
-        $oCountry = oxNew('oxcountry');
-        $oCountry->load($oDelivery->country_code);
-
-        $sTiramizooWindow = oxSession::getVar( 'sTiramizooTimeWindow' );
-        $oDelivery->after = date('c', strtotime($sTiramizooWindow));
-        $oDelivery->before = date('c', strtotime('+' . oxConfig::getInstance()->getShopConfVar('oxTiramizoo_pickup_del_offset') . 'minutes', strtotime($sTiramizooWindow)));
-
-        //change delivery before time exceed maximum delivery hour
-        if (strtotime(date('H:i', strtotime($oDelivery->before))) > strtotime(oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour'))) {
-            $oDelivery->before = date('c', strtotime(date('Y-m-d', strtotime($sTiramizooWindow)) . ' ' . oxTiramizooConfig::getInstance()->getConfigParam('maximumDeliveryHour')));
-        }
-
-
-        $oDelivery->country_code = strtolower($oCountry->oxcountry__oxisoalpha2->value);
-
-        return $oDelivery;
-    }
 
     /**
      * Build items data used for both type of request sending order and getting quotes.

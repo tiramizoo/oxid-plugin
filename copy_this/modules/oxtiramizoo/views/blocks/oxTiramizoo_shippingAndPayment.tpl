@@ -27,4 +27,10 @@
     [{assign var="payment" value=$oView->getPayment() }]
     [{ $payment->oxpayments__oxdesc->value }]
 </div>
-467686
+
+
+[{* oxtiramizoo BEGIN *}]
+[{ $sTiramizooTimeWindow }]
+[{* oxtiramizoo END *}]
+
+
