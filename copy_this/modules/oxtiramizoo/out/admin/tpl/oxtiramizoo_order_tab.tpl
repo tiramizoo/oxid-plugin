@@ -34,6 +34,8 @@ function ThisDate( sID)
 <input type="hidden" name="oxid" value="[{ $oxid }]">
 <input type="hidden" name="editval[oxorder__oxid]" value="[{ $oxid }]">
 
+[{if $oxTiramizooOrderExtended}]
+
 <table cellspacing="0" cellpadding="0" border="0">
 <tr>
     <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_status_label" }]</td>
@@ -84,6 +86,10 @@ function ThisDate( sID)
 
 
 </table>
+
+[{/if}]
+
+
 </form>
 
 [{include file="bottomnaviitem.tpl"}]
