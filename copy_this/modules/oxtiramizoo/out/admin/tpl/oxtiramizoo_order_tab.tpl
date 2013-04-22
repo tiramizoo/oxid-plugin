@@ -39,7 +39,7 @@ function ThisDate( sID)
 <table cellspacing="0" cellpadding="0" border="0">
 <tr>
     <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_status_label" }]</td>
-    <td class="edittext">[{$oxTiramizooOrderExtended->oxorder__tiramizoo_status->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_status_help" }]</td>
+    <td class="edittext">[{$oxTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_status->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_status_help" }]</td>
 </tr>
 
 <tr>
@@ -49,7 +49,7 @@ function ThisDate( sID)
 
 <tr>
     <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_external_id_label" }]</td>
-    <td class="edittext">[{$oxTiramizooOrderExtended->oxorder__tiramizoo_external_id->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_external_id_help" }]</td>
+    <td class="edittext">[{$oxTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_external_id->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_external_id_help" }]</td>
 </tr>
 
 <tr>
