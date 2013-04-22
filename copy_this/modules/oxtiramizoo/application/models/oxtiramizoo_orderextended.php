@@ -1,11 +1,6 @@
 <?php
 
-/**
- * Core class for API log entries
- *
- * @author FATCHIP GmbH | Robert Müller
- */
-class oxtiramizooorderextended extends oxBase {
+class oxTiramizoo_OrderExtended extends oxBase {
 
     /**
      * Object core table name
@@ -19,7 +14,7 @@ class oxtiramizooorderextended extends oxBase {
      *
      * @var string
      */
-    protected $_sClassName = 'oxtiramizooorderextended';
+    protected $_sClassName = 'oxTiramizoo_OrderExtended';
 
     protected $_aConfigVars = null;
 
@@ -50,13 +45,36 @@ class oxtiramizooorderextended extends oxBase {
         
         if ( $rs && $rs->RecordCount() ) {
 
-            $oTiramizooRetailLocation = oxNew('oxtiramizooorderextended');
-            $oTiramizooRetailLocation->load( $rs->fields['OXID'] );            
+            $oxTiramizooOrderExtended = oxNew('oxTiramizoo_OrderExtended');
+            $oxTiramizooOrderExtended->load( $rs->fields['OXID'] );            
 
-            return $oTiramizooRetailLocation;
+            return $oxTiramizooOrderExtended;
         }
 
         return null;
+    }
+
+
+    public static function findOneByFiltersOrCreate($aFilters) 
+    {
+        $oTiramizooOrderExtended = oxTiramizoo_OrderExtended::findOneByFilters($aFilters);
+
+        if (!$oTiramizooOrderExtended) {
+            $oTiramizooOrderExtended = oxNew('oxTiramizoo_OrderExtended');
+        }
+
+        return $oTiramizooOrderExtended;
+    }
+
+
+    public function getTiramizooData()
+    {
+        return unserialize(base64_decode($this->oxtiramizooorderextended__tiramizoo_request_data->value));
+    }
+
+    public function setTiramizooData($oTiramizooData)
+    {
+        $this->oxtiramizooorderextended__tiramizoo_request_data = new oxField( base64_encode( serialize( $oTiramizooData ) ) );
     }
 
 }

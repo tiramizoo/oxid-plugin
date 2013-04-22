@@ -30,7 +30,7 @@
 
 
 [{* oxtiramizoo BEGIN *}]
-[{ $sTiramizooTimeWindow }]
+[{ $sFormattedTiramizooTimeWindow }]
 [{* oxtiramizoo END *}]
 
 

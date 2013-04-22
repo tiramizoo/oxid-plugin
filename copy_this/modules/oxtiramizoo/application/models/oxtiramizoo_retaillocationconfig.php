@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Core class for API log entries
- *
- * @author FATCHIP GmbH | Robert Müller
- */
 class oxtiramizooretaillocationconfig extends oxBase {
 
     /**

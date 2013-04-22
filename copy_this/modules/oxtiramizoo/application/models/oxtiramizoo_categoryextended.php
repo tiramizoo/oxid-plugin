@@ -1,11 +1,6 @@
 <?php
 
-/**
- * Core class for API log entries
- *
- * @author FATCHIP GmbH | Robert Müller
- */
-class oxtiramizoocategoryextended extends oxBase {
+class oxTiramizoo_CategoryExtended extends oxBase {
 
     /**
      * Object core table name
@@ -19,7 +14,7 @@ class oxtiramizoocategoryextended extends oxBase {
      *
      * @var string
      */
-    protected $_sClassName = 'oxtiramizoocategoryextended';
+    protected $_sClassName = 'oxTiramizoo_CategoryExtended';
 
     protected $_aConfigVars = null;
 
@@ -50,7 +45,7 @@ class oxtiramizoocategoryextended extends oxBase {
         
         if ( $rs && $rs->RecordCount() ) {
 
-            $oTiramizooRetailLocation = oxNew('oxtiramizoocategoryextended');
+            $oTiramizooRetailLocation = oxNew('oxTiramizoo_CategoryExtended');
             $oTiramizooRetailLocation->load( $rs->fields['OXID'] );            
 
             return $oTiramizooRetailLocation;
@@ -62,10 +57,10 @@ class oxtiramizoocategoryextended extends oxBase {
 
     public static function findOneByFiltersOrCreate($aFilters) 
     {
-        $oTiramizooCategoryExtended = oxtiramizoocategoryextended::findOneByFilters($aFilters);
+        $oTiramizooCategoryExtended = oxTiramizoo_CategoryExtended::findOneByFilters($aFilters);
 
         if (!$oTiramizooCategoryExtended) {
-            $oTiramizooCategoryExtended = oxNew('oxtiramizoocategoryextended');
+            $oTiramizooCategoryExtended = oxNew('oxTiramizoo_CategoryExtended');
         }
 
         return $oTiramizooCategoryExtended;

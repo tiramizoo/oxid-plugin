@@ -27,11 +27,13 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
             // load object
             $oArticle->load( $soxId );
         }
-        $this->_aViewData['oxTiramizooArticleExtended'] = oxtiramizooarticleextended::findOneByFiltersOrCreate(array('oxarticleid' => $oArticle->getId()));
 
+        $oTiramizooArticleExtended = oxTiramizoo_ArticleExtended::findOneByFiltersOrCreate(array('oxarticleid' => $oArticle->getId()));
 
-        $this->_aViewData['inheritedData'] = oxTiramizooArticleHelper::getInstance()->getArticleInheritData($oArticle);
-        $this->_aViewData['effectiveData'] = $effectiveData = oxTiramizooArticleHelper::getInstance()->buildArticleEffectiveData($oArticle);
+        $this->_aViewData['oxTiramizooArticleExtended'] = $oTiramizooArticleExtended;
+
+        $this->_aViewData['inheritedData'] = $oTiramizooArticleExtended->getArticleInheritData();
+        $this->_aViewData['effectiveData'] = $effectiveData = $oTiramizooArticleExtended->buildArticleEffectiveData();
 
         if ($effectiveData->weight == 0 || 
             $effectiveData->width  == 0 || 
@@ -42,7 +44,7 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
         }
 
 
-        $this->_aViewData['disabledCategory'] = oxTiramizooArticleHelper::getInstance()->getDisabledCategory($oArticle);
+        $this->_aViewData['disabledCategory'] = $oTiramizooArticleExtended->getDisabledCategory();
 
 
 
@@ -64,7 +66,7 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
 
         if ( $soxId != "-1" ) {
             $oArticle = oxNew( "oxarticle" );
-            $oxTiramizooArticleExtended = oxtiramizooarticleextended::findOneByFiltersOrCreate(array('oxarticleid' => $soxId));
+            $oxTiramizooArticleExtended = oxTiramizoo_ArticleExtended::findOneByFiltersOrCreate(array('oxarticleid' => $soxId));
             $aParams['oxarticleid'] = $soxId;
 
             $oxTiramizooArticleExtended->assign( $aParams );

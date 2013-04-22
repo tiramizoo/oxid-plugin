@@ -7,55 +7,28 @@
 class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
 {
 
-    /**
-     * Returns order delivery expenses price object
-     *
-     * @return oxprice
-     */
-    public function getOrderDeliveryPrice()
+
+    public function finalizeOrder( oxBasket $oBasket, $oUser, $blRecalculatingOrder = false )
     {
-        $this->_oDelPrice = parent::getOrderDeliveryPrice();
+        $iRet = parent::finalizeOrder($oBasket, $oUser, $blRecalculatingOrder);
 
-        if (in_array(oxSession::getVar('sShipSet'), array('Tiramizoo'))) {
-            
-            $sTiramizooDeliveryType = oxSession::getVar('sTiramizooDeliveryType');
-            $sTiramizooDeliveryType = $sTiramizooDeliveryType ? $sTiramizooDeliveryType : '';
+        if (oxSession::getVar('sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID) {
 
-            $this->_oDelPrice->setPrice( $this->oxorder__oxdelcost->value );
-        }
+            $oTiramizooDeliverySet = oxRegistry::get('oxTiramizoo_DeliverySet');
 
-        return $this->_oDelPrice;
-    }
+            $oTiramizooWindow = $oTiramizooDeliverySet->getSelectedTimeWindow();
 
+            $oRetailLocation = $oTiramizooDeliverySet->getRetailLocation();
+            $oUser = $oTiramizooDeliverySet->getUser();
+            $oDeliveryAddress = $oTiramizooDeliverySet->getDeliveryAddress();
 
-    /**
-     * Load data from basket. Build order data and send order to API. If response status is not 201
-     * throw an exception.
-     * 
-     * @param  oxBasket $oBasket
-     * @return null
-     */
-    protected function _loadFromBasket( oxBasket $oBasket )
-    {
-        parent::_loadFromBasket($oBasket);
+            $oCreateOrderData = new oxTiramizoo_CreateOrderData($oTiramizooWindow, $oBasket, $oRetailLocation);
+            $oCreateOrderData->buildPickup();
+            $oCreateOrderData->buildDelivery($oUser, $oDeliveryAddress);
+            $oCreateOrderData->buildItems();
+            $oTiramizooData = $oCreateOrderData->getCreatedTiramizooOrderDataObject();
 
-        if (in_array(oxSession::getVar('sShipSet'), array('Tiramizoo', 'TiramizooEvening', 'TiramizooSelectTime'))) {
-            $oxTiramizooConfig = oxTiramizooConfig::getInstance();
-            $oDeliveryAddress = $this->getDelAddressInfo();
-            $oUser = $this->getUser();
-            $oxTiramizooApi = oxTiramizooApi::getInstance();
-            $sCurrentLang = oxLang::getInstance()->getLanguageAbbr(oxLang::getInstance()->getBaseLanguage());
-
-            $tiramizooData = new stdClass();
-
-            $tiramizooData->pickup = $oxTiramizooApi->buildPickupObject( $oxTiramizooConfig, oxSession::getVar( 'sTiramizooTimeWindow' ) );
-            $tiramizooData->delivery = $oxTiramizooApi->buildDeliveryObject( $oUser, $oDeliveryAddress );
-            $tiramizooData->description = $oxTiramizooApi->buildDescription( $oBasket );
-            $tiramizooData->external_id = md5(time());
-            $tiramizooData->web_hook_url = trim($oxTiramizooConfig->getShopConfVar('oxTiramizoo_shop_url'), '/') . '/modules/oxtiramizoo/api.php';
-            $tiramizooData->items = $oxTiramizooApi->buildItemsData( $oBasket );
-
-            $tiramizooResult = $oxTiramizooApi->sendOrder($tiramizooData);
+            $tiramizooResult = $oTiramizooDeliverySet->getTiramizooApi()->sendOrder($oTiramizooData);
 
             if (!in_array($tiramizooResult['http_status'], array(201))) {
 
@@ -65,14 +38,28 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
                 // echo json_encode($tiramizooResult);
                 // echo '</div>';
                 // 
-                $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_post_order_error', oxLang::getInstance()->getBaseLanguage(), false);
-                throw new oxTiramizoo_SendOrderException( $errorMessage );
+
+                $oSendOrderJob = new oxTiramizoo_SendOrderJob();
+                $oSendOrderJob->setExternalId($this->getId());
+                $oSendOrderJob->setParams(array('api_token' => $oTiramizooDeliverySet->getApiToken()));            
+                $oSendOrderJob->save();
+
+                // $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_post_order_error', oxLang::getInstance()->getBaseLanguage(), false);
+                // throw new oxTiramizoo_SendOrderException( $errorMessage );
             }
 
-            $this->oxorder__tiramizoo_params = new oxField(base64_encode(serialize($tiramizooResult)), oxField::T_RAW);
-            $this->oxorder__tiramizoo_status = new oxField($tiramizooResult['response']->state, oxField::T_RAW);
-            $this->oxorder__tiramizoo_external_id = new oxField($tiramizooData->external_id, oxField::T_RAW);
-            $this->oxorder__tiramizoo_tracking_url = new oxField($tiramizooResult['response']->tracking_url . '?locale=' . $sCurrentLang, oxField::T_RAW);
+            $oTiramizooOrderExtended = oxTiramizoo_OrderExtended::findOneByFiltersOrCreate(array('oxorderid' => $this->getId()));
+
+            $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_response = new oxField(base64_encode(serialize($tiramizooResult)), oxField::T_RAW);
+            $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_request_data = new oxField(base64_encode(serialize($oTiramizooData)), oxField::T_RAW);
+            $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_status = new oxField($tiramizooResult['response']->state, oxField::T_RAW);
+            $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_external_id = new oxField($oTiramizooData->external_id, oxField::T_RAW);
+            $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_tracking_url = new oxField($tiramizooResult['response']->tracking_url . '?locale=' . $sCurrentLang, oxField::T_RAW);
+            $oTiramizooOrderExtended->oxtiramizooorderextended__oxorderid = new oxField($this->getId());
+
+            $oTiramizooOrderExtended->save();
         }
+
+        return $iRet;
     }
 }

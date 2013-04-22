@@ -19,7 +19,7 @@ class oxTiramizooConfig extends oxConfig
     /**
      * Get the instance of class
      * 
-     * @return oxTiramizooHelper
+     * @return oxTiramizooConfig
      */
     public static function getInstance()
     {
@@ -41,34 +41,26 @@ class oxTiramizooConfig extends oxConfig
     public function synchronizeAll( $sApiToken = null )
     {
         $oxTiramizooApi = oxTiramizooApi::getApiInstance( $sApiToken );
-        try {
 
-            $aRemoteConfiguration = $oxTiramizooApi->getRemoteConfiguration();
-            $oRetailLocation = oxtiramizooretaillocation::findOneByFilters( array('oxapitoken' => $sApiToken) );
-            $oRetailLocation->synchronizeConfiguration( $aRemoteConfiguration );
+        $aRemoteConfiguration = $oxTiramizooApi->getRemoteConfiguration();
 
-            $aPickupAddress = $oRetailLocation->getConfVar('pickup_contact');
+        $oRetailLocation = oxtiramizooretaillocation::findOneByFilters( array('oxapitoken' => $sApiToken) );
+        $oRetailLocation->synchronizeConfiguration( $aRemoteConfiguration );
+
+        $aPickupAddress = $oRetailLocation->getConfVar('pickup_contact');
+
+        $startDate = date('Y-m-d\TH:i:s', strtotime(date('Y-m-d')));
+        $endDate = date('Y-m-d\TH:i:s', strtotime('+2 days', strtotime(date('Y-m-d'))));
+
+        $aRangeDates = array('express_from' => $startDate, 
+                             'express_to' => $endDate,
+                             'standard_from' => $startDate,
+                             'standard_to' => $endDate);
 
 
-            $startDate = date('c', strtotime(date('Y-m-d')));
-            $endDate = date('c', strtotime('+2 days', date('Y-m-d')));
-
-            $aRangeDates = array('express_from' => $startDate, 
-                                 'express_to' => $endDate,
-                                 'standard_from' => $startDate,
-                                 'standard_to' => $endDate);
-
-
-            //@todo: only for 2 days express_from from API
-            $aAvaialbleServiceAreas = $oxTiramizooApi->getAvailableServiceAreas($aPickupAddress['postal_code'], $aRangeDates);
-            $oRetailLocation->synchronizeServiceAreas($aAvaialbleServiceAreas);
-
-        } catch (oxTiramizoo_ApiException $e) {
-            echo $e->getMessage();
-            //@ToDo: handle errors?
-        }
-
-        //$this->synchronizeTimeWindows();
+        //@todo: only for 2 days express_from from API
+        $aAvaialbleServiceAreas = $oxTiramizooApi->getAvailableServiceAreas($aPickupAddress['postal_code'], $aRangeDates);
+        $oRetailLocation->synchronizeServiceAreas($aAvaialbleServiceAreas);
     }
 
 
@@ -249,7 +241,7 @@ class oxTiramizooConfig extends oxConfig
             $sShopId = $this->getShopId();
         }
 
-        $oDb = oxDb::getDb(true);
+        $oDb = oxDb::getDb( oxDb::FETCH_MODE_NUM );
 
         $sQ  = "select oxvartype, DECODE( oxvarvalue, '".$this->getConfigParam( 'sConfigKey' )."') as oxvarvalue from oxtiramizooconfig where oxshopid = '$sShopId' and oxvarname = ".$oDb->quote($sVarName);
         $oRs = $oDb->Execute( $sQ );
@@ -257,7 +249,8 @@ class oxTiramizooConfig extends oxConfig
         $sValue = null;
         if ( $oRs != false && $oRs->recordCount() > 0 ) {
 
-            list($sVarType, $sVarVal) = $oRs->fields;
+            //$TODO: ugly conversion
+            list($sVarType, $sVarVal) = array_values($oRs->fields);
 
             switch ( $sVarType ) {
                 case 'arr':
@@ -266,6 +259,9 @@ class oxTiramizooConfig extends oxConfig
                     break;
                 case 'bool':
                     $sValue =  ( $sVarVal == 'true' || $sVarVal == '1' );
+                    break;
+                case 'str':
+                    $sValue = $sVarVal;
                     break;
                 default:
                     $sValue = $sVarVal;

@@ -9,7 +9,7 @@
 /**
  * Metadata version
  */
-$sMetadataVersion = '0.2.33';
+$sMetadataVersion = '0.2.38';
 
 /**
  * Module information
@@ -30,9 +30,10 @@ $aModule = array(
 
     'extend'       =>   array(
                             'oxorder'       => 'oxtiramizoo/core/oxtiramizoo_oxorder',
+                            'oxbasket'      => 'oxtiramizoo/core/oxtiramizoo_oxbasket',
                             'order'         => 'oxtiramizoo/application/controllers/oxtiramizoo_order',
                             'payment'       => 'oxtiramizoo/application/controllers/oxtiramizoo_payment',
-                            // 'oxShopControl' => 'oxtiramizoo/application/controllers/oxtiramizoo_oxshopcontrol',
+                            'oxShopControl' => 'oxtiramizoo/application/controllers/oxtiramizoo_oxshopcontrol',
                         ),
 
 
@@ -45,32 +46,44 @@ $aModule = array(
                             'oxTiramizoo_setup'                 => 'oxtiramizoo/core/oxtiramizoo_setup.php',
                             'oxTiramizooApi'                    => 'oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php',
                             'TiramizooApi'                      => 'oxtiramizoo/core/TiramizooApi/TiramizooApi.php',
+                            'oxTiramizoo_CreateOrderData'       => 'oxtiramizoo/core/TiramizooApi/oxTiramizooCreateOrderData.php',
                             'oxTiramizooEvents'                 => 'oxtiramizoo/core/oxtiramizoo_events.php',
                             'oxTiramizooConfig'                 => 'oxtiramizoo/core/oxtiramizoo_config.php',
-                            'oxTiramizooArticleHelper'          => 'oxtiramizoo/core/oxtiramizoo_articlehelper.php',
-                            'oxTiramizooHelper'                 => 'oxtiramizoo/core/oxtiramizoo_helper.php',
+                            
+                            'oxTiramizoo_DeliverySet'           => 'oxtiramizoo/core/oxtiramizoo_deliveryset.php',
+                            'oxTiramizoo_DeliveryPrice'         => 'oxtiramizoo/core/oxtiramizoo_deliveryprice.php',
+                            'oxTiramizoo_DeliveryType'          => 'oxtiramizoo/core/oxtiramizoo_deliverytype.php',
+                            'oxTiramizoo_DeliveryTypeImmediate' => 'oxtiramizoo/core/oxtiramizoo_deliverytypeimmediate.php',
+                            'oxTiramizoo_DeliveryTypeEvening'   => 'oxtiramizoo/core/oxtiramizoo_deliverytypeevening.php',
+                            'oxTiramizoo_TimeWindow'            => 'oxtiramizoo/core/oxtiramizoo_timewindow.php',
+
 
                             'oxTiramizoo_Webhook'               => 'oxtiramizoo/application/controllers/oxtiramizoo_webhook.php',           
                             'oxTiramizoo_Cron'                  => 'oxtiramizoo/application/controllers/oxtiramizoo_cron.php',
 
                             'oxTiramizoo_ScheduleJobManager'    => 'oxtiramizoo/core/oxtiramizoo_schedulejobmanager.php',
-                            'oxTiramizoo_ScheduleJob'           => 'oxtiramizoo/core/oxtiramizoo_schedulejob.php',
                             'oxTiramizoo_SendOrderJob'          => 'oxtiramizoo/core/oxtiramizoo_sendorderjob.php',
                             'oxTiramizoo_SyncConfigJob'         => 'oxtiramizoo/core/oxtiramizoo_syncconfigjob.php',
 
                             /* models */
                             'oxtiramizooretaillocation'         => 'oxtiramizoo/application/models/oxtiramizoo_retaillocation.php',
                             'oxtiramizooretaillocationconfig'   => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationconfig.php',
-                            'oxtiramizoorjob'                   => 'oxtiramizoo/application/models/oxtiramizoo_job.php',
-                            'oxtiramizooarticleextended'        => 'oxtiramizoo/application/models/oxtiramizoo_articleextended.php',
-                            'oxtiramizoocategoryextended'       => 'oxtiramizoo/application/models/oxtiramizoo_categoryextended.php',
-                            'oxtiramizooorderextended'          => 'oxtiramizoo/application/models/oxtiramizoo_orderextended.php',
+                            'oxTiramizoo_ArticleExtended'       => 'oxtiramizoo/application/models/oxtiramizoo_articleextended.php',
+                            'oxTiramizoo_CategoryExtended'      => 'oxtiramizoo/application/models/oxtiramizoo_categoryextended.php',
+                            'oxTiramizoo_OrderExtended'         => 'oxtiramizoo/application/models/oxtiramizoo_orderextended.php',
+                            'oxTiramizoo_ScheduleJob'           => 'oxtiramizoo/application/models/oxtiramizoo_schedulejob.php',
 
 
                             /* exception */
-                            'oxTiramizoo_ApiException'          => 'oxtiramizoo/core/exception/oxtiramizoo_apiexception.php',
-                            'oxTiramizoo_NotAvailableException' => 'oxtiramizoo/core/exception/oxtiramizoo_notavailableexception.php',
-                            'oxTiramizoo_SendOrderException'    => 'oxtiramizoo/core/exception/oxtiramizoo_sendorderexception.php',
+                            'oxTiramizoo_ApiException'                  => 'oxtiramizoo/core/exception/oxtiramizoo_apiexception.php',
+                            'oxTiramizoo_NotAvailableException'         => 'oxtiramizoo/core/exception/oxtiramizoo_notavailableexception.php',
+                            'oxTiramizoo_SendOrderException'            => 'oxtiramizoo/core/exception/oxtiramizoo_sendorderexception.php',
+                            'oxTiramizoo_InvalidTimeWindowException'    => 'oxtiramizoo/core/exception/oxtiramizoo_invalidtimewindowexception.php',
+                            'oxTiramizoo_InvalidDeliveryTypeException'  => 'oxtiramizoo/core/exception/oxtiramizoo_invaliddeliverytypeexception.php',
+
+                            /* libs */
+                            'pudzian'                           => 'oxtiramizoo/lib/pudzian/pudzian.php',
+                            'packIntoBoxes'                     => 'oxtiramizoo/lib/packIntoBoxes.php',
                         ),
 
     'templates'    =>   array(

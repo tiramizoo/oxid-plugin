@@ -51,14 +51,25 @@ function ThisDate( sID)
 </tr>
 
 <tr>
+    <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_request_label" }]</td>
+    <td class="edittext">
+        <textarea style="width:600px; height:180px; border:1px solid #AAA;" readonly="true">
+        [{$aTiramizooRequest|@print_r}]
+        </textarea>
+        [{ oxinputhelp ident="oxTiramizoo_order_tab_request_help" }]
+    </td>
+</tr>
+
+<tr>
     <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_response_label" }]</td>
     <td class="edittext">
         <textarea style="width:600px; height:180px; border:1px solid #AAA;" readonly="true">
-        [{$aTiramizooParams|@print_r}]
+        [{$aTiramizooResponse|@print_r}]
         </textarea>
         [{ oxinputhelp ident="oxTiramizoo_order_tab_response_help" }]
     </td>
 </tr>
+
 
 <tr>
     <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_webhook_response_label" }]</td>

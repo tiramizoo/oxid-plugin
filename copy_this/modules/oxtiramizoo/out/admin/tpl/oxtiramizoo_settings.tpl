@@ -299,7 +299,7 @@
                           <input type="hidden" name="api_token" value="[{$oRetaiLocation->getApiToken()}]">
                           <input type="hidden" name="oxid" value="[{$oxid}]">
                           <input type="hidden" name="editval[oxshops__oxid]" value="[{$oxid}]">
-                          <input type="submit" value="detach this api" />
+                          <input type="submit" value="Remove this location" />
 
                           <a target="_top" href="[{$oRetaiLocation->getConfVar('dashboard_url')}]">Go to dashboard</a>
                           

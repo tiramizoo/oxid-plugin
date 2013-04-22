@@ -28,13 +28,13 @@ class oxTiramizoo_Webhook extends oxUBase
     public function saveOrderStatus($oApiResponse)
     {
         if ($oApiResponse && isset($oApiResponse->external_id)) {
-            $sql = "UPDATE oxorder 
+            $sql = "UPDATE oxtiramizooorderextended 
                         SET TIRAMIZOO_WEBHOOK_RESPONSE = '" . base64_encode(serialize($oApiResponse)) . "'
                         WHERE TIRAMIZOO_EXTERNAL_ID = '" . $oApiResponse->external_id . "';";
 
             oxDb::getDb()->Execute($sql);
 
-            $sql = "UPDATE oxorder 
+            $sql = "UPDATE oxtiramizooorderextended 
                         SET TIRAMIZOO_STATUS = '" . $oApiResponse->state . "'
                         WHERE TIRAMIZOO_EXTERNAL_ID = '" . $oApiResponse->external_id . "';";
 

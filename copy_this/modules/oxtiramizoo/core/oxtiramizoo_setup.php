@@ -156,18 +156,20 @@ class oxTiramizoo_setup extends Shop_Config
                                 OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
                                 TIRAMIZOO_STATUS VARCHAR(255),
                                 TIRAMIZOO_TRACKING_URL VARCHAR(1024) NOT NULL,
-                                TIRAMIZOO_PARAMS TEXT NOT NULL,
+                                TIRAMIZOO_RESPONSE TEXT NOT NULL,
+                                TIRAMIZOO_REQUEST_DATA TEXT NOT NULL,
                                 TIRAMIZOO_WEBHOOK_RESPONSE TEXT NOT NULL,
                                 TIRAMIZOO_EXTERNAL_ID VARCHAR(40) NOT NULL,
                                 OXORDERID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
                                 PRIMARY KEY (OXID)
                            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
-        $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizoojob (
-                                OXID int(11) NOT NULL AUTO_INCREMENT,
+        $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooschedulejob (
+                                OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
                                 OXJOBTYPE varchar(32),
                                 OXPARAMS text NOT NULL DEFAULT '',
                                 OXCREATEDAT datetime,
+                                OXFINISHEDAT datetime,                                
                                 OXRUNAFTER datetime,
                                 OXRUNBEFORE datetime,
                                 OXREPEATCOUNTER INT(11) NOT NULL DEFAULT 0,

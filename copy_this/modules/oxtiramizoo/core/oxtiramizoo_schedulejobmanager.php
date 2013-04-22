@@ -2,8 +2,7 @@
 
 class oxTiramizoo_ScheduleJobManager
 {
-	private $_aJobTypes = array('send_order' => 'oxTiramizoo_SendOrderJob',
-							    'synchronize_configuration' => 'oxTiramizoo_SyncConfigJob');
+	const MAX_RUNNING_JOBS_PER_REQUEST = 5;
 
 	private $_isFinished = false;
 
@@ -12,22 +11,33 @@ class oxTiramizoo_ScheduleJobManager
 		return $this->_isFinished;
 	}
 
-	public function runJobs()
+	public function getJobsForRun()
 	{
-		foreach ($this->_aJobTypes as $sJobType => $sClassName) 
-		{
-			$oScheduleJob = new $sClassName;
-
-			$oScheduleJob->initialize();
-
-			if ($oScheduleJob->jobExists()) {
-				$oScheduleJob->run();
-			}
-		}	
+		return oxTiramizoo_ScheduleJob::findAllToRun(self::MAX_RUNNING_JOBS_PER_REQUEST);
 	}
 
-	public function activateJob(oxTiramizoo_ScheduleJob $oScheduleJob)
+	public function runJobs()
 	{
-		$oScheduleJob->activate();
+		foreach ($this->getJobsForRun() as $oScheduleJob) 
+		{
+			$oScheduleJob->run();
+		}
+
+		$this->_isFinished = true;
+	}
+
+	public function addTasks()
+	{
+		$this->syncConfigDaily();
+	}
+
+	public function syncConfigDaily()
+	{
+		if ($oSyncConfigJob = oxTiramizoo_ScheduleJob::findDailyByType('synchronize_configuration')) {
+			return false;
+		} else {
+			$oSyncConfigJob = new oxTiramizoo_SyncConfigJob();
+            $oSyncConfigJob->save();
+		}
 	}
 }

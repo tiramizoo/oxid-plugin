@@ -98,7 +98,7 @@ function editThis( sID )
             </td>
             <td class="edittext">
                 <input type="hidden" name="oxTiramizooArticleExtended[oxtiramizooarticleextended__tiramizoo_use_package]" value="1" />
-                <input type="checkbox" name="oxTiramizooArticleExtended[oxtiramizooarticleextended__tiramizoo_use_package]" value="0" [{if ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_use_package->value == 0)}]checked="checked"[{/if}] />
+                <input type="checkbox" name="oxTiramizooArticleExtended[oxtiramizooarticleextended__tiramizoo_use_package]" value="0" [{if ($oxTiramizooArticleExtended->hasIndividualPackage())}]checked="checked"[{/if}] />
                 [{ oxmultilang ident="oxTiramizoo_article_tab_use_package_value" }]
                 [{ oxinputhelp ident="oxTiramizoo_article_tab_use_package_help" }]
             </td>

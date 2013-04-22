@@ -220,6 +220,10 @@ $aLang = array(
 'oxTiramizoo_order_tab_response_label'                  => 'Tiramizoo API response',
 'oxTiramizoo_order_tab_response_help'                   => 'Tiramizoo API response data',
 
+'oxTiramizoo_order_tab_request_label'                   => 'Tiramizoo API request',
+'oxTiramizoo_order_tab_request_help'                    => 'Tiramizoo API request data',
+ 
+
 'oxTiramizoo_order_tab_webhook_response_label'          => 'Tiramizoo webhook response',
 'oxTiramizoo_order_tab_webhook_response_help'           => 'Tiramizoo webhook response data',
 

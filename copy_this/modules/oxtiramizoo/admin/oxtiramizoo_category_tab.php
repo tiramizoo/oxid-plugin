@@ -50,7 +50,7 @@ class oxTiramizoo_Category_Tab extends oxAdminDetails
             }
         }
 
-        $this->_aViewData['oxTiramizooCategoryExtended'] = oxtiramizoocategoryextended::findOneByFiltersOrCreate(array('oxcategoryid' => $oCategory->getId()));
+        $this->_aViewData['oxTiramizooCategoryExtended'] = oxTiramizoo_CategoryExtended::findOneByFiltersOrCreate(array('oxcategoryid' => $oCategory->getId()));
 
         return "oxTiramizoo_category_tab.tpl";
     }
@@ -74,10 +74,10 @@ class oxTiramizoo_Category_Tab extends oxAdminDetails
             $aParams['oxcategoryid'] = $soxId;
         }
 
-        $oxTiramizooCategoryExtended = oxtiramizoocategoryextended::findOneByFiltersOrCreate(array('oxcategoryid' => $oCategory->getId()));
+        $oTiramizooCategoryExtended = oxTiramizoo_CategoryExtended::findOneByFiltersOrCreate(array('oxcategoryid' => $oCategory->getId()));
 
-        $oxTiramizooCategoryExtended->assign( $aParams );
-        $oxTiramizooCategoryExtended->save();
+        $oTiramizooCategoryExtended->assign( $aParams );
+        $oTiramizooCategoryExtended->save();
 
         // set oxid if inserted
         if ( $soxId == "-1") {

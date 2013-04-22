@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Core class for API log entries
- *
- * @author FATCHIP GmbH | Robert Müller
- */
 class oxtiramizooretaillocation extends oxBase {
 
     /**
@@ -141,7 +136,7 @@ class oxtiramizooretaillocation extends oxBase {
             throw new oxTiramizoo_ApiException("Can't connect to Tiramizoo API", 1);
         }
 
-        $aResponse = oxTiramizooHelper::getInstance()->objectToArray($response['response']);
+        $aResponse = oxTiramizooApi::objectToArray($response['response']);
 
         foreach ($aResponse as $sConfigIndex => $sVarVal) 
         {
@@ -174,7 +169,7 @@ class oxtiramizooretaillocation extends oxBase {
             throw new oxTiramizoo_ApiException("Can't connect to Tiramizoo API", 1);
         }
 
-        $aResponse = oxTiramizooHelper::getInstance()->objectToArray($response['response']);
+        $aResponse = oxTiramizooApi::objectToArray($response['response']);
 
         foreach ($aResponse as $sConfigIndex => $sVarVal) 
         {

@@ -9,54 +9,32 @@
 
 
 [{if $sCurrentShipSet == 'Tiramizoo' }]
-	<br />
-	<input type="radio" onchange="JavaScript:document.forms.shipping.submit();" name="sTiramizooDeliveryType" value="immediate" [{if $sTiramizooDeliveryType == 'immediate' }]checked="true"[{/if}] /> Immediate <br />
-	<input type="radio" onchange="JavaScript:document.forms.shipping.submit();" name="sTiramizooDeliveryType" value="evening" [{if $sTiramizooDeliveryType == 'evening' }]checked="true"[{/if}] /> Evening <br />
-	<input type="radio" onchange="JavaScript:document.forms.shipping.submit();" name="sTiramizooDeliveryType" value="select_time" [{if $sTiramizooDeliveryType == 'select_time' }]checked="true"[{/if}] /> Select Time <br />
+<p>
+	[{foreach from=$aAvailableDeliveryTypes item=oDeliveryType}]
 
-  [{if ($isTiramizooSelectTimeShippingMethod && ($sCurrentShipSet == 'Tiramizoo')) }]
-  <div style="margin-left:20px;">
-      <select id="tiramizooSelectDate" onchange="JavaScript:showTiramizooTimeWindows();">
-          [{foreach from=$aTiramizooSelectTimeWindows item=aDeliveryDate}]
-              <option value="[{$aDeliveryDate.date}]" [{if ($sTiramizooSelectedDate == $aDeliveryDate.date)}] selected="selected" [{/if}]>[{$aDeliveryDate.label}]</option>
-          [{/foreach}]
-      </select>
+		<input type="radio" onchange="JavaScript:document.forms.shipping.submit();" name="sTiramizooDeliveryType" value="[{ $oDeliveryType->getType() }]" [{if $sTiramizooDeliveryType == $oDeliveryType->getType() }]checked="true"[{/if}] /> [{ $oDeliveryType->getName() }] 
 
-      [{foreach key=key from=$aTiramizooSelectTimeWindows item=sDeliveryDate}]
-        <div class="tiramizooSelectDateTimeWrapper" id="tiramizooSelectDateTime-[{$sDeliveryDate.date}]" [{if (!$sDeliveryDate.active) }] style="display:none;" [{/if}]>
+			[{if $oDeliveryType->getType() == 'immediate'}]
+
+				[{ assign var=oTimeWindow value=$oDeliveryType->getImmediateTimeWindow() }]
+
+ 				<span> - [{ $oTimeWindow->getFormattedDeliveryTimeWindow() }]</span>
+				<span style="display:none;">
+					<input type="radio" onchange="JavaScript:document.forms.shipping.submit();" name="sTiramizooTimeWindow" value="[{ $oTimeWindow->getHash() }]" [{if ($sSelectedTimeWindow == $oDeliveryType->getImmediateTimeWindow()) && ($sTiramizooDeliveryType == $oDeliveryType->getType()) }]checked="true"[{/if}] />
+				</span>
 
 
-          [{foreach from=$sDeliveryDate.timeWindows item=aTimeWindow}]
-<br />
-				[{$aTimeWindow.pickup.from|date_format:"%Y-%m-%d %H:%M:%S"}]<br />
-				[{$aTimeWindow.pickup.to|date_format:"%Y-%m-%d %H:%M:%S"}]<br /><br />
-				[{$aTimeWindow.delivery.from|date_format:"%Y-%m-%d %H:%M:%S"}]<br />
-				[{$aTimeWindow.delivery.to|date_format:"%Y-%m-%d %H:%M:%S"}]<br />
-<br />
+			[{elseif $oDeliveryType->getType() == 'evening'}]
 
-				<input type="radio" name="sTiramizooTimeWindow" value="[{$aTimeWindow.timeWindowDate}]" onChange="JavaScript:document.forms.shipping.submit();" [{if (!$aTimeWindow.enable) }] disabled="true" [{/if}] [{if ($sTiramizooTimeWindow == $aTimeWindow.timeWindowDate) }] checked="checked" [{/if}] />
-				<span [{if (!$aTimeWindow.enable) }] style="color:#666;" [{/if}]>[{$aTimeWindow.timeWindowLabel}]</span> <br />
-          [{/foreach}]
-        </div>
-      [{/foreach}]
-  </div>
+				[{ assign var=oTimeWindow value=$oDeliveryType->getEveningTimeWindow() }]
+				<span> - [{ $oTimeWindow->getFormattedDeliveryTimeWindow() }]</span>
+				<span style="display:none;">
+					<input type="radio" onchange="JavaScript:document.forms.shipping.submit();" name="sTiramizooTimeWindow" value="[{ $oTimeWindow->getHash() }]" [{if ($sSelectedTimeWindow == $oDeliveryType->getEveningTimeWindow()) && ($sTiramizooDeliveryType == $oDeliveryType->getType()) }]checked="true"[{/if}] /> 
+				</span>
 
-  <script type="text/javascript">
-    function showTiramizooTimeWindows() {
-        var selectDateObject = document.getElementById("tiramizooSelectDate");
-        var selectedDate = selectDateObject.options[selectDateObject.selectedIndex].value;
-        
-        var tiramizooSelectDateTimeWrappers = document.getElementsByClassName('tiramizooSelectDateTimeWrapper');
-        for (i = 0; i < tiramizooSelectDateTimeWrappers.length; i++){
-            tiramizooSelectDateTimeWrappers[i].style.display = 'none';
-        }
+			[{/if}]
 
-        var tiramizooSelectedDateTimeWrapper = document.getElementById('tiramizooSelectDateTime-' + selectedDate);
-        tiramizooSelectedDateTimeWrapper.style.display = 'block';
-    }
-  </script>
-  [{/if}]
-
-
-
+			<br />
+	[{/foreach}]
+</p>
 [{/if}]

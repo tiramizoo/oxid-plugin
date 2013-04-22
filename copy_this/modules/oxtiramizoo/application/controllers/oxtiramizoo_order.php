@@ -8,6 +8,26 @@
  */
 class oxTiramizoo_order extends oxTiramizoo_order_parent
 {
+
+    public function init()
+    {
+        parent::init();
+
+        $oTiramizooDeliverySet = oxRegistry::get('oxTiramizoo_DeliverySet');
+        $oTiramizooDeliverySet->init($this->getUser(), oxNew( 'oxorder' )->getDelAddressInfo());
+
+        //redirect to payment if tiramizoo is not available
+        if (!$this->getTiramizooDeliverySet()->isTiramizooAvailable() && (oxSession::getVar( 'sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID)) {
+            oxUtils::getInstance()->redirect( oxConfig::getInstance()->getShopHomeURL() .'cl=payment', true, 302 );
+        }
+
+    }
+
+    public function getTiramizooDeliverySet()
+    {
+        return oxRegistry::get('oxTiramizoo_DeliverySet');
+    }
+
     /**
      * Executes parent::render(), pass variable to template to check
      * if tiramizoo module is running now
@@ -16,8 +36,14 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
      */
     public function render()
     {
-        if (in_array(oxSession::getVar('sShipSet'), array('Tiramizoo', 'TiramizooEvening', 'TiramizooSelectTime'))) {
-            $this->_aViewData['sTiramizooTimeWindow'] = oxTiramizooHelper::getLabelDeliveryWindow(oxSession::getVar( 'sTiramizooTimeWindow' ));
+
+        if ( oxSession::getVar('sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID ) {
+
+            $oTiramizooDeliverySet = $this->getTiramizooDeliverySet();
+
+            $oTiramizooWindow = $oTiramizooDeliverySet->getSelectedTimeWindow();
+
+            $this->_aViewData['sFormattedTiramizooTimeWindow'] = $oTiramizooWindow->getFormattedDeliveryTimeWindow();
         }
 
         return parent::render();

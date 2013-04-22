@@ -16,7 +16,9 @@ $aLang = array(
 'oxTiramizoo_Today'                                     => 'Today',
 'oxTiramizoo_Tomorrow'                                  => 'Tomorrow',
 'oxTiramizoo_selectTimeWindowTitle'                     => 'Select when the order will be delivered',
-'oxTiramizoo_post_order_error'                          => 'Tiramizoo couldn\'t proccess this order, try again later or change your shipping method'
+'oxTiramizoo_post_order_error'                          => 'Tiramizoo couldn\'t proccess this order, try again later or change your shipping method',
+'oxTiramizoo_delivery_type_immediate_name'				=> 'tiramizoo.com "Immediate" ',
+'oxTiramizoo_delivery_type_evening_name'				=> 'tiramizoo.com "Evening"',
 );
 
 
