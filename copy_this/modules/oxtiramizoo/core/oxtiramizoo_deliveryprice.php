@@ -22,7 +22,7 @@ class oxTiramizoo_DeliveryPrice
 
 			if (($oTimeWindow->getDeliveryType() == 'standard') && isset($iStandardPrice)) {
 				$iPrice = $iStandardPrice;
-			} else if (($oTimeWindow->getDeliveryType() == 'standard') && isset($iExpressPrice)) {
+			} else if (($oTimeWindow->getDeliveryType() == 'express') && isset($iExpressPrice)) {
 				$iPrice = $iExpressPrice;
 			} else if (($oTimeWindow->getDeliveryType() == 'standard_weekend') && isset($iStandardWeekendPrice)) {
 				$iPrice = $iStandardWeekendPrice;
