@@ -34,7 +34,8 @@ class oxTiramizoo_DeliveryPrice
 				$oDeliveryPrice->setPrice($iPrice);
 			}
 
-			return $oDeliveryPrice;
 		*/
+		
+		return $oDeliveryPrice;
 	}
 }
