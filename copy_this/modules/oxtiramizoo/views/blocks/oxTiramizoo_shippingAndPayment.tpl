@@ -11,6 +11,11 @@
 [{assign var="oShipSet" value=$oView->getShipSet() }]
 [{ $oShipSet->oxdeliveryset__oxtitle->value }]
 
+[{* oxtiramizoo BEGIN *}]
+[{if $sFormattedTiramizooTimeWindow}]
+    ([{ $sFormattedTiramizooTimeWindow }])
+[{/if}]
+[{* oxtiramizoo END *}]
 
 </div>
 
@@ -29,8 +34,5 @@
 </div>
 
 
-[{* oxtiramizoo BEGIN *}]
-[{ $sFormattedTiramizooTimeWindow }]
-[{* oxtiramizoo END *}]
 
 

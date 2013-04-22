@@ -42,7 +42,7 @@ function ThisDate( sID)
 
 <tr>
     <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_tracking_url_label" }]</td>
-    <td class="edittext">[{$oxTiramizooOrderExtended->oxorder__tiramizoo_tracking_url->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_tracking_url_help" }]</td>
+    <td class="edittext">[{$oxTiramizooOrderExtended->getTrackingUrl() }] [{ oxinputhelp ident="oxTiramizoo_order_tab_tracking_url_help" }]</td>
 </tr>
 
 <tr>

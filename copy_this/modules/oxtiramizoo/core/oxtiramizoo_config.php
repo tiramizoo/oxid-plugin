@@ -49,6 +49,7 @@ class oxTiramizooConfig extends oxConfig
 
         $aPickupAddress = $oRetailLocation->getConfVar('pickup_contact');
 
+        // synchronize service areas for 2 days
         $startDate = date('Y-m-d\TH:i:s', strtotime(date('Y-m-d')));
         $endDate = date('Y-m-d\TH:i:s', strtotime('+2 days', strtotime(date('Y-m-d'))));
 
@@ -57,27 +58,9 @@ class oxTiramizooConfig extends oxConfig
                              'standard_from' => $startDate,
                              'standard_to' => $endDate);
 
-
-        //@todo: only for 2 days express_from from API
         $aAvaialbleServiceAreas = $oxTiramizooApi->getAvailableServiceAreas($aPickupAddress['postal_code'], $aRangeDates);
         $oRetailLocation->synchronizeServiceAreas($aAvaialbleServiceAreas);
     }
-
-
-
-
-
-    public function synchronizeTimeWindows()
-    {
-        //@ToDo: aPickuPostalCodes is fake from fixturews in database
-        $aPickupPostalCodes = $this->getShopConfVar('aPickupPostalCodes');
-
-        foreach ($aPickupPostalCodes as $sPickupPostalCode) 
-        {
-            oxTiramizooApi::getInstance()->synchronizeServiceAreas($sPickupPostalCode);
-        }
-    }
-
 
     /**
      * Updates or adds new shop configuration parameters to DB.
@@ -155,10 +138,6 @@ class oxTiramizooConfig extends oxConfig
         $oDb->execute( $sQ );
     }
 
-
-
-
-
     public function setConfVarGroup( $sVarName, $sGroup = null )
     {
         if ($sVarName && ($sGroup !== null)) 
@@ -169,7 +148,6 @@ class oxTiramizooConfig extends oxConfig
             $oDb->execute( $sQ );
         }
     }
-
 
 
     public function getShopConfVars( $sShopId = null )
@@ -223,9 +201,6 @@ class oxTiramizooConfig extends oxConfig
 
         return $aValues;
     }
-
-
-
 
     /**
      * Retrieves shop configuration parameters from DB.

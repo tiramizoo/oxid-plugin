@@ -6,11 +6,9 @@
  */
 class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
 {
-
-
-    public function finalizeOrder( oxBasket $oBasket, $oUser, $blRecalculatingOrder = false )
+    public function _loadFromBasket( oxBasket $oBasket )
     {
-        $iRet = parent::finalizeOrder($oBasket, $oUser, $blRecalculatingOrder);
+        parent::_loadFromBasket( $oBasket );
 
         if (oxSession::getVar('sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID) {
 
@@ -60,6 +58,11 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
             $oTiramizooOrderExtended->save();
         }
 
-        return $iRet;
+        // return $iRet;
+    }
+
+    public function getOrderExtended()
+    {
+        return oxTiramizoo_OrderExtended::findOneByFiltersOrCreate(array('oxorderid' => $this->getId()));
     }
 }

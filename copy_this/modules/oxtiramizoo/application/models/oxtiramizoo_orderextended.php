@@ -77,4 +77,8 @@ class oxTiramizoo_OrderExtended extends oxBase {
         $this->oxtiramizooorderextended__tiramizoo_request_data = new oxField( base64_encode( serialize( $oTiramizooData ) ) );
     }
 
+    public function getTrackingUrl()
+    {
+        return $this->oxtiramizooorderextended__tiramizoo_tracking_url->value . oxLang::getInstance()->getLanguageAbbr();
+    }
 }

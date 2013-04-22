@@ -9,7 +9,7 @@
 /**
  * Metadata version
  */
-$sMetadataVersion = '0.2.38';
+$sMetadataVersion = '0.2.40';
 
 /**
  * Module information
@@ -109,6 +109,17 @@ $aModule = array(
                                     'block'     =>  'shippingAndPayment',              
                                     'file'      =>  'views/blocks/oxTiramizoo_shippingAndPayment.tpl'
                             ),
+
+                            array(  'template'  =>  'email/html/order_cust.tpl',    
+                                    'block'     =>  'email_html_order_cust_deliveryinfo',              
+                                    'file'      =>  'views/blocks/oxTiramizoo_email_html_order_cust.tpl'
+                            ),
+
+                            array(  'template'  =>  'email/html/order_cust.tpl',    
+                                    'block'     =>  'email_plain_order_cust_deliveryinfo',              
+                                    'file'      =>  'views/blocks/oxTiramizoo_email_html_order_cust.tpl'
+                            ),
+
                         ),
 
 );

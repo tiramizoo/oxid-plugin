@@ -335,9 +335,6 @@ class oxTiramizoo_settings extends Shop_Config
         return $errors;
     }
 
-
-
-
     public function test()
     {
 
@@ -345,7 +342,7 @@ class oxTiramizoo_settings extends Shop_Config
 
         foreach ($aRetailLocations as $oRetailLocation) 
         {
-            print_r($oRetailLocation->getConfVar('invoice_contact'));
+            print_r($oRetailLocation->getConfVar('time_windows'));
         }
 
         exit;
