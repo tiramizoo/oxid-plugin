@@ -51,10 +51,6 @@ abstract class oxTiramizoo_DeliveryType
 			return false;
 		}
 
-		if (!isset($aPickupContact['city']) || !$aPickupContact['city']) {
-			return false;
-		}
-
 		if (!isset($aPickupContact['postal_code']) || !$aPickupContact['postal_code']) {
 			return false;
 		}
