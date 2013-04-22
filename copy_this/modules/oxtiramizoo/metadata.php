@@ -9,7 +9,7 @@
 /**
  * Metadata version
  */
-$sMetadataVersion = '0.2.40';
+$sMetadataVersion = '0.2.41';
 
 /**
  * Module information
@@ -26,7 +26,7 @@ $aModule = array(
     'version'      =>   '0.9',
     'author'       =>   'tiramizoo',
     'url'          =>   'http://github.com/tiramizoo/oxid-plugin/',
-    'email'        =>   'kowalikus@gmail.com',
+    'email'        =>   'support@tiramizoo.com',
 
     'extend'       =>   array(
                             'oxorder'       => 'oxtiramizoo/core/oxtiramizoo_oxorder',
