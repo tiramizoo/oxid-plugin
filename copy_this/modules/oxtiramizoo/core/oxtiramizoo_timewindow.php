@@ -29,6 +29,26 @@ class oxTiramizoo_TimeWindow
 		return $this->_aData['pickup']['to'];
 	}
 
+    public function getDeliveryFromDate()
+    {
+        return new oxTiramizoo_Date($this->_aData['delivery']['from']);
+    }
+
+    public function getDeliveryToDate()
+    {
+        return new oxTiramizoo_Date($this->_aData['delivery']['to']);
+    }
+
+    public function getPickupFromDate()
+    {
+        return new oxTiramizoo_Date($this->_aData['pickup']['from']);
+    }
+
+    public function getPickupToDate()
+    {
+        return new oxTiramizoo_Date($this->_aData['pickup']['to']);
+    }
+
 	public function getCutOff()
 	{
 		return $this->_aData['cut_off'];
@@ -38,7 +58,6 @@ class oxTiramizoo_TimeWindow
 	{
 		return $this->_aData['delivery_type'];
 	}
-
 
 	public function getAsArray()
 	{
@@ -62,7 +81,7 @@ class oxTiramizoo_TimeWindow
         } else if ($this->isTomorrow()){
             return oxLang::getInstance()->translateString('oxTiramizoo_Tomorrow', oxLang::getInstance()->getBaseLanguage(), false) . ' ' .  $this->getDeliveryHoursFormated($this->_aData);
         } else {
-            return oxUtilsDate::getInstance()->formatDBDate( date('Y-m-d', strtotime($this->_aData['delivery']['from'])) ) . ' ' . $this->getDeliveryHoursFormated($this->_aData);
+            return oxUtilsDate::getInstance()->formatDBDate( $this->getDeliveryFromDate()->get() ) . ' ' . $this->getDeliveryHoursFormated($this->_aData);
         }
 
 		return $this->_aData['delivery']['from'] . '-' . $this->_aData['delivery']['to'];
@@ -70,18 +89,18 @@ class oxTiramizoo_TimeWindow
 
     public function getDeliveryHoursFormated()
     {
-        return date('H:i', strtotime($this->_aData['delivery']['from'])) . ' - ' . date('H:i', strtotime($this->_aData['delivery']['to']));
+        return $this->getDeliveryFromDate()->get('H:i') . ' - ' . $this->getDeliveryToDate()->get('H:i');
     }
 
-    public function isValid($sDate = null)
+    public function isValid()
     {
-        $sDueDate = $sDate ? $sDate : strtotime('now');
+        $oDueDate = new oxTiramizoo_Date();
 
         if ($iMinutes = $this->_aData['cut_off']) {
-            $sDueDate = strtotime('+' . $iMinutes . ' minutes');
+            $oDueDate->modify('+' . $iMinutes . ' minutes');
         }
 
-        if ((strtotime($this->_aData['pickup']['from']) >= $sDueDate) && (strtotime($this->_aData['delivery']['from']) >= $sDueDate)) {
+        if ($this->getPickupFromDate()->isLaterThan($oDueDate) && $this->getDeliveryFromDate()->isLaterThan($oDueDate)) {
             return true;
         }
 
@@ -90,48 +109,26 @@ class oxTiramizoo_TimeWindow
 
     public function isToday()
     {
-        $sToday = date('Y-m-d');
-        $sPickupFromDay = date('Y-m-d', strtotime($this->_aData['pickup']['from']));
-        $sPickupToDay = date('Y-m-d', strtotime($this->_aData['pickup']['to']));
-        $sDeliveryFromDay = date('Y-m-d', strtotime($this->_aData['delivery']['from']));
-        $sDeliveryToDay = date('Y-m-d', strtotime($this->_aData['delivery']['to']));
-
-        return ($sToday == $sPickupFromDay) && 
-               ($sToday == $sPickupToDay) && 
-               ($sToday == $sDeliveryFromDay) && 
-               ($sToday == $sDeliveryToDay);
+        return $this->getPickupFromDate()->isToday() && 
+               $this->getPickupToDate()->isToday() && 
+               $this->getDeliveryFromDate()->isToday() && 
+               $this->getDeliveryToDate()->isToday();
     }
 
     public function isTomorrow()
     {
-        $sTomorrow = strtotime('+1 days', date('Y-m-d'));
-        $sPickupFromDay = date('Y-m-d', strtotime($this->_aData['pickup']['from']));
-        $sPickupToDay = date('Y-m-d', strtotime($this->_aData['pickup']['to']));
-        $sDeliveryFromDay = date('Y-m-d', strtotime($this->_aData['delivery']['from']));
-        $sDeliveryToDay = date('Y-m-d', strtotime($this->_aData['delivery']['to']));
-
-        return ($sTomorrow == $sPickupFromDay) && 
-               ($sTomorrow == $sPickupToDay) && 
-               ($sTomorrow == $sDeliveryFromDay) && 
-               ($sTomorrow == $sDeliveryToDay);
+        return $this->getPickupFromDate()->isTomorrow() && 
+               $this->getPickupToDate()->isTomorrow() && 
+               $this->getDeliveryFromDate()->isTomorrow() && 
+               $this->getDeliveryToDate()->isTomorrow();
     }
 
     public function hasHours($aHours)
     {
-        $sPickupFromHours = date('H:i', strtotime($this->_aData['pickup']['from']));
-        $sPickupToHours = date('H:i', strtotime($this->_aData['pickup']['to']));
-        $sDeliveryFromHours = date('H:i', strtotime($this->_aData['delivery']['from']));
-        $sDeliveryToHours = date('H:i', strtotime($this->_aData['delivery']['to']));
-
-        $sPickupFromPresetHours = $aHours['pickup_after'];
-        $sPickupToPresetHours = $aHours['pickup_before'];
-        $sDeliveryFromPresetHours = $aHours['delivery_after'];
-        $sDeliveryToPresetHours = $aHours['delivery_before'];
-
-		return ($sPickupFromPresetHours == $sPickupFromHours) && 
-               ($sPickupToPresetHours == $sPickupToHours) && 
-               ($sDeliveryFromPresetHours == $sDeliveryFromHours) && 
-               ($sDeliveryToPresetHours == $sDeliveryToHours);
+        return $this->getPickupFromDate()->isOnTime($aHours['pickup_after']) && 
+               $this->getPickupToDate()->isOnTime($aHours['pickup_before']) && 
+               $this->getDeliveryFromDate()->isOnTime($aHours['delivery_after']) && 
+               $this->getDeliveryToDate()->isOnTime($aHours['delivery_before']);
     }
 
 }

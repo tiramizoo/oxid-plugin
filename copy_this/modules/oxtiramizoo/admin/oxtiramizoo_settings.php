@@ -269,7 +269,7 @@ class oxTiramizoo_settings extends Shop_Config
         }
 
         //@ToDo: change this
-        $oTiramizooRetailLocation->oxtiramizooretaillocation__oxname = new oxField(date('Y-m-d H:i:s'));
+        $oTiramizooRetailLocation->oxtiramizooretaillocation__oxname = new oxField(oxTiramizoo_Date::date());
         $oTiramizooRetailLocation->oxtiramizooretaillocation__oxapitoken = new oxField( $sApiToken );
 
         $oTiramizooRetailLocation->save();

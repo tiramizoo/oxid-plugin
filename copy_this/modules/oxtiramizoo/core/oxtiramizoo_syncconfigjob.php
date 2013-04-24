@@ -34,9 +34,15 @@ class oxTiramizoo_SyncConfigJob extends oxTiramizoo_ScheduleJob
 	{
 		parent::setDefaultData();
 
-		$this->oxtiramizooschedulejob__oxcreatedat = new oxField(date('Y-m-d H:i:s'));
-		$this->oxtiramizooschedulejob__oxrunafter = new oxField(date('Y-m-d'));
-		$this->oxtiramizooschedulejob__oxrunbefore = new oxField(date('Y-m-d', strtotime('+1 day')));
+		$this->oxtiramizooschedulejob__oxcreatedat = new oxField(oxTiramizoo_Date::date());
+		
+		$oRunAfterDate = new oxTiramizoo_Date();
+		$this->oxtiramizooschedulejob__oxrunafter = new oxField($oRunAfterDate->get('Y-m-d'));
+
+		$oRunBeforeDate = new oxTiramizoo_Date();
+		$oRunBeforeDate->modify('+1 day');
+		$this->oxtiramizooschedulejob__oxrunbefore = new oxField($oRunBeforeDate->get('Y-m-d'));
+
         $this->oxtiramizooschedulejob__oxjobtype = new oxField(self::JOB_TYPE);
 	}
 

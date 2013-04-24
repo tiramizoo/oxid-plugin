@@ -50,8 +50,12 @@ class oxTiramizooConfig extends oxConfig
         $aPickupAddress = $oRetailLocation->getConfVar('pickup_contact');
 
         // synchronize service areas for 2 days
-        $startDate = date('Y-m-d\TH:i:s', strtotime(date('Y-m-d')));
-        $endDate = date('Y-m-d\TH:i:s', strtotime('+2 days', strtotime(date('Y-m-d'))));
+        $oStartDate = new oxTiramizoo_Date(date('Y-m-d'));
+        $oEndDate = new oxTiramizoo_Date(date('Y-m-d'));
+        $oEndDate->modify('+2 days');
+
+        $startDate = $oStartDate->getForRestApi();
+        $endDate = $oEndDate->getForRestApi();
 
         $aRangeDates = array('express_from' => $startDate, 
                              'express_to' => $endDate,

@@ -175,7 +175,7 @@ class oxTiramizoo_ScheduleJob extends oxBase {
 
     public function finishJob()
     {
-        $this->oxtiramizooschedulejob__oxfinishedat = new oxField(date('Y-m-d H:i:s'));
+        $this->oxtiramizooschedulejob__oxfinishedat = new oxField(oxTiramizoo_Date::date());
         $this->oxtiramizooschedulejob__oxstate = new oxField('finished');
         $this->save();
     }

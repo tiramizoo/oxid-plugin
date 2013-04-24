@@ -51,9 +51,16 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
 	{
 		parent::setDefaultData();
 
-		$this->oxtiramizooschedulejob__oxcreatedat = new oxField(date('Y-m-d H:i:s'));
-		$this->oxtiramizooschedulejob__oxrunafter = new oxField(date('Y-m-d H:i:s', strtotime('+1 minutes')));
-		$this->oxtiramizooschedulejob__oxrunbefore = new oxField(date('Y-m-d H:i:s', strtotime('+34 minutes')));
+		$this->oxtiramizooschedulejob__oxcreatedat = new oxField(oxTiramizoo_Date::date());
+		
+		$oRunAfterDate = new oxTiramizoo_Date();
+		$oRunAfterDate->modify('+1 minutes');
+		$this->oxtiramizooschedulejob__oxrunafter = new oxField($oRunAfterDate->get());
+
+		$oRunBeforeDate = new oxTiramizoo_Date();
+		$oRunBeforeDate->modify('+34 minutes');
+		$this->oxtiramizooschedulejob__oxrunbefore = new oxField($oRunBeforeDate->get());
+
         $this->oxtiramizooschedulejob__oxjobtype = new oxField(self::JOB_TYPE);
 	}
 
@@ -72,7 +79,11 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
 		$iRepeats = ++$this->oxtiramizooschedulejob__oxrepeatcounter->value;
 		
 		$iMinutes = pow(2, $iRepeats);
-		$this->oxtiramizooschedulejob__oxrunafter = new oxField(date('Y-m-d H:i:s', strtotime('+' . $iMinutes . ' minutes', strtotime($sCreatedAt))));
+
+		$oRunAfterDate = new oxTiramizoo_Date($sCreatedAt);
+		$oRunBeforeDate->modify('+' . $iMinutes . ' minutes');
+
+		$this->oxtiramizooschedulejob__oxrunafter = new oxField($oRunBeforeDate->get());
 		
 		$this->oxtiramizooschedulejob__oxstate = new oxField('retry');
 		

@@ -249,7 +249,9 @@ class oxTiramizoo_DeliverySet
         //sort by delivery from date
         foreach ($aTimeWindows as $oldKey => $aTimeWindow) 
         {
-            $aTimeWindows[strtotime($aTimeWindow['delivery']['from'])] = $aTimeWindow;
+            $oTimeWindow = new oxTiramizoo_TimeWindow($aTimeWindow);
+
+            $aTimeWindows[$oTimeWindow->getDeliveryFromDate()->getTimestamp()] = $aTimeWindow;
             unset($aTimeWindows[$oldKey]);
         }
 

@@ -9,7 +9,7 @@
 /**
  * Metadata version
  */
-$sMetadataVersion = '0.2.41';
+$sMetadataVersion = '0.2.43';
 
 /**
  * Module information
@@ -56,6 +56,7 @@ $aModule = array(
                             'oxTiramizoo_DeliveryTypeImmediate' => 'oxtiramizoo/core/oxtiramizoo_deliverytypeimmediate.php',
                             'oxTiramizoo_DeliveryTypeEvening'   => 'oxtiramizoo/core/oxtiramizoo_deliverytypeevening.php',
                             'oxTiramizoo_TimeWindow'            => 'oxtiramizoo/core/oxtiramizoo_timewindow.php',
+                            'oxTiramizoo_Date'                  => 'oxtiramizoo/core/oxtiramizoo_date.php',
 
 
                             'oxTiramizoo_Webhook'               => 'oxtiramizoo/application/controllers/oxtiramizoo_webhook.php',           

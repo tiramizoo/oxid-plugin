@@ -155,7 +155,7 @@ class oxtiramizooretaillocation extends oxBase {
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvartype = new oxField($sVarType);
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarvalue = new oxField( base64_encode( serialize( $sValue ) ) );
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxretaillocationid = new oxField($this->getId());
-            $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxlastsync = new oxField(date('Y-m-d H:i:s'));
+            $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxlastsync = new oxField(oxTiramizoo_Date::date());
 
             $sOxRetailLocationConfig->save();
         }
@@ -188,7 +188,7 @@ class oxtiramizooretaillocation extends oxBase {
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvartype = new oxField($sVarType);
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarvalue = new oxField( base64_encode( serialize( $sValue ) ) );
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxretaillocationid = new oxField($this->getId());
-            $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxlastsync = new oxField(date('Y-m-d H:i:s'));
+            $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxlastsync = new oxField(oxTiramizoo_Date::date());
 
             $sOxRetailLocationConfig->save();
         }
