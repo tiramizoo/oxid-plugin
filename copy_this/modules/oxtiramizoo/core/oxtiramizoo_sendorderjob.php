@@ -81,9 +81,9 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
 		$iMinutes = pow(2, $iRepeats);
 
 		$oRunAfterDate = new oxTiramizoo_Date($sCreatedAt);
-		$oRunBeforeDate->modify('+' . $iMinutes . ' minutes');
+		$oRunAfterDate->modify('+' . $iMinutes . ' minutes');
 
-		$this->oxtiramizooschedulejob__oxrunafter = new oxField($oRunBeforeDate->get());
+		$this->oxtiramizooschedulejob__oxrunafter = new oxField($oRunAfterDate->get());
 		
 		$this->oxtiramizooschedulejob__oxstate = new oxField('retry');
 		
