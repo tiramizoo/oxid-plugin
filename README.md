@@ -57,7 +57,7 @@ All items added by user have to have tiramizoo service enabled, directly or by p
 
 *   If template does not support blocks, please compare [changed files](https://github.com/tiramizoo/oxid-plugin/tree/master/copy_this/modules/oxtiramizoo/views/blocks) according to [metadata file](https://github.com/tiramizoo/oxid-plugin/blob/master/copy_this/modules/oxtiramizoo/metadata.php#L102)
 
-*   Go to **eShop Admin -> Extensions -> Modules**, select the **"OXID Tiramizoo.com"** extension and press the `Activate` Button in the `Overview` tab.
+*   Go to **eShop Admin -> Extensions -> Modules**, select the **"OXID Tiramizoo.com"** extension and press the "Activate" button in the "Overview" tab.
 
 *   After these steps, the "Tirazmizoo" menu item appears in the eShop Admin navigation   
 
@@ -77,11 +77,12 @@ All items added by user have to have tiramizoo service enabled, directly or by p
     * **Packing strategy:**
     The shop admin is able to specify what packages are used by the shop. He can do that in 3 ways:
 
-        * **All products have individual dimensions**: That means each product will be packed seperately (number of products equals number of packages).
+        * **All products have individual dimensions**: That means each product will be packed separately (number of products equals number of packages).
 
         * **Specific dimensions of packages**: That means that the admin is able to specify all package sizes they use in shop to pack products. Then the  packing algorithm starts to pack all products in as smallest number of packages as possible and assumes the resulting package size as the package to deliver. Go to tiramizoo configuration to specify these dimensions ([Production version](https://www.tiramizoo.com/dashboard/package_presets), [testing version](https://sandbox.tiramizoo.com/dashboard/package_presets)).
 
         * **All products should fit to one package**: That means every product will go to one package (no matter how many products customer bought there will be only 1 package for courier)
+
 
     * **Default dimensions and weight:**
     Tiramizoo delivery works only if every article in basket has specified dimensions and weight. The module allows to specify global dimensions and weight. These values are applied for each product without specified dimensions and weight.
@@ -90,19 +91,19 @@ All items added by user have to have tiramizoo service enabled, directly or by p
     Payment methods which are available for tiramizoo service. *Warning: Cash on delivery is currently not supported by Tiramizoo.
 
     * **Enable only articles with stock:**
-    Admin is able to turn on/off stock monitoring. That means if any of products in customer’s basket is not available in the shop’s stock, the tiramizoo delivery option will not show up.
+    Admin is able to turn on/off stock monitoring. That means if any of products in customer's basket is not available in the shop's stock, the tiramizoo delivery option will not show up.
 
     * **Retail Locations**
     The user api tokens available in the user dashboard after registration on the tiramizoo.com site. The API token is required to authenticate api requests.
     Plugin offers to connect for more than one tiramizoo account. Shop can deliver orders from more than one retail location. The decision which api token is going to be used is made by postal codes comparisons. 
 
     * **Synchronize all configuration:**
-    All retail locations configurations (in tiramizoo account) is synchronized daily on first shop request after midnight. It is able to synchronize configuration directly by pressing the `Synchronize` button
+    Configuration options from all retail locations (tiramizoo accounts) are synchronized daily. This process is performed in the first http request to the shop after midnight. It is possible to synchronize configuration directly by pressing the "Synchronize" button
 
 
 *  At the **Administer Products -> Categories -> Category selection -> Tiramizoo tab**
 
-    Product's main category and all its parents categories need to have Tiramizoo service enabled to let containing products to be delivered by Tiramizoo service. Also dimensions form enables to specify default product dimentions which will apply to all products which have the category selected as a main category and will not have dimentions specified explicitly.
+    Product's main category and all its parents categories need to have Tiramizoo service enabled to let containing products to be delivered by Tiramizoo service. Also dimensions form enables to specify default product dimensions which will apply to all products which have the category selected as a main category and will not have dimensions specified explicitly.
 
     Please consider, that inheritance of category properties that are not assigned as Main category, wouldn't be apply to products they have.
 
@@ -117,7 +118,7 @@ All items added by user have to have tiramizoo service enabled, directly or by p
 
 ## Configure the account ##
 
-The main configuration of tiramizoo delivery is avaialble on tiramizoo page.
+The main configuration of tiramizoo delivery is available on tiramizoo page.
 
 -   **Packages presets:** (Profile -> Default packages sizes)
     Retail location admin is able to specify package sizes that they use to pack products. 
@@ -145,7 +146,7 @@ The main configuration of tiramizoo delivery is avaialble on tiramizoo page.
 -   **Retail location name:** (Profile -> Account -> Name)
     Name of retail location presented on Oxid tiramizoo settings.
 
--   **Bussiness hours:** (Profile -> Account -> Business hours)
+-   **Business hours:** (Profile -> Account -> Business hours)
     Specify when courier can pick up delivery. Selected days and hours could be extended by special days *e.g. 24/12/2013 8:00-14:00* (in this example business hours are reduced).
 
 
@@ -157,18 +158,18 @@ The tiramizoo delivery option is only available if the following rules are met:
     
     * Pickup contact is selected and has valid postal code
     * Immediate delivery type or Evening delivery type is enabled
-    * Package presets are sepecified if shop use "Specific dimensions of packages" as packing strategy
+    * Package presets are specified if shop use "Specific dimensions of packages" as packing strategy
 
 *   **Oxid plugin configuration:**
 
-    * Tiramizoo is filled correctly *sanbox* or 
+    * Tiramizoo API url is filled correctly with *sandbox* or *production* API url
     * Shop url is not empty
     * One or more available payment method are checked
     * The API Token is added
 
 *   **Article in basket configuration**
     
-    * Article has specified dimensions and weight directly or inherited by flobal / category settings.
+    * Article has specified dimensions and weight directly or inherited by global / category settings.
     * Article is enabled with Tiramizoo Delivery
     * Article's main category and its parent categories are enabled with Tiramizoo Delivery
     * Article stock quantity is greater than 0 if "Enable only articles with stock: is selected
@@ -202,19 +203,15 @@ The tiramizoo delivery option is only available if the following rules are met:
     
     Available on category page
 
--   **Change the calculating delivery cost**
+-   **Change cost calculation method of delivery**
 
-    Default price paid by customer for every delivery is set as **Tiramizoo Standard Cost rule** and it could be changed. If needed that price is depended on conditions like (article dimesnions, basket total price, article amount in basket) it could be solved by adding new cost rules. But if needed more complexity cost calculation depends on other factors (from tiramizoo configuration and time windows delivery type) it should be done by changing the method `calculateDeliveryPrice` in class [oxTiramizoo_DeliveryPrice](https://github.com/tiramizoo/oxid-plugin/blob/master/copy_this/modules/oxtiramizoo/core/oxtiramizoo_deliveryprice.php)
+    Default price paid by customer for every delivery is set as **Tiramizoo Standard Cost rule** and it could be changed. If needed that price is depended on conditions like (article dimensions, basket total price, article amount in basket) it could be solved by adding new cost rules. But if needed more complexity cost calculation depends on other factors (from tiramizoo configuration and time windows delivery type) it should be done by changing the method `calculateDeliveryPrice` in class [oxTiramizoo_DeliveryPrice](https://github.com/tiramizoo/oxid-plugin/blob/master/copy_this/modules/oxtiramizoo/core/oxtiramizoo_deliveryprice.php)
 
 
 
 ## Troubleshooting and bugs ##
 
-* Check Minimal configurations section of this document
-* Be sure You are using the newest version of plugin from [master branch](https://github.com/tiramizoo/oxid-plugin/tree/master) and Your eShop version is 4.7.x/5.0.x.
-* If You found any bugs or have great idea of new features please inform us on [githhub issues](https://github.com/tiramizoo/oxid-plugin/issues)
-
-
-
-
+* Check "Minimal configurations" section of this document
+* Use the newest version of plugin from [master branch](https://github.com/tiramizoo/oxid-plugin/tree/master) and Your eShop version is 4.7.x/5.0.x.
+* In case of any issues or suggestions please let us know through [github issues](https://github.com/tiramizoo/oxid-plugin/issues)
 
