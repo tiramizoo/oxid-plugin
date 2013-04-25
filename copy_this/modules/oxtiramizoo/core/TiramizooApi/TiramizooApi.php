@@ -32,7 +32,7 @@ class TiramizooApi
      *             
      * @var integer
      */    
-    protected static $_iTimeOut = 10;
+    protected static $_iTimeOut = 60;
 
     /**
      * Time out curl error

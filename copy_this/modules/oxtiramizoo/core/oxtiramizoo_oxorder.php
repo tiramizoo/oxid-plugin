@@ -44,6 +44,8 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
 
                 // $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_post_order_error', oxLang::getInstance()->getBaseLanguage(), false);
                 // throw new oxTiramizoo_SendOrderException( $errorMessage );
+            } else if ($tiramizooResult['errno'] == oxTiramizooApi::CURLE_OPERATION_TIMEDOUT) {
+                //@TODO: notification
             }
 
             $oTiramizooOrderExtended = oxTiramizoo_OrderExtended::findOneByFiltersOrCreate(array('oxorderid' => $this->getId()));

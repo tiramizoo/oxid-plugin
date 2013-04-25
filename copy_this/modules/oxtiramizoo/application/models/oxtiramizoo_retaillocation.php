@@ -194,7 +194,7 @@ class oxtiramizooretaillocation extends oxBase {
         }
     }
 
-    public function delete()
+    public function delete($sOXID = null)
     {
         $aRetailLocationConfigs = $this->getRetailLocationConfigs();
 

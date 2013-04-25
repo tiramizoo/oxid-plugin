@@ -17,7 +17,6 @@ abstract class oxTiramizoo_DeliveryType
 		return $this->_oRetailLocation;
 	}
 
-
 	public function getType()
 	{
 		return $this->_sType;
