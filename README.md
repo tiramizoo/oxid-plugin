@@ -9,25 +9,23 @@ Module works with following OXID eSales versions: 4.7.x/5.0.x. The 4.3.2 version
 
 ## Customer checkout flow
 
-*   Checkout has 5 steps. Step 1 - Cart, Step 2 - Address, Step 3 - Pay, Step 4 - Order, Step 5 - Ready  
+Checkout has 5 steps. Step 1 - Cart, Step 2 - Address, Step 3 - Pay, Step 4 - Order, Step 5 - Ready  
 
-*   User adds items to basket (All items added by user have to have tiramizoo service enabled, directly or by parent category)
+All items added by user have to have tiramizoo service enabled, directly or by parent category
+
+*   User adds items to basket. 
 
 *   User goes to checkout (Step 1)
 
-*   User specifies delivery address (Step 2) *Warning: We highly recommend to set customer's phone number as a required field (@TODO: link how to specify). It enables courier to contact customer when necessary
-
-*   Between (Step 2) and (Step 3) plugin verify if package can be delivered with Tiramizoo. In case package is too big, or delivery address is outside of avaialble service areas (Retail locations) tiramizoo will not appear as delivery option
+*   User specifies delivery address (Step 2)
 
 *   User selects tiramizoo as a delivery option (Step 3)
 
 *   User selects delivery time window - when he wants courier to deliver (Step 3)
 
-*   User selects payment method (Step 3) (please remember that cash on delivery should not be available for tiramizoo service)
+*   User selects payment method (Step 3)
 
-*   User selects payment option in Step 3 and go to step 4
-
-*   User verifies and confirms (corrects if needed) order by going to step 5
+*   User verifies and confirms (or corrects if needed) order by going to step 5
 
 *   Between Step 4 and Step 5 plugin sends request to tiramizoo to create order
 
@@ -180,7 +178,7 @@ The tiramizoo delivery option is only available if the following rules are met:
 
     * **Tiramizoo Delivery Set** is active
     * **Tiramizoo Cost rule** is active and assigned to **Tiramizoo Delivery Set**
-
+    * Warning: We highly recommend to set customer's phone number as a required field. It enables courier to contact customer when necessary*
 
 
 ## Additional features / Tips ##
@@ -204,8 +202,6 @@ The tiramizoo delivery option is only available if the following rules are met:
 -   **Mark each product within category as individual product to not be packed with others - standalone**
     
     Available on category page
-
--   **Disable tiramizoo service for individual category**
 
 -   **Change the calculating delivery cost**
 
