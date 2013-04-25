@@ -128,11 +128,11 @@ The main configuration of tiramizoo delivery is avaialble on tiramizoo page.
 -   **Pickup contact:** (Profile -> Account -> Default contact)
     Select pickup contact name from list. All contacts are get from Address Book (Profile -> Address Book). To add contact to Address Book fill and send booking form (Organize Delivery).
 
-    ![Add pickup contact step 1](/readme/images/tiramizoo_add_new_contact_step1.png)
+    ![Add pickup contact step 1](readme/images/tiramizoo_add_new_contact_step1.png)
 
-    ![Add pickup contact step 2](https://raw.github.com/tiramizoo/oxid-plugin/feature/readme_oxid_4.7.x/readme/images/tiramizoo_add_new_contact_step2.png)
+    ![Add pickup contact step 2](readme_oxid_4.7.x/readme/images/tiramizoo_add_new_contact_step2.png)
 
-    ![Add pickup contact step 3](https://raw.github.com/tiramizoo/oxid-plugin/feature/readme_oxid_4.7.x/readme/images/tiramizoo_add_new_contact_step3.png)
+    ![Add pickup contact step 3](readme/images/tiramizoo_add_new_contact_step3.png)
 
 -   **Enable Immediate delivery type:** (Profile -> Account -> Immediate time window enabled)
     Select Yes to enable Immediate delivery type or no to disable.
