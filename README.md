@@ -130,7 +130,6 @@ The main configuration of tiramizoo delivery is avaialble on tiramizoo page.
 
     ![Image step 3](https://raw.github.com/tiramizoo/oxid-plugin/feature/readme_oxid_4.7.x/readme/images/tiramizoo_add_new_contact_step3.png)
 
-
 -   **Enable Immediate delivery type:** (Profile -> Account -> Immediate time window enabled)
     Select Yes to enable Immediate delivery type or no to disable.
 
