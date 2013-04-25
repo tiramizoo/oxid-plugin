@@ -67,10 +67,9 @@ All items added by user have to have tiramizoo service enabled, directly or by p
 ## Configure the module ##
 
 
-1.  At the **Tiramizoo -> Settings**
+*  At the **Tiramizoo -> Settings**
 
     To finalize configuration form has to be filled in with proper data.
-
     * **Tiramizoo URL:** The URL of the tiramizoo service endpoint (production version [https://api.tiramizoo.com/v1](https://api.tiramizoo.com/v1), testing version [https://sandbox.tiramizoo.com/api/v1](https://sandbox.tiramizoo.com/api/v1))
 
     * **Shop URL:** URL used to build the webhook url for order creation. The tiramizoo service will send a request to the url each time an order status change occurs.
@@ -78,7 +77,7 @@ All items added by user have to have tiramizoo service enabled, directly or by p
     * **Packing strategy:**
     The shop admin is able to specify what packages are used by the shop. He can do that in 3 ways:
 
-        * **All products have individual dimensions**: That means each product will be packaged seperately (number of products equals number of packages).
+        * **All products have individual dimensions**: That means each product will be packed seperately (number of products equals number of packages).
 
         * **Specific dimensions of packages**: That means that the admin is able to specify all package sizes they use in shop to pack products. Then the  packing algorithm starts to pack all products in as smallest number of packages as possible and assumes the resulting package size as the package to deliver. Go to tiramizoo configuration to specify these dimensions ([Production version](https://www.tiramizoo.com/dashboard/package_presets), [testing version](https://sandbox.tiramizoo.com/dashboard/package_presets)).
 
@@ -94,24 +93,24 @@ All items added by user have to have tiramizoo service enabled, directly or by p
     Admin is able to turn on/off stock monitoring. That means if any of products in customer’s basket is not available in the shop’s stock, the tiramizoo delivery option will not show up.
 
     * **Retail Locations**
-    The user api token available in the user dashboard after registration on the tiramizoo.com site. The API token is required to authenticate api requests.
+    The user api tokens available in the user dashboard after registration on the tiramizoo.com site. The API token is required to authenticate api requests.
     Plugin offers to connect for more than one tiramizoo account. Shop can deliver orders from more than one retail location. The decision which api token is going to be used is made by postal codes comparisons. 
 
     * **Synchronize all configuration:**
-    All retial locations configurations (in tiramizoo account) is synchronized daily on first shop request after midnight. It is able to synchronize configuration directly by pressing the `Synchronize` button
+    All retail locations configurations (in tiramizoo account) is synchronized daily on first shop request after midnight. It is able to synchronize configuration directly by pressing the `Synchronize` button
 
 
-2.  At the **Administer Products -> Categories -> Category selection -> Tiramizoo tab**
+*  At the **Administer Products -> Categories -> Category selection -> Tiramizoo tab**
 
     Product's main category and all its parents categories need to have Tiramizoo service enabled to let containing products to be delivered by Tiramizoo service. Also dimensions form enables to specify default product dimentions which will apply to all products which have the category selected as a main category and will not have dimentions specified explicitly.
 
-    Please consider that inheritance of category properties that are not assigned as Main category wouldn't be apply to products they have.
+    Please consider, that inheritance of category properties that are not assigned as Main category, wouldn't be apply to products they have.
 
-    Products ready for delivery with tiramizoo should be available in stock, should have dimensions and weight specified and dimensions and weight can not cross specific level.
+    Products ready for delivery with tiramizoo should be available in stock (if "Enable only articles in stock" is selected), should have dimensions and weight specified and dimensions and weight can not cross specific level.
 
     Validation of products will take place when delivery and payment methods appear. That means, even if flag "available for tiramizoo" is set, tiramizoo service could not appear as one of delivery option in 3th step of checkout process because of validation
 
-3.  At the **Administer Products -> Products -> Article selection -> Tiramizoo tab**
+*  At the **Administer Products -> Products -> Article selection -> Tiramizoo tab**
 
     You can enable or disable Tiramizoo delivery for selected product. This page contains preview of the effective dimensions
 
