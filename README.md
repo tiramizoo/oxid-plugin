@@ -125,12 +125,17 @@ The main configuration of tiramizoo delivery is avaialble on tiramizoo page.
 -   **Packages presets:** (Profile -> Default packages sizes)
     Retail location admin is able to specify package sizes that they use to pack products. 
 
--   **Pickup contact:** (Profile -> Account -> Default contact)
-    Select pickup contact name from list. All contacts are get from Address Book (Profile -> Address Book). To add contact to Address Book fill and send booking form (Organize Delivery).
+-   **Pickup contact:** 
+
+    Go to **Profile -> Account** and click on "Add Contact" link
 
     ![Add pickup contact step 1](readme/images/tiramizoo_add_new_contact_step1.png)
 
-    ![Add pickup contact step 2](readme_oxid_4.7.x/readme/images/tiramizoo_add_new_contact_step2.png)
+    Fill the required form fields and press the "Create contact" button
+
+    ![Add pickup contact step 2](readme/images/tiramizoo_add_new_contact_step2.png)
+
+    Click on radio button to set selected contact as "Pickup contact"
 
     ![Add pickup contact step 3](readme/images/tiramizoo_add_new_contact_step3.png)
 
