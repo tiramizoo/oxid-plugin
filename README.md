@@ -57,9 +57,9 @@ All items added by user have to have tiramizoo service enabled, directly or by p
 
 *   If template does not support blocks, please compare [changed files](https://github.com/tiramizoo/oxid-plugin/tree/master/copy_this/modules/oxtiramizoo/views/blocks) according to [metadata file](https://github.com/tiramizoo/oxid-plugin/blob/master/copy_this/modules/oxtiramizoo/metadata.php#L102)
 
-*   Go to **Extensions -> Modules**, select the **"OXID Tiramizoo.com"** extension and press the `Activate` Button in the `Overview` tab.
+*   Go to **eShop Admin -> Extensions -> Modules**, select the **"OXID Tiramizoo.com"** extension and press the `Activate` Button in the `Overview` tab.
 
-*   After these steps "Tirazmizoo" item should be appear in the eShop Admin navigation   
+*   After these steps, the "Tirazmizoo" menu item appears in the eShop Admin navigation   
 
 
 
@@ -67,9 +67,9 @@ All items added by user have to have tiramizoo service enabled, directly or by p
 ## Configure the module ##
 
 
--   At the **Tiramizoo -> Settings**
+1.  At the **Tiramizoo -> Settings**
 
-    To finalize configuration form has to be filled in with proper data. **Warning tiramizoo service will not work with "Cash on delivery" payment option. Such delivery will not be processed.
+    To finalize configuration form has to be filled in with proper data.
 
     * **Tiramizoo URL:** The URL of the tiramizoo service endpoint (production version [https://api.tiramizoo.com/v1](https://api.tiramizoo.com/v1), testing version [https://sandbox.tiramizoo.com/api/v1](https://sandbox.tiramizoo.com/api/v1))
 
@@ -93,7 +93,7 @@ All items added by user have to have tiramizoo service enabled, directly or by p
     * **Enable only articles with stock:**
     Admin is able to turn on/off stock monitoring. That means if any of products in customer’s basket is not available in the shop’s stock, the tiramizoo delivery option will not show up.
 
-    * ** Retail Locations **
+    * **Retail Locations**
     The user api token available in the user dashboard after registration on the tiramizoo.com site. The API token is required to authenticate api requests.
     Plugin offers to connect for more than one tiramizoo account. Shop can deliver orders from more than one retail location. The decision which api token is going to be used is made by postal codes comparisons. 
 
@@ -101,7 +101,7 @@ All items added by user have to have tiramizoo service enabled, directly or by p
     All retial locations configurations (in tiramizoo account) is synchronized daily on first shop request after midnight. It is able to synchronize configuration directly by pressing the `Synchronize` button
 
 
--   At the **Administer Products -> Categories -> Category selection -> Tiramizoo tab**
+2.  At the **Administer Products -> Categories -> Category selection -> Tiramizoo tab**
 
     Product's main category and all its parents categories need to have Tiramizoo service enabled to let containing products to be delivered by Tiramizoo service. Also dimensions form enables to specify default product dimentions which will apply to all products which have the category selected as a main category and will not have dimentions specified explicitly.
 
@@ -111,7 +111,7 @@ All items added by user have to have tiramizoo service enabled, directly or by p
 
     Validation of products will take place when delivery and payment methods appear. That means, even if flag "available for tiramizoo" is set, tiramizoo service could not appear as one of delivery option in 3th step of checkout process because of validation
 
--   At the **Administer Products -> Products -> Article selection -> Tiramizoo tab**
+3.  At the **Administer Products -> Products -> Article selection -> Tiramizoo tab**
 
     You can enable or disable Tiramizoo delivery for selected product. This page contains preview of the effective dimensions
 
@@ -154,27 +154,27 @@ The main configuration of tiramizoo delivery is avaialble on tiramizoo page.
 ## Minimal configurations ##
 The tiramizoo delivery option is only available if the following rules are met:
 
--   **Tiramizoo account configuration:**
+*   **Tiramizoo account configuration:**
     
     * Pickup contact is selected and has valid postal code
     * Immediate delivery type or Evening delivery type is enabled
     * Package presets are sepecified if shop use "Specific dimensions of packages" as packing strategy
 
--   **Oxid plugin configuration:**
+*   **Oxid plugin configuration:**
 
     * Tiramizoo is filled correctly *sanbox* or 
     * Shop url is not empty
     * One or more available payment method are checked
     * The API Token is added
 
--   **Article in basket configuration**
+*   **Article in basket configuration**
     
     * Article has specified dimensions and weight directly or inherited by flobal / category settings.
     * Article is enabled with Tiramizoo Delivery
     * Article's main category and its parent categories are enabled with Tiramizoo Delivery
     * Article stock quantity is greater than 0 if "Enable only articles with stock: is selected
 
--   **Oxid eShop configuration**
+*   **Oxid eShop configuration**
 
     * **Tiramizoo Delivery Set** is active
     * **Tiramizoo Cost rule** is active and assigned to **Tiramizoo Delivery Set**
