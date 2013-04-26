@@ -26,6 +26,7 @@ class oxTiramizoo_setup extends Shop_Config
         $oxTiramizooConfig = oxTiramizooConfig::getInstance();
 
         $currentInstalledVersion = $oxTiramizooConfig->getShopConfVar('oxTiramizoo_version');
+
         $tiramizooIsInstalled = $oxTiramizooConfig->getShopConfVar('oxTiramizoo_is_installed');
 
         try 
@@ -41,8 +42,13 @@ class oxTiramizoo_setup extends Shop_Config
             }
 
         } catch(oxException $e) {
-            $errorMessage = $e->getMessage . "<ul><li>" . implode("</li><li>", $this->_migrationErrors) . "</li></ul>";
+            $errorMessage = $e->getMessage() . "<ul><li>" . implode("</li><li>", $this->_migrationErrors) . "</li></ul>";
             echo $errorMessage;
+
+            $oModule = new oxModule();
+            $oModule->load('oxTiramizoo');
+            $oModule->deactivate();
+
             exit;
         }
     }
@@ -56,7 +62,7 @@ class oxTiramizoo_setup extends Shop_Config
         $methodsName = get_class_methods(__CLASS__);
 
         $migrationsMethods = array();
-        
+
         foreach ($methodsName as $methodName) 
         {
             if (strpos($methodName, 'migration_') === 0) {
@@ -75,7 +81,7 @@ class oxTiramizoo_setup extends Shop_Config
                     call_user_func_array(array($this, $migrationMethod), array());
 
                     if ($this->stopMigrationsIfErrors($methodVersion)) {
-                        throw new oxException('You need to manually run this sql statements to update database to version: ' . $methodVersion);
+                        throw new oxException('<p>You need to manually run this sql statements to update database to version: ' . $methodVersion . '</p>');
                     }
 
                     oxTiramizooConfig::getInstance()->saveShopConfVar( "str", 'oxTiramizoo_version', $methodVersion);                    
@@ -99,7 +105,7 @@ class oxTiramizoo_setup extends Shop_Config
     }
 
     /**
-     * Update database to version 0.8.0 
+     * Update database to version 0.9.0 
      */
     public function migration_0_9_0()
     {
@@ -215,34 +221,14 @@ class oxTiramizoo_setup extends Shop_Config
                                 OXDELID = 'TiramizooStandardDelivery',
                                 OXDELSETID = 'Tiramizoo';");
 
-        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
-                                OXID = MD5(CONCAT('TiramizooExpressDelivery', 'Tiramizoo')),
-                                OXDELID = 'TiramizooExpressDelivery',
-                                OXDELSETID = 'Tiramizoo';");
-
-        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
-                                OXID = MD5(CONCAT('TiramizooStandardWeekendDelivery', 'Tiramizoo')),
-                                OXDELID = 'TiramizooStandardWeekendDelivery',
-                                OXDELSETID = 'Tiramizoo';");
-        
-        $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
-                                OXID = MD5(CONCAT('TiramizooNewDelivery', 'Tiramizoo')),
-                                OXDELID = 'TiramizooNewDelivery',
-                                OXDELSETID = 'Tiramizoo';");
-
         $oxTiramizooConfig = oxTiramizooConfig::getInstance();
 
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/api/v1'); 
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_price', "7.90");
-        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable', 0);
-        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 0);
-        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_evening', 0);
-        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_immediate', 0);
-        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_select_time', 0);
-        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_articles_stock_gt_0', 0);
+        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_articles_stock_gt_0', 1);
         $oxTiramizooConfig->saveShopConfVar( "num", 'oxTiramizoo_package_strategy', 0);
     }
+
 
     /**
      * Execute sql query
