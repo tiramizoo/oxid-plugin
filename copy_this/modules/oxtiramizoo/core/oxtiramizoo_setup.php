@@ -81,7 +81,7 @@ class oxTiramizoo_setup extends Shop_Config
                     call_user_func_array(array($this, $migrationMethod), array());
 
                     if ($this->stopMigrationsIfErrors($methodVersion)) {
-                        throw new oxException('<p>You need to manually run this sql statements to update database to version: ' . $methodVersion . '</p>');
+                        throw new oxException('<p>Cannot execute the following sql queries:</p>');
                     }
 
                     oxTiramizooConfig::getInstance()->saveShopConfVar( "str", 'oxTiramizoo_version', $methodVersion);                    
