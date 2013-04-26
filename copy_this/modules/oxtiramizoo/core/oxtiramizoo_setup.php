@@ -213,7 +213,7 @@ class oxTiramizoo_setup extends Shop_Config
                                 OXPARAM = 0,
                                 OXPARAMEND = 999999,
                                 OXFIXED = 0,
-                                OXSORT = 5,
+                                OXSORT = 1,
                                 OXFINALIZE = 1;");
 
         $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
