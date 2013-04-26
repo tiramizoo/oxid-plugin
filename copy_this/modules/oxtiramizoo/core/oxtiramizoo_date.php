@@ -14,9 +14,11 @@ class oxTiramizoo_Date
 
     public static function changeCurrentTime($sCurrentTime = 'now')
     {
+        // @codeCoverageIgnoreStart
         if ( !defined( 'OXID_PHP_UNIT' ) ) {
             return;
-        }    	
+        }       
+        // @codeCoverageIgnoreEnd
 
         self::$_sCurrentTime = $sCurrentTime;
     }

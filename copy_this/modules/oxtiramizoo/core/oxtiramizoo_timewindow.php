@@ -81,10 +81,9 @@ class oxTiramizoo_TimeWindow
         } else if ($this->isTomorrow()){
             return oxLang::getInstance()->translateString('oxTiramizoo_Tomorrow', oxLang::getInstance()->getBaseLanguage(), false) . ' ' .  $this->getDeliveryHoursFormated($this->_aData);
         } else {
-            return oxUtilsDate::getInstance()->formatDBDate( $this->getDeliveryFromDate()->get() ) . ' ' . $this->getDeliveryHoursFormated($this->_aData);
+            return  $this->getDeliveryFromDate()->get(oxLang::getInstance()->translateString('oxTiramizoo_time_window_date_format', oxLang::getInstance()->getBaseLanguage(), false)) . ' ' . $this->getDeliveryHoursFormated($this->_aData);
         }
 
-		return $this->_aData['delivery']['from'] . '-' . $this->_aData['delivery']['to'];
 	}
 
     public function getDeliveryHoursFormated()

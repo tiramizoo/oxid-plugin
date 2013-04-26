@@ -1,6 +1,5 @@
 <?php
 
-
 class oxTiramizooEvents
 {
 	public static function onActivate() 

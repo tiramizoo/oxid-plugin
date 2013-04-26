@@ -143,9 +143,11 @@ class TiramizooApi
      * */
     public static function setConnectionTimeout($iTimeOut, $iConnectionTimeOut)
     {
+        // @codeCoverageIgnoreStart
         if ( !defined( 'OXID_PHP_UNIT' ) ) {
             return;
         }       
+        // @codeCoverageIgnoreEnd
 
         self::$_iTimeOut = $iTimeOut;
         self::$_iConnectionTimeOut = $iConnectionTimeOut;
