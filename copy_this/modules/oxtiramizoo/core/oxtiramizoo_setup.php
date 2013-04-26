@@ -5,7 +5,7 @@
  *
  * @package: oxTiramizoo
  */
-class oxTiramizoo_setup extends Shop_Config
+class oxTiramizoo_Setup extends Shop_Config
 {
     /**
      * Current version of oxTiramizoo module
@@ -42,8 +42,8 @@ class oxTiramizoo_setup extends Shop_Config
 
         } catch(oxException $e) {
             $errorMessage = $e->getMessage . "<ul><li>" . implode("</li><li>", $this->_migrationErrors) . "</li></ul>";
-            echo $errorMessage;
-            exit;
+            
+            throw new oxException($errorMessage);
         }
     }
 

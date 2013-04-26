@@ -43,7 +43,7 @@ $aModule = array(
                             'oxTiramizoo_Category_tab'          => 'oxtiramizoo/admin/oxtiramizoo_category_tab.php',
                             'oxTiramizoo_Order_Tab'             => 'oxtiramizoo/admin/oxtiramizoo_order_tab.php',
 
-                            'oxTiramizoo_setup'                 => 'oxtiramizoo/core/oxtiramizoo_setup.php',
+                            'oxTiramizoo_Setup'                 => 'oxtiramizoo/core/oxtiramizoo_setup.php',
                             'oxTiramizooApi'                    => 'oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php',
                             'TiramizooApi'                      => 'oxtiramizoo/core/TiramizooApi/TiramizooApi.php',
                             'oxTiramizoo_CreateOrderData'       => 'oxtiramizoo/core/TiramizooApi/oxTiramizooCreateOrderData.php',
@@ -93,7 +93,7 @@ $aModule = array(
                             'oxTiramizoo_category_tab.tpl'  => 'oxtiramizoo/out/admin/tpl/oxtiramizoo_category_tab.tpl',
                             'oxTiramizoo_order_tab.tpl'     => 'oxtiramizoo/out/admin/tpl/oxtiramizoo_order_tab.tpl',
                         ),
-    // @ToDo: check it
+
     'events'       =>   array(
                             'onActivate'   => 'oxTiramizoo_Events::onActivate'
                         ),

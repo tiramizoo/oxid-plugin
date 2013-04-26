@@ -4,7 +4,12 @@ class oxTiramizoo_Events
 {
 	public static function onActivate() 
 	{
-		$oxTiramizooSetup = new oxTiramizoo_setup();
-        $oxTiramizooSetup->install();
+		try
+		{
+        	$oTiramizooSetup = oxRegistry::get('oxTiramizoo_Setup');
+			$oTiramizooSetup->install();
+		} catch (oxException $e) {
+			die($e->getMessage());
+		}
 	}
 }

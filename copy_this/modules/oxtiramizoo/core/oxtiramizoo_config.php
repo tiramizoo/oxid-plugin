@@ -77,7 +77,7 @@ class oxTiramizooConfig extends oxConfig
      *
      * @return null
      */
-    public function saveShopConfVar( $sVarType, $sVarName, $sVarVal, $sShopId = null )
+    public function saveShopConfVar( $sVarType, $sVarName, $sVarVal, $sShopId = null, $sModule = '' )
     {
         switch ( $sVarType ) {
             case 'arr':
@@ -214,7 +214,7 @@ class oxTiramizooConfig extends oxConfig
      *
      * @return object - raw configuration value in DB
      */
-    public function getShopConfVar( $sVarName, $sShopId = null )
+    public function getShopConfVar( $sVarName, $sShopId = null, $sModule = '' )
     {
         if ( !$sShopId ) {
             $sShopId = $this->getShopId();
