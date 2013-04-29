@@ -1,7 +1,6 @@
 -- To remove all changes in database by oxTiramizoo plugin, try to run these sql queries
 
 -- Drop Tables
-DROP TABLE oxtiramizooconfig;
 DROP TABLE oxtiramizooretaillocation;
 DROP TABLE oxtiramizooretaillocationconfig;
 DROP TABLE oxtiramizooarticleextended;
@@ -16,3 +15,6 @@ DELETE FROM oxdel2delset WHERE OXID = MD5(CONCAT('TiramizooStandardDelivery', 'T
 
 -- DELETE all tpl blocks
 DELETE FROM oxtplblocks WHERE OXMODULE = 'oxTiramizoo';
+
+-- DELETE all modules vars
+DELETE FROM oxconfig WHERE OXMODULE = 'oxTiramizoo';

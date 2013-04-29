@@ -66,109 +66,34 @@ class oxTiramizooConfig extends oxConfig
         $oRetailLocation->synchronizeServiceAreas($aAvaialbleServiceAreas);
     }
 
-    /**
-     * Updates or adds new shop configuration parameters to DB.
-     * Arrays must be passed not serialized, serialized values are supported just for backward compatibility.
-     *
-     * @param string $sVarType Variable Type
-     * @param string $sVarName Variable name
-     * @param mixed  $sVarVal  Variable value (can be string, integer or array)
-     * @param string $sShopId  Shop ID, default is current shop
-     *
-     * @return null
-     */
-    public function saveShopConfVar( $sVarType, $sVarName, $sVarVal, $sShopId = null, $sModule = '' )
+    public function saveShopConfVar( $sVarType, $sVarName, $sVarVal, $sShopId = null, $sModule = 'oxTiramizoo' )
     {
-        switch ( $sVarType ) {
-            case 'arr':
-            case 'aarr':
-                if (is_array($sVarVal)) {
-                    $sValue = serialize( $sVarVal );
-                } else {
-                    // Deprecated functionality
-                    $sValue  = $sVarVal ;
-                    $sVarVal = unserialize( $sVarVal );
-                }
-                break;
-            case 'bool':
-                //config param
-                $sVarVal = (( $sVarVal == 'true' || $sVarVal) && $sVarVal && strcasecmp($sVarVal, "false"));
-                //db value
-                $sValue  = $sVarVal?"1":"";
-                break;
-            default:
-                $sValue  = $sVarVal;
-                break;
-        }
+        parent::saveShopConfVar( $sVarType, $sVarName, $sVarVal, $sShopId, $sModule);
+    }
 
+    public function getShopConfVar( $sVarName, $sShopId = null, $sModule = 'oxTiramizoo' )
+    {
+        return parent::getShopConfVar( $sVarName, $sShopId, $sModule);
+    }
+
+
+    public function getTiramizooConfVars( $sShopId = null )
+    {
         if ( !$sShopId ) {
             $sShopId = $this->getShopId();
         }
 
-        // Update value only for current shop
-        if ($sShopId == $this->getShopId()) {
-            $this->setConfigParam( $sVarName, $sVarVal );
-        }
-
-        $oDb = oxDb::getDb();
-
-        $rs = $oDb->Execute(
-                "select oxid
-                from oxtiramizooconfig
-                where oxvarname = '$sVarName' AND oxshopid = '$sShopId'"
-        );
-
-        $sOxid = null;
-
-        if ($rs != false && $rs->recordCount() > 0) {
-            list($sOxid) = $rs->fields;
-        }
-
-
-        $sNewOXIDdQuoted  = $oDb->quote(oxUtilsObject::getInstance()->generateUID());
-        $sShopIdQuoted    = $oDb->quote($sShopId);
-        $sVarNameQuoted   = $oDb->quote($sVarName);
-        $sVarTypeQuoted   = $oDb->quote($sVarType);
-        $sVarValueQuoted  = $oDb->quote($sValue);
-        $sConfigKeyQuoted = $oDb->quote($this->getConfigParam('sConfigKey'));
-
-        if ($sOxid) {
-            $sQ = "UPDATE oxtiramizooconfig SET oxvarvalue = ENCODE( $sVarValueQuoted, $sConfigKeyQuoted), oxlastsync = NOW() where oxvarname = '$sVarName' AND oxshopid = '$sShopId'";
-        } else {
-            $sQ = "insert into oxtiramizooconfig (oxid, oxshopid, oxvarname, oxvartype, oxvarvalue, oxlastsync)
-               values($sNewOXIDdQuoted, $sShopIdQuoted, $sVarNameQuoted, $sVarTypeQuoted, ENCODE( $sVarValueQuoted, $sConfigKeyQuoted), NOW())";
-        }
-
-        $oDb->execute( $sQ );
-    }
-
-    public function setConfVarGroup( $sVarName, $sGroup = null )
-    {
-        if ($sVarName && ($sGroup !== null)) 
-        {
-            $oDb = oxDb::getDb();
-
-            $sQ = "UPDATE oxtiramizooconfig SET oxgroup = '$sGroup' WHERE oxvarname = '$sVarName';";
-            $oDb->execute( $sQ );
-        }
-    }
-
-
-    public function getShopConfVars( $sShopId = null )
-    {
-        if ( !$sShopId ) {
-            $sShopId = $this->getShopId();
-        }
+        $sModule = 'oxTiramizoo';
 
         $aTypeArray = array("bool"   => 'confbools',
                             "str"    => 'confstrs',
                             "arr"    => 'confarrs',
                             "aarr"   => 'confaarrs',
                             "select" => 'confselects',
-                            "num"    => 'confnum');
+                            "int"    => 'confints');
 
         $oDb = oxDb::getDb();
-        $sQ  = "select oxvarname, oxvartype, DECODE( oxvarvalue, '".$this->getConfigParam( 'sConfigKey' )."') as oxvarvalue from oxtiramizooconfig where oxshopid = '$sShopId'";
+        $sQ  = "select oxvarname, oxvartype, DECODE( oxvarvalue, '".$this->getConfigParam( 'sConfigKey' )."') as oxvarvalue from oxconfig where oxshopid = '{$sShopId}' AND oxmodule ='{$sModule}';";
         $oRs = $oDb->Execute( $sQ );
 
         $aValues = array('confbools' => array(),
@@ -176,7 +101,7 @@ class oxTiramizooConfig extends oxConfig
                          'confarrs' => array(),
                          'confaarrs' => array(),
                          'confselects' => array(),
-                         'confnum' => array());
+                         'confints' => array());
 
 
         if ( $oRs != false && $oRs->recordCount() > 0 ) {
@@ -184,20 +109,7 @@ class oxTiramizooConfig extends oxConfig
                 
                 list($sVarName, $sVarType, $sVarVal) = $oRs->fields;
 
-                    switch ( $sVarType ) {  
-                    case 'arr':
-                    case 'aarr':
-                        $sValue =  unserialize( $sVarVal );
-                        break;
-                    case 'bool':
-                        $sValue =  ( $sVarVal == 'true' || $sVarVal == '1' );
-                        break;
-                    default:
-                        $sValue = $sVarVal;
-                        break;
-                }
-
-                $aValues[$aTypeArray[$sVarType]][$sVarName] = $sValue;
+                $aValues[$aTypeArray[$sVarType]][$sVarName] = $this->decodeValue($sVarType, $sVarVal);
 
                 $oRs->moveNext();
             }
@@ -205,77 +117,4 @@ class oxTiramizooConfig extends oxConfig
 
         return $aValues;
     }
-
-    /**
-     * Retrieves shop configuration parameters from DB.
-     *
-     * @param string $sVarName Variable name
-     * @param string $sShopId  Shop ID
-     *
-     * @return object - raw configuration value in DB
-     */
-    public function getShopConfVar( $sVarName, $sShopId = null, $sModule = '' )
-    {
-        if ( !$sShopId ) {
-            $sShopId = $this->getShopId();
-        }
-
-        $oDb = oxDb::getDb( oxDb::FETCH_MODE_NUM );
-
-        $sQ  = "select oxvartype, DECODE( oxvarvalue, '".$this->getConfigParam( 'sConfigKey' )."') as oxvarvalue from oxtiramizooconfig where oxshopid = '$sShopId' and oxvarname = ".$oDb->quote($sVarName);
-        $oRs = $oDb->Execute( $sQ );
-
-        $sValue = null;
-        if ( $oRs != false && $oRs->recordCount() > 0 ) {
-
-            //$TODO: ugly conversion
-            list($sVarType, $sVarVal) = array_values($oRs->fields);
-
-            switch ( $sVarType ) {
-                case 'arr':
-                case 'aarr':
-                    $sValue =  unserialize( $sVarVal );
-                    break;
-                case 'bool':
-                    $sValue =  ( $sVarVal == 'true' || $sVarVal == '1' );
-                    break;
-                case 'str':
-                    $sValue = $sVarVal;
-                    break;
-                default:
-                    $sValue = $sVarVal;
-                    break;
-            }
-        }
-
-        return $sValue;
-    }
-
-    /**
-     * Function returns default shop ID
-     *
-     * @return string
-     */
-    public function getBaseShopId()
-    {
-        return 'oxbaseshop';
-    }
-
-    /**
-     * Loads and returns active shop object
-     *
-     * @return oxshop
-     */
-    public function getActiveShop()
-    {
-        if ( $this->_oActShop && $this->_iShopId == $this->_oActShop->getId() &&
-             $this->_oActShop->getLanguage() == oxLang::getInstance()->getBaseLanguage() ) {
-            return $this->_oActShop;
-        }
-
-        $this->_oActShop = oxNew( 'oxshop' );
-        $this->_oActShop->load( $this->getShopId() );
-        return $this->_oActShop;
-    }
-
 }

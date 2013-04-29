@@ -54,8 +54,11 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
             $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_request_data = new oxField(base64_encode(serialize($oTiramizooData)), oxField::T_RAW);
             $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_status = new oxField($tiramizooResult['response']->state, oxField::T_RAW);
             $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_external_id = new oxField($oTiramizooData->external_id, oxField::T_RAW);
-            $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_tracking_url = new oxField($tiramizooResult['response']->tracking_url . '?locale=' . $sCurrentLang, oxField::T_RAW);
+            $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_tracking_url = new oxField($tiramizooResult['response']->tracking_url . '?locale=' . oxLang::getInstance()->getLanguageAbbr(), oxField::T_RAW);
             $oTiramizooOrderExtended->oxtiramizooorderextended__oxorderid = new oxField($this->getId());
+
+            oxSession::deleteVar('sTiramizooTimeWindow');
+            oxSession::deleteVar('sTiramizooDeliveryType');
 
             $oTiramizooOrderExtended->save();
         }

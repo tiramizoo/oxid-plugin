@@ -108,14 +108,6 @@ class oxTiramizoo_Setup extends Shop_Config
      */
     public function migration_0_9_0()
     {
-        $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooconfig (
-                                OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL PRIMARY KEY,
-                                OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
-                                OXVARNAME varchar(64) NOT NULL DEFAULT '',
-                                OXVARTYPE varchar(4) NOT NULL DEFAULT '',
-                                OXVARVALUE blob NOT NULL,
-                                OXLASTSYNC datetime NOT NULL
-                            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
         $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooretaillocation (
                                 OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL PRIMARY KEY,
@@ -218,7 +210,7 @@ class oxTiramizoo_Setup extends Shop_Config
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/api/v1'); 
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
         $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_articles_stock_gt_0', 1);
-        $oxTiramizooConfig->saveShopConfVar( "num", 'oxTiramizoo_package_strategy', 0);
+        $oxTiramizooConfig->saveShopConfVar( "int", 'oxTiramizoo_package_strategy', 0);
     }
 
 

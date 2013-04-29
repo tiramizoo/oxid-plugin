@@ -37,6 +37,7 @@ class oxTiramizoo_DeliverySet
                     $this->setTiramizooDeliveryType($sTiramizooDeliveryType);
                 } catch (oxTiramizoo_InvalidDeliveryTypeException $oEx) {
                     $this->_sTiramizooDeliveryType = null;
+                    oxSession::deleteVar('sTiramizooDeliveryType');
 
                     // try set default delivery type
                     $aAvailableDeliveryTypes = $this->getAvailableDeliveryTypes();
@@ -52,6 +53,7 @@ class oxTiramizoo_DeliverySet
                     $this->setSelectedTimeWindow($sSelectedTimeWindow);
                 } catch (oxTiramizoo_InvalidTimeWindowException $oEx) {
                     $this->_oSelectedTimeWindow = null;
+                    oxSession::deleteVar('sTiramizooTimeWindow');
 
                     // try set default time window
                     $aAvailableDeliveryTypes = $this->getAvailableDeliveryTypes();

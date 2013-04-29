@@ -79,6 +79,6 @@ class oxTiramizoo_OrderExtended extends oxBase {
 
     public function getTrackingUrl()
     {
-        return $this->oxtiramizooorderextended__tiramizoo_tracking_url->value . oxLang::getInstance()->getLanguageAbbr();
+        return $this->oxtiramizooorderextended__tiramizoo_tracking_url->value;
     }
 }
