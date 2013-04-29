@@ -33,14 +33,14 @@ class oxTiramizoo_settings extends Shop_Config
 
         $sCurrentAdminShop = $oxConfig->getShopId();
 
-        $aShopConfVars = $oxTiramizooConfig->getShopConfVars();
+        $aShopConfVars = $oxTiramizooConfig->getTiramizooConfVars();
         
         $this->_aViewData['confstrs'] = $aShopConfVars['confstrs'];
         $this->_aViewData['confarrs'] = $aShopConfVars['confarrs'];
         $this->_aViewData['confaarrs'] = $aShopConfVars['confaarrs'];
         $this->_aViewData['confselects'] = $aShopConfVars['confselects'];
         $this->_aViewData['confbools'] = $aShopConfVars['confbools'];
-        $this->_aViewData['confnum'] = $aShopConfVars['confnum'];
+        $this->_aViewData['confints'] = $aShopConfVars['confints'];
 
         $this->_aViewData['version'] = oxTiramizoo_setup::VERSION;
 
@@ -115,7 +115,7 @@ class oxTiramizoo_settings extends Shop_Config
         $aConfStrs  = oxConfig::getParameter( "confstrs" );
         $aConfArrs  = oxConfig::getParameter( "confarrs" );
         $aConfAarrs = oxConfig::getParameter( "confaarrs" );
-        $aConfNums  = oxConfig::getParameter( "confnum" );
+        $aConfInts  = oxConfig::getParameter( "confints" );
 
         if ( is_array( $aConfBools ) ) {
           foreach ( $aConfBools as $sVarName => $sVarVal ) {
@@ -144,9 +144,9 @@ class oxTiramizoo_settings extends Shop_Config
           }
         }
 
-        if ( is_array( $aConfNums ) ) {
-          foreach ( $aConfNums as $sVarName => $aVarVal ) {
-            $oxTiramizooConfig->saveShopConfVar( "num", $sVarName, $aVarVal );
+        if ( is_array( $aConfInts ) ) {
+          foreach ( $aConfInts as $sVarName => $aVarVal ) {
+            $oxTiramizooConfig->saveShopConfVar( "int", $sVarName, $aVarVal );
           }
         }
     }

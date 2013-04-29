@@ -95,9 +95,9 @@
             <tr>
               <td valign="top" class="edittext" nowrap="">Define Package size</td>
               <td valign="top" class="edittext" id="selectPackageStrategyRadiosCell">
-                <input class="selectPackageStrategyRadios" type="radio" name=confnum[oxTiramizoo_package_strategy] [{if ($confnum.oxTiramizoo_package_strategy == 0)}]checked="checked"[{/if}] value="0" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_1_label" }]<br />
-                <input class="selectPackageStrategyRadios" type="radio" name=confnum[oxTiramizoo_package_strategy] [{if ($confnum.oxTiramizoo_package_strategy == 1)}]checked="checked"[{/if}] value="1" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_2_label" }] (specified from tiramizoo dashboard) <br />
-                <input class="selectPackageStrategyRadios" type="radio" name=confnum[oxTiramizoo_package_strategy] [{if ($confnum.oxTiramizoo_package_strategy == 2)}]checked="checked"[{/if}] value="2" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_3_label" }]<br />
+                <input class="selectPackageStrategyRadios" type="radio" name=confints[oxTiramizoo_package_strategy] [{if ($confints.oxTiramizoo_package_strategy == 0)}]checked="checked"[{/if}] value="0" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_1_label" }]<br />
+                <input class="selectPackageStrategyRadios" type="radio" name=confints[oxTiramizoo_package_strategy] [{if ($confints.oxTiramizoo_package_strategy == 1)}]checked="checked"[{/if}] value="1" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_2_label" }] (specified from tiramizoo dashboard) <br />
+                <input class="selectPackageStrategyRadios" type="radio" name=confints[oxTiramizoo_package_strategy] [{if ($confints.oxTiramizoo_package_strategy == 2)}]checked="checked"[{/if}] value="2" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_3_label" }]<br />
               </td>
             </tr>
 
@@ -114,7 +114,7 @@
 
                 var selectPackageStrategy = function() {
                   var input = YAHOO.util.Dom.getElementsBy(function (el) {
-                                  return (el.name === 'confnum[oxTiramizoo_package_strategy]' && el.checked);
+                                  return (el.name === 'confints[oxTiramizoo_package_strategy]' && el.checked);
                               }, 'input', 'selectPackageStrategyRadiosCell', null, null, null, true);
 
                   var packageStrategyId = input.value;
@@ -133,7 +133,7 @@
             </script>
 
 
-            <tr class="oxTiramizoo_package_strategy_row oxTiramizoo_package_strategy_2" [{if ($confnum.oxTiramizoo_package_strategy != 2)}]style="display:none;"[{/if}]>
+            <tr class="oxTiramizoo_package_strategy_row oxTiramizoo_package_strategy_2" [{if ($confints.oxTiramizoo_package_strategy != 2)}]style="display:none;"[{/if}]>
               <td valign="top" class="edittext" nowrap="">[{oxmultilang ident="oxTiramizoo_settings_package_std_size_weight_label"}]</td>
               <td valign="top" class="edittext">
 
