@@ -26,6 +26,15 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
 	        $oTiramizooApi = oxTiramizooApi::getApiInstance($this->getApiToken());
 			$tiramizooResult = $oTiramizooApi->sendOrder($oTiramizooData);
 
+            $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_response = new oxField(base64_encode(serialize($tiramizooResult)), oxField::T_RAW);
+            $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_request_data = new oxField(base64_encode(serialize($oTiramizooData)), oxField::T_RAW);
+            $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_status = new oxField($tiramizooResult['response']->state, oxField::T_RAW);
+            $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_external_id = new oxField($oTiramizooData->external_id, oxField::T_RAW);
+            $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_tracking_url = new oxField($tiramizooResult['response']->tracking_url . '?locale=' . oxLang::getInstance()->getLanguageAbbr(), oxField::T_RAW);
+            $oTiramizooOrderExtended->oxtiramizooorderextended__oxorderid = new oxField($oOrder->getId());
+
+            $oTiramizooOrderExtended->save();
+
 	        if (!in_array($tiramizooResult['http_status'], array(201))) {
                 $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_post_order_error', oxLang::getInstance()->getBaseLanguage(), false);
                 throw new oxTiramizoo_SendOrderException( $errorMessage );
