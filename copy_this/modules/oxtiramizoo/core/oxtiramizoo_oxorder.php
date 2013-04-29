@@ -55,6 +55,9 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
             $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_tracking_url = new oxField($tiramizooResult['response']->tracking_url . '?locale=' . $sCurrentLang, oxField::T_RAW);
             $oTiramizooOrderExtended->oxtiramizooorderextended__oxorderid = new oxField($this->getId());
 
+            oxSession::deleteVar('sTiramizooTimeWindow');
+            oxSession::deleteVar('sTiramizooDeliveryType');
+
             $oTiramizooOrderExtended->save();
         }
 
