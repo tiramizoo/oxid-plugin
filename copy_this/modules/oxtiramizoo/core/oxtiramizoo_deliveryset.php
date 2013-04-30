@@ -367,7 +367,9 @@ class oxTiramizoo_DeliverySet
     {
         if ($this->_isTiramizooAvailable === null) {
 
-            //@TODO: validate basket
+            if (!$this->getSession()->getBasket()->isValid()) {
+                return $this->_isTiramizooAvailable = false;                
+            }
 
             //check if retail location is fit to postal code service is available in this area
             try {
@@ -386,5 +388,15 @@ class oxTiramizoo_DeliverySet
         }
 
         return $this->_isTiramizooAvailable;
+    }
+
+    /**
+     * oxSession instance getter
+     *
+     * @return oxsession
+     */
+    public function getSession()
+    {
+        return oxRegistry::getSession();
     }
 }
