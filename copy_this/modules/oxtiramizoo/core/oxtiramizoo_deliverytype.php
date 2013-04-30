@@ -6,9 +6,9 @@ abstract class oxTiramizoo_DeliveryType
 	protected $_aTimeWindows = null;
 	protected $_oRetailLocation = null;
 
-	public function __construct($aTimeWindows, $oRetailLocation)
+	public function __construct($oRetailLocation)
 	{
-		$this->_aTimeWindows = $aTimeWindows;
+		$this->_aTimeWindows = $oRetailLocation->getAvailableTimeWindows();
 		$this->_oRetailLocation = $oRetailLocation;
 	}
 
