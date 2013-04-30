@@ -5,7 +5,7 @@
  *
  * @package: oxTiramizoo
  */
-class oxTiramizoo_Setup extends Shop_Config
+class oxTiramizoo_Setup
 {
     /**
      * Current version of oxTiramizoo module
@@ -23,7 +23,7 @@ class oxTiramizoo_Setup extends Shop_Config
      */
     public function install()
     {
-        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
+        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
 
         $currentInstalledVersion = $oxTiramizooConfig->getShopConfVar('oxTiramizoo_version');
 
@@ -32,24 +32,27 @@ class oxTiramizoo_Setup extends Shop_Config
         try 
         { 
             if (!$tiramizooIsInstalled || !$currentInstalledVersion) {
-
                 $this->runMigrations();
                 $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 1);
-
-            } else if ($tiramizooIsInstalled && (version_compare(oxTiramizoo_setup::VERSION, $currentInstalledVersion) !== 0)) {
-                
+            } else if ($tiramizooIsInstalled && (version_compare(oxTiramizoo_setup::VERSION, $currentInstalledVersion) > 0)) {
                 $this->runMigrations();
             }
 
         } catch(oxException $e) {
             $errorMessage = $e->getMessage() . "<ul><li>" . implode("</li><li>", $this->_migrationErrors) . "</li></ul>";
             
-            $oModule = new oxModule();
-            $oModule->load('oxTiramizoo');
-            $oModule->deactivate();
+            $this->getModule()->deactivate();
 
             throw new oxException($errorMessage);
         }
+    }
+
+    public function getModule()
+    {
+        $oModule = oxnew('oxModule');
+        $oModule->load('oxTiramizoo');
+
+        return $oModule;
     }
 
     /**
@@ -57,12 +60,34 @@ class oxTiramizoo_Setup extends Shop_Config
      */
     public function runMigrations()
     {
-        $currentInstalledVersion = oxTiramizooConfig::getInstance()->getShopConfVar('oxTiramizoo_version') ? oxTiramizooConfig::getInstance()->getShopConfVar('oxTiramizoo_version') : '0.0.0';
-        $methodsName = get_class_methods(__CLASS__);
+        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+
+        $currentInstalledVersion = $oxTiramizooConfig->getShopConfVar('oxTiramizoo_version') ? $oxTiramizooConfig->getShopConfVar('oxTiramizoo_version') : '0.0.0';
+
+        $migrationsMethods = $this->getMigrationMethods();
+
+        foreach($migrationsMethods as $methodVersion => $migrationMethod)
+        {
+            if (version_compare($methodVersion, $currentInstalledVersion) > 0) {
+                if (version_compare($methodVersion, oxTiramizoo_setup::VERSION) <= 0) {
+                    call_user_func_array(array($this, $migrationMethod), array());
+
+                    if ($this->stopMigrationsIfErrors()) {
+                        throw new oxException('<p>Cannot execute the following sql queries:</p>');
+                    }
+                    oxTiramizooConfig::getInstance()->saveShopConfVar( "str", 'oxTiramizoo_version', $methodVersion);                    
+                }
+            }
+        }
+    }
+
+    public function getMigrationMethods($class = __CLASS__)
+    {
+        $methodsNames = get_class_methods($class);
 
         $migrationsMethods = array();
 
-        foreach ($methodsName as $methodName) 
+        foreach ($methodsNames as $methodName) 
         {
             if (strpos($methodName, 'migration_') === 0) {
                 $methodVersion = str_replace('migration_', '', $methodName);
@@ -73,25 +98,12 @@ class oxTiramizoo_Setup extends Shop_Config
 
         uksort($migrationsMethods, 'version_compare');
 
-        foreach($migrationsMethods as $methodVersion => $migrationMethod)
-        {
-            if (version_compare($methodVersion, $currentInstalledVersion) > 0) {
-                if (version_compare($methodVersion, oxTiramizoo_setup::VERSION) <= 0) {
-                    call_user_func_array(array($this, $migrationMethod), array());
-
-                    if ($this->stopMigrationsIfErrors($methodVersion)) {
-                        throw new oxException('<p>Cannot execute the following sql queries:</p>');
-                    }
-
-                    oxTiramizooConfig::getInstance()->saveShopConfVar( "str", 'oxTiramizoo_version', $methodVersion);                    
-                }
-            }
-        }
+        return $migrationsMethods;
     }
 
-    public function stopMigrationsIfErrors($migrationVersion)
+    public function stopMigrationsIfErrors()
     {
-        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
+        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
 
         if (count($this->_migrationErrors)) {
             //disable tiramizoo if db errors
@@ -205,7 +217,7 @@ class oxTiramizoo_Setup extends Shop_Config
                                 OXDELID = 'TiramizooStandardDelivery',
                                 OXDELSETID = 'Tiramizoo';");
 
-        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
+        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
 
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/api/v1'); 
         $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
@@ -223,9 +235,11 @@ class oxTiramizoo_Setup extends Shop_Config
     protected function executeSQL($sql)
     {
         $result = oxDb::getDb()->Execute($sql);
+
         if ($result === false) {
             $this->_migrationErrors[] = $sql;
         }
+
         return $result;
     }
 
@@ -256,6 +270,6 @@ class oxTiramizoo_Setup extends Shop_Config
         $sql = "SHOW COLUMNS FROM " . $tableName . " LIKE '" . $columnName . "'";
         $result = oxDb::getDb()->Execute($sql);
 
-        return $result->RecordCount();
+        return $result->RecordCount() > 0;
     }
 }
