@@ -44,7 +44,7 @@ class oxTiramizoo_settings extends Shop_Config
 
         $this->_aViewData['version'] = oxTiramizoo_setup::VERSION;
 
-        $this->_aViewData['aRetailLocations'] = oxtiramizooretaillocation::getAll();
+        $this->_aViewData['aRetailLocations'] = oxTiramizoo_RetailLocation::getAll();
 
         return 'oxTiramizoo_settings.tpl';
     }
@@ -205,7 +205,7 @@ class oxTiramizoo_settings extends Shop_Config
         // synchronizing config params
         try 
         {
-            $aApiKeys = oxtiramizooretaillocation::getAll(); 
+            $aApiKeys = oxTiramizoo_RetailLocation::getAll(); 
 
             foreach ($aApiKeys as $oTiramizooRetailLocation) 
             {
@@ -234,7 +234,7 @@ class oxTiramizoo_settings extends Shop_Config
             
             $this->saveConfVars();
 
-            $aRetailLocations = oxtiramizooretaillocation::getAll();
+            $aRetailLocations = oxTiramizoo_RetailLocation::getAll();
 
             foreach ($aRetailLocations as $oRetailLocation) 
             {
@@ -260,7 +260,7 @@ class oxTiramizoo_settings extends Shop_Config
     {
 
         $sApiToken = trim(oxConfig::getParameter('api_token'));
-        $oTiramizooRetailLocation = oxNew('oxtiramizooretaillocation');
+        $oTiramizooRetailLocation = oxNew('oxTiramizoo_RetailLocation');
 
         
         if ($sOxid = $oTiramizooRetailLocation->getOxidByApiToken( $sApiToken )) 
@@ -290,8 +290,8 @@ class oxTiramizoo_settings extends Shop_Config
     public function removeLocation()
     {
         $sApiToken = oxConfig::getParameter('api_token');
-        $oTiramizooRetailLocation = oxNew('oxtiramizooretaillocation');
-        if ($oTiramizooRetailLocation = oxtiramizooretaillocation::findOneByFilters( array('oxapitoken' => $sApiToken) )) 
+        $oTiramizooRetailLocation = oxNew('oxTiramizoo_RetailLocation');
+        if ($oTiramizooRetailLocation = oxTiramizoo_RetailLocation::findOneByFilters( array('oxapitoken' => $sApiToken) )) 
         {
             $oTiramizooRetailLocation->delete();            
         }
@@ -338,7 +338,7 @@ class oxTiramizoo_settings extends Shop_Config
     public function test()
     {
 
-        $aRetailLocations = oxtiramizooretaillocation::getAll();
+        $aRetailLocations = oxTiramizoo_RetailLocation::getAll();
 
         foreach ($aRetailLocations as $oRetailLocation) 
         {

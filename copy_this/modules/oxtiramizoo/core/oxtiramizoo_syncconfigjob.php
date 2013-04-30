@@ -15,7 +15,7 @@ class oxTiramizoo_SyncConfigJob extends oxTiramizoo_ScheduleJob
 				return true;
 			}
 
-	        $aApiKeys = oxtiramizooretaillocation::getAll(); 
+	        $aApiKeys = oxTiramizoo_RetailLocation::getAll(); 
 
 	        foreach ($aApiKeys as $oTiramizooRetailLocation) 
 	        {

@@ -1,6 +1,6 @@
 <?php
 
-class oxtiramizooretaillocation extends oxBase {
+class oxTiramizoo_RetailLocation extends oxBase {
 
     /**
      * Object core table name
@@ -14,7 +14,7 @@ class oxtiramizooretaillocation extends oxBase {
      *
      * @var string
      */
-    protected $_sClassName = 'oxtiramizooretaillocation';
+    protected $_sClassName = 'oxTiramizoo_RetailLocation';
 
     protected $_aConfigVars = null;
 
@@ -45,7 +45,7 @@ class oxtiramizooretaillocation extends oxBase {
         
         if ( $rs && $rs->RecordCount() ) {
 
-            $oTiramizooRetailLocation = oxNew('oxtiramizooretaillocation');
+            $oTiramizooRetailLocation = oxNew('oxTiramizoo_RetailLocation');
             $oTiramizooRetailLocation->load( $rs->fields['OXID'] );            
 
             return $oTiramizooRetailLocation;
@@ -78,7 +78,7 @@ class oxtiramizooretaillocation extends oxBase {
 
         if ( $oRs != false && $oRs->recordCount() > 0 ) {
             while (!$oRs->EOF) {
-    			$oTiramizooRetailLocation = oxNew('oxtiramizooretaillocation');
+    			$oTiramizooRetailLocation = oxNew('oxTiramizoo_RetailLocation');
             	$oTiramizooRetailLocation->load( $oRs->fields['OXID'] );            
 
             	$result[] = $oTiramizooRetailLocation;
@@ -125,7 +125,7 @@ class oxtiramizooretaillocation extends oxBase {
 
     public function getRetailLocationConfigs()
     {
-        return oxtiramizooretaillocationconfig::findByFilters(array('OXRETAILLOCATIONID' => $this->getId()));        
+        return oxTiramizoo_RetailLocationConfig::findByFilters(array('OXRETAILLOCATIONID' => $this->getId()));        
     }
 
     public function synchronizeConfiguration($aRemoteConfiguration)
@@ -149,7 +149,7 @@ class oxtiramizooretaillocation extends oxBase {
 
             $sValue  = $sVarVal ;
 
-            $sOxRetailLocationConfig = oxtiramizooretaillocationconfig::findOneByFiltersOrCreate(array('oxretaillocationid' => $this->getId(), 'oxvarname' => $sConfigIndex));
+            $sOxRetailLocationConfig = oxTiramizoo_RetailLocationConfig::findOneByFiltersOrCreate(array('oxretaillocationid' => $this->getId(), 'oxvarname' => $sConfigIndex));
 
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarname = new oxField($sConfigIndex);
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvartype = new oxField($sVarType);
@@ -182,7 +182,7 @@ class oxtiramizooretaillocation extends oxBase {
 
             $sValue  = $sVarVal ;
 
-            $sOxRetailLocationConfig = oxtiramizooretaillocationconfig::findOneByFiltersOrCreate(array('oxretaillocationid' => $this->getId(), 'oxvarname' => $sConfigIndex));
+            $sOxRetailLocationConfig = oxTiramizoo_RetailLocationConfig::findOneByFiltersOrCreate(array('oxretaillocationid' => $this->getId(), 'oxvarname' => $sConfigIndex));
 
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarname = new oxField($sConfigIndex);
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvartype = new oxField($sVarType);
@@ -205,5 +205,42 @@ class oxtiramizooretaillocation extends oxBase {
 
         return parent::delete();
     }
+
+
+
+    public function getAvailableTimeWindows()
+    {
+        $aTimeWindows = $this->getConfVar('time_windows');
+
+        if ($aTimeWindows) {
+            
+            //sort by delivery from date
+            foreach ($aTimeWindows as $oldKey => $aTimeWindow) 
+            {
+                $oTimeWindow = new oxTiramizoo_TimeWindow($aTimeWindow);
+
+                $aTimeWindows[$oTimeWindow->getDeliveryFromDate()->getTimestamp()] = $aTimeWindow;
+                unset($aTimeWindows[$oldKey]);
+            }
+
+            ksort($aTimeWindows);
+        }
+
+        return $aTimeWindows ? $aTimeWindows : array();
+    }
+
+    public function getTimeWindowByHash($sHash) 
+    {
+        foreach ($this->getAvailableTimeWindows() as $aTimeWindow) 
+        {
+            $oTimeWindow = new oxTiramizoo_TimeWindow($aTimeWindow);
+            
+            if ($oTimeWindow->getHash() == $sHash) {
+                return $oTimeWindow;
+            }
+        }
+        return null;
+    }
+
 
 }

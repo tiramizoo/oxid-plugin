@@ -67,8 +67,8 @@ $aModule = array(
                             'oxTiramizoo_SyncConfigJob'         => 'oxtiramizoo/core/oxtiramizoo_syncconfigjob.php',
 
                             /* models */
-                            'oxtiramizooretaillocation'         => 'oxtiramizoo/application/models/oxtiramizoo_retaillocation.php',
-                            'oxtiramizooretaillocationconfig'   => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationconfig.php',
+                            'oxTiramizoo_RetailLocation'        => 'oxtiramizoo/application/models/oxtiramizoo_retaillocation.php',
+                            'oxTiramizoo_RetailLocationConfig'  => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationconfig.php',
                             'oxTiramizoo_ArticleExtended'       => 'oxtiramizoo/application/models/oxtiramizoo_articleextended.php',
                             'oxTiramizoo_CategoryExtended'      => 'oxtiramizoo/application/models/oxtiramizoo_categoryextended.php',
                             'oxTiramizoo_OrderExtended'         => 'oxtiramizoo/application/models/oxtiramizoo_orderextended.php',
