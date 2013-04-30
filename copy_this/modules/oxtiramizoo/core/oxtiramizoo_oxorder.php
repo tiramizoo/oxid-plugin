@@ -17,8 +17,8 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
             $oTiramizooWindow = $oTiramizooDeliverySet->getSelectedTimeWindow();
 
             $oRetailLocation = $oTiramizooDeliverySet->getRetailLocation();
-            $oUser = $oTiramizooDeliverySet->getUser();
-            $oDeliveryAddress = $oTiramizooDeliverySet->getDeliveryAddress();
+            $oUser = $this->getUser();
+            $oDeliveryAddress = $this->getDelAddressInfo();
 
             $oCreateOrderData = new oxTiramizoo_CreateOrderData($oTiramizooWindow, $oBasket, $oRetailLocation);
             $oCreateOrderData->buildPickup();
