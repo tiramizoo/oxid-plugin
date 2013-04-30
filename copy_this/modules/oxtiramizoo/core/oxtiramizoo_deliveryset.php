@@ -84,13 +84,13 @@ class oxTiramizoo_DeliverySet
             $this->_sDeliveryPostalcode = $this->refreshDeliveryPostalCode($oUser, $oDeliveryAddress);
 
             if ($this->isTiramizooAvailable()) {
-                $sTiramizooDeliveryType = oxSession::getVar('sTiramizooDeliveryType');
+                $sTiramizooDeliveryType = $this->getSession()->getVariable('sTiramizooDeliveryType');
 
                 try {
                     $this->setTiramizooDeliveryType($sTiramizooDeliveryType);
                 } catch (oxTiramizoo_InvalidDeliveryTypeException $oEx) {
                     $this->_sTiramizooDeliveryType = null;
-                    oxSession::deleteVar('sTiramizooDeliveryType');
+                    $this->getSession()->deleteVariable('sTiramizooDeliveryType');
 
                     // try set default delivery type
                     $this->setDefaultDeliveryType();
@@ -102,13 +102,13 @@ class oxTiramizoo_DeliverySet
                     }
                 }
 
-                $sSelectedTimeWindow = oxSession::getVar('sTiramizooTimeWindow');
+                $sSelectedTimeWindow = $this->getSession()->getVariable('sTiramizooTimeWindow');
 
                 try {
                     $this->setSelectedTimeWindow($sSelectedTimeWindow);
                 } catch (oxTiramizoo_InvalidTimeWindowException $oEx) {
                     $this->_oSelectedTimeWindow = null;
-                    oxSession::deleteVar('sTiramizooTimeWindow');
+                    $this->getSession()->deleteVariable('sTiramizooTimeWindow');
 
                     // try set default time window
                     $this->setDefaultTimeWindow();
@@ -367,7 +367,7 @@ class oxTiramizoo_DeliverySet
     {
         if ($this->_isTiramizooAvailable === null) {
 
-            if (!$this->getSession()->getBasket()->isValid()) {
+            if (!$this->getBasket()->isValid()) {
                 return $this->_isTiramizooAvailable = false;                
             }
 
@@ -388,6 +388,16 @@ class oxTiramizoo_DeliverySet
         }
 
         return $this->_isTiramizooAvailable;
+    }
+
+    /**
+     * oxBasket instance
+     *
+     * @return oxbasket
+     */
+    public function getBasket()
+    {
+        return $this->getSession()->getBasket();
     }
 
     /**
