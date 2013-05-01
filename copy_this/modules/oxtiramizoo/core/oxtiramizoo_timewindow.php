@@ -77,11 +77,11 @@ class oxTiramizoo_TimeWindow
 	public function getFormattedDeliveryTimeWindow()
 	{
         if ($this->isToday()) {
-            return oxLang::getInstance()->translateString('oxTiramizoo_Today', oxLang::getInstance()->getBaseLanguage(), false) . ' ' . $this->getDeliveryHoursFormated($this->_aData);
+            return oxRegistry::getLang()->translateString('oxTiramizoo_Today', oxRegistry::getLang()->getBaseLanguage(), false) . ' ' . $this->getDeliveryHoursFormated($this->_aData);
         } else if ($this->isTomorrow()){
-            return oxLang::getInstance()->translateString('oxTiramizoo_Tomorrow', oxLang::getInstance()->getBaseLanguage(), false) . ' ' .  $this->getDeliveryHoursFormated($this->_aData);
+            return oxRegistry::getLang()->translateString('oxTiramizoo_Tomorrow', oxRegistry::getLang()->getBaseLanguage(), false) . ' ' .  $this->getDeliveryHoursFormated($this->_aData);
         } else {
-            return  $this->getDeliveryFromDate()->get(oxLang::getInstance()->translateString('oxTiramizoo_time_window_date_format', oxLang::getInstance()->getBaseLanguage(), false)) . ' ' . $this->getDeliveryHoursFormated($this->_aData);
+            return  $this->getDeliveryFromDate()->get(oxRegistry::getLang()->translateString('oxTiramizoo_time_window_date_format', oxRegistry::getLang()->getBaseLanguage(), false)) . ' ' . $this->getDeliveryHoursFormated($this->_aData);
         }
 
 	}
