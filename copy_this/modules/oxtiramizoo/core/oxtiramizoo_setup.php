@@ -120,6 +120,7 @@ class oxTiramizoo_Setup
      */
     public function migration_0_9_0()
     {
+        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
 
         $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooretaillocation (
                                 OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL PRIMARY KEY,
@@ -183,7 +184,7 @@ class oxTiramizoo_Setup
 
         $this->executeSQL("INSERT IGNORE INTO oxdeliveryset SET
                                 OXID = 'Tiramizoo',
-                                OXSHOPID = 'oxbaseshop',
+                                OXSHOPID = '" . $oTiramizooConfig->getShopId() . "',
                                 OXACTIVE = 0,
                                 OXACTIVEFROM = '0000-00-00 00:00:00',
                                 OXACTIVETO = '0000-00-00 00:00:00',
@@ -195,7 +196,7 @@ class oxTiramizoo_Setup
 
          $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
                                 OXID = 'TiramizooStandardDelivery',
-                                OXSHOPID = 'oxbaseshop',
+                                OXSHOPID = '" . $oTiramizooConfig->getShopId() . "',
                                 OXACTIVE = 1,
                                 OXACTIVEFROM = '0000-00-00 00:00:00',
                                 OXACTIVETO = '0000-00-00 00:00:00',
@@ -217,12 +218,10 @@ class oxTiramizoo_Setup
                                 OXDELID = 'TiramizooStandardDelivery',
                                 OXDELSETID = 'Tiramizoo';");
 
-        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
-
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/api/v1'); 
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
-        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_articles_stock_gt_0', 1);
-        $oxTiramizooConfig->saveShopConfVar( "int", 'oxTiramizoo_package_strategy', 0);
+        $oTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/api/v1'); 
+        $oTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
+        $oTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_articles_stock_gt_0', 1);
+        $oTiramizooConfig->saveShopConfVar( "int", 'oxTiramizoo_package_strategy', 0);
     }
 
 
