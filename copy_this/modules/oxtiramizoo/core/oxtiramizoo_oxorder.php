@@ -10,7 +10,7 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
     {
         parent::_loadFromBasket( $oBasket );
 
-        if (oxSession::getVar('sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID) {
+        if ($oBasket->getShippingId() == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID) {
 
             $oTiramizooDeliverySet = oxRegistry::get('oxTiramizoo_DeliverySet');
 
