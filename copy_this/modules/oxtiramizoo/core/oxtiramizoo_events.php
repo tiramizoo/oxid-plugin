@@ -9,7 +9,11 @@ class oxTiramizoo_Events
         	$oTiramizooSetup = oxRegistry::get('oxTiramizoo_Setup');
 			$oTiramizooSetup->install();
 		} catch (oxException $e) {
-			die($e->getMessage());
+	        // @codeCoverageIgnoreStart
+	        if ( !defined( 'OXID_PHP_UNIT' ) ) {
+				die($e->getMessage());
+	        }       
+	        // @codeCoverageIgnoreEnd
 		}
 	}
 }
