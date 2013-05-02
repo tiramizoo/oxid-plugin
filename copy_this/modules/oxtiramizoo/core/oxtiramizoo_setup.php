@@ -5,7 +5,7 @@
  *
  * @package: oxTiramizoo
  */
-class oxTiramizoo_setup extends Shop_Config
+class oxTiramizoo_Setup
 {
     /**
      * Current version of oxTiramizoo module
@@ -23,7 +23,7 @@ class oxTiramizoo_setup extends Shop_Config
      */
     public function install()
     {
-        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
+        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
 
         $currentInstalledVersion = $oxTiramizooConfig->getShopConfVar('oxTiramizoo_version');
 
@@ -32,25 +32,27 @@ class oxTiramizoo_setup extends Shop_Config
         try 
         { 
             if (!$tiramizooIsInstalled || !$currentInstalledVersion) {
-
                 $this->runMigrations();
                 $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 1);
-
-            } else if ($tiramizooIsInstalled && (version_compare(oxTiramizoo_setup::VERSION, $currentInstalledVersion) !== 0)) {
-                
+            } else if ($tiramizooIsInstalled && (version_compare(oxTiramizoo_setup::VERSION, $currentInstalledVersion) > 0)) {
                 $this->runMigrations();
             }
 
         } catch(oxException $e) {
             $errorMessage = $e->getMessage() . "<ul><li>" . implode("</li><li>", $this->_migrationErrors) . "</li></ul>";
-            echo $errorMessage;
+            
+            $this->getModule()->deactivate();
 
-            $oModule = new oxModule();
-            $oModule->load('oxTiramizoo');
-            $oModule->deactivate();
-
-            exit;
+            throw new oxException($errorMessage);
         }
+    }
+
+    public function getModule()
+    {
+        $oModule = oxnew('oxModule');
+        $oModule->load('oxTiramizoo');
+
+        return $oModule;
     }
 
     /**
@@ -58,12 +60,34 @@ class oxTiramizoo_setup extends Shop_Config
      */
     public function runMigrations()
     {
-        $currentInstalledVersion = oxTiramizooConfig::getInstance()->getShopConfVar('oxTiramizoo_version') ? oxTiramizooConfig::getInstance()->getShopConfVar('oxTiramizoo_version') : '0.0.0';
-        $methodsName = get_class_methods(__CLASS__);
+        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+
+        $currentInstalledVersion = $oxTiramizooConfig->getShopConfVar('oxTiramizoo_version') ? $oxTiramizooConfig->getShopConfVar('oxTiramizoo_version') : '0.0.0';
+
+        $migrationsMethods = $this->getMigrationMethods();
+
+        foreach($migrationsMethods as $methodVersion => $migrationMethod)
+        {
+            if (version_compare($methodVersion, $currentInstalledVersion) > 0) {
+                if (version_compare($methodVersion, oxTiramizoo_setup::VERSION) <= 0) {
+                    call_user_func_array(array($this, $migrationMethod), array());
+
+                    if ($this->stopMigrationsIfErrors()) {
+                        throw new oxException('<p>Cannot execute the following sql queries:</p>');
+                    }
+                    oxTiramizooConfig::getInstance()->saveShopConfVar( "str", 'oxTiramizoo_version', $methodVersion);                    
+                }
+            }
+        }
+    }
+
+    public function getMigrationMethods($class = __CLASS__)
+    {
+        $methodsNames = get_class_methods($class);
 
         $migrationsMethods = array();
 
-        foreach ($methodsName as $methodName) 
+        foreach ($methodsNames as $methodName) 
         {
             if (strpos($methodName, 'migration_') === 0) {
                 $methodVersion = str_replace('migration_', '', $methodName);
@@ -74,25 +98,12 @@ class oxTiramizoo_setup extends Shop_Config
 
         uksort($migrationsMethods, 'version_compare');
 
-        foreach($migrationsMethods as $methodVersion => $migrationMethod)
-        {
-            if (version_compare($methodVersion, $currentInstalledVersion) > 0) {
-                if (version_compare($methodVersion, oxTiramizoo_setup::VERSION) <= 0) {
-                    call_user_func_array(array($this, $migrationMethod), array());
-
-                    if ($this->stopMigrationsIfErrors($methodVersion)) {
-                        throw new oxException('<p>Cannot execute the following sql queries:</p>');
-                    }
-
-                    oxTiramizooConfig::getInstance()->saveShopConfVar( "str", 'oxTiramizoo_version', $methodVersion);                    
-                }
-            }
-        }
+        return $migrationsMethods;
     }
 
-    public function stopMigrationsIfErrors($migrationVersion)
+    public function stopMigrationsIfErrors()
     {
-        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
+        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
 
         if (count($this->_migrationErrors)) {
             //disable tiramizoo if db errors
@@ -109,6 +120,7 @@ class oxTiramizoo_setup extends Shop_Config
      */
     public function migration_0_9_0()
     {
+        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
 
         $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooretaillocation (
                                 OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL PRIMARY KEY,
@@ -119,7 +131,6 @@ class oxTiramizoo_setup extends Shop_Config
 
         $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooretaillocationconfig (
                                 OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL PRIMARY KEY,
-                                OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
                                 OXVARNAME varchar(128) NOT NULL DEFAULT '',
                                 OXVARTYPE varchar(4) NOT NULL DEFAULT '',
                                 OXVARVALUE TEXT NOT NULL,
@@ -158,6 +169,7 @@ class oxTiramizoo_setup extends Shop_Config
 
         $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooschedulejob (
                                 OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL PRIMARY KEY,
+                                OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
                                 OXJOBTYPE varchar(32),
                                 OXPARAMS text NOT NULL DEFAULT '',
                                 OXCREATEDAT datetime,
@@ -172,7 +184,7 @@ class oxTiramizoo_setup extends Shop_Config
 
         $this->executeSQL("INSERT IGNORE INTO oxdeliveryset SET
                                 OXID = 'Tiramizoo',
-                                OXSHOPID = 'oxbaseshop',
+                                OXSHOPID = '" . $oTiramizooConfig->getShopId() . "',
                                 OXACTIVE = 0,
                                 OXACTIVEFROM = '0000-00-00 00:00:00',
                                 OXACTIVETO = '0000-00-00 00:00:00',
@@ -184,7 +196,7 @@ class oxTiramizoo_setup extends Shop_Config
 
          $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
                                 OXID = 'TiramizooStandardDelivery',
-                                OXSHOPID = 'oxbaseshop',
+                                OXSHOPID = '" . $oTiramizooConfig->getShopId() . "',
                                 OXACTIVE = 1,
                                 OXACTIVEFROM = '0000-00-00 00:00:00',
                                 OXACTIVETO = '0000-00-00 00:00:00',
@@ -206,12 +218,10 @@ class oxTiramizoo_setup extends Shop_Config
                                 OXDELID = 'TiramizooStandardDelivery',
                                 OXDELSETID = 'Tiramizoo';");
 
-        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
-
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/api/v1'); 
-        $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
-        $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_articles_stock_gt_0', 1);
-        $oxTiramizooConfig->saveShopConfVar( "int", 'oxTiramizoo_package_strategy', 0);
+        $oTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/api/v1'); 
+        $oTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
+        $oTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_articles_stock_gt_0', 1);
+        $oTiramizooConfig->saveShopConfVar( "int", 'oxTiramizoo_package_strategy', 0);
     }
 
 
@@ -224,9 +234,11 @@ class oxTiramizoo_setup extends Shop_Config
     protected function executeSQL($sql)
     {
         $result = oxDb::getDb()->Execute($sql);
+
         if ($result === false) {
             $this->_migrationErrors[] = $sql;
         }
+
         return $result;
     }
 
@@ -257,6 +269,6 @@ class oxTiramizoo_setup extends Shop_Config
         $sql = "SHOW COLUMNS FROM " . $tableName . " LIKE '" . $columnName . "'";
         $result = oxDb::getDb()->Execute($sql);
 
-        return $result->RecordCount();
+        return $result->RecordCount() > 0;
     }
 }

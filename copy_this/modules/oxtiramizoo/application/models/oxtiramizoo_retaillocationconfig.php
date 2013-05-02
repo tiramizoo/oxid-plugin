@@ -1,6 +1,6 @@
 <?php
 
-class oxtiramizooretaillocationconfig extends oxBase {
+class oxTiramizoo_RetailLocationConfig extends oxBase {
 
     /**
      * Object core table name
@@ -14,7 +14,7 @@ class oxtiramizooretaillocationconfig extends oxBase {
      *
      * @var string
      */
-    protected $_sClassName = 'oxtiramizooretaillocationconfig';
+    protected $_sClassName = 'oxTiramizoo_RetailLocationConfig';
 
     /**
      * Class constructor
@@ -67,7 +67,7 @@ class oxtiramizooretaillocationconfig extends oxBase {
         
         if ( $rs && $rs->RecordCount() ) {
 
-            $oTiramizooRetailLocationoConfig = oxNew('oxtiramizooretaillocationconfig');
+            $oTiramizooRetailLocationoConfig = oxNew('oxTiramizoo_RetailLocationConfig');
             $oTiramizooRetailLocationoConfig->load( $rs->fields['OXID'] );            
 
             return $oTiramizooRetailLocationoConfig;
@@ -94,7 +94,7 @@ class oxtiramizooretaillocationconfig extends oxBase {
 
         if ( $oRs != false && $oRs->recordCount() > 0 ) {
             while (!$oRs->EOF) {
-                $oRetailLocationConfig = oxNew('oxtiramizooretaillocationconfig');
+                $oRetailLocationConfig = oxNew('oxTiramizoo_RetailLocationConfig');
                 $oRetailLocationConfig->load( $oRs->fields['OXID'] );            
 
                 $result[] = $oRetailLocationConfig;
@@ -107,10 +107,10 @@ class oxtiramizooretaillocationconfig extends oxBase {
 
     public static function findOneByFiltersOrCreate($aFilters) 
     {
-        $oTiramizooRetailLocationoConfig = oxtiramizooretaillocationconfig::findOneByFilters($aFilters);
+        $oTiramizooRetailLocationoConfig = oxTiramizoo_RetailLocationConfig::findOneByFilters($aFilters);
 
         if (!$oTiramizooRetailLocationoConfig) {
-            $oTiramizooRetailLocationoConfig = oxNew('oxtiramizooretaillocationconfig');
+            $oTiramizooRetailLocationoConfig = oxNew('oxTiramizoo_RetailLocationConfig');
         }
 
         return $oTiramizooRetailLocationoConfig;

@@ -13,7 +13,10 @@ class oxTiramizoo_ScheduleJobManager
 
 	public function getJobsForRun()
 	{
-		return oxTiramizoo_ScheduleJob::findAllToRun(self::MAX_RUNNING_JOBS_PER_REQUEST);
+        $oScheduleJobList = oxNew('oxTiramizoo_ScheduleJobList');
+        $oScheduleJobList->loadToRun(self::MAX_RUNNING_JOBS_PER_REQUEST);
+    
+        return $oScheduleJobList;
 	}
 
 	public function runJobs()
@@ -33,11 +36,13 @@ class oxTiramizoo_ScheduleJobManager
 
 	public function syncConfigDaily()
 	{
-		if ($oSyncConfigJob = oxTiramizoo_ScheduleJob::findDailyByType('synchronize_configuration')) {
+		$oSyncConfigJob = oxnew('oxTiramizoo_SyncConfigJob');
+
+		if ($oSyncConfigJob->getIdTodayByType('synchronize_configuration')) {
 			return false;
 		} else {
-			$oSyncConfigJob = new oxTiramizoo_SyncConfigJob();
             $oSyncConfigJob->save();
+            return true;
 		}
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-class oxtiramizooretaillocation extends oxBase {
+class oxTiramizoo_RetailLocation extends oxBase {
 
     /**
      * Object core table name
@@ -14,7 +14,7 @@ class oxtiramizooretaillocation extends oxBase {
      *
      * @var string
      */
-    protected $_sClassName = 'oxtiramizooretaillocation';
+    protected $_sClassName = 'oxTiramizoo_RetailLocation';
 
     protected $_aConfigVars = null;
 
@@ -29,66 +29,17 @@ class oxtiramizooretaillocation extends oxBase {
     }
 
 
-    public static function findOneByFilters($aFilters) 
+
+
+    public function getIdByApiToken($sApiToken) 
     {
-        $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-
-        $whereItems = array();
-
-        foreach ($aFilters as $sColumnName => $value) 
-        {
-            $whereItems[] =  $sColumnName . " = " . $oDb->quote( $value );
-        }
-
-        $sQ = "SELECT * FROM oxtiramizooretaillocation WHERE " . implode(' AND ', $whereItems);
-        $rs = $oDb->select( $sQ );
+	    $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
+	    $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE OXSHOPID = '" . $this->getConfig()->getShopId() . "' AND oxapitoken = " . $oDb->quote( $sApiToken );
         
-        if ( $rs && $rs->RecordCount() ) {
-
-            $oTiramizooRetailLocation = oxNew('oxtiramizooretaillocation');
-            $oTiramizooRetailLocation->load( $rs->fields['OXID'] );            
-
-            return $oTiramizooRetailLocation;
-        }
-
-        return null;
+        return $oDb->getOne($sQ);
     }
 
-    public function getOxidByApiToken($sApiToken) 
-    {
-	    $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-	    $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE `oxapitoken` = " . $oDb->quote( $sApiToken );
-	    $rs = $oDb->select( $sQ );
-	    
-	    if ( $rs && $rs->RecordCount() ) {
-	    	return $rs->fields['oxid'];
-	    }
 
-	    return false;
-    }
-
-    public static function getAll() 
-    {
-	    $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-	    $sQ = "SELECT * FROM oxtiramizooretaillocation";
-	    $oRs = $oDb->select( $sQ );
-	    
-	    $result = array();
-
-
-        if ( $oRs != false && $oRs->recordCount() > 0 ) {
-            while (!$oRs->EOF) {
-    			$oTiramizooRetailLocation = oxNew('oxtiramizooretaillocation');
-            	$oTiramizooRetailLocation->load( $oRs->fields['OXID'] );            
-
-            	$result[] = $oTiramizooRetailLocation;
-                $oRs->moveNext();
-            }
-        }
-
-
-	    return $result;
-    }
 
 
     public function refreshConfigVars()
@@ -125,7 +76,7 @@ class oxtiramizooretaillocation extends oxBase {
 
     public function getRetailLocationConfigs()
     {
-        return oxtiramizooretaillocationconfig::findByFilters(array('OXRETAILLOCATIONID' => $this->getId()));        
+        return oxTiramizoo_RetailLocationConfig::findByFilters(array('OXRETAILLOCATIONID' => $this->getId()));        
     }
 
     public function synchronizeConfiguration($aRemoteConfiguration)
@@ -149,13 +100,13 @@ class oxtiramizooretaillocation extends oxBase {
 
             $sValue  = $sVarVal ;
 
-            $sOxRetailLocationConfig = oxtiramizooretaillocationconfig::findOneByFiltersOrCreate(array('oxretaillocationid' => $this->getId(), 'oxvarname' => $sConfigIndex));
+            $sOxRetailLocationConfig = oxTiramizoo_RetailLocationConfig::findOneByFiltersOrCreate(array('oxretaillocationid' => $this->getId(), 'oxvarname' => $sConfigIndex));
 
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarname = new oxField($sConfigIndex);
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvartype = new oxField($sVarType);
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarvalue = new oxField( base64_encode( serialize( $sValue ) ) );
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxretaillocationid = new oxField($this->getId());
-            $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxlastsync = new oxField(date('Y-m-d H:i:s'));
+            $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxlastsync = new oxField(oxTiramizoo_Date::date());
 
             $sOxRetailLocationConfig->save();
         }
@@ -182,19 +133,19 @@ class oxtiramizooretaillocation extends oxBase {
 
             $sValue  = $sVarVal ;
 
-            $sOxRetailLocationConfig = oxtiramizooretaillocationconfig::findOneByFiltersOrCreate(array('oxretaillocationid' => $this->getId(), 'oxvarname' => $sConfigIndex));
+            $sOxRetailLocationConfig = oxTiramizoo_RetailLocationConfig::findOneByFiltersOrCreate(array('oxretaillocationid' => $this->getId(), 'oxvarname' => $sConfigIndex));
 
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarname = new oxField($sConfigIndex);
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvartype = new oxField($sVarType);
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarvalue = new oxField( base64_encode( serialize( $sValue ) ) );
             $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxretaillocationid = new oxField($this->getId());
-            $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxlastsync = new oxField(date('Y-m-d H:i:s'));
+            $sOxRetailLocationConfig->oxtiramizooretaillocationconfig__oxlastsync = new oxField(oxTiramizoo_Date::date());
 
             $sOxRetailLocationConfig->save();
         }
     }
 
-    public function delete()
+    public function delete($sOXID = null)
     {
         $aRetailLocationConfigs = $this->getRetailLocationConfigs();
 
@@ -205,5 +156,42 @@ class oxtiramizooretaillocation extends oxBase {
 
         return parent::delete();
     }
+
+
+
+    public function getAvailableTimeWindows()
+    {
+        $aTimeWindows = $this->getConfVar('time_windows');
+
+        if ($aTimeWindows) {
+            
+            //sort by delivery from date
+            foreach ($aTimeWindows as $oldKey => $aTimeWindow) 
+            {
+                $oTimeWindow = new oxTiramizoo_TimeWindow($aTimeWindow);
+
+                $aTimeWindows[$oTimeWindow->getDeliveryFromDate()->getTimestamp()] = $aTimeWindow;
+                unset($aTimeWindows[$oldKey]);
+            }
+
+            ksort($aTimeWindows);
+        }
+
+        return $aTimeWindows ? $aTimeWindows : array();
+    }
+
+    public function getTimeWindowByHash($sHash) 
+    {
+        foreach ($this->getAvailableTimeWindows() as $aTimeWindow) 
+        {
+            $oTimeWindow = new oxTiramizoo_TimeWindow($aTimeWindow);
+            
+            if ($oTimeWindow->getHash() == $sHash) {
+                return $oTimeWindow;
+            }
+        }
+        return null;
+    }
+
 
 }

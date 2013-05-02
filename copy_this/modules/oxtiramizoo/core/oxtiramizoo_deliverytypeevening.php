@@ -19,13 +19,25 @@ class oxTiramizoo_DeliveryTypeEvening extends oxTiramizoo_DeliveryType
 		return true;
 	}
 
+	public function hasPresetHours()
+	{
+    	$aPresetHours = $this->getPresetHours();
+    	
+    	return is_array($aPresetHours) && count($aPresetHours);
+	}
+
+	public function getPresetHours()
+	{
+    	return $this->getRetailLocation()->getConfVar('time_window_preset');
+	}
+
     public function getEveningTimeWindow()
     {
-    	$aPresetHours = $this->getRetailLocation()->getConfVar('time_window_preset');
-
-		if (!$aPresetHours) {
+		if (!$this->hasPresetHours()) {
 			return null;
 		}
+
+    	$aPresetHours = $this->getPresetHours();
 
         foreach ($this->_aTimeWindows as $aTimeWindow) 
         {

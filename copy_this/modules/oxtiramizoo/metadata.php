@@ -9,7 +9,7 @@
 /**
  * Metadata version
  */
-$sMetadataVersion = '0.2.41';
+$sMetadataVersion = '0.2.55';
 
 /**
  * Module information
@@ -43,11 +43,11 @@ $aModule = array(
                             'oxTiramizoo_Category_tab'          => 'oxtiramizoo/admin/oxtiramizoo_category_tab.php',
                             'oxTiramizoo_Order_Tab'             => 'oxtiramizoo/admin/oxtiramizoo_order_tab.php',
 
-                            'oxTiramizoo_setup'                 => 'oxtiramizoo/core/oxtiramizoo_setup.php',
+                            'oxTiramizoo_Setup'                 => 'oxtiramizoo/core/oxtiramizoo_setup.php',
                             'oxTiramizooApi'                    => 'oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php',
                             'TiramizooApi'                      => 'oxtiramizoo/core/TiramizooApi/TiramizooApi.php',
                             'oxTiramizoo_CreateOrderData'       => 'oxtiramizoo/core/TiramizooApi/oxTiramizooCreateOrderData.php',
-                            'oxTiramizooEvents'                 => 'oxtiramizoo/core/oxtiramizoo_events.php',
+                            'oxTiramizoo_Events'                => 'oxtiramizoo/core/oxtiramizoo_events.php',
                             'oxTiramizooConfig'                 => 'oxtiramizoo/core/oxtiramizoo_config.php',
                             
                             'oxTiramizoo_DeliverySet'           => 'oxtiramizoo/core/oxtiramizoo_deliveryset.php',
@@ -56,22 +56,30 @@ $aModule = array(
                             'oxTiramizoo_DeliveryTypeImmediate' => 'oxtiramizoo/core/oxtiramizoo_deliverytypeimmediate.php',
                             'oxTiramizoo_DeliveryTypeEvening'   => 'oxtiramizoo/core/oxtiramizoo_deliverytypeevening.php',
                             'oxTiramizoo_TimeWindow'            => 'oxtiramizoo/core/oxtiramizoo_timewindow.php',
-
+                            'oxTiramizoo_Date'                  => 'oxtiramizoo/core/oxtiramizoo_date.php',
 
                             'oxTiramizoo_Webhook'               => 'oxtiramizoo/application/controllers/oxtiramizoo_webhook.php',           
                             'oxTiramizoo_Cron'                  => 'oxtiramizoo/application/controllers/oxtiramizoo_cron.php',
 
                             'oxTiramizoo_ScheduleJobManager'    => 'oxtiramizoo/core/oxtiramizoo_schedulejobmanager.php',
+
+
                             'oxTiramizoo_SendOrderJob'          => 'oxtiramizoo/core/oxtiramizoo_sendorderjob.php',
                             'oxTiramizoo_SyncConfigJob'         => 'oxtiramizoo/core/oxtiramizoo_syncconfigjob.php',
 
                             /* models */
-                            'oxtiramizooretaillocation'         => 'oxtiramizoo/application/models/oxtiramizoo_retaillocation.php',
-                            'oxtiramizooretaillocationconfig'   => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationconfig.php',
+                            'oxTiramizoo_RetailLocation'        => 'oxtiramizoo/application/models/oxtiramizoo_retaillocation.php',
+                            'oxTiramizoo_RetailLocationList'    => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationlist.php',
+
+                            'oxTiramizoo_RetailLocationConfig'  => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationconfig.php',
+
+                            
                             'oxTiramizoo_ArticleExtended'       => 'oxtiramizoo/application/models/oxtiramizoo_articleextended.php',
                             'oxTiramizoo_CategoryExtended'      => 'oxtiramizoo/application/models/oxtiramizoo_categoryextended.php',
                             'oxTiramizoo_OrderExtended'         => 'oxtiramizoo/application/models/oxtiramizoo_orderextended.php',
+                            
                             'oxTiramizoo_ScheduleJob'           => 'oxtiramizoo/application/models/oxtiramizoo_schedulejob.php',
+                            'oxTiramizoo_ScheduleJobList'       => 'oxtiramizoo/application/models/oxtiramizoo_schedulejoblist.php',
 
 
                             /* exception */
@@ -92,10 +100,9 @@ $aModule = array(
                             'oxTiramizoo_category_tab.tpl'  => 'oxtiramizoo/out/admin/tpl/oxtiramizoo_category_tab.tpl',
                             'oxTiramizoo_order_tab.tpl'     => 'oxtiramizoo/out/admin/tpl/oxtiramizoo_order_tab.tpl',
                         ),
-    // @ToDo: check it
+
     'events'       =>   array(
-                            'onActivate'   => 'oxTiramizooEvents::onActivate',
-                            'onDeactivate' => 'oxTiramizooEvents::onDeactivate'
+                            'onActivate'   => 'oxTiramizoo_Events::onActivate'
                         ),
 
 

@@ -10,15 +10,15 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
     {
         parent::_loadFromBasket( $oBasket );
 
-        if (oxSession::getVar('sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID) {
+        if ($oBasket->getShippingId() == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID) {
 
             $oTiramizooDeliverySet = oxRegistry::get('oxTiramizoo_DeliverySet');
 
             $oTiramizooWindow = $oTiramizooDeliverySet->getSelectedTimeWindow();
 
             $oRetailLocation = $oTiramizooDeliverySet->getRetailLocation();
-            $oUser = $oTiramizooDeliverySet->getUser();
-            $oDeliveryAddress = $oTiramizooDeliverySet->getDeliveryAddress();
+            $oUser = $this->getUser();
+            $oDeliveryAddress = $this->getDelAddressInfo();
 
             $oCreateOrderData = new oxTiramizoo_CreateOrderData($oTiramizooWindow, $oBasket, $oRetailLocation);
             $oCreateOrderData->buildPickup();
@@ -44,6 +44,8 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
 
                 // $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_post_order_error', oxLang::getInstance()->getBaseLanguage(), false);
                 // throw new oxTiramizoo_SendOrderException( $errorMessage );
+            } else if ($tiramizooResult['errno'] == oxTiramizooApi::CURLE_OPERATION_TIMEDOUT) {
+                //@TODO: notification
             }
 
             $oTiramizooOrderExtended = oxTiramizoo_OrderExtended::findOneByFiltersOrCreate(array('oxorderid' => $this->getId()));

@@ -1,79 +1,182 @@
 <?php
 
-
 /**
- * This class contains static methods used for calculating pickup and delivery hours
+ * Manage tiramizoo delivery sets
  *
  * @package: oxTiramizoo
  */
 class oxTiramizoo_DeliverySet
 {
-    protected $_sDeliveryPostalcode = '';
-    protected $_oUser = null;
-    protected $_oDeliveryAddress = null;
-
-    protected $_isTiramizooAvailable = -1;
-
-    protected $_sTiramizooDeliveryType = null;
-    protected $_oSelectedTimeWindow = null;
-
-    protected $_aDeliveryTypes = array('immediate', 'evening');
-    protected $_aAvailableDeliveryTypes = null;
-
+    /**
+     * Is class initialized 
+     * 
+     * @var bool 
+     */
     protected $_isInitialized = false;
 
+    /**
+     * Is tiramizoo avialable
+     * 
+     * @var bool 
+     */
+    protected $_isTiramizooAvailable = null;
+
+    /**
+     * User's postal code get from user's address or checkout address
+     * 
+     * @var string
+     */
+    protected $_sDeliveryPostalcode = null;
+
+    /**
+     * Current tiramizoo delivery type
+     * 
+     * @var string
+     */ 
+    protected $_sTiramizooDeliveryType = null;
+    
+    /**
+     * Current seleceted in checkout process time window
+     * 
+     * @var oxTiramizoo_TimeWindow
+     */ 
+    protected $_oSelectedTimeWindow = null;
+
+    /**
+     * All tiramizoo delivery types
+     * 
+     * @var mixed
+     */
+    protected $_aDeliveryTypes = array('immediate', 'evening');
+    
+    /**
+     * All delivery types available in user's area 
+     * 
+     * @var mixed
+     */
+    protected $_aAvailableDeliveryTypes = null;
+
+    /**
+     * Current Api token selected by postal code
+     * 
+     * @var string
+     */
+    protected $_sCurrentApiToken = null;
+
+    /**
+     * Tiramizoo shipping id
+     * 
+     * @var constant
+     */
     const TIRAMIZOO_DELIVERY_SET_ID = 'Tiramizoo';
 
+    /**
+     * Initialize 
+     * 
+     * @param oxuser|null       $oUser             Userr object
+     * @param oxaddress|null    $oDeliveryAddress  Delivery address provided in checkout process
+     *
+     * @return null
+     */
     public function init($oUser, $oDeliveryAddress)
     {
         if (!$this->_isInitialized) {        
-            $this->setUser($oUser);
-            $this->setDeliveryAddress($oDeliveryAddress);
+            $this->_sDeliveryPostalcode = $this->refreshDeliveryPostalCode($oUser, $oDeliveryAddress);
 
             if ($this->isTiramizooAvailable()) {
-                $sTiramizooDeliveryType = oxSession::getVar('sTiramizooDeliveryType');
+                $sTiramizooDeliveryType = $this->getSession()->getVariable('sTiramizooDeliveryType');
 
                 try {
                     $this->setTiramizooDeliveryType($sTiramizooDeliveryType);
                 } catch (oxTiramizoo_InvalidDeliveryTypeException $oEx) {
                     $this->_sTiramizooDeliveryType = null;
-                    oxSession::deleteVar('sTiramizooDeliveryType');
+                    $this->getSession()->deleteVariable('sTiramizooDeliveryType');
 
                     // try set default delivery type
-                    $aAvailableDeliveryTypes = $this->getAvailableDeliveryTypes();
+                    $this->setDefaultDeliveryType();
 
-                    if (count($aAvailableDeliveryTypes)) {
-                        $this->setTiramizooDeliveryType($aAvailableDeliveryTypes[0]->getType());
+                    // if was setted redirect
+                    if ($sTiramizooDeliveryType) {
+                        oxUtilsView::getInstance()->addErrorToDisplay( $oEx->getMessage() );
+                        oxUtils::getInstance()->redirect( oxConfig::getInstance()->getShopHomeURL() .'cl=payment', true, 302 );
                     }
                 }
 
-                $sSelectedTimeWindow = oxSession::getVar('sTiramizooTimeWindow');
+                $sSelectedTimeWindow = $this->getSession()->getVariable('sTiramizooTimeWindow');
 
                 try {
                     $this->setSelectedTimeWindow($sSelectedTimeWindow);
                 } catch (oxTiramizoo_InvalidTimeWindowException $oEx) {
                     $this->_oSelectedTimeWindow = null;
-                    oxSession::deleteVar('sTiramizooTimeWindow');
+                    $this->getSession()->deleteVariable('sTiramizooTimeWindow');
 
                     // try set default time window
-                    $aAvailableDeliveryTypes = $this->getAvailableDeliveryTypes();
+                    $this->setDefaultTimeWindow();
 
-                    if (count($aAvailableDeliveryTypes) && $aAvailableDeliveryTypes[0]->getDefaultTimeWindow()) {
-                        $this->setSelectedTimeWindow($aAvailableDeliveryTypes[0]->getDefaultTimeWindow()->getHash());
+                    // if was setted redirect
+                    if ($sSelectedTimeWindow) {
+                        oxUtilsView::getInstance()->addErrorToDisplay( $oEx->getMessage() );
+                        oxUtils::getInstance()->redirect( oxConfig::getInstance()->getShopHomeURL() .'cl=payment', true, 302 );
                     }
                 }
             }
 
             $this->_isInitialized = 1;
-
-
-
         }
     }
 
+    /**
+     * Set default delivery type 
+     * 
+     * @return null
+     */
+    public function setDefaultDeliveryType()
+    {
+        $aAvailableDeliveryTypes = $this->getAvailableDeliveryTypes();
+
+        if (count($aAvailableDeliveryTypes)) {
+            $aAvailableDeliveryTypeNames = array_keys($aAvailableDeliveryTypes);
+            $sFirstIndex = $aAvailableDeliveryTypeNames[0];
+            $this->setTiramizooDeliveryType($aAvailableDeliveryTypes[$sFirstIndex]->getType());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Set Default itme window 
+     * 
+     * @return null
+     */
+    public function setDefaultTimeWindow()
+    {
+        $aAvailableDeliveryTypes = $this->getAvailableDeliveryTypes();
+
+        if (!count($aAvailableDeliveryTypes)) {
+            return false;
+        }
+
+        $aAvailableDeliveryTypeNames = array_keys($aAvailableDeliveryTypes);
+        $sFirstIndex = $aAvailableDeliveryTypeNames[0];
+
+        if ($aAvailableDeliveryTypes[$sFirstIndex]->getDefaultTimeWindow()) {
+            $this->setSelectedTimeWindow($aAvailableDeliveryTypes[$sFirstIndex]->getDefaultTimeWindow()->getHash());
+
+            return true;
+        }
+
+        return false;
+    }
 
 
-
+    /**
+     * Set current delivery type name if is valid
+     * 
+     * @throws oxTiramizoo_InvalidDeliveryTypeException
+     * @return null
+     */
     public function setTiramizooDeliveryType($sTiramizooDeliveryType)
     {
         if ($this->isTiramizooDeliveryTypeValid($sTiramizooDeliveryType)) {
@@ -85,10 +188,15 @@ class oxTiramizoo_DeliverySet
         }
     }
 
+    /**
+     * Set current time window if is valid
+     * 
+     * @throws oxTiramizoo_InvalidTimeWindowException
+     * @return null
+     */
     public function setSelectedTimeWindow($sTimeWindow)
     {
-        if ($oTimeWindow = $this->getTimeWindowByHash($sTimeWindow)) {
-
+        if ($oTimeWindow = $this->getRetailLocation()->getTimeWindowByHash($sTimeWindow)) {
             if ($oTimeWindow->isValid()) {
                 oxSession::setVar( 'sTiramizooTimeWindow',  $oTimeWindow->getHash() );
                 $this->_oSelectedTimeWindow = $oTimeWindow;
@@ -101,20 +209,24 @@ class oxTiramizoo_DeliverySet
         }
     }
 
+    /**
+     * Gets validated collection of available delivery types
+     *
+     * @return mixed
+     */
     public function getAvailableDeliveryTypes()
     {
-        if ($this->_aAvailableDeliveryTypes == null) {
-
+        if ($this->_aAvailableDeliveryTypes === null) {
             $this->_aAvailableDeliveryTypes = array();
             
             foreach ($this->_aDeliveryTypes as $sDeliveryType) 
             {
                 $sClass = 'oxTiramizoo_DeliveryType' . ucfirst($sDeliveryType);
                 
-                $oDeliveryType = new $sClass($this->getAvailableTimeWindows(), $this->getRetailLocation());
+                $oDeliveryType = oxnew($sClass, $this->getRetailLocation());
 
                 if ($oDeliveryType->isAvailable()) {
-                    $this->_aAvailableDeliveryTypes[] = $oDeliveryType;
+                    $this->_aAvailableDeliveryTypes[$sDeliveryType] = $oDeliveryType;
                 }
             }
         }
@@ -122,23 +234,42 @@ class oxTiramizoo_DeliverySet
         return $this->_aAvailableDeliveryTypes;
     }
 
-
+    /**
+     * Gets the current time window selected in checkout process
+     *
+     * @return bool
+     */
     public function isTiramizooDeliveryTypeValid($sTiramizooDeliveryType)
     {
-        //@TODO: add checks if each type ia available
-        return in_array($sTiramizooDeliveryType, $this->_aDeliveryTypes);
+        return in_array($sTiramizooDeliveryType, array_keys($this->getAvailableDeliveryTypes()));
     }
 
+    /**
+     * Gets the current time window selected in checkout process
+     *
+     * @return oxTiramizoo_TimeWindow
+     */
     public function getSelectedTimeWindow()
     {
         return $this->_oSelectedTimeWindow;
     }
 
+    /**
+     * Gets the current tiramizoo delivery type name
+     *
+     * @return string
+     */
     public function getTiramizooDeliveryType()
     {
         return $this->_sTiramizooDeliveryType;
     }
 
+
+    /**
+     * Gets the current tiramizoo delivery type object 
+     * 
+     * @return oxTiramizoo_DeliveryType|null
+     */ 
     public function getTiramizooDeliveryTypeObject()
     {
         foreach ($this->getAvailableDeliveryTypes() as $oDeliveryType) 
@@ -151,159 +282,135 @@ class oxTiramizoo_DeliverySet
         return null;
     }
 
-    public function setUser($oUser)
+    /**
+     * Choose which postal code should be used in amtching user's postal code and tiramizoo service areas
+     * 
+     * @return string|null
+     */
+    public function refreshDeliveryPostalCode($oUser, $oDeliveryAddress)
     {
-        $this->_oUser = $oUser;
-        $this->_refreshDeliveryPostalCode();
-    }
-
-    public function getUser()
-    {
-        return $this->_oUser;
-    }
-
-    public function setDeliveryAddress($oDeliveryAddress)
-    {
-        $this->_oDeliveryAddress = $oDeliveryAddress;       
-        $this->_refreshDeliveryPostalCode();
-    }
-
-    public function getDeliveryAddress()
-    {
-        return $this->_oDeliveryAddress;
-    }
-
-    public function _refreshDeliveryPostalCode()
-    {
-        if ($this->getUser()) {
-            if ($sDeliveryPostalCode = $this->getUser()->oxuser__oxzip->value) {
-                $this->setDeliveryPostalCode($sDeliveryPostalCode);
+        if ($oDeliveryAddress) {
+            if ($sDeliveryPostalCode = $oDeliveryAddress->oxaddress__oxzip->value) {
+                return $sDeliveryPostalCode;
             }
         }
 
-        if ($this->getDeliveryAddress()) {
-            if ($sDeliveryPostalCode = $this->getDeliveryAddress()->oxaddress__oxzip->value) {
-                $this->setDeliveryPostalCode($sDeliveryPostalCode);
+        if ($oUser) {
+            if ($sDeliveryPostalCode = $oUser->oxuser__oxzip->value) {
+                return $sDeliveryPostalCode;
             }
         }
+
+        return null;
     }
 
-
-    public function getDeliveryPostalCode()
-    {
-        return $this->_sDeliveryPostalcode;
-    }
-
-    public function setDeliveryPostalCode($sDeliveryPostalcode)
-    {
-        $this->_sDeliveryPostalcode = $sDeliveryPostalcode;
-    }
-
-
-    public function getConfig()
-    {
-        return oxTiramizooConfig::getInstance();
-    }
-
-
-
-
-
+    /**
+     * Gets the API token matched by user's postal code
+     * 
+     * @throws oxTiramizoo_NotAvailableException
+     * @return string API token
+     */
     public function getApiToken()
     {
-        $sDeliveryPostalcode = $this->getDeliveryPostalCode();
+        if ($this->_sCurrentApiToken == null) {
 
-        $aRetailLocations = oxtiramizooretaillocation::getAll();
+            $oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
+            $oRetailLocationList->loadAll();
 
-        foreach ($aRetailLocations as $oRetailLocation) 
-        {
-            $aAvailablePostalCodes = $oRetailLocation->getConfVar('postal_codes');
+            foreach ($oRetailLocationList as $oRetailLocation) 
+            {
+                $aAvailablePostalCodes = $oRetailLocation->getConfVar('postal_codes');
 
-            if (in_array($sDeliveryPostalcode, $aAvailablePostalCodes)) {
-                return $oRetailLocation->getApiToken();
+                if (in_array($this->_sDeliveryPostalcode, $aAvailablePostalCodes)) {
+                    return $this->_sCurrentApiToken = $oRetailLocation->getApiToken();
+                }
             }
+
+            throw new oxTiramizoo_NotAvailableException('This postal code id not supported');
         }
 
-        //@TODO: catch this exception
-        throw new oxTiramizoo_NotAvailableException('This postal code id not supported');
+        return $this->_sCurrentApiToken;
     }
 
+    /**
+     * Gets the instance of current API object
+     * 
+     * @return oxTiramizooApi
+     */
     public function getTiramizooApi()
     {
         return oxTiramizooApi::getApiInstance($this->getApiToken());
     }
 
+    /**
+     * Gets the current retail location object from API token
+     * 
+     * @throws oxTiramizoo_NotAvailableException
+     * @return oxTiramizoo_RetailLocation
+     */
     public function getRetailLocation()
     {
-        $oRetailLocation = oxtiramizooretaillocation::findOneByFilters(array('oxapitoken' => $this->getApiToken()));
+        $oRetailLocation = oxnew('oxTiramizoo_RetailLocation');
+        $sOxid = $oRetailLocation->getIdByApiToken($this->getApiToken());
 
-        if (!$oRetailLocation) {
+        $oRetailLocation->load($sOxid);
+
+        if (!$oRetailLocation->getId()) {
             throw new oxTiramizoo_NotAvailableException('This postal code id not supported');
         }
 
         return $oRetailLocation;
     }
 
-    public function getAvailableTimeWindows()
-    {
-        $aTimeWindows = $this->getRetailLocation()->getConfVar('time_windows');
-
-        //sort by delivery from date
-        foreach ($aTimeWindows as $oldKey => $aTimeWindow) 
-        {
-            $aTimeWindows[strtotime($aTimeWindow['delivery']['from'])] = $aTimeWindow;
-            unset($aTimeWindows[$oldKey]);
-        }
-
-        ksort($aTimeWindows);
-
-        return $aTimeWindows ? $aTimeWindows : array();
-    }
-
-    public function getTimeWindowByHash($sHash) 
-    {
-        foreach ($this->getAvailableTimeWindows() as $aTimeWindow) 
-        {
-            $oTimeWindow = new oxTiramizoo_TimeWindow($aTimeWindow);
-            
-            if ($oTimeWindow->getHash() == $sHash) {
-                return $oTimeWindow;
-            }
-        }
-        return null;
-    }
-
-
-
-
     /**
-     * Validate basket data to decide if can be delivered by tiramizoo 
+     * Validate if tiramizoo service is available with delivery address 
      * 
      * @return bool
      */
     public function isTiramizooAvailable() 
     {
-        //@ToDo: validate basket and others
-        if ($this->_isTiramizooAvailable === -1) {
+        if ($this->_isTiramizooAvailable === null) {
 
+            if (!$this->getBasket()->isValid()) {
+                return $this->_isTiramizooAvailable = false;                
+            }
+
+            //check if retail location is fit to postal code service is available in this area
             try {
                 $oRetailLocation = $this->getRetailLocation();
-            } catch(Exception $e) {
-                return $this->_isTiramizooAvailable = 0;
+            } catch(oxException $oEx) {
+                return $this->_isTiramizooAvailable = false;
             }
 
+            //check if exists delivery types
             if (count($this->getAvailableDeliveryTypes()) == 0) {
-                return $this->_isTiramizooAvailable = 0;   
+                return $this->_isTiramizooAvailable = false;   
             }
 
-            //@TODO: add items in basket
-
-            $this->_isTiramizooAvailable = 1;
+            $this->_isTiramizooAvailable = true;
 
         }
 
         return $this->_isTiramizooAvailable;
     }
 
+    /**
+     * oxBasket instance
+     *
+     * @return oxbasket
+     */
+    public function getBasket()
+    {
+        return $this->getSession()->getBasket();
+    }
 
+    /**
+     * oxSession instance getter
+     *
+     * @return oxsession
+     */
+    public function getSession()
+    {
+        return oxRegistry::getSession();
+    }
 }

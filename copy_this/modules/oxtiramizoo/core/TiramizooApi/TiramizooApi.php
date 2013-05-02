@@ -21,6 +21,26 @@ class TiramizooApi
     protected $api_token = null;
 
     /**
+     * Connection Time Out
+     *             
+     * @var integer
+     */    
+    protected static $_iConnectionTimeOut = 300;
+
+    /**
+     * Time Out
+     *             
+     * @var integer
+     */    
+    protected static $_iTimeOut = 60;
+
+    /**
+     * Time out curl error
+     * 
+     */
+    const CURLE_OPERATION_TIMEDOUT = 28;
+
+    /**
      * Construct the object with api key and url
      * @param string $api_url   API url
      * @param string $api_token API token to authenticate
@@ -51,17 +71,22 @@ class TiramizooApi
         curl_setopt($c, CURLOPT_POST, true);
         curl_setopt($c, CURLOPT_POSTFIELDS, preg_replace_callback('/(\\\u[0-9a-f]{4})/', array($this, "json_unescape"), json_encode($data)));
 
+
         curl_setopt($c, CURLOPT_HTTPHEADER, array(
             "Content-Type: application/json",
             "Accept: application/json"
         ));
 
-        curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($c, CURLOPT_TIMEOUT, self::$_iTimeOut);
+        curl_setopt($c, CURLOPT_CONNECTTIMEOUT, self::$_iConnectionTimeOut);
 
+        curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($c);
+
+        $errno = curl_errno($c);
         $status = curl_getinfo($c, CURLINFO_HTTP_CODE);
 
-        $result = array('http_status' => $status, 'response' => json_decode($response));
+        $result = array('http_status' => $status, 'response' => json_decode($response), 'errno' => $errno);
 
         curl_close($c);
     }   
@@ -84,12 +109,17 @@ class TiramizooApi
 
         curl_setopt($c, CURLOPT_URL, $this->api_url.'/'.$path.'?api_token='. $this->api_token . '&' . http_build_query($data));
 
+        curl_setopt($c, CURLOPT_TIMEOUT, self::$_iTimeOut);
+        curl_setopt($c, CURLOPT_CONNECTTIMEOUT, self::$_iConnectionTimeOut);
+
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
 
         $response = curl_exec($c);
+
+        $errno = curl_errno($c);
         $status = curl_getinfo($c, CURLINFO_HTTP_CODE);
 
-        $result = array('http_status' => $status, 'response' => json_decode($response));
+        $result = array('http_status' => $status, 'response' => json_decode($response), 'errno' => $errno);
 
         curl_close($c);
     }   
@@ -103,5 +133,23 @@ class TiramizooApi
     protected function json_unescape($m) 
     {
         return json_decode('"'.$m[1].'"');
+    }
+
+    /**
+     * Modify connection Timeout for unit tests
+     * 
+     * @param  integer $iTimeOut The maximum number of seconds to allow cURL functions to execute.  
+     * @param  integer $iConnectionTimeOut The number of seconds to wait while trying to connect
+     * */
+    public static function setConnectionTimeout($iTimeOut, $iConnectionTimeOut)
+    {
+        // @codeCoverageIgnoreStart
+        if ( !defined( 'OXID_PHP_UNIT' ) ) {
+            return;
+        }       
+        // @codeCoverageIgnoreEnd
+
+        self::$_iTimeOut = $iTimeOut;
+        self::$_iConnectionTimeOut = $iConnectionTimeOut;
     }
 }
