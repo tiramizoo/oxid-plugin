@@ -131,7 +131,6 @@ class oxTiramizoo_Setup
 
         $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooretaillocationconfig (
                                 OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL PRIMARY KEY,
-                                OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
                                 OXVARNAME varchar(128) NOT NULL DEFAULT '',
                                 OXVARTYPE varchar(4) NOT NULL DEFAULT '',
                                 OXVARVALUE TEXT NOT NULL,
@@ -170,6 +169,7 @@ class oxTiramizoo_Setup
 
         $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooschedulejob (
                                 OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL PRIMARY KEY,
+                                OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
                                 OXJOBTYPE varchar(32),
                                 OXPARAMS text NOT NULL DEFAULT '',
                                 OXCREATEDAT datetime,

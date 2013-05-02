@@ -15,18 +15,18 @@ class oxTiramizoo_SyncConfigJob extends oxTiramizoo_ScheduleJob
 				return true;
 			}
 
-	        $aApiKeys = oxTiramizoo_RetailLocation::getAll(); 
+			$oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
+			$oRetailLocationList->loadAll();
 
-	        foreach ($aApiKeys as $oTiramizooRetailLocation) 
+	        foreach ($oRetailLocationList as $oRetailLocation) 
 	        {
-	            oxTiramizooConfig::getInstance()->synchronizeAll( $oTiramizooRetailLocation->getApiToken() );
+	            oxTiramizooConfig::getInstance()->synchronizeAll( $oRetailLocation->getApiToken() );
 	        }
 
 	        $this->finishJob();
 
 		} catch (Exception $oEX) {
 	        $this->refreshJob();
-			echo $oEX; exit;
 		}
 	}
 
