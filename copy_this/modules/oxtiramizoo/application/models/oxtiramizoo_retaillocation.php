@@ -31,6 +31,8 @@ class oxTiramizoo_RetailLocation extends oxBase {
 
     public static function findOneByFilters($aFilters) 
     {
+        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+
         $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
 
         $whereItems = array();
@@ -40,7 +42,7 @@ class oxTiramizoo_RetailLocation extends oxBase {
             $whereItems[] =  $sColumnName . " = " . $oDb->quote( $value );
         }
 
-        $sQ = "SELECT * FROM oxtiramizooretaillocation WHERE " . implode(' AND ', $whereItems);
+        $sQ = "SELECT * FROM oxtiramizooretaillocation WHERE OXSHOPID = '" . $oTiramizooConfig->getShopId() . "' AND " . implode(' AND ', $whereItems);
         $rs = $oDb->select( $sQ );
         
         if ( $rs && $rs->RecordCount() ) {
@@ -56,8 +58,10 @@ class oxTiramizoo_RetailLocation extends oxBase {
 
     public function getOxidByApiToken($sApiToken) 
     {
+        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+
 	    $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-	    $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE `oxapitoken` = " . $oDb->quote( $sApiToken );
+	    $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE OXSHOPID = '" . $oTiramizooConfig->getShopId() . "' AND oxapitoken = " . $oDb->quote( $sApiToken );
 	    $rs = $oDb->select( $sQ );
 	    
 	    if ( $rs && $rs->RecordCount() ) {
@@ -69,8 +73,10 @@ class oxTiramizoo_RetailLocation extends oxBase {
 
     public static function getAll() 
     {
+        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+
 	    $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-	    $sQ = "SELECT * FROM oxtiramizooretaillocation";
+	    $sQ = "SELECT * FROM oxtiramizooretaillocation WHERE OXSHOPID = '" . $oTiramizooConfig->getShopId() . "';";
 	    $oRs = $oDb->select( $sQ );
 	    
 	    $result = array();

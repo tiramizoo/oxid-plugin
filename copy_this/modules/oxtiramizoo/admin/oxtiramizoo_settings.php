@@ -184,13 +184,13 @@ class oxTiramizoo_settings extends Shop_Config
 
         $sql = "UPDATE oxdelivery
                     SET OXACTIVE = " . $isTiramizooEnable . "
-                    WHERE OXID = 'TiramizooStandardDelivery';";
+                    WHERE OXID = 'TiramizooStandardDelivery' AND OXSHOPID = '" . $oTiramizooConfig->getShopId() .  "';";
 
         oxDb::getDb()->Execute($sql);
 
         $sql = "UPDATE oxdeliveryset
                     SET OXACTIVE = " . $isTiramizooEnable . "
-                    WHERE OXID = 'Tiramizoo';";
+                    WHERE OXID = 'Tiramizoo' AND OXSHOPID = '" . $oTiramizooConfig->getShopId() .  "';";
 
         oxDb::getDb()->Execute($sql);
     }
@@ -261,7 +261,7 @@ class oxTiramizoo_settings extends Shop_Config
 
         $sApiToken = trim(oxConfig::getParameter('api_token'));
         $oTiramizooRetailLocation = oxNew('oxTiramizoo_RetailLocation');
-
+        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
         
         if ($sOxid = $oTiramizooRetailLocation->getOxidByApiToken( $sApiToken )) 
         {
@@ -271,9 +271,9 @@ class oxTiramizoo_settings extends Shop_Config
         //@ToDo: change this
         $oTiramizooRetailLocation->oxtiramizooretaillocation__oxname = new oxField(oxTiramizoo_Date::date());
         $oTiramizooRetailLocation->oxtiramizooretaillocation__oxapitoken = new oxField( $sApiToken );
+        $oTiramizooRetailLocation->oxtiramizooretaillocation__oxshopid = new oxField( $oTiramizooConfig->getShopId() );
 
         $oTiramizooRetailLocation->save();
-
         try
         {
             oxTiramizooApi::getApiInstance( $sApiToken )->getRemoteConfiguration();
