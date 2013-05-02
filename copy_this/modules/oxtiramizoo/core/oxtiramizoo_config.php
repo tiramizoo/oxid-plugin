@@ -44,7 +44,11 @@ class oxTiramizooConfig extends oxConfig
 
         $aRemoteConfiguration = $oxTiramizooApi->getRemoteConfiguration();
 
-        $oRetailLocation = oxTiramizoo_RetailLocation::findOneByFilters( array('oxapitoken' => $sApiToken) );
+        $oRetailLocation = oxnew('oxTiramizoo_RetailLocation');
+        $sOxid = $oRetailLocation->getIdByApiToken($sApiToken);
+
+        $oRetailLocation->load($sOxid);
+
         $oRetailLocation->synchronizeConfiguration( $aRemoteConfiguration );
 
         $aPickupAddress = $oRetailLocation->getConfVar('pickup_contact');

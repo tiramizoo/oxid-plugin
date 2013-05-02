@@ -9,7 +9,7 @@
 /**
  * Metadata version
  */
-$sMetadataVersion = '0.2.43';
+$sMetadataVersion = '0.2.55';
 
 /**
  * Module information
@@ -62,16 +62,24 @@ $aModule = array(
                             'oxTiramizoo_Cron'                  => 'oxtiramizoo/application/controllers/oxtiramizoo_cron.php',
 
                             'oxTiramizoo_ScheduleJobManager'    => 'oxtiramizoo/core/oxtiramizoo_schedulejobmanager.php',
+
+
                             'oxTiramizoo_SendOrderJob'          => 'oxtiramizoo/core/oxtiramizoo_sendorderjob.php',
                             'oxTiramizoo_SyncConfigJob'         => 'oxtiramizoo/core/oxtiramizoo_syncconfigjob.php',
 
                             /* models */
                             'oxTiramizoo_RetailLocation'        => 'oxtiramizoo/application/models/oxtiramizoo_retaillocation.php',
+                            'oxTiramizoo_RetailLocationList'    => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationlist.php',
+
                             'oxTiramizoo_RetailLocationConfig'  => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationconfig.php',
+
+                            
                             'oxTiramizoo_ArticleExtended'       => 'oxtiramizoo/application/models/oxtiramizoo_articleextended.php',
                             'oxTiramizoo_CategoryExtended'      => 'oxtiramizoo/application/models/oxtiramizoo_categoryextended.php',
                             'oxTiramizoo_OrderExtended'         => 'oxtiramizoo/application/models/oxtiramizoo_orderextended.php',
+                            
                             'oxTiramizoo_ScheduleJob'           => 'oxtiramizoo/application/models/oxtiramizoo_schedulejob.php',
+                            'oxTiramizoo_ScheduleJobList'       => 'oxtiramizoo/application/models/oxtiramizoo_schedulejoblist.php',
 
 
                             /* exception */

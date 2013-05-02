@@ -32,92 +32,19 @@ class oxTiramizoo_ScheduleJob extends oxBase {
         $this->init( 'oxtiramizooschedulejob' );
     }
 
-
-    public static function findOneByFilters($aFilters) 
+    public function getIdTodayByType($sType) 
     {
         $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
 
-        $whereItems = array();
+        $oDate = oxnew('oxTiramizoo_Date');
 
-        foreach ($aFilters as $sColumnName => $value) 
-        {
-            $whereItems[] =  $sColumnName . " = " . $oDb->quote( $value );
-        }
+        $sQ = "SELECT oxid FROM oxtiramizooschedulejob 
+                    WHERE oxshopid='".$this->getConfig()->getShopId()."'
+                        AND oxjobtype = '" . $sType . "'
+                        AND DATE(oxcreatedat)='" . $oDate->get('Y-m-d') . "';";
 
-        $sQ = "SELECT * FROM oxtiramizooschedulejob WHERE " . implode(' AND ', $whereItems);
-        $rs = $oDb->select( $sQ );
-        
-        if ( $rs && $rs->RecordCount() ) {
-
-            $sClassName = self::$_aJobTypes[$oRs->fields['OXJOBTYPE']];
-
-            $oTiramizooJob = oxNew($sClassName);
-            $oTiramizooJob->load( $rs->fields['OXID'] );            
-
-            return $oTiramizooJob;
-        }
-
-        return null;
+        return $oDb->getOne($sQ);
     }
-
-    public static function findAllToRun($iLimit = 100) 
-    {
-        $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-
-        $sQ = "SELECT * FROM oxtiramizooschedulejob 
-                        WHERE oxstate IN ('new', 'retry') 
-                            AND oxrunafter <= NOW()
-                            AND oxrunbefore >= NOW()
-                        LIMIT " . intval($iLimit) . ";";
-        $oRs = $oDb->select( $sQ );
-        
-        $result = array();
-
-        if ( $oRs != false && $oRs->recordCount() > 0 ) {
-            while (!$oRs->EOF) {
-
-
-                $sClassName = self::$_aJobTypes[$oRs->fields['OXJOBTYPE']];
-
-                $oTiramizooJob = oxNew($sClassName);
-                $oTiramizooJob->load( $oRs->fields['OXID'] );            
-
-                $result[] = $oTiramizooJob;
-                $oRs->moveNext();
-            }
-        }
-
-        return $result;
-    }
-
-    public static function findDailyByType($sType) 
-    {
-        $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-
-        $sQ = "SELECT * FROM oxtiramizooschedulejob 
-                    WHERE oxjobtype = '" . $sType . "'
-                        AND DATE(oxcreatedat)=CURDATE();";
-
-        $oRs = $oDb->select( $sQ );
-        
-        if ( $oRs && $oRs->RecordCount() ) {
-
-            $sClassName = self::$_aJobTypes[$oRs->fields['OXJOBTYPE']];
-
-            $oTiramizooJob = oxNew($sClassName);
-            $oTiramizooJob->load( $rs->fields['OXID'] );            
-
-            return $oTiramizooJob;
-        }
-
-        return null;
-    }
-
-
-
-
-
-
 
     const MAX_REPEATS = 2;
     const JOB_TYPE = '';

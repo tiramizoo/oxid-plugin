@@ -44,7 +44,11 @@ class oxTiramizoo_settings extends Shop_Config
 
         $this->_aViewData['version'] = oxTiramizoo_setup::VERSION;
 
-        $this->_aViewData['aRetailLocations'] = oxTiramizoo_RetailLocation::getAll();
+
+        $oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
+        $oRetailLocationList->loadAll();
+
+        $this->_aViewData['aRetailLocations'] = $oRetailLocationList;
 
         return 'oxTiramizoo_settings.tpl';
     }
@@ -173,6 +177,8 @@ class oxTiramizoo_settings extends Shop_Config
         //@todo: better checks
         $aConfStrs = oxConfig::getParameter( "confstrs" );
 
+        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+
         $isTiramizooEnable = 1;
 
         $errors = $this->validateEnable();
@@ -205,11 +211,12 @@ class oxTiramizoo_settings extends Shop_Config
         // synchronizing config params
         try 
         {
-            $aApiKeys = oxTiramizoo_RetailLocation::getAll(); 
+            $oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
+            $oRetailLocationList->loadAll();
 
-            foreach ($aApiKeys as $oTiramizooRetailLocation) 
+            foreach ($oRetailLocationList as $oRetailLocation) 
             {
-                oxTiramizooConfig::getInstance()->synchronizeAll( $oTiramizooRetailLocation->getApiToken() );
+                oxTiramizooConfig::getInstance()->synchronizeAll( $oRetailLocation->getApiToken() );
             }
 
         } catch (oxTiramizoo_ApiException $e) {
@@ -234,9 +241,10 @@ class oxTiramizoo_settings extends Shop_Config
             
             $this->saveConfVars();
 
-            $aRetailLocations = oxTiramizoo_RetailLocation::getAll();
+            $oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
+            $oRetailLocationList->loadAll();
 
-            foreach ($aRetailLocations as $oRetailLocation) 
+            foreach ($oRetailLocationList as $oRetailLocation) 
             {
                 try
                 {
@@ -290,10 +298,13 @@ class oxTiramizoo_settings extends Shop_Config
     public function removeLocation()
     {
         $sApiToken = oxConfig::getParameter('api_token');
-        $oTiramizooRetailLocation = oxNew('oxTiramizoo_RetailLocation');
-        if ($oTiramizooRetailLocation = oxTiramizoo_RetailLocation::findOneByFilters( array('oxapitoken' => $sApiToken) )) 
+
+        $oRetailLocation = oxnew('oxTiramizoo_RetailLocation');
+        $sOxid = $oRetailLocation->getIdByApiToken($sApiToken);
+
+        if ($sOxid) 
         {
-            $oTiramizooRetailLocation->delete();            
+            $oRetailLocation->load($sOxid)->delete();            
         }
 
         return 'oxtiramizoo_settings';
@@ -338,15 +349,14 @@ class oxTiramizoo_settings extends Shop_Config
     public function test()
     {
 
-        $aRetailLocations = oxTiramizoo_RetailLocation::getAll();
+        $oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
+        $oRetailLocationList->loadAll();
 
-        foreach ($aRetailLocations as $oRetailLocation) 
+        foreach ($oRetailLocationList as $oRetailLocation) 
         {
             print_r($oRetailLocation->getConfVar('time_windows'));
         }
 
         exit;
     }
-
-
 }

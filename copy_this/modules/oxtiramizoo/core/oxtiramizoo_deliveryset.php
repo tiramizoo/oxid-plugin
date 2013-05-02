@@ -314,9 +314,10 @@ class oxTiramizoo_DeliverySet
     {
         if ($this->_sCurrentApiToken == null) {
 
-            $aRetailLocations = oxTiramizoo_RetailLocation::getAll();
+            $oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
+            $oRetailLocationList->loadAll();
 
-            foreach ($aRetailLocations as $oRetailLocation) 
+            foreach ($oRetailLocationList as $oRetailLocation) 
             {
                 $aAvailablePostalCodes = $oRetailLocation->getConfVar('postal_codes');
 
@@ -349,9 +350,12 @@ class oxTiramizoo_DeliverySet
      */
     public function getRetailLocation()
     {
-        $oRetailLocation = oxTiramizoo_RetailLocation::findOneByFilters(array('oxapitoken' => $this->getApiToken()));
+        $oRetailLocation = oxnew('oxTiramizoo_RetailLocation');
+        $sOxid = $oRetailLocation->getIdByApiToken($this->getApiToken());
 
-        if (!$oRetailLocation) {
+        $oRetailLocation->load($sOxid);
+
+        if (!$oRetailLocation->getId()) {
             throw new oxTiramizoo_NotAvailableException('This postal code id not supported');
         }
 

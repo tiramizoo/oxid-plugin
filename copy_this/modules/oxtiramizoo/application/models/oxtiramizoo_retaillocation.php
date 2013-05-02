@@ -29,72 +29,17 @@ class oxTiramizoo_RetailLocation extends oxBase {
     }
 
 
-    public static function findOneByFilters($aFilters) 
+
+
+    public function getIdByApiToken($sApiToken) 
     {
-        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
-
-        $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-
-        $whereItems = array();
-
-        foreach ($aFilters as $sColumnName => $value) 
-        {
-            $whereItems[] =  $sColumnName . " = " . $oDb->quote( $value );
-        }
-
-        $sQ = "SELECT * FROM oxtiramizooretaillocation WHERE OXSHOPID = '" . $oTiramizooConfig->getShopId() . "' AND " . implode(' AND ', $whereItems);
-        $rs = $oDb->select( $sQ );
+	    $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
+	    $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE OXSHOPID = '" . $this->getConfig()->getShopId() . "' AND oxapitoken = " . $oDb->quote( $sApiToken );
         
-        if ( $rs && $rs->RecordCount() ) {
-
-            $oTiramizooRetailLocation = oxNew('oxTiramizoo_RetailLocation');
-            $oTiramizooRetailLocation->load( $rs->fields['OXID'] );            
-
-            return $oTiramizooRetailLocation;
-        }
-
-        return null;
+        return $oDb->getOne($sQ);
     }
 
-    public function getOxidByApiToken($sApiToken) 
-    {
-        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
 
-	    $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-	    $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE OXSHOPID = '" . $oTiramizooConfig->getShopId() . "' AND oxapitoken = " . $oDb->quote( $sApiToken );
-	    $rs = $oDb->select( $sQ );
-	    
-	    if ( $rs && $rs->RecordCount() ) {
-	    	return $rs->fields['oxid'];
-	    }
-
-	    return false;
-    }
-
-    public static function getAll() 
-    {
-        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
-
-	    $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-	    $sQ = "SELECT * FROM oxtiramizooretaillocation WHERE OXSHOPID = '" . $oTiramizooConfig->getShopId() . "';";
-	    $oRs = $oDb->select( $sQ );
-	    
-	    $result = array();
-
-
-        if ( $oRs != false && $oRs->recordCount() > 0 ) {
-            while (!$oRs->EOF) {
-    			$oTiramizooRetailLocation = oxNew('oxTiramizoo_RetailLocation');
-            	$oTiramizooRetailLocation->load( $oRs->fields['OXID'] );            
-
-            	$result[] = $oTiramizooRetailLocation;
-                $oRs->moveNext();
-            }
-        }
-
-
-	    return $result;
-    }
 
 
     public function refreshConfigVars()
