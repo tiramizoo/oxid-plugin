@@ -31,13 +31,14 @@ class oxTiramizooApi extends TiramizooApi
      * @var mixed used for lazy loading
      **/
     protected $_aRemoteConfiguration = null;
-
+    
     /**
      * Create the API object with api token and url get from appliaction config
      */
-    protected function __construct( $sApiToken )
+    public function __construct( $sApiToken )
     {
-        $tiramizooApiUrl = oxTiramizooConfig::getInstance()->getShopConfVar('oxTiramizoo_api_url');
+        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+        $tiramizooApiUrl = $oTiramizooConfig->getShopConfVar('oxTiramizoo_api_url');
         parent::__construct($tiramizooApiUrl, $sApiToken);
     }
 
@@ -49,39 +50,10 @@ class oxTiramizooApi extends TiramizooApi
     public static function getApiInstance( $sApiToken )
     {
         if ( !isset(self::$_instances[$sApiToken]) && !self::$_instances[$sApiToken] instanceof oxTiramizooApi ) {
-            self::$_instances[$sApiToken] = new oxTiramizooApi( $sApiToken );
+            self::$_instances[$sApiToken] = oxnew('oxTiramizooApi', $sApiToken );
         }
 
         return self::$_instances[$sApiToken];
-    }
-
-    /**
-     * Get the instance of class
-     * 
-     * @return oxTiramizooApi
-     */
-    public static function getInstance()
-    {
-        if ( !self::$_instance instanceof oxTiramizooApi ) {
-                self::$_instance = new oxTiramizooApi();
-        }
-
-        return self::$_instance;
-    }
-
-    /**
-     * Sending request to the API fo getting quotes
-     * 
-     * @param  mixed $data Request data
-     * @return mixed Array with status code of request and response data
-     */
-    public function getQuotes($data)
-    {
-        $result = null;
-
-        $this->request('quotes', $data, $result);
-
-        return $result;
     }
 
     /**
@@ -119,30 +91,6 @@ class oxTiramizooApi extends TiramizooApi
     }
 
     /**
-     * Get working services hours
-     * 
-     * @param string $sCountryCode
-     * @param string $sPickupCode
-     * @param string $sDeliveryCode
-     * @return mixed Array with status code of request and response data
-     */
-    public function getAvailableWorkingHours($sCountryCode, $sPickupCode, $sDeliveryCode)
-    {
-        $data = array();
-
-        $data['country_code'] = $sCountryCode;
-        $data['pickup_postal_code'] = $sPickupCode;
-        $data['delivery_postal_code'] = $sDeliveryCode;
-
-        if ($this->_aAvailableWorkingHours === null) {
-            $result = null;
-            $this->requestGet('service_availability', $data, $this->_aAvailableWorkingHours);
-        }
-
-        return $this->_aAvailableWorkingHours;
-    }
-
-    /**
      * Get service areas
      * 
      * @param string $sPickupCode
@@ -157,7 +105,6 @@ class oxTiramizooApi extends TiramizooApi
     }
 
 
-
     /**
      * Synchronize service areas for one postal code
      * 
@@ -170,8 +117,9 @@ class oxTiramizooApi extends TiramizooApi
         if ($response['http_status'] != 200) {
             throw new oxTiramizoo_ApiException("Can't connect to Tiramizoo API", 1);
         }
-
-        oxTiramizooConfig::getInstance()->saveShopConfVar('aarr', 'service_areas_' . $sPostalCode, oxTiramizooApi::objectToArray($response['response']));
+        
+        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+        $oTiramizooConfig->saveShopConfVar('aarr', 'service_areas_' . $sPostalCode, oxTiramizooApi::objectToArray($response['response']));
     }
 
     /**
@@ -192,24 +140,9 @@ class oxTiramizooApi extends TiramizooApi
                 $variableType = 'str';
             }
 
-            oxTiramizooConfig::getInstance()->saveShopConfVar($variableType, $configIndex, $configValue);
+            $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+            $oTiramizooConfig->saveShopConfVar($variableType, $configIndex, $configValue);
         }
-    }
-
-    /**
-     * Synchronize retail package sizes information
-     */
-    public function synchronizePackageSizes()
-    {
-        throw new oxTiramizoo_ApiException("Not implemented yet", 1);
-    }
-
-    /**
-     * Synchronize retail location information
-     */
-    public function synchronizeRetailLocation()
-    {
-        throw new oxTiramizoo_ApiException("Not implemented yet", 1);
     }
 
 

@@ -18,14 +18,16 @@ class oxTiramizoo_SyncConfigJob extends oxTiramizoo_ScheduleJob
 			$oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
 			$oRetailLocationList->loadAll();
 
+			$oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+
 	        foreach ($oRetailLocationList as $oRetailLocation) 
 	        {
-	            oxTiramizooConfig::getInstance()->synchronizeAll( $oRetailLocation->getApiToken() );
+	            $oTiramizooConfig->synchronizeAll( $oRetailLocation->getApiToken() );
 	        }
 
 	        $this->finishJob();
 
-		} catch (Exception $oEX) {
+		} catch (oxException $oEX) {
 	        $this->refreshJob();
 		}
 	}

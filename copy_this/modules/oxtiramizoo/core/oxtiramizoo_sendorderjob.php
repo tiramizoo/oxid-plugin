@@ -12,15 +12,18 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
 		{
 			if ($soxId = $this->getExternalId()) {
 		        $oOrder = oxNew( "oxorder" );
-		        $oOrder->load( $soxId);
+		        $oOrder->load( $soxId );
 			}
 
 			if ($this->getRepeats() >= self::MAX_REPEATS) {
 				$this->closeJob();
 				return true;
 			}
+			
+	        $oTiramizooOrderExtended = oxNew('oxTiramizoo_OrderExtended');
+	        $sOxId = $oTiramizooOrderExtended->getIdByOrderId($oOrder->getId());
+	        $oTiramizooOrderExtended->load($sOxId);
 
-	        $oTiramizooOrderExtended = oxTiramizoo_OrderExtended::findOneByFilters(array('oxorderid' => $oOrder->getId()));
 			$oTiramizooData = $oTiramizooOrderExtended->getTiramizooData();
 
 	        $oTiramizooApi = oxTiramizooApi::getApiInstance($this->getApiToken());

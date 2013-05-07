@@ -112,7 +112,6 @@ class oxTiramizooConfig extends oxConfig
             while (!$oRs->EOF) {
                 
                 list($sVarName, $sVarType, $sVarVal) = $oRs->fields;
-
                 $aValues[$aTypeArray[$sVarType]][$sVarName] = $this->decodeValue($sVarType, $sVarVal);
 
                 $oRs->moveNext();

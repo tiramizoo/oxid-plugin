@@ -28,8 +28,10 @@ class oxTiramizoo_Order_Tab extends oxAdminDetails
 
             $this->_aViewData["edit"] =  $oOrder;
 
+            $oxTiramizooOrderExtended = oxNew('oxTiramizoo_OrderExtended');
+            $sOxId = $oxTiramizooOrderExtended->getIdByOrderId($this->oOrder());
+            $oxTiramizooOrderExtended->load($sOxId);
 
-            $oxTiramizooOrderExtended = oxTiramizoo_OrderExtended::findOneByFilters(array('oxorderid' => $oOrder->getId()));
             $this->_aViewData["oxTiramizooOrderExtended"] =  $oxTiramizooOrderExtended;
 
 

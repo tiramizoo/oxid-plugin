@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Extends oxbasket class. Overrides method to calculate price
  */

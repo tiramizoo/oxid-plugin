@@ -271,7 +271,7 @@ class oxTiramizoo_settings extends Shop_Config
         $oTiramizooRetailLocation = oxNew('oxTiramizoo_RetailLocation');
         $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
         
-        if ($sOxid = $oTiramizooRetailLocation->getOxidByApiToken( $sApiToken )) 
+        if ($sOxid = $oTiramizooRetailLocation->getIdByApiToken( $sApiToken )) 
         {
             $oTiramizooRetailLocation->load( $sOxid );            
         }
