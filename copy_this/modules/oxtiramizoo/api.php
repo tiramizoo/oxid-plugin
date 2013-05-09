@@ -8,6 +8,4 @@ $_POST['cl'] = 'oxtiramizoo_webhook';
 
 // executing regular routines ...
 
-if ( !defined( 'OXID_PHP_UNIT' ) ) {
-	require '../../index.php';
-}
+require '../../index.php';
