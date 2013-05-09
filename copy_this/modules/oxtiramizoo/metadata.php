@@ -76,11 +76,11 @@ $aModule = array(
                             
                             'oxTiramizoo_ArticleExtended'       => 'oxtiramizoo/application/models/oxtiramizoo_articleextended.php',
                             'oxTiramizoo_CategoryExtended'      => 'oxtiramizoo/application/models/oxtiramizoo_categoryextended.php',
+                            
                             'oxTiramizoo_OrderExtended'         => 'oxtiramizoo/application/models/oxtiramizoo_orderextended.php',
                             
                             'oxTiramizoo_ScheduleJob'           => 'oxtiramizoo/application/models/oxtiramizoo_schedulejob.php',
                             'oxTiramizoo_ScheduleJobList'       => 'oxtiramizoo/application/models/oxtiramizoo_schedulejoblist.php',
-
 
                             /* exception */
                             'oxTiramizoo_ApiException'                  => 'oxtiramizoo/core/exception/oxtiramizoo_apiexception.php',

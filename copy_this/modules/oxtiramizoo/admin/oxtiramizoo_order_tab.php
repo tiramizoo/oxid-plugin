@@ -19,7 +19,6 @@ class oxTiramizoo_Order_Tab extends oxAdminDetails
         parent::render();
 
         $soxId = oxConfig::getParameter( "oxid");
-
         if ( $soxId != "-1" && isset( $soxId ) ) {
             // load object
             $oOrder = oxNew( "oxorder" );
@@ -28,8 +27,11 @@ class oxTiramizoo_Order_Tab extends oxAdminDetails
 
             $this->_aViewData["edit"] =  $oOrder;
 
+            $oxTiramizooOrderExtended = oxNew('oxTiramizoo_OrderExtended');
+            $soxIdExtended = $oxTiramizooOrderExtended->getIdByOrderId($soxId);
+            
+            $oxTiramizooOrderExtended->load($soxIdExtended);
 
-            $oxTiramizooOrderExtended = oxTiramizoo_OrderExtended::findOneByFilters(array('oxorderid' => $oOrder->getId()));
             $this->_aViewData["oxTiramizooOrderExtended"] =  $oxTiramizooOrderExtended;
 
 

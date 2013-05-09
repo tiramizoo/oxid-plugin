@@ -321,7 +321,7 @@ class oxTiramizoo_DeliverySet
             {
                 $aAvailablePostalCodes = $oRetailLocation->getConfVar('postal_codes');
 
-                if (in_array($this->_sDeliveryPostalcode, $aAvailablePostalCodes)) {
+                if (is_array($aAvailablePostalCodes) && in_array($this->_sDeliveryPostalcode, $aAvailablePostalCodes)) {
                     return $this->_sCurrentApiToken = $oRetailLocation->getApiToken();
                 }
             }

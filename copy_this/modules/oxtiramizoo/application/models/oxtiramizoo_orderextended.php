@@ -29,41 +29,11 @@ class oxTiramizoo_OrderExtended extends oxBase {
     }
 
 
-    public static function findOneByFilters($aFilters) 
+    public function getIdByOrderId($sOrderId) 
     {
-        $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-
-        $whereItems = array();
-
-        foreach ($aFilters as $sColumnName => $value) 
-        {
-            $whereItems[] =  $sColumnName . " = " . $oDb->quote( $value );
-        }
-
-        $sQ = "SELECT * FROM oxtiramizooorderextended WHERE " . implode(' AND ', $whereItems);
-        $rs = $oDb->select( $sQ );
-        
-        if ( $rs && $rs->RecordCount() ) {
-
-            $oxTiramizooOrderExtended = oxNew('oxTiramizoo_OrderExtended');
-            $oxTiramizooOrderExtended->load( $rs->fields['OXID'] );            
-
-            return $oxTiramizooOrderExtended;
-        }
-
-        return null;
-    }
-
-
-    public static function findOneByFiltersOrCreate($aFilters) 
-    {
-        $oTiramizooOrderExtended = oxTiramizoo_OrderExtended::findOneByFilters($aFilters);
-
-        if (!$oTiramizooOrderExtended) {
-            $oTiramizooOrderExtended = oxNew('oxTiramizoo_OrderExtended');
-        }
-
-        return $oTiramizooOrderExtended;
+        $oDb = oxDb::getDb(  );
+        $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE OXORDERID = '" . $sOrderId . "';";
+        return $oDb->getOne($sQ);
     }
 
 

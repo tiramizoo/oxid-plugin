@@ -107,12 +107,11 @@ class oxTiramizooConfig extends oxConfig
                          'confselects' => array(),
                          'confints' => array());
 
-
         if ( $oRs != false && $oRs->recordCount() > 0 ) {
             while (!$oRs->EOF) {
                 
-                list($sVarName, $sVarType, $sVarVal) = $oRs->fields;
-
+                //using array_values prevent against problems with fetch type in EE fetch_assoc, CE fetch_num
+                list($sVarName, $sVarType, $sVarVal) = array_values($oRs->fields);
                 $aValues[$aTypeArray[$sVarType]][$sVarName] = $this->decodeValue($sVarType, $sVarVal);
 
                 $oRs->moveNext();

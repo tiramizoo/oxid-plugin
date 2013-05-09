@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Extends oxbasket class. Overrides method to calculate price
  */
@@ -33,10 +32,12 @@ class oxTiramizoo_oxbasket extends oxTiramizoo_oxbasket_parent
             return false;
         }
 
+        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+
         foreach ($this->getBasketArticles() as $key => $oArticle) 
         {
             //check if deliverable is set for articles with stock > 0
-            if (oxTiramizooConfig::getInstance()->getShopConfVar('oxTiramizoo_articles_stock_gt_0')) {
+            if ($oTiramizooConfig->getShopConfVar('oxTiramizoo_articles_stock_gt_0')) {
                 if ($oArticle->oxarticles__oxstock->value <= 0) {
                     return false;
                 }
@@ -51,7 +52,8 @@ class oxTiramizoo_oxbasket extends oxTiramizoo_oxbasket_parent
                 $oArticle = $oArticleParent;
             }
 
-            $oArticleExtended = oxTiramizoo_ArticleExtended::findOneByFiltersOrCreate(array('oxarticleid' => $oArticle->oxarticles__oxid->value));
+            $oArticleExtended = oxnew('oxTiramizoo_ArticleExtended');
+            $oArticleExtended->load($oArticle->getId());
 
             if (!$oArticleExtended->isEnabled()) {
                 return false;

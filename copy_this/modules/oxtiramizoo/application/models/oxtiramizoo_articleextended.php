@@ -30,6 +30,12 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         $this->init( 'oxtiramizooarticleextended' );
     }
 
+    public function getIdByArticleId($sArticleId) 
+    {
+        $oDb = oxDb::getDb();
+        $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE OXARTICLEID = '" . $sArticleId . "';";
+        return $oDb->getOne($sQ);
+    }
 
     public static function findOneByFilters($aFilters) 
     {

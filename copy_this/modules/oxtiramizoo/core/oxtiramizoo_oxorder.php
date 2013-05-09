@@ -48,7 +48,7 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
                 //@TODO: notification
             }
 
-            $oTiramizooOrderExtended = oxTiramizoo_OrderExtended::findOneByFiltersOrCreate(array('oxorderid' => $this->getId()));
+            $oTiramizooOrderExtended = $this->getOrderExtended();
 
             $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_response = new oxField(base64_encode(serialize($tiramizooResult)), oxField::T_RAW);
             $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_request_data = new oxField(base64_encode(serialize($oTiramizooData)), oxField::T_RAW);
@@ -68,6 +68,10 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
 
     public function getOrderExtended()
     {
-        return oxTiramizoo_OrderExtended::findOneByFiltersOrCreate(array('oxorderid' => $this->getId()));
+        $oTiramizooOrderExtended = oxNew('oxTiramizoo_OrderExtended');
+        $sOxId = $oTiramizooOrderExtended->getIdByOrderId($this->getId());
+        $oTiramizooOrderExtended->load($sOxId);
+
+        return $oTiramizooOrderExtended;
     }
 }

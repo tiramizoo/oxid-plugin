@@ -194,6 +194,15 @@ class oxTiramizoo_Setup
                                 OXTITLE_3 = 'Tiramizoo',
                                 OXPOS = 1;");
 
+        if ($this->columnExistsInTable('OXSHOPINCL', 'oxdeliveryset')) {
+            $this->executeSQL("UPDATE oxdeliveryset SET
+                                    OXSHOPINCL = 1
+                                WHERE
+                                    OXID = 'Tiramizoo'
+                                AND
+                                    OXSHOPID = '" . $oTiramizooConfig->getShopId() . "'");
+        }
+
          $this->executeSQL("INSERT IGNORE INTO oxdelivery SET
                                 OXID = 'TiramizooStandardDelivery',
                                 OXSHOPID = '" . $oTiramizooConfig->getShopId() . "',
@@ -212,6 +221,15 @@ class oxTiramizoo_Setup
                                 OXFIXED = 0,
                                 OXSORT = 1,
                                 OXFINALIZE = 1;");
+
+        if ($this->columnExistsInTable('OXSHOPINCL', 'oxdelivery')) {
+            $this->executeSQL("UPDATE oxdelivery SET
+                                    OXSHOPINCL = 1
+                                WHERE
+                                    OXID = 'TiramizooStandardDelivery'
+                                AND
+                                    OXSHOPID = '" . $oTiramizooConfig->getShopId() . "'");
+        }
 
         $this->executeSQL("INSERT IGNORE INTO oxdel2delset SET
                                 OXID = MD5(CONCAT('TiramizooStandardDelivery', 'Tiramizoo')),
