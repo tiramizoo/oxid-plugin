@@ -52,7 +52,8 @@ class oxTiramizoo_oxbasket extends oxTiramizoo_oxbasket_parent
                 $oArticle = $oArticleParent;
             }
 
-            $oArticleExtended = oxTiramizoo_ArticleExtended::findOneByFiltersOrCreate(array('oxarticleid' => $oArticle->oxarticles__oxid->value));
+            $oArticleExtended = oxnew('oxTiramizoo_ArticleExtended');
+            $oArticleExtended->load($oArticle->getId());
 
             if (!$oArticleExtended->isEnabled()) {
                 return false;

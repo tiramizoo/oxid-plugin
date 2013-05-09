@@ -105,47 +105,6 @@ class oxTiramizooApi extends TiramizooApi
     }
 
 
-    /**
-     * Synchronize service areas for one postal code
-     * 
-     * @param string $sPostalCode postal code parameter to getting time windows from API
-     */
-    public function synchronizeServiceAreas($sPostalCode, $aRangeDates = array())
-    {
-        $response = $this->getAvailableServiceAreas($sPostalCode, $aRangeDates = array());
-
-        if ($response['http_status'] != 200) {
-            throw new oxTiramizoo_ApiException("Can't connect to Tiramizoo API", 1);
-        }
-        
-        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
-        $oTiramizooConfig->saveShopConfVar('aarr', 'service_areas_' . $sPostalCode, oxTiramizooApi::objectToArray($response['response']));
-    }
-
-    /**
-     * Synchronize whole config for all retail locations
-     */
-    public function synchronizeConfiguration()
-    {
-        $response = $this->getRemoteConfiguration();
-
-        $aResponse = oxTiramizooApi::objectToArray($response['response']);
-
-        foreach ($aResponse as $configIndex => $configValue) 
-        {
-            //@ToDo: better check
-            if(is_array($configValue)) {
-                $variableType = 'aarr';
-            } else {
-                $variableType = 'str';
-            }
-
-            $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
-            $oTiramizooConfig->saveShopConfVar($variableType, $configIndex, $configValue);
-        }
-    }
-
-
     public static function objectToArray($data)
     {
         if (is_array($data) || is_object($data))

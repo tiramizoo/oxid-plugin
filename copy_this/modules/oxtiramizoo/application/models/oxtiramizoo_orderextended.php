@@ -29,9 +29,9 @@ class oxTiramizoo_OrderExtended extends oxBase {
     }
 
 
-    public function getIdByOrderId($sApiToken) 
+    public function getIdByOrderId($sOrderId) 
     {
-        $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
+        $oDb = oxDb::getDb(  );
         $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE OXORDERID = '" . $sOrderId . "';";
         return $oDb->getOne($sQ);
     }
