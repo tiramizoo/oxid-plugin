@@ -20,7 +20,7 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
             $oUser = $this->getUser();
             $oDeliveryAddress = $this->getDelAddressInfo();
 
-            $oCreateOrderData = new oxTiramizoo_CreateOrderData($oTiramizooWindow, $oBasket, $oRetailLocation);
+            $oCreateOrderData = oxnew('oxTiramizoo_CreateOrderData', $oTiramizooWindow, $oBasket, $oRetailLocation);
             $oCreateOrderData->buildPickup();
             $oCreateOrderData->buildDelivery($oUser, $oDeliveryAddress);
             $oCreateOrderData->buildItems();
@@ -37,7 +37,7 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
                 // echo '</div>';
                 // 
 
-                $oSendOrderJob = new oxTiramizoo_SendOrderJob();
+                $oSendOrderJob = oxnew('oxTiramizoo_SendOrderJob');
                 $oSendOrderJob->setExternalId($this->getId());
                 $oSendOrderJob->setParams(array('api_token' => $oTiramizooDeliverySet->getApiToken()));            
                 $oSendOrderJob->save();
