@@ -63,7 +63,7 @@ class oxTiramizoo_CreateOrderData
 
     public function getTiramizooConfig()
     {
-        return oxTiramizooConfig::getInstance();
+        return oxRegistry::get('oxTiramizooConfig');
     }
 
     public function getTiramizooDataObject()
@@ -85,16 +85,12 @@ class oxTiramizoo_CreateOrderData
 	{
         $this->_oTiramizooData = new stdClass();
 
-
-
-
         $this->_oTiramizooData->description = $this->getDescription();
         $this->_oTiramizooData->external_id = $this->getExternalId();
         $this->_oTiramizooData->web_hook_url = $this->getWebhookUrl();
         $this->_oTiramizooData->pickup = $this->_oPickup;
         $this->_oTiramizooData->delivery = $this->_oDelivery;
         $this->_oTiramizooData->packages = $this->_aPackages;
-
 
         return $this->_oTiramizooData;
 	}
@@ -166,6 +162,8 @@ class oxTiramizoo_CreateOrderData
 
         $this->_oDelivery->after = $this->_oTimeWindow->getDeliveryFrom();
         $this->_oDelivery->before = $this->_oTimeWindow->getDeliveryTo();
+
+        return $this->_oDelivery;
     }
 
 
@@ -194,6 +192,8 @@ class oxTiramizoo_CreateOrderData
 
         $this->_oPickup->after = $this->_oTimeWindow->getPickupFrom();
         $this->_oPickup->before = $this->_oTimeWindow->getPickupTo();
+
+        return $this->_oPickup;
     }
 
 
@@ -215,30 +215,16 @@ class oxTiramizoo_CreateOrderData
 
         $useStandardPackage = false;
 
-        $this->getPackageSizesSortedByVolume();
-
-
-        if ($sPackageStrategy == 1) {
-            $aPackageSizes = $this->getPackageSizesSortedByVolume();
-
-            if (count($aPackageSizes)) {
-                $useAutoFittingToPackage = 1;
-                $aAutoFitPackageItems = array();
-            }
-        } else if ($sPackageStrategy == 2) {
-
+        if ($sPackageStrategy == oxTiramizoo_DeliverySet::TIRAMIZOO_PACKING_STRATEGY_SINGLE_PACKAGE) {
             $stdPackageWidth = $oTiramizooConfig->getShopConfVar('oxTiramizoo_std_package_width');
             $stdPackageLength = $oTiramizooConfig->getShopConfVar('oxTiramizoo_std_package_length');
             $stdPackageHeight = $oTiramizooConfig->getShopConfVar('oxTiramizoo_std_package_height');
             $stdPackageWeight = $oTiramizooConfig->getShopConfVar('oxTiramizoo_std_package_weight');
-
             $useStandardPackage = $stdPackageWidth && $stdPackageLength && $stdPackageHeight && $stdPackageWeight;
-
             $standardPackageAddedToItems = 0;
         }
 
-
-        foreach ($this->_oBasket->getBasketArticles() as $key => $oArticle) 
+        foreach ($this->getBasket()->getBasketArticles() as $key => $oArticle) 
         {
             //initialize standard class
             $item = new stdClass();
@@ -247,7 +233,7 @@ class oxTiramizoo_CreateOrderData
             $item->height = null;
             $item->length = null;
 
-            $item->quantity = $this->_oBasket->getArtStockInBasket($oArticle->oxarticles__oxid->value);
+            $item->quantity = $this->getBasket()->getArtStockInBasket($oArticle->oxarticles__oxid->value);
 
             //check if deliverable is set for articles with stock > 0
             if (oxTiramizooConfig::getInstance()->getShopConfVar('oxTiramizoo_articles_stock_gt_0')) {
@@ -264,21 +250,25 @@ class oxTiramizoo_CreateOrderData
                 $oArticleParent->load($parentArticleId);
                 $oArticle = $oArticleParent;
             }
+            
+            $oArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
+            $sOxid = $oArticleExtended->getIdByArticleId($oArticle->getId());
 
-            $oArticleExtended = oxTiramizoo_ArticleExtended::findOneByFiltersOrCreate(array('oxarticleid' => $oArticle->oxarticles__oxid->value));
+            if ($sOxid) {
+                $oArticleExtended->load($sOxid);
+            }
 
             if (!$oArticleExtended->isEnabled()) {
                 return false;
             }
 
             $item = $oArticleExtended->buildArticleEffectiveData($item);
-            $item->name = $oArticle->oxarticles__oxtitle->value;  
+
+            $item->description = $oArticle->oxarticles__oxtitle->value;  
 
             if ($useStandardPackage && !$oArticleExtended->hasIndividualPackage()) {
                 if (!$standardPackageAddedToItems) {
                     $standardPackageAddedToItems = 1;
-
-                    list($width, $height, $length) = explode('x', $useStandardPackage);
 
                     $item->weight = floatval($stdPackageWeight);
                     $item->width = floatval($stdPackageWidth);
@@ -288,67 +278,15 @@ class oxTiramizoo_CreateOrderData
 
                     $items[] = $item;
                 }
-            } else if ($useAutoFittingToPackage && !$oArticleExtended->hasIndividualPackage()) {
-                for ($i=0; $i < $item->quantity; $i++) {
-                   $aAutoFitPackageItems[] = (array)$item;
-                }
+            } else if (($sPackageStrategy == oxTiramizoo_DeliverySet::TIRAMIZOO_PACKING_STRATEGY_PACKAGE_PRESETS) && !$oArticleExtended->hasIndividualPackage()) {
+                $item->bundle = true;
+                $items[] = $item;
             } else {
                 $items[] = $item;
             }
         }
 
-
-        if ($useAutoFittingToPackage && count($aAutoFitPackageItems)) {
-
-            $packIntoBoxes = new packIntoBoxes($aAutoFitPackageItems, $aPackageSizes);
-            $packIntoBoxes->pack();
-
-            if ($packIntoBoxes->getIndividualPackageItems()) {
-                throw new oxTiramizoo_NotAvailableException();
-            }
-            
-            foreach($packIntoBoxes->getPackedItems() as $key => $package) 
-            {
-                $item = new stdClass();
-
-                $item->weight = floatval($package['package']['weight']);
-                $item->width = floatval($package['package']['width']);
-                $item->length = floatval($package['package']['length']);
-                $item->height = floatval($package['package']['height']);
-                $item->quantity = 1;
-
-                $aDescriptionNames = array();
-
-                foreach ($package['items'] as $itemInPackage) {
-                    $aDescriptionNames[] = $itemInPackage['name']; 
-                }
-                
-                $item->description = substr(implode(', ', $aDescriptionNames), 0, 255);
-
-                $items[] = $item;
-            }
-        } 
-
-        $this->_aPackages = $items;
-    }
-
-
-
-
-    public function getPackageSizesSortedByVolume() 
-    {
-        $aPackagePresets = $this->_oRetailLocation->getConfVar('package_presets');
-
-        $aPackageSizesSorted = array();
-
-        foreach ($aPackagePresets as $key => $aPackagePreset) {
-            $volume = $aPackagePreset['width'] * $aPackagePreset['length'] * $aPackagePreset['height'];
-            $aPackageSizesSorted[$volume] = $aPackagePreset;
-        }
-
-        ksort($aPackageSizesSorted);
-
-        return $aPackageSizesSorted;
+        return $this->_aPackages = $items;
     }
 
 }

@@ -71,6 +71,27 @@ class oxTiramizoo_DeliverySet
     const TIRAMIZOO_DELIVERY_SET_ID = 'Tiramizoo';
 
     /**
+     * Tiramizoo packing strategy that pack each products in another package
+     * 
+     * @var constant
+     */
+    const TIRAMIZOO_PACKING_STRATEGY_INDIVIDUAL_DIMENSIONS = 0;
+
+    /**
+     * Tiramizoo packing strategy that pack articles to packages specified in tiramizoo dashboard
+     * 
+     * @var constant
+     */
+    const TIRAMIZOO_PACKING_STRATEGY_PACKAGE_PRESETS = 1;
+
+    /**
+     * Tiramizoo packing strategy that pack all articles to one single package
+     * 
+     * @var constant
+     */
+    const TIRAMIZOO_PACKING_STRATEGY_SINGLE_PACKAGE = 2;
+
+    /**
      * Initialize 
      * 
      * @param oxuser|null       $oUser             Userr object

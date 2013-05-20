@@ -8,80 +8,46 @@
 class oxTiramizoo_Category_Tab extends oxAdminDetails
 {
     /**
-     * Loads category object data, pases it to Smarty engine and returns
-     * name of template file "category_text.tpl".
+     * Loads category extended object data, pases it to Smarty engine and returns
+     * name of template file "oxTiramizoo_category_tab.tpl".
      *
      * @return string
      */
     public function render()
     {
-        parent::render();
-
-        $this->_aViewData['edit'] = $oCategory = oxNew( 'oxcategory' );
-
-        $soxId = oxConfig::getParameter( "oxid");
-        // check if we right now saved a new entry
-        $sSavedID = oxConfig::getParameter( "saved_oxid");
-        if ( ($soxId == "-1" || !isset( $soxId)) && isset( $sSavedID) ) {
-            $soxId = $sSavedID;
-            oxSession::deleteVar( "saved_oxid");
-            $this->_aViewData["oxid"] =  $soxId;
-            // for reloading upper frame
-            $this->_aViewData["updatelist"] =  "1";
+        // @codeCoverageIgnoreStart
+        if (!defined('OXID_PHP_UNIT')) {
+            parent::render();
         }
+        // @codeCoverageIgnoreEnd
 
-        if ( $soxId != "-1" && isset( $soxId)) {
-            // load object
-            $iCatLang = oxConfig::getParameter("catlang");
+        $this->_aViewData['edit'] = oxNew( 'oxcategory' );
 
-            if (!isset($iCatLang))
-                $iCatLang = $this->_iEditLang;
-
-            $this->_aViewData["catlang"] = $iCatLang;
-
-            $oCategory->loadInLang( $iCatLang, $soxId );
-
-
-            foreach ( oxLang::getInstance()->getLanguageNames() as $id => $language) {
-                $oLang= new oxStdClass();
-                $oLang->sLangDesc = $language;
-                $oLang->selected = ($id == $this->_iEditLang);
-                $this->_aViewData["otherlang"][$id] = clone $oLang;
-            }
-        }
-
-        $this->_aViewData['oxTiramizooCategoryExtended'] = oxTiramizoo_CategoryExtended::findOneByFiltersOrCreate(array('oxcategoryid' => $oCategory->getId()));
+        $soxId = $this->getConfig()->getRequestParameter( "oxid");
+        
+        $oTiramizooCategoryExtended = oxNew('oxTiramizoo_CategoryExtended');
+        $oTiramizooCategoryExtended->load($oTiramizooCategoryExtended->getIdByCategoryId($soxId));
+        $this->_aViewData['oxTiramizooCategoryExtended'] = $oTiramizooCategoryExtended;
 
         return "oxTiramizoo_category_tab.tpl";
     }
 
     /**
-     * Saves category description text to DB.
+     * Saves category extended.
      *
-     * @return mixed
+     * @return void
      */
     public function save()
     {
-        $myConfig  = $this->getConfig();
+        $soxId   = $this->getConfig()->getRequestParameter( "oxid");
+        $aParams = $this->getConfig()->getRequestParameter( "oxTiramizooCategoryExtended");
+        
+        if ( $soxId != "-1" && isset( $soxId ) ) {
+            $oTiramizooCategoryExtended = oxNew('oxTiramizoo_CategoryExtended');
+            $oTiramizooCategoryExtended->load($oTiramizooCategoryExtended->getIdByCategoryId($soxId));
 
-        $soxId   = oxConfig::getParameter( "oxid");
-        $aParams = oxConfig::getParameter( "oxTiramizooCategoryExtended");
-
-        $oCategory = oxNew( "oxcategory" );
-
-        if ( $soxId != "-1" ) {
-            $oCategory->load( $soxId );
-            $aParams['oxcategoryid'] = $soxId;
-        }
-
-        $oTiramizooCategoryExtended = oxTiramizoo_CategoryExtended::findOneByFiltersOrCreate(array('oxcategoryid' => $oCategory->getId()));
-
-        $oTiramizooCategoryExtended->assign( $aParams );
-        $oTiramizooCategoryExtended->save();
-
-        // set oxid if inserted
-        if ( $soxId == "-1") {
-            oxSession::setVar( "saved_oxid", $oCategory->oxcategories__oxid->value);
+            $oTiramizooCategoryExtended->assign( $aParams );
+            $oTiramizooCategoryExtended->save();
         }
     }
 }

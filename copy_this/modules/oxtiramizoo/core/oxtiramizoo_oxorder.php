@@ -37,7 +37,7 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
                 // echo '</div>';
                 // 
 
-                $oSendOrderJob = oxnew('oxTiramizoo_SendOrderJob');
+                $oSendOrderJob = oxNew('oxTiramizoo_SendOrderJob');
                 $oSendOrderJob->setExternalId($this->getId());
                 $oSendOrderJob->setParams(array('api_token' => $oTiramizooDeliverySet->getApiToken()));            
                 $oSendOrderJob->save();

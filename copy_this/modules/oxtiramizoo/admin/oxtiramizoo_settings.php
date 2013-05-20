@@ -10,10 +10,14 @@ class oxTiramizoo_settings extends Shop_Config
 
     public function init()
     {
-        $oxTiramizooSetup = new oxTiramizoo_setup();
+        $oxTiramizooSetup = oxNew('oxTiramizoo_setup');
         $oxTiramizooSetup->install();
 
-        return parent::Init();
+        // @codeCoverageIgnoreStart
+        if (!defined('OXID_PHP_UNIT')) {
+            parent::init();
+        }
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -23,15 +27,17 @@ class oxTiramizoo_settings extends Shop_Config
     */
     public function render()
     {
-        parent::render();
+        // @codeCoverageIgnoreStart
+        if (!defined('OXID_PHP_UNIT')) {
+            parent::render();
+        }
+        // @codeCoverageIgnoreEnd
 
-        $oxConfig = $this->getConfig();
-
-        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
+        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
 
         $this->_aViewData['oPaymentsList'] = $this->getPaymentsList();
 
-        $sCurrentAdminShop = $oxConfig->getShopId();
+        $sCurrentAdminShop = $oxTiramizooConfig->getShopId();
 
         $aShopConfVars = $oxTiramizooConfig->getTiramizooConfVars();
         
@@ -44,7 +50,6 @@ class oxTiramizoo_settings extends Shop_Config
 
         $this->_aViewData['version'] = oxTiramizoo_setup::VERSION;
 
-
         $oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
         $oRetailLocationList->loadAll();
 
@@ -55,7 +60,7 @@ class oxTiramizoo_settings extends Shop_Config
 
     public function getPaymentsList()
     {
-        $oxPaymentList = new Payment_List();
+        $oxPaymentList = oxNew('Payment_List');
         $oxPaymentList->init();
 
         $aPaymentList = array();
@@ -77,31 +82,28 @@ class oxTiramizoo_settings extends Shop_Config
 
     public function assignPaymentsToTiramizoo()
     {
-        $aPayments  = oxConfig::getParameter( "payment" );
+        $aPayments = $this->getConfig()->getRequestParameter("payment");
 
-        //assign payments for all shipping methods
-        $aTiramizooSoxIds = array('Tiramizoo');
+        //assign payments for Tiramizoo
+        $soxId = 'Tiramizoo';
 
         $oDb = oxDb::getDb();
 
         foreach ( $aPayments as $sPaymentId => $isAssigned) 
         {
-            foreach ( $aTiramizooSoxIds as $soxId) 
-            {
-                if ($isAssigned) {
-                    // check if we have this entry already in
-                    $sID = $oDb->getOne("SELECT oxid FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'", false, false);
-                    if ( !isset( $sID) || !$sID) {
-                        $oObject = oxNew( 'oxbase' );
-                        $oObject->init( 'oxobject2payment' );
-                        $oObject->oxobject2payment__oxpaymentid = new oxField($sPaymentId);
-                        $oObject->oxobject2payment__oxobjectid  = new oxField($soxId);
-                        $oObject->oxobject2payment__oxtype      = new oxField("oxdelset");
-                        $oObject->save();
-                    }
-                } else {
-                    $oDb->Execute("DELETE FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'");
+            if ($isAssigned) {
+                // check if we have this entry already in
+                $sID = $oDb->getOne("SELECT oxid FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'", false, false);
+                if ( !isset( $sID) || !$sID) {
+                    $oObject = oxNew( 'oxbase' );
+                    $oObject->init( 'oxobject2payment' );
+                    $oObject->oxobject2payment__oxpaymentid = new oxField($sPaymentId);
+                    $oObject->oxobject2payment__oxobjectid  = new oxField($soxId);
+                    $oObject->oxobject2payment__oxtype      = new oxField("oxdelset");
+                    $oObject->save();
                 }
+            } else {
+                $oDb->Execute("DELETE FROM oxobject2payment WHERE oxpaymentid = " . $oDb->quote( $sPaymentId ) . "  AND oxobjectid = ".$oDb->quote( $soxId )." AND oxtype = 'oxdelset'");
             }
         }
     }
@@ -113,13 +115,13 @@ class oxTiramizoo_settings extends Shop_Config
     */
     public function saveConfVars()
     {
-        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
+        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
 
-        $aConfBools = oxConfig::getParameter( "confbools" );
-        $aConfStrs  = oxConfig::getParameter( "confstrs" );
-        $aConfArrs  = oxConfig::getParameter( "confarrs" );
-        $aConfAarrs = oxConfig::getParameter( "confaarrs" );
-        $aConfInts  = oxConfig::getParameter( "confints" );
+        $aConfBools = $this->getConfig()->getRequestParameter("confbools");
+        $aConfStrs  = $this->getConfig()->getRequestParameter("confstrs");
+        $aConfArrs  = $this->getConfig()->getRequestParameter("confarrs");
+        $aConfAarrs = $this->getConfig()->getRequestParameter("confaarrs");
+        $aConfInts  = $this->getConfig()->getRequestParameter("confints");
 
         if ( is_array( $aConfBools ) ) {
           foreach ( $aConfBools as $sVarName => $sVarVal ) {
@@ -158,9 +160,9 @@ class oxTiramizoo_settings extends Shop_Config
 
     public function tiramizooApiUrlHasChanged()
     {
-        $oxTiramizooConfig = oxTiramizooConfig::getInstance();
+        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
 
-        $aConfStrs  = oxConfig::getParameter( "confstrs" );
+        $aConfStrs = $this->getConfig()->getRequestParameter( "confstrs" );
 
         if ($aConfStrs['oxTiramizoo_api_url'] != $oxTiramizooConfig->getShopConfVar('oxTiramizoo_api_url')) {
             return true;
@@ -174,9 +176,6 @@ class oxTiramizoo_settings extends Shop_Config
      */
     public function saveEnableShippingMethod()
     {
-        //@todo: better checks
-        $aConfStrs = oxConfig::getParameter( "confstrs" );
-
         $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
 
         $isTiramizooEnable = 1;
@@ -184,7 +183,6 @@ class oxTiramizoo_settings extends Shop_Config
         $errors = $this->validateEnable();
 
         if (count($errors)) {
-            oxSession::setVar('oxTiramizoo_enable', $errors);
             $isTiramizooEnable = 0;
         }
 
@@ -208,23 +206,23 @@ class oxTiramizoo_settings extends Shop_Config
      */
     public function synchronize()
     {
-        // synchronizing config params
         try 
         {
-            $oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
+            $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+
+            $oRetailLocationList = oxNew('oxTiramizoo_RetailLocationList');
             $oRetailLocationList->loadAll();
 
-            foreach ($oRetailLocationList as $oRetailLocation) 
+            foreach ($oRetailLocationList->getArray() as $oRetailLocation) 
             {
-                oxTiramizooConfig::getInstance()->synchronizeAll( $oRetailLocation->getApiToken() );
+                $oTiramizooConfig->synchronizeAll( $oRetailLocation->getApiToken() );
             }
 
         } catch (oxTiramizoo_ApiException $e) {
             echo $e->getMessage();
             return 'oxTiramizoo_settings.tpl';
         }
-        // clear cache 
-        // oxUtils::getInstance()->rebuildCache();
+
         return 'oxtiramizoo_settings';
     }
 
@@ -244,7 +242,7 @@ class oxTiramizoo_settings extends Shop_Config
             $oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
             $oRetailLocationList->loadAll();
 
-            foreach ($oRetailLocationList as $oRetailLocation) 
+            foreach ($oRetailLocationList->getArray() as $oRetailLocation) 
             {
                 try
                 {
@@ -267,9 +265,9 @@ class oxTiramizoo_settings extends Shop_Config
     public function addNewLocation()
     {
 
-        $sApiToken = trim(oxConfig::getParameter('api_token'));
-        $oTiramizooRetailLocation = oxNew('oxTiramizoo_RetailLocation');
+        $sApiToken = trim($this->getConfig()->getRequestParameter('api_token'));
         $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+        $oTiramizooRetailLocation = oxNew('oxTiramizoo_RetailLocation');
         
         if ($sOxid = $oTiramizooRetailLocation->getIdByApiToken( $sApiToken )) 
         {
@@ -282,29 +280,33 @@ class oxTiramizoo_settings extends Shop_Config
         $oTiramizooRetailLocation->oxtiramizooretaillocation__oxshopid = new oxField( $oTiramizooConfig->getShopId() );
 
         $oTiramizooRetailLocation->save();
+
         try
         {
             oxTiramizooApi::getApiInstance( $sApiToken )->getRemoteConfiguration();
-
         } catch (oxTiramizoo_ApiException $e) {
             $oTiramizooRetailLocation->delete();
 
+            //@todo: add errors
             return 'oxtiramizoo_settings';
         }
 
-        oxTiramizooConfig::getInstance()->synchronizeAll( $sApiToken );
+        $oTiramizooConfig->synchronizeAll( $sApiToken );
+        
+        return 'oxtiramizoo_settings';
     }
 
     public function removeLocation()
     {
-        $sApiToken = oxConfig::getParameter('api_token');
+        $sApiToken = trim($this->getConfig()->getRequestParameter('api_token'));
 
-        $oRetailLocation = oxnew('oxTiramizoo_RetailLocation');
+        $oRetailLocation = oxNew('oxTiramizoo_RetailLocation');
         $sOxid = $oRetailLocation->getIdByApiToken($sApiToken);
 
         if ($sOxid) 
         {
-            $oRetailLocation->load($sOxid)->delete();            
+            $oRetailLocation->load($sOxid);
+            $oRetailLocation->delete();            
         }
 
         return 'oxtiramizoo_settings';
@@ -317,18 +319,17 @@ class oxTiramizoo_settings extends Shop_Config
      */
     public function validateEnable()
     {
-        $aConfStrs = oxConfig::getParameter( "confstrs" );
-        $aPickupHours = oxConfig::getParameter( "oxTiramizoo_shop_pickup_hour" );
-        $aPayments = oxConfig::getParameter( "payment" );
+        $aConfStrs = $this->getConfig()->getRequestParameter( "confstrs" );
+        $aPayments = $this->getConfig()->getRequestParameter( "payment" );
 
         $errors = array();
 
         if (!trim($aConfStrs['oxTiramizoo_api_url'])) {
-            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_api_url_label', oxLang::getInstance()->getBaseLanguage(), true) . ' ' . oxLang::getInstance()->translateString('oxTiramizoo_is_required', oxLang::getInstance()->getBaseLanguage(), true);
+            $errors[] = oxRegistry::getLang()->translateString('oxTiramizoo_settings_api_url_label', oxRegistry::getLang()->getBaseLanguage(), true) . ' ' . oxRegistry::getLang()->translateString('oxTiramizoo_is_required', oxRegistry::getLang()->getBaseLanguage(), true);
         }
 
         if (!trim($aConfStrs['oxTiramizoo_shop_url'])) {
-            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_settings_shop_url_label', oxLang::getInstance()->getBaseLanguage(), true) . ' ' . oxLang::getInstance()->translateString('oxTiramizoo_is_required', oxLang::getInstance()->getBaseLanguage(), true);
+            $errors[] = oxRegistry::getLang()->translateString('oxTiramizoo_settings_shop_url_label', oxRegistry::getLang()->getBaseLanguage(), true) . ' ' . oxRegistry::getLang()->translateString('oxTiramizoo_is_required', oxRegistry::getLang()->getBaseLanguage(), true);
         }
 
         $paymentsAreValid = 0;
@@ -340,23 +341,10 @@ class oxTiramizoo_settings extends Shop_Config
         }
 
         if (!$paymentsAreValid) {
-            $errors[] = oxLang::getInstance()->translateString('oxTiramizoo_payments_required_error', oxLang::getInstance()->getBaseLanguage(), true);
+            $errors[] = oxRegistry::getLang()->translateString('oxTiramizoo_payments_required_error', oxRegistry::getLang()->getBaseLanguage(), true);
         }
 
         return $errors;
     }
 
-    public function test()
-    {
-
-        $oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
-        $oRetailLocationList->loadAll();
-
-        foreach ($oRetailLocationList as $oRetailLocation) 
-        {
-            print_r($oRetailLocation->getConfVar('time_windows'));
-        }
-
-        exit;
-    }
 }
