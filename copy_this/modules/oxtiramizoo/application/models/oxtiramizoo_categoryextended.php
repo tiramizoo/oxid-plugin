@@ -28,41 +28,11 @@ class oxTiramizoo_CategoryExtended extends oxBase {
         $this->init( 'oxtiramizoocategoryextended' );
     }
 
-
-    public static function findOneByFilters($aFilters) 
+    public function getIdByCategoryId($sCategoryId) 
     {
         $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-
-        $whereItems = array();
-
-        foreach ($aFilters as $sColumnName => $value) 
-        {
-            $whereItems[] =  $sColumnName . " = " . $oDb->quote( $value );
-        }
-
-        $sQ = "SELECT * FROM oxtiramizoocategoryextended WHERE " . implode(' AND ', $whereItems);
-        $rs = $oDb->select( $sQ );
+        $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE oxcategoryid = " . $oDb->quote( $sCategoryId );
         
-        if ( $rs && $rs->RecordCount() ) {
-
-            $oTiramizooRetailLocation = oxNew('oxTiramizoo_CategoryExtended');
-            $oTiramizooRetailLocation->load( $rs->fields['OXID'] );            
-
-            return $oTiramizooRetailLocation;
-        }
-
-        return null;
-    }
-
-
-    public static function findOneByFiltersOrCreate($aFilters) 
-    {
-        $oTiramizooCategoryExtended = oxTiramizoo_CategoryExtended::findOneByFilters($aFilters);
-
-        if (!$oTiramizooCategoryExtended) {
-            $oTiramizooCategoryExtended = oxNew('oxTiramizoo_CategoryExtended');
-        }
-
-        return $oTiramizooCategoryExtended;
+        return $oDb->getOne($sQ);
     }
 }

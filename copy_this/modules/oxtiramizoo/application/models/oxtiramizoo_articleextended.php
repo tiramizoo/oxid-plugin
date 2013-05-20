@@ -37,61 +37,20 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         return $oDb->getOne($sQ);
     }
 
-    public static function findOneByFilters($aFilters) 
-    {
-        $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-
-        $whereItems = array();
-
-        foreach ($aFilters as $sColumnName => $value) 
-        {
-            $whereItems[] =  $sColumnName . " = " . $oDb->quote( $value );
-        }
-
-        $sQ = "SELECT * FROM oxtiramizooarticleextended WHERE " . implode(' AND ', $whereItems);
-        $rs = $oDb->select( $sQ );
-
-        if ( $rs && $rs->RecordCount() ) {
-
-            $oTiramizooArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
-            $oTiramizooArticleExtended->load( $rs->fields['OXID'] );            
-
-            return $oTiramizooArticleExtended;
-        }
-
-        return null;
-    }
-    
-    public static function findOneByFiltersOrCreate($aFilters) 
-    {
-        $oTiramizooArticleExtended = oxTiramizoo_ArticleExtended::findOneByFilters($aFilters);
-
-        if (!$oTiramizooArticleExtended) {
-            $oTiramizooArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
-
-            foreach ($aFilters as $sColumnName => $value) 
-            {
-                $oTiramizooArticleExtended->{'oxtiramizooarticleextended__' . $sColumnName} = new oxField($value);
-            }            
-        }
-        return $oTiramizooArticleExtended;
-    }
-
     public function getArticle()
     {
-        if ($this->_oArticle === null) {        
+        if ($this->_oArticle === null) {
             $this->loadArticle();
         }
 
         return $this->_oArticle;
     }
 
-    public function loadArticle()
+    protected function loadArticle()
     {
         $this->_oArticle = oxNew( 'oxarticle' );
-        $this->_oArticle->load($this->oxtiramizooarticleextended__oxarticleid->value);
+        $this->_oArticle->load($this->getId());
     }
-
 
     public function isEnabled()
     {
@@ -117,7 +76,6 @@ class oxTiramizoo_ArticleExtended extends oxBase {
 
     public function hasIndividualPackage()
     {
-        //@TODO: test this
         $aTiramizooInheritedData = $this->getArticleInheritData();
 
         if (isset($this->oxtiramizooarticleextended__tiramizoo_use_package->value) && $this->oxtiramizooarticleextended__tiramizoo_use_package->value) {
@@ -200,8 +158,8 @@ class oxTiramizoo_ArticleExtended extends oxBase {
      */
     protected function _getParentsCategoryTree($oCategory, $returnCategories = array())
     {
-        $oTiramizooCategoryExtended = oxTiramizoo_CategoryExtended::findOneByFiltersOrCreate(array('oxcategoryid' => $oCategory->oxcategories__oxid->value));
-
+        $oTiramizooCategoryExtended = oxNew('oxTiramizoo_CategoryExtended');
+        $oTiramizooCategoryExtended->load($oTiramizooCategoryExtended->getIdByCategoryId($oCategory->getId()));
 
         $aTiramizooCategoryData = array();
         $aTiramizooCategoryData['oxid'] = $oCategory->oxcategories__oxid->value;

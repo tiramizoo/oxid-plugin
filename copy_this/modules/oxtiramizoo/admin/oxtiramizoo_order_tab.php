@@ -16,31 +16,28 @@ class oxTiramizoo_Order_Tab extends oxAdminDetails
      */
     public function render()
     {
-        parent::render();
+        // @codeCoverageIgnoreStart
+        if (!defined('OXID_PHP_UNIT')) {
+            parent::render();
+        }
+        // @codeCoverageIgnoreEnd
 
-        $soxId = oxConfig::getParameter( "oxid");
+        $soxId = $this->getConfig()->getRequestParameter( "oxid");
         if ( $soxId != "-1" && isset( $soxId ) ) {
-            // load object
             $oOrder = oxNew( "oxorder" );
-            $oOrder->load( $soxId);
-
 
             $this->_aViewData["edit"] =  $oOrder;
 
-            $oxTiramizooOrderExtended = oxNew('oxTiramizoo_OrderExtended');
-            $soxIdExtended = $oxTiramizooOrderExtended->getIdByOrderId($soxId);
-            
-            $oxTiramizooOrderExtended->load($soxIdExtended);
+            $oTiramizooOrderExtended = oxNew('oxTiramizoo_OrderExtended');
+            $oTiramizooOrderExtended->load($oTiramizooOrderExtended->getIdByOrderId($soxId));
 
-            $this->_aViewData["oxTiramizooOrderExtended"] =  $oxTiramizooOrderExtended;
+            $this->_aViewData["oxTiramizooOrderExtended"] =  $oTiramizooOrderExtended;
 
-
-            $this->_aViewData["aTiramizooWebhookResponse"] = unserialize(base64_decode($oxTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_webhook_response->value));
-            $this->_aViewData["aTiramizooResponse"] = unserialize(base64_decode($oxTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_response->value));
-            $this->_aViewData["aTiramizooRequest"] = unserialize(base64_decode($oxTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_request_data->value));
+            $this->_aViewData["aTiramizooWebhookResponse"] = unserialize(base64_decode($oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_webhook_response->value));
+            $this->_aViewData["aTiramizooResponse"] = unserialize(base64_decode($oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_response->value));
+            $this->_aViewData["aTiramizooRequest"] = unserialize(base64_decode($oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_request_data->value));
         }
 
         return "oxTiramizoo_order_tab.tpl";
     }
-
 }

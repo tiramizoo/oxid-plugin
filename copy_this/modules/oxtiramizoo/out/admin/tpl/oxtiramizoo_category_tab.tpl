@@ -17,7 +17,7 @@ function loadLang(obj)
     [{ $shop->hiddensid }]
     <input type="hidden" name="oxid" value="[{ $oxid }]">
     <input type="hidden" name="cl" value="category_text">
-    <input type="hidden" name="editlanguage" value="[{ $oxTiramizooCategoryExtendedlanguage }]">
+    <input type="hidden" name="editlanguage" value="[{ $editlanguage }]">
 </form>
 
 
@@ -29,7 +29,6 @@ function loadLang(obj)
         <input type="hidden" name="oxid" value="[{ $oxid }]">
         <input type="hidden" name="voxid" value="[{ $oxid }]">
         <input type="hidden" name="editval[oxtiramizoocategoryextended__oxid]" value="[{ $oxid }]">
-        <input type="hidden" name="catlang" value="[{$catlang}]">
         <input type="hidden" name="editval[oxtiramizoocategoryextended__oxlongdesc]" value="">
         <table cellspacing="0" cellpadding="0" border="0">
           
@@ -52,7 +51,7 @@ function loadLang(obj)
             </td>
             <td class="edittext">
                 <input type="hidden" name="oxTiramizooCategoryExtended[oxtiramizoocategoryextended__tiramizoo_use_package]" value="1" />
-                <input type="checkbox" name="oxTiramizooCategoryExtended[oxtiramizoocategoryextended__tiramizoo_use_package]" value="0" [{if ($oxTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_use_package->value == 0)}]checked="checked"[{/if}] />
+                <input type="checkbox" name="oxTiramizooCategoryExtended[oxtiramizoocategoryextended__tiramizoo_use_package]" value="0" [{if ($oxTiramizooCategoryExtended->getId() && $oxTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_use_package->value == 0)}]checked="checked"[{/if}] />
                 [{ oxmultilang ident="oxTiramizoo_category_tab_use_package_value" }]
                 [{ oxinputhelp ident="oxTiramizoo_category_tab_use_package_help" }]
             </td>

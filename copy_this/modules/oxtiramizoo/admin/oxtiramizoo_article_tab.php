@@ -8,27 +8,25 @@
 class oxTiramizoo_Article_Tab extends oxAdminDetails
 {
     /**
-     * Collects available article axtended parameters, passes them to
+     * Collects available article extended parameters, passes them to
      * Smarty engine and returns tamplate file name "article_extend.tpl".
      *
      * @return string
      */
     public function render()
     {
-        parent::render();
-
-        $this->_aViewData['edit'] = $oArticle = oxNew( 'oxarticle' );
-
-
-        $soxId = oxConfig::getParameter( 'oxid' );
-
-
-        if ( $soxId != "-1" && isset( $soxId ) ) {
-            // load object
-            $oArticle->load( $soxId );
+        // @codeCoverageIgnoreStart
+        if (!defined('OXID_PHP_UNIT')) {
+            parent::render();
         }
+        // @codeCoverageIgnoreEnd
 
-        $oTiramizooArticleExtended = oxTiramizoo_ArticleExtended::findOneByFiltersOrCreate(array('oxarticleid' => $oArticle->getId()));
+        $this->_aViewData['edit'] = oxNew( 'oxarticle' );
+
+        $soxId = $this->getConfig()->getRequestParameter( 'oxid' );
+
+        $oTiramizooArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
+        $oTiramizooArticleExtended->load($oTiramizooArticleExtended->getIdByArticleId($soxId));
 
         $this->_aViewData['oxTiramizooArticleExtended'] = $oTiramizooArticleExtended;
 
@@ -40,13 +38,10 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
             $effectiveData->height == 0 || 
             $effectiveData->length == 0) {
 
-                $this->_aViewData['warningDimensions'] = 'You have to specify dimensions and weight. You can do this in global settings, category tab or article extended tab.';
+            $this->_aViewData['warningDimensions'] = 'You have to specify dimensions and weight. You can do this in global settings, category tab or article extended tab.';
         }
 
-
         $this->_aViewData['disabledCategory'] = $oTiramizooArticleExtended->getDisabledCategory();
-
-
 
         return "oxTiramizoo_article_tab.tpl";
     }
@@ -58,21 +53,16 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
      */
     public function save()
     {
+        $soxId   = $this->getConfig()->getRequestParameter( "oxid");
+        $aParams = $this->getConfig()->getRequestParameter( "oxTiramizooArticleExtended");
 
-        $soxId   = oxConfig::getParameter( "oxid");
-        $aParams = oxConfig::getParameter( "oxTiramizooArticleExtended");
-
-        $oArticle = oxNew( "oxarticle" );
-
-        if ( $soxId != "-1" ) {
-            $oArticle = oxNew( "oxarticle" );
-            $oxTiramizooArticleExtended = oxTiramizoo_ArticleExtended::findOneByFiltersOrCreate(array('oxarticleid' => $soxId));
+        if ( $soxId != "-1" && isset( $soxId ) ) {
+            $oTiramizooArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
+            $oTiramizooArticleExtended->load($oTiramizooArticleExtended->getIdByArticleId($soxId));
             $aParams['oxarticleid'] = $soxId;
 
-            $oxTiramizooArticleExtended->assign( $aParams );
-            $oxTiramizooArticleExtended->save();
+            $oTiramizooArticleExtended->assign( $aParams );
+            $oTiramizooArticleExtended->save();
         }
-
     }
-
 }
