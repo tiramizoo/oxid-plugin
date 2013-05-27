@@ -59,7 +59,6 @@ $aModule = array(
                             'oxTiramizoo_Date'                  => 'oxtiramizoo/core/oxtiramizoo_date.php',
 
                             'oxTiramizoo_Webhook'               => 'oxtiramizoo/application/controllers/oxtiramizoo_webhook.php',           
-                            'oxTiramizoo_Cron'                  => 'oxtiramizoo/application/controllers/oxtiramizoo_cron.php',
 
                             'oxTiramizoo_ScheduleJobManager'    => 'oxtiramizoo/core/oxtiramizoo_schedulejobmanager.php',
 
