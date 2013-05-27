@@ -117,6 +117,12 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
             $this->_aViewData['aAvailableDeliveryTypes'] = $oTiramizooDeliverySet->getAvailableDeliveryTypes();
         }
 
-        return parent::render();
+        // @codeCoverageIgnoreStart
+        if (!defined('OXID_PHP_UNIT')) {
+            return parent::render();
+        } else {
+            return $this->_sThisTemplate;
+        }
+        // @codeCoverageIgnoreEnd
     }
 }

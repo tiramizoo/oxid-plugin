@@ -11,7 +11,11 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
 
     public function init()
     {
-        parent::init();
+        // @codeCoverageIgnoreStart
+        if (!defined('OXID_PHP_UNIT')) {
+            parent::init();
+        }
+        // @codeCoverageIgnoreEnd
 
         $oTiramizooDeliverySet = oxRegistry::get('oxTiramizoo_DeliverySet');
         $oTiramizooDeliverySet->init($this->getUser(), oxNew( 'oxorder' )->getDelAddressInfo());
