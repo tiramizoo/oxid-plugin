@@ -17,10 +17,9 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
         $oTiramizooDeliverySet->init($this->getUser(), oxNew( 'oxorder' )->getDelAddressInfo());
 
         //redirect to payment if tiramizoo is not available
-        if (!$this->getTiramizooDeliverySet()->isTiramizooAvailable() && (oxSession::getVar( 'sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID)) {
-            oxUtils::getInstance()->redirect( oxConfig::getInstance()->getShopHomeURL() .'cl=payment', true, 302 );
+        if (!$this->getTiramizooDeliverySet()->isTiramizooAvailable() && ($this->getSession()->getVariable( 'sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID)) {
+            oxRegistry::get('oxUtils')->redirect( $this->getConfig()->getShopHomeURL() .'cl=payment', true, 302 );
         }
-
     }
 
     public function getTiramizooDeliverySet()
@@ -36,8 +35,13 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
      */
     public function render()
     {
+        // @codeCoverageIgnoreStart
+        if (!defined('OXID_PHP_UNIT')) {
+            parent::render();
+        }
+        // @codeCoverageIgnoreEnd
 
-        if ( oxSession::getVar('sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID ) {
+        if ( $this->getSession()->getVariable('sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID ) {
 
             $oTiramizooDeliverySet = $this->getTiramizooDeliverySet();
 
@@ -46,7 +50,7 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
             $this->_aViewData['sFormattedTiramizooTimeWindow'] = $oTiramizooWindow->getFormattedDeliveryTimeWindow();
         }
 
-        return parent::render();
+        return $this->_sThisTemplate;
     }
 
     /**
@@ -59,7 +63,7 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
         try {
             return parent::execute();
         } catch ( oxTiramizoo_SendOrderException $oEx ) {
-            oxUtilsView::getInstance()->addErrorToDisplay( $oEx );
+            oxRegistry::get('oxUtilsView')->addErrorToDisplay( $oEx );
         }
     }
 }

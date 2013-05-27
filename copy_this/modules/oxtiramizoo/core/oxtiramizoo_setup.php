@@ -23,17 +23,17 @@ class oxTiramizoo_Setup
      */
     public function install()
     {
-        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+        $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
-        $currentInstalledVersion = $oxTiramizooConfig->getShopConfVar('oxTiramizoo_version');
+        $currentInstalledVersion = $oTiramizooConfig->getShopConfVar('oxTiramizoo_version');
 
-        $tiramizooIsInstalled = $oxTiramizooConfig->getShopConfVar('oxTiramizoo_is_installed');
+        $tiramizooIsInstalled = $oTiramizooConfig->getShopConfVar('oxTiramizoo_is_installed');
 
         try 
         { 
             if (!$tiramizooIsInstalled || !$currentInstalledVersion) {
                 $this->runMigrations();
-                $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 1);
+                $oTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 1);
             } else if ($tiramizooIsInstalled && (version_compare(oxTiramizoo_setup::VERSION, $currentInstalledVersion) > 0)) {
                 $this->runMigrations();
             }
@@ -60,9 +60,9 @@ class oxTiramizoo_Setup
      */
     public function runMigrations()
     {
-        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+        $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
-        $currentInstalledVersion = $oxTiramizooConfig->getShopConfVar('oxTiramizoo_version') ? $oxTiramizooConfig->getShopConfVar('oxTiramizoo_version') : '0.0.0';
+        $currentInstalledVersion = $oTiramizooConfig->getShopConfVar('oxTiramizoo_version') ? $oTiramizooConfig->getShopConfVar('oxTiramizoo_version') : '0.0.0';
 
         $migrationsMethods = $this->getMigrationMethods();
 
@@ -75,7 +75,7 @@ class oxTiramizoo_Setup
                     if ($this->stopMigrationsIfErrors()) {
                         throw new oxException('<p>Cannot execute the following sql queries:</p>');
                     }
-                    oxTiramizooConfig::getInstance()->saveShopConfVar( "str", 'oxTiramizoo_version', $methodVersion);                    
+                    oxTiramizoo_Config::getInstance()->saveShopConfVar( "str", 'oxTiramizoo_version', $methodVersion);                    
                 }
             }
         }
@@ -103,14 +103,14 @@ class oxTiramizoo_Setup
 
     public function stopMigrationsIfErrors()
     {
-        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+        $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
         if (count($this->_migrationErrors)) {
             //disable tiramizoo if db errors
-            $oxTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
+            $oTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
             return true;
         } else {
-            $oxTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_update_errors', '');
+            $oTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_update_errors', '');
             return false;
         }
     }
@@ -120,7 +120,7 @@ class oxTiramizoo_Setup
      */
     public function migration_0_9_0()
     {
-        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+        $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
         $this->executeSQL("CREATE TABLE IF NOT EXISTS oxtiramizooretaillocation (
                                 OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL PRIMARY KEY,

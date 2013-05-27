@@ -18,18 +18,4 @@ class oxTiramizoo_RetailLocationList extends oxList
         $this->selectString( $sQ );
         $this->_aArray = array_reverse( $this->_aArray, true );
     } 
-
-    public function loadByApiToken($sApiToken)
-    {
-        $sTableName = $this->getBaseObject()->getCoreTableName();
-
-        $oDb = oxDb::getDb();
-        $sQ = "SELECT * FROM oxtiramizooretaillocation 
-                    WHERE OXSHOPID = '" . $this->getConfig()->getShopId() . "'
-                        AND OXAPITOKEN = '" . $sApiToken . "';";
-
-        $this->selectString( $sQ );
-        $this->_aArray = array_reverse( $this->_aArray, true );
-    } 
-
 }

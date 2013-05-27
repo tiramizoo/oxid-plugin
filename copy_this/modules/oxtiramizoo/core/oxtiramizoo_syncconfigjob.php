@@ -18,7 +18,7 @@ class oxTiramizoo_SyncConfigJob extends oxTiramizoo_ScheduleJob
 			$oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
 			$oRetailLocationList->loadAll();
 
-			$oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+			$oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
 	        foreach ($oRetailLocationList as $oRetailLocation) 
 	        {

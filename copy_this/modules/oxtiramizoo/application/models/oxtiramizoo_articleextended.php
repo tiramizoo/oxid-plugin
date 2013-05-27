@@ -40,7 +40,7 @@ class oxTiramizoo_ArticleExtended extends oxBase {
     public function getArticle()
     {
         if ($this->_oArticle === null) {
-            $this->loadArticle();
+            $this->_oArticle = $this->loadArticle();
         }
 
         return $this->_oArticle;
@@ -48,8 +48,10 @@ class oxTiramizoo_ArticleExtended extends oxBase {
 
     protected function loadArticle()
     {
-        $this->_oArticle = oxNew( 'oxarticle' );
-        $this->_oArticle->load($this->getId());
+        $oArticle = oxNew( 'oxarticle' );
+        $oArticle->load($this->getId());
+
+        return $oArticle;
     }
 
     public function isEnabled()
@@ -87,7 +89,6 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         return true;
     }
 
-
     /**
      * Get product data (enable, weight, dimensions) from main category or parents
      * 
@@ -106,7 +107,7 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         $aTiramizooInheritedData['height'] = 0;
         $aTiramizooInheritedData['length'] = 0;
 
-        $oTiramizooConfig = oxTiramizooConfig::getInstance();
+        $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
         // get from tiramizoo settings centimeters and kilograms
         $aTiramizooInheritedData['weight'] = floatval($oTiramizooConfig->getShopConfVar('oxTiramizoo_global_weight'));
@@ -240,7 +241,6 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         }
     }
 
-
     public function getInheritedCategory() 
     {
         $oArticle = $this->getArticle();
@@ -258,7 +258,6 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         foreach ($aCheckCategories as $aCategoryData) 
         {   
             if ($aCategoryData['tiramizoo_weight'] && $aCategoryData['tiramizoo_width'] && $aCategoryData['tiramizoo_height'] && $aCategoryData['tiramizoo_length']) {
-
                 $inheritedCategoryId = $aCategoryData['oxid'];
             }
         }

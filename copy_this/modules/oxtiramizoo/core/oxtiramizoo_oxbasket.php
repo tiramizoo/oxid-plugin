@@ -32,7 +32,7 @@ class oxTiramizoo_oxbasket extends oxTiramizoo_oxbasket_parent
             return false;
         }
 
-        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+        $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
         foreach ($this->getBasketArticles() as $key => $oArticle) 
         {

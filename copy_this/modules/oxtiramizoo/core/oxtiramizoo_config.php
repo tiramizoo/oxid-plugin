@@ -7,24 +7,24 @@
  *
  * @package: oxTiramizoo
  */
-class oxTiramizooConfig extends oxConfig
+class oxTiramizoo_Config extends oxConfig
 {
     /**
      * Singleton instance
      * 
-     * @var oxTiramizooApi
+     * @var oxTiramizoo_Api
      */
     protected static $_instance = null;
 
     /**
      * Get the instance of class
      * 
-     * @return oxTiramizooConfig
+     * @return oxTiramizoo_Config
      */
     public static function getInstance()
     {
-        if ( !self::$_instance instanceof oxTiramizooConfig ) {
-            self::$_instance = new oxTiramizooConfig();
+        if ( !self::$_instance instanceof oxTiramizoo_Config ) {
+            self::$_instance = new oxTiramizoo_Config();
         }
 
         return self::$_instance;
@@ -40,9 +40,9 @@ class oxTiramizooConfig extends oxConfig
      */
     public function synchronizeAll( $sApiToken = null )
     {
-        $oxTiramizooApi = oxTiramizooApi::getApiInstance( $sApiToken );
+        $oTiramizooApi = oxTiramizoo_Api::getApiInstance( $sApiToken );
 
-        $aRemoteConfiguration = $oxTiramizooApi->getRemoteConfiguration();
+        $aRemoteConfiguration = $oTiramizooApi->getRemoteConfiguration();
 
         $oRetailLocation = oxnew('oxTiramizoo_RetailLocation');
         $sOxid = $oRetailLocation->getIdByApiToken($sApiToken);
@@ -54,8 +54,8 @@ class oxTiramizooConfig extends oxConfig
         $aPickupAddress = $oRetailLocation->getConfVar('pickup_contact');
 
         // synchronize service areas for 2 days
-        $oStartDate = new oxTiramizoo_Date(date('Y-m-d'));
-        $oEndDate = new oxTiramizoo_Date(date('Y-m-d'));
+        $oStartDate = oxNew('oxTiramizoo_Date', date('Y-m-d'));
+        $oEndDate = oxNew('oxTiramizoo_Date', date('Y-m-d'));
         $oEndDate->modify('+2 days');
 
         $startDate = $oStartDate->getForRestApi();
@@ -66,8 +66,8 @@ class oxTiramizooConfig extends oxConfig
                              'standard_from' => $startDate,
                              'standard_to' => $endDate);
 
-        $aAvaialbleServiceAreas = $oxTiramizooApi->getAvailableServiceAreas($aPickupAddress['postal_code'], $aRangeDates);
-        $oRetailLocation->synchronizeServiceAreas($aAvaialbleServiceAreas);
+        $aAvaialbleServiceAreas = $oTiramizooApi->getAvailableServiceAreas($aPickupAddress['postal_code'], $aRangeDates);
+        $oRetailLocation->synchronizeConfiguration($aAvaialbleServiceAreas);
     }
 
     public function saveShopConfVar( $sVarType, $sVarName, $sVarVal, $sShopId = null, $sModule = 'oxTiramizoo' )

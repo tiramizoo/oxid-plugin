@@ -6,19 +6,19 @@
  *
  * @package: oxTiramizoo
  */
-class oxTiramizooApi extends TiramizooApi
+class oxTiramizoo_Api extends TiramizooApi
 {
     /**
      * Singleton instance
      * 
-     * @var oxTiramizooApi
+     * @var oxTiramizoo_Api
      */
     protected static $_instance = null;
 
     /**
      * Singleton instance
      * 
-     * @var oxTiramizooApi
+     * @var oxTiramizoo_Api
      */
     protected static $_instances = null;
 
@@ -37,7 +37,7 @@ class oxTiramizooApi extends TiramizooApi
      */
     public function __construct( $sApiToken )
     {
-        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+        $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
         $tiramizooApiUrl = $oTiramizooConfig->getShopConfVar('oxTiramizoo_api_url');
         parent::__construct($tiramizooApiUrl, $sApiToken);
     }
@@ -45,12 +45,12 @@ class oxTiramizooApi extends TiramizooApi
     /**
      * Get the instance of class
      * 
-     * @return oxTiramizooApi
+     * @return oxTiramizoo_Api
      */
     public static function getApiInstance( $sApiToken )
     {
-        if ( !isset(self::$_instances[$sApiToken]) && !self::$_instances[$sApiToken] instanceof oxTiramizooApi ) {
-            self::$_instances[$sApiToken] = oxnew('oxTiramizooApi', $sApiToken );
+        if ( !isset(self::$_instances[$sApiToken]) && !self::$_instances[$sApiToken] instanceof oxTiramizoo_Api ) {
+            self::$_instances[$sApiToken] = oxnew('oxTiramizoo_Api', $sApiToken );
         }
 
         return self::$_instances[$sApiToken];
@@ -103,21 +103,4 @@ class oxTiramizooApi extends TiramizooApi
         
         return $response;
     }
-
-
-    public static function objectToArray($data)
-    {
-        if (is_array($data) || is_object($data))
-        {
-            $result = array();
-            foreach ($data as $key => $value)
-            {
-                $result[$key] = self::objectToArray($value);
-            }
-            return $result;
-        }
-        return $data;
-    }
-
-
 }

@@ -33,13 +33,13 @@ class oxTiramizoo_settings extends Shop_Config
         }
         // @codeCoverageIgnoreEnd
 
-        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+        $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
         $this->_aViewData['oPaymentsList'] = $this->getPaymentsList();
 
-        $sCurrentAdminShop = $oxTiramizooConfig->getShopId();
+        $sCurrentAdminShop = $oTiramizooConfig->getShopId();
 
-        $aShopConfVars = $oxTiramizooConfig->getTiramizooConfVars();
+        $aShopConfVars = $oTiramizooConfig->getTiramizooConfVars();
         
         $this->_aViewData['confstrs'] = $aShopConfVars['confstrs'];
         $this->_aViewData['confarrs'] = $aShopConfVars['confarrs'];
@@ -115,7 +115,7 @@ class oxTiramizoo_settings extends Shop_Config
     */
     public function saveConfVars()
     {
-        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+        $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
         $aConfBools = $this->getConfig()->getRequestParameter("confbools");
         $aConfStrs  = $this->getConfig()->getRequestParameter("confstrs");
@@ -125,13 +125,13 @@ class oxTiramizoo_settings extends Shop_Config
 
         if ( is_array( $aConfBools ) ) {
           foreach ( $aConfBools as $sVarName => $sVarVal ) {
-              $oxTiramizooConfig->saveShopConfVar( "bool", $sVarName, $sVarVal);
+              $oTiramizooConfig->saveShopConfVar( "bool", $sVarName, $sVarVal);
           }
         }
 
         if ( is_array( $aConfStrs ) ) {
           foreach ( $aConfStrs as $sVarName => $sVarVal ) {
-            $oxTiramizooConfig->saveShopConfVar( "str", $sVarName, $sVarVal);
+            $oTiramizooConfig->saveShopConfVar( "str", $sVarName, $sVarVal);
           }
         }
 
@@ -140,19 +140,19 @@ class oxTiramizoo_settings extends Shop_Config
             if ( !is_array( $aVarVal ) ) {
               $aVarVal = $this->_multilineToArray($aVarVal);
             }
-            $oxTiramizooConfig->saveShopConfVar("arr", $sVarName, $aVarVal);
+            $oTiramizooConfig->saveShopConfVar("arr", $sVarName, $aVarVal);
           }
         }
 
         if ( is_array( $aConfAarrs ) ) {
           foreach ( $aConfAarrs as $sVarName => $aVarVal ) {
-            $oxTiramizooConfig->saveShopConfVar( "aarr", $sVarName, $this->_multilineToAarray( $aVarVal ));
+            $oTiramizooConfig->saveShopConfVar( "aarr", $sVarName, $this->_multilineToAarray( $aVarVal ));
           }
         }
 
         if ( is_array( $aConfInts ) ) {
           foreach ( $aConfInts as $sVarName => $aVarVal ) {
-            $oxTiramizooConfig->saveShopConfVar( "int", $sVarName, $aVarVal );
+            $oTiramizooConfig->saveShopConfVar( "int", $sVarName, $aVarVal );
           }
         }
     }
@@ -160,11 +160,11 @@ class oxTiramizoo_settings extends Shop_Config
 
     public function tiramizooApiUrlHasChanged()
     {
-        $oxTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+        $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
         $aConfStrs = $this->getConfig()->getRequestParameter( "confstrs" );
 
-        if ($aConfStrs['oxTiramizoo_api_url'] != $oxTiramizooConfig->getShopConfVar('oxTiramizoo_api_url')) {
+        if ($aConfStrs['oxTiramizoo_api_url'] != $oTiramizooConfig->getShopConfVar('oxTiramizoo_api_url')) {
             return true;
         }
 
@@ -176,7 +176,7 @@ class oxTiramizoo_settings extends Shop_Config
      */
     public function saveEnableShippingMethod()
     {
-        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+        $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
         $isTiramizooEnable = 1;
 
@@ -208,7 +208,7 @@ class oxTiramizoo_settings extends Shop_Config
     {
         try 
         {
-            $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+            $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
             $oRetailLocationList = oxNew('oxTiramizoo_RetailLocationList');
             $oRetailLocationList->loadAll();
@@ -246,7 +246,7 @@ class oxTiramizoo_settings extends Shop_Config
             {
                 try
                 {
-                    $remote = oxTiramizooApi::getApiInstance( $oRetailLocation->getApiToken() )->getRemoteConfiguration();
+                    $remote = oxTiramizoo_Api::getApiInstance( $oRetailLocation->getApiToken() )->getRemoteConfiguration();
                 } catch (oxTiramizoo_ApiException $e) {
                     $oRetailLocation->delete();
                 }
@@ -266,7 +266,7 @@ class oxTiramizoo_settings extends Shop_Config
     {
 
         $sApiToken = trim($this->getConfig()->getRequestParameter('api_token'));
-        $oTiramizooConfig = oxRegistry::get('oxTiramizooConfig');
+        $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
         $oTiramizooRetailLocation = oxNew('oxTiramizoo_RetailLocation');
         
         if ($sOxid = $oTiramizooRetailLocation->getIdByApiToken( $sApiToken )) 
@@ -283,7 +283,7 @@ class oxTiramizoo_settings extends Shop_Config
 
         try
         {
-            oxTiramizooApi::getApiInstance( $sApiToken )->getRemoteConfiguration();
+            oxTiramizoo_Api::getApiInstance( $sApiToken )->getRemoteConfiguration();
         } catch (oxTiramizoo_ApiException $e) {
             $oTiramizooRetailLocation->delete();
 

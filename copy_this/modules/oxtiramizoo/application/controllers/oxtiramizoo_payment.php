@@ -11,9 +11,13 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 
     public function init()
     {
-        parent::init();
-       
-        $oTiramizooDeliverySet = oxRegistry::get('oxTiramizoo_DeliverySet');
+        // @codeCoverageIgnoreStart
+        if (!defined('OXID_PHP_UNIT')) {
+            parent::init();
+        }
+        // @codeCoverageIgnoreEnd
+
+        $oTiramizooDeliverySet = $this->getTiramizooDeliverySet();
         $oTiramizooDeliverySet->init($this->getUser(), oxNew( 'oxorder' )->getDelAddressInfo());
     }
 
@@ -30,7 +34,11 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
      */
     public function getAllSets()
     {
-        $this->_aAllSets = parent::getAllSets();
+        // @codeCoverageIgnoreStart
+        if (!defined('OXID_PHP_UNIT')) {
+            $this->_aAllSets = parent::getAllSets();
+        }
+        // @codeCoverageIgnoreEnd
 
         $unsetTiramizoo = false;
 
@@ -40,17 +48,17 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         }
 
         // if tiramizoo was selected and is not available set the first delivery set
-        if ($unsetTiramizoo && (oxSession::getVar( 'sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID)) {
+        if ($unsetTiramizoo && ($this->getSession()->getVariable( 'sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID)) {
 
             $sNewShippingMethod = key($this->_aAllSets);
 
-            oxSession::setVar('sShipSet', $sNewShippingMethod);
+            $this->getSession()->setVariable('sShipSet', $sNewShippingMethod);
             $oBasket = $this->getSession()->getBasket();
 
             $oBasket->setShipping($sNewShippingMethod);
             $oBasket->onUpdate();
 
-            oxUtils::getInstance()->redirect( oxConfig::getInstance()->getShopHomeURL() .'cl=payment', true, 302 );
+            oxRegistry::get('oxUtils')->redirect($this->getConfig()->getShopHomeURL() .'cl=payment', true, 302 );
         }
 
         return $this->_aAllSets;
@@ -66,21 +74,27 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
     {
         parent::changeshipping();
 
-        if (oxConfig::getParameter( 'sTiramizooDeliveryType' )) {
+        $oConfig = $this->getConfig();
+
+        if ($oConfig->getRequestParameter( 'sTiramizooDeliveryType' )) {
+            
+            $sTiramizooTimeWindow = $oConfig->getRequestParameter('sTiramizooTimeWindow');
+
             try {
                 $oTiramizooDeliverySet = $this->getTiramizooDeliverySet();
-                $oTiramizooDeliverySet->setTiramizooDeliveryType(oxConfig::getParameter('sTiramizooDeliveryType'));
+                $oTiramizooDeliverySet->setTiramizooDeliveryType($oConfig->getRequestParameter('sTiramizooDeliveryType'));
                 
-                if (oxConfig::getParameter('sTiramizooTimeWindow') && $oTiramizooDeliverySet->getTiramizooDeliveryTypeObject()->hasTimeWindow(oxConfig::getParameter('sTiramizooTimeWindow'))) {
-                    $oTiramizooDeliverySet->setSelectedTimeWindow(oxConfig::getParameter('sTiramizooTimeWindow'));      
-                } else if ($oDefaultTimeWindow = $oTiramizooDeliverySet->getTiramizooDeliveryTypeObject()->getDefaultTimeWindow()) {
+                $oTiramizooDeliveryTypeObject = $oTiramizooDeliverySet->getTiramizooDeliveryTypeObject();
+
+                if ($sTiramizooTimeWindow && $oTiramizooDeliveryTypeObject->hasTimeWindow($sTiramizooTimeWindow)) {
+                    $oTiramizooDeliverySet->setSelectedTimeWindow($sTiramizooTimeWindow);      
+                } else if ($oDefaultTimeWindow = $oTiramizooDeliveryTypeObject->getDefaultTimeWindow()) {
                     $oTiramizooDeliverySet->setSelectedTimeWindow($oDefaultTimeWindow->getHash());      
                 }
-
             } catch (oxTiramizoo_InvalidTiramizooDeliveryTypeException $oEx) {
-                oxUtilsView::getInstance()->addErrorToDisplay( $oEx );
+                oxRegistry::get("oxUtilsView")->addErrorToDisplay( $oEx );
             } catch (oxTiramizoo_InvalidTimeWindowException $oEx) {
-                oxUtilsView::getInstance()->addErrorToDisplay( $oEx );
+                oxRegistry::get("oxUtilsView")->addErrorToDisplay( $oEx );
             }
         }
     }
@@ -102,7 +116,6 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
             $this->_aViewData['sSelectedTimeWindow'] = $oTiramizooDeliverySet->getSelectedTimeWindow() ? $oTiramizooDeliverySet->getSelectedTimeWindow()->getHash() : '';
             $this->_aViewData['aAvailableDeliveryTypes'] = $oTiramizooDeliverySet->getAvailableDeliveryTypes();
         }
-
 
         return parent::render();
     }

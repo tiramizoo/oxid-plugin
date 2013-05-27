@@ -356,11 +356,11 @@ class oxTiramizoo_DeliverySet
     /**
      * Gets the instance of current API object
      * 
-     * @return oxTiramizooApi
+     * @return oxTiramizoo_Api
      */
     public function getTiramizooApi()
     {
-        return oxTiramizooApi::getApiInstance($this->getApiToken());
+        return oxTiramizoo_Api::getApiInstance($this->getApiToken());
     }
 
     /**

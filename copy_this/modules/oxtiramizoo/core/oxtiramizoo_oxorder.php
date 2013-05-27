@@ -6,7 +6,7 @@
  */
 class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
 {
-    public function _loadFromBasket( oxBasket $oBasket )
+    protected function _loadFromBasket( oxBasket $oBasket )
     {
         parent::_loadFromBasket( $oBasket );
 
@@ -30,22 +30,29 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
 
             if (!in_array($tiramizooResult['http_status'], array(201))) {
 
-                // Uncomment to debug
-                // echo '<div>';
-                // echo json_encode($tiramizooData);
-                // echo json_encode($tiramizooResult);
-                // echo '</div>';
-                // 
-
                 $oSendOrderJob = oxNew('oxTiramizoo_SendOrderJob');
                 $oSendOrderJob->setExternalId($this->getId());
                 $oSendOrderJob->setParams(array('api_token' => $oTiramizooDeliverySet->getApiToken()));            
                 $oSendOrderJob->save();
 
-                // $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_post_order_error', oxLang::getInstance()->getBaseLanguage(), false);
-                // throw new oxTiramizoo_SendOrderException( $errorMessage );
-            } else if ($tiramizooResult['errno'] == oxTiramizooApi::CURLE_OPERATION_TIMEDOUT) {
-                //@TODO: notification
+                if ($tiramizooResult['errno'] == oxTiramizoo_Api::CURLE_OPERATION_TIMEDOUT) {
+                    $oEmail = oxNew( 'oxEmail' );
+
+                    $oShop = $oEmail->getConfig()->getActiveShop();
+
+                    $oEmail->setFrom( $oShop->oxshops__oxowneremail->value );
+                    $oEmail->setSmtp( $oShop );
+                    $oEmail->setBody(print_r($oTiramizooData, true));
+                    $oEmail->setSubject( 'Sending order timeout, API token: ' . $oTiramizooDeliverySet->getApiToken());
+                    $oEmail->setRecipient( 'developers@tiramizoo.com', 'Developers team' );
+                    $oEmail->setReplyTo( $oShop->oxshops__oxorderemail->value, $oShop->oxshops__oxname->getRawValue() );
+
+                    // @codeCoverageIgnoreStart
+                    if (!defined('OXID_PHP_UNIT')) {
+                        $oEmail->send();
+                    }
+                    // @codeCoverageIgnoreEnd
+                }
             }
 
             $oTiramizooOrderExtended = $this->getOrderExtended();
@@ -62,8 +69,6 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
 
             $oTiramizooOrderExtended->save();
         }
-
-        // return $iRet;
     }
 
     public function getOrderExtended()

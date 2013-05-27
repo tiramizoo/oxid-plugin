@@ -26,7 +26,7 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
 
 			$oTiramizooData = $oTiramizooOrderExtended->getTiramizooData();
 
-	        $oTiramizooApi = oxTiramizooApi::getApiInstance($this->getApiToken());
+	        $oTiramizooApi = oxTiramizoo_Api::getApiInstance($this->getApiToken());
 			$tiramizooResult = $oTiramizooApi->sendOrder($oTiramizooData);
 
             $oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_response = new oxField(base64_encode(serialize($tiramizooResult)), oxField::T_RAW);
@@ -101,4 +101,39 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
 		
 		$this->save();
 	}
+
+    public function finishJob()
+    {
+    	parent::finishJob();
+		
+		if ($soxId = $this->getExternalId()) {
+	        $oOrder = oxNew( "oxorder" );
+	        $oOrder->load( $soxId );
+
+	        $oOrderExtended = oxNew('oxTiramizoo_OrderExtended');
+	        $sOxId = $oOrderExtended->getIdByOrderId($oOrder->getId());
+	        $oOrderExtended->load($sOxId);
+
+	        $oEmail = oxNew( 'oxEmail' );
+
+	        $oShop = $oEmail->getConfig()->getActiveShop();
+
+	        $oEmail->setFrom( $oShop->oxshops__oxorderemail->value, $oShop->oxshops__oxname->getRawValue() );
+	        $oEmail->setSmtp( $oShop );
+	        $oEmail->setBody('Tracking URL:' . $oOrderExtended->getTrackingUrl());
+	        $oEmail->setSubject( 'Tiramizoo tracking URL');
+	        
+	        $oUser = $oOrder->getOrderUser();
+	        $sFullName = $oUser->oxuser__oxfname->value . " " . $oUser->oxuser__oxlname->value;
+
+	        $oEmail->setRecipient( $oUser->oxuser__oxusername->value, $sFullName );
+	        $oEmail->setReplyTo( $oShop->oxshops__oxorderemail->value, $oShop->oxshops__oxname->getRawValue() );
+
+	        // @codeCoverageIgnoreStart
+	        if (!defined('OXID_PHP_UNIT')) {
+	            $oEmail->send();
+	        }
+	        // @codeCoverageIgnoreEnd
+		}
+    }
 }

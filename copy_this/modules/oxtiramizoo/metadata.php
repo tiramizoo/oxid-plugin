@@ -33,7 +33,7 @@ $aModule = array(
                             'oxbasket'      => 'oxtiramizoo/core/oxtiramizoo_oxbasket',
                             'order'         => 'oxtiramizoo/application/controllers/oxtiramizoo_order',
                             'payment'       => 'oxtiramizoo/application/controllers/oxtiramizoo_payment',
-                            'oxShopControl' => 'oxtiramizoo/application/controllers/oxtiramizoo_oxshopcontrol',
+                            'oxshopcontrol' => 'oxtiramizoo/application/controllers/oxtiramizoo_oxshopcontrol',
                         ),
 
 
@@ -44,11 +44,11 @@ $aModule = array(
                             'oxTiramizoo_Order_Tab'             => 'oxtiramizoo/admin/oxtiramizoo_order_tab.php',
 
                             'oxTiramizoo_Setup'                 => 'oxtiramizoo/core/oxtiramizoo_setup.php',
-                            'oxTiramizooApi'                    => 'oxtiramizoo/core/TiramizooApi/oxTiramizooApi.php',
                             'TiramizooApi'                      => 'oxtiramizoo/core/TiramizooApi/TiramizooApi.php',
-                            'oxTiramizoo_CreateOrderData'       => 'oxtiramizoo/core/TiramizooApi/oxTiramizooCreateOrderData.php',
+                            'oxTiramizoo_Api'                   => 'oxtiramizoo/core/TiramizooApi/oxtiramizoo_api.php',
+                            'oxTiramizoo_CreateOrderData'       => 'oxtiramizoo/core/TiramizooApi/oxtiramizoo_createorderdata.php',
                             'oxTiramizoo_Events'                => 'oxtiramizoo/core/oxtiramizoo_events.php',
-                            'oxTiramizooConfig'                 => 'oxtiramizoo/core/oxtiramizoo_config.php',
+                            'oxTiramizoo_Config'                 => 'oxtiramizoo/core/oxtiramizoo_config.php',
                             
                             'oxTiramizoo_DeliverySet'           => 'oxtiramizoo/core/oxtiramizoo_deliveryset.php',
                             'oxTiramizoo_DeliveryPrice'         => 'oxtiramizoo/core/oxtiramizoo_deliveryprice.php',
@@ -71,8 +71,8 @@ $aModule = array(
                             'oxTiramizoo_RetailLocation'        => 'oxtiramizoo/application/models/oxtiramizoo_retaillocation.php',
                             'oxTiramizoo_RetailLocationList'    => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationlist.php',
 
-                            'oxTiramizoo_RetailLocationConfig'  => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationconfig.php',
-
+                            'oxTiramizoo_RetailLocationConfig'      => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationconfig.php',
+                            'oxTiramizoo_RetailLocationConfigList'  => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationconfiglist.php',
                             
                             'oxTiramizoo_ArticleExtended'       => 'oxtiramizoo/application/models/oxtiramizoo_articleextended.php',
                             'oxTiramizoo_CategoryExtended'      => 'oxtiramizoo/application/models/oxtiramizoo_categoryextended.php',
@@ -90,8 +90,7 @@ $aModule = array(
                             'oxTiramizoo_InvalidDeliveryTypeException'  => 'oxtiramizoo/core/exception/oxtiramizoo_invaliddeliverytypeexception.php',
 
                             /* libs */
-                            'pudzian'                           => 'oxtiramizoo/lib/pudzian/pudzian.php',
-                            'packIntoBoxes'                     => 'oxtiramizoo/lib/packIntoBoxes.php',
+                            'pudzian'                           => 'oxtiramizoo/lib/pudzian/pudzian.php'
                         ),
 
     'templates'    =>   array(
@@ -126,10 +125,6 @@ $aModule = array(
                                     'block'     =>  'email_plain_order_cust_deliveryinfo',              
                                     'file'      =>  'views/blocks/oxTiramizoo_email_html_order_cust.tpl'
                             ),
-
                         ),
 
 );
-
-
-

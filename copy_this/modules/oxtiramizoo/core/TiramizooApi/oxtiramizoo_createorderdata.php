@@ -63,7 +63,7 @@ class oxTiramizoo_CreateOrderData
 
     public function getTiramizooConfig()
     {
-        return oxRegistry::get('oxTiramizooConfig');
+        return oxRegistry::get('oxTiramizoo_Config');
     }
 
     public function getTiramizooDataObject()
@@ -236,7 +236,7 @@ class oxTiramizoo_CreateOrderData
             $item->quantity = $this->getBasket()->getArtStockInBasket($oArticle->oxarticles__oxid->value);
 
             //check if deliverable is set for articles with stock > 0
-            if (oxTiramizooConfig::getInstance()->getShopConfVar('oxTiramizoo_articles_stock_gt_0')) {
+            if (oxTiramizoo_Config::getInstance()->getShopConfVar('oxTiramizoo_articles_stock_gt_0')) {
                 if ($oArticle->oxarticles__oxstock->value <= 0) {
                     return false;
                 }

@@ -21,6 +21,10 @@ class oxTiramizoo_ScheduleJob extends oxBase {
     protected static $_aJobTypes = array('send_order' => 'oxTiramizoo_SendOrderJob',
                                          'synchronize_configuration' => 'oxTiramizoo_SyncConfigJob');
 
+    const MAX_REPEATS = 2;
+    const JOB_TYPE = '';
+
+    protected $_sJobType = '';
 
     /**
      * Class constructor
@@ -45,11 +49,6 @@ class oxTiramizoo_ScheduleJob extends oxBase {
 
         return $oDb->getOne($sQ);
     }
-
-    const MAX_REPEATS = 2;
-    const JOB_TYPE = '';
-
-    protected $_sJobType = '';
 
     public function setDefaultData()
     {
@@ -95,10 +94,8 @@ class oxTiramizoo_ScheduleJob extends oxBase {
     public function closeJob()
     {
         $this->oxtiramizooschedulejob__oxstate = new oxField('error');
-        
         $this->save();
     }
-
 
     public function finishJob()
     {
@@ -107,8 +104,9 @@ class oxTiramizoo_ScheduleJob extends oxBase {
         $this->save();
     }
 
-    
     public function run()
     {
+        $this->oxtiramizooschedulejob__oxrepeatcounter->value++;
+        $this->save();
     }
 }
