@@ -65,9 +65,10 @@ All items added by the user need to have the tiramizoo service enabled, either d
 ## Configure the module ##
 
 
-*  At the **Tiramizoo -> Settings**
+*  At **Tiramizoo -> Settings**
 
-    To finalize configuration form has to be filled in with proper data.
+    The configuration form has to be filled in with proper data:
+    
     * **Tiramizoo URL:** The URL of the tiramizoo service endpoint (production version [https://api.tiramizoo.com/v1](https://api.tiramizoo.com/v1), testing version [https://sandbox.tiramizoo.com/api/v1](https://sandbox.tiramizoo.com/api/v1))
 
     * **Shop URL:** URL used to build the webhook url for order creation. The tiramizoo service will send a request to the url each time an order status change occurs.
@@ -77,7 +78,7 @@ All items added by the user need to have the tiramizoo service enabled, either d
 
         * **All products have individual dimensions**: That means each product will be packed separately (number of products equals number of packages).
 
-        * **Specific dimensions of packages**: That means that the admin is able to specify all package sizes they use in shop to pack products. Then the  packing algorithm starts to pack all products in as smallest number of packages as possible and assumes the resulting package size as the package to deliver. Go to tiramizoo configuration to specify these dimensions ([Production version](https://www.tiramizoo.com/dashboard/package_presets), [testing version](https://sandbox.tiramizoo.com/dashboard/package_presets)).
+        * **Specific dimensions of packages**: That means that the admin is able to specify all package sizes they use in shop to pack products. Then the  packing algorithm starts to pack all products in as smallest number of packages as possible and assumes the resulting package size as the package to deliver. Go to the tiramizoo website configuration to specify these dimensions ([Production version](https://www.tiramizoo.com/dashboard/package_presets), [testing version](https://sandbox.tiramizoo.com/dashboard/package_presets)).
 
         * **All products should fit to one package**: That means every product will go to one package (no matter how many products customer bought there will be only 1 package for courier)
 
@@ -89,7 +90,7 @@ All items added by the user need to have the tiramizoo service enabled, either d
     Payment methods which are available for tiramizoo service. *Warning: Cash on delivery is currently not supported by Tiramizoo.
 
     * **Enable only articles with stock:**
-    Admin is able to turn on/off stock monitoring. That means if any of products in customer's basket is not available in the shop's stock, the tiramizoo delivery option will not show up.
+    Admin is able to turn on/off stock monitoring. That means if any of products in customer's basket are not available in the shop's stock, the tiramizoo delivery option will not show up.
 
     * **Retail Locations**
     The user api tokens available in the user dashboard after registration on the tiramizoo.com site. The API token is required to authenticate api requests.
@@ -101,7 +102,7 @@ All items added by the user need to have the tiramizoo service enabled, either d
 
 *  At the **Administer Products -> Categories -> Category selection -> Tiramizoo tab**
 
-    Product's main category and all its parents categories need to have Tiramizoo service enabled to let containing products to be delivered by Tiramizoo service. Also dimensions form enables to specify default product dimensions which will apply to all products which have the category selected as a main category and will not have dimensions specified explicitly.
+    Product's main category and all its parents categories need to have Tiramizoo service enabled to let containing products be delivered by Tiramizoo service. Also dimensions form enables to specify default product dimensions which will apply to all products which have the category selected as a main category and will not have dimensions specified explicitly.
 
     Please consider, that inheritance of category properties that are not assigned as Main category, wouldn't be apply to products they have.
 
@@ -116,7 +117,7 @@ All items added by the user need to have the tiramizoo service enabled, either d
 
 ## Configure the account ##
 
-The main configuration of tiramizoo delivery is available on tiramizoo page.
+The main configuration of tiramizoo delivery is available on the tiramizoo website.
 
 -   **Packages presets:** (Profile -> Default packages sizes)
     Retail location admin is able to specify package sizes that they use to pack products. 
@@ -183,7 +184,7 @@ The tiramizoo delivery option is only available if the following rules are met:
 
 -   **WebHook notifications**
     
-    plugin is able to receive push notification sent by tiramizoo service each time the order status has changed. The order state is then changed on shop level as well. Go to Order tab to check the current order status. Webhook url needs to be accessible for POST request.
+    The plugin is able to receive push notification sent by tiramizoo each time the order status has changed. The order state is then changed on shop level as well. Go to Order tab to check the current order status. Webhook url needs to be accessible for POST request.
 
 -   **Disable tiramizoo service for individual product**
 
