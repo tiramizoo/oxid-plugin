@@ -2,41 +2,39 @@ tiramizoo oxid plugin documentation
 ===============
 
 OXID eSales module for integration with [Tiramizoo API](http://dev.tiramizoo.com/).
-Module works with following OXID eSales versions: 4.7.x/5.0.x. The 4.3.2 version is deprecated.
-
-
+The module works with the following OXID eSales versions: 4.7.x/5.0.x.
 
 
 ## Customer checkout flow
 
-Checkout has 5 steps. Step 1 - Cart, Step 2 - Address, Step 3 - Pay, Step 4 - Order, Step 5 - Ready  
+The checkout has 5 steps. Step 1 - Cart, Step 2 - Address, Step 3 - Payment, Step 4 - Ordering, Step 5 - Confirmation
 
-All items added by user have to have tiramizoo service enabled, directly or by parent category
+All items added by the user need to have the tiramizoo service enabled, either directly or by their parent category.
 
-*   User adds items to basket. 
+*   User adds items to the basket. 
 
-*   User goes to checkout (Step 1)
+*   User goes to the checkout (Step 1)
 
-*   User specifies delivery address (Step 2)
+*   User specifies the delivery address (Step 2)
 
-*   User selects tiramizoo as a delivery option (Step 3)
+*   User selects tiramizoo as delivery option (Step 3)
 
-*   User selects delivery time window - when he wants courier to deliver (Step 3)
+*   User selects the delivery time window (when he wants the courier to deliver) (Step 3)
 
 *   User selects payment method (Step 3)
 
-*   User verifies and confirms (or corrects if needed) order by going to step 5
+*   User verifies and confirms (or corrects if needed) the order by going to step 5
 
-*   Between Step 4 and Step 5 plugin sends request to tiramizoo to create order
+*   Between Step 4 and Step 5 the plugin sends a request to tiramizoo.com to create the order
 
-*   User sees thank you page and receives email with tracking url
+*   User sees the thank you page and receives an email with the tracking url
 
 
 
 
 ## Demo ##
 
-*   Demo shop is available here: [http://staging.oxid-demo.tiramizoo.com](http://staging.oxid-demo.tiramizoo.com)
+*   The Demo shop is available here: [http://staging.oxid-demo.tiramizoo.com](http://staging.oxid-demo.tiramizoo.com)
 
 *   Admin panel access: [http://staging.oxid-demo.tiramizoo.com/admin](http://staging.oxid-demo.tiramizoo.com/admin)
 
@@ -53,9 +51,9 @@ All items added by user have to have tiramizoo service enabled, directly or by p
 
 *   Switch to [master](https://github.com/tiramizoo/oxid-plugin/tree/master) branch and download code
 
-*   Copy all files from [copy_this](https://github.com/tiramizoo/oxid-plugin/tree/master/copy_this) folder to OXID eSales installation path. This step does not overwrite any files.
+*   Copy all files from [copy_this](https://github.com/tiramizoo/oxid-plugin/tree/master/copy_this) folder to the OXID eSales installation path. This step does not overwrite any files.
 
-*   If template does not support blocks, please compare [changed files](https://github.com/tiramizoo/oxid-plugin/tree/master/copy_this/modules/oxtiramizoo/views/blocks) according to [metadata file](https://github.com/tiramizoo/oxid-plugin/blob/master/copy_this/modules/oxtiramizoo/metadata.php#L102)
+*   If the template does not support blocks, please compare [changed files](https://github.com/tiramizoo/oxid-plugin/tree/master/copy_this/modules/oxtiramizoo/views/blocks) according to [metadata file](https://github.com/tiramizoo/oxid-plugin/blob/master/copy_this/modules/oxtiramizoo/metadata.php#L102)
 
 *   Go to **eShop Admin -> Extensions -> Modules**, select the **"OXID Tiramizoo.com"** extension and press the "Activate" button in the "Overview" tab.
 
