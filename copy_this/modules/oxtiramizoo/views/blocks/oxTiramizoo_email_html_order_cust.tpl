@@ -5,11 +5,13 @@
     <p style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; margin: 5px 0 10px;">
         <b>[{ $order->oDelSet->oxdeliveryset__oxtitle->value }]</b>
     </p>
-
+    [{* oxtiramizoo BEGIN *}]
 	[{ assign var=oOrderExtended value=$order->getOrderExtended() }]
     [{if $oOrderExtended->getTrackingUrl()}]
     <p>
     	Tracking URL: [{ $oOrderExtended->getTrackingUrl() }]
 	</p>
 	[{/if}]
+    [{* oxtiramizoo END *}]
+
 [{/if}]

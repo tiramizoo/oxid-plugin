@@ -7,7 +7,7 @@
 <button type="submit" class="submitButton largeButton">[{ oxmultilang ident="PAGE_CHECKOUT_PAYMENT_UPDATESHIPPING" }]</button>
 </noscript>
 
-
+[{* oxtiramizoo BEGIN *}]
 [{if $sCurrentShipSet == 'Tiramizoo' }]
 <p>
 	[{foreach from=$aAvailableDeliveryTypes item=oDeliveryType}]
@@ -38,3 +38,4 @@
 	[{/foreach}]
 </p>
 [{/if}]
+[{* oxtiramizoo BEGIN *}]
