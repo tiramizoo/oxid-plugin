@@ -77,7 +77,7 @@ class MockPhpStream
 }
 
 
-class Unit_Application_Controllers_oxTiramizoo_WebhookTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_WebhookTest extends OxidTestCase
 {
     protected function setUp()
     {

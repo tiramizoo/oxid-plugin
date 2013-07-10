@@ -1,7 +1,7 @@
 <?php
 
 
-class Unit_Application_Models_oxTiramizoo_RetailLocationConfigTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_RetailLocationConfigTest extends OxidTestCase
 {
 
     protected function tearDown()

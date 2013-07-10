@@ -1,7 +1,7 @@
 <?php
 
 
-class Unit_Admin_oxTiramizoo_settingsTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCase
 {
 
     protected function setUp()

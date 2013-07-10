@@ -2,7 +2,7 @@
 
 
 
-class Unit_Translations_TranslationsTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Translations_TranslationsTest extends OxidTestCase
 {
 	public function testTranslationEn()
 	{

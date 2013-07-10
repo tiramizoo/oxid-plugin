@@ -10,7 +10,7 @@ class oxTiramizoo_oxorderExposed extends oxTiramizoo_oxorder
 }
 
 
-class Unit_Core_oxTiramizoo_oxorderTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_oxorderTest extends OxidTestCase
 {
 	protected function tearDown()
 	{

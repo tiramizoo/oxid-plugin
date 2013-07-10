@@ -2,7 +2,7 @@
 
 
 
-class Unit_Core_oxTiramizoo_TimeWindowTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_TimeWindowTest extends OxidTestCase
 {
 	protected $_oSubj = null;
 	protected $_aDataTodayWindow = array();

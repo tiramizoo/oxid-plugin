@@ -24,7 +24,7 @@ class oxTiramizoo_CreateOrderDataExposed extends oxTiramizoo_CreateOrderData
 }
 
 
-class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 {	
 	protected function tearDown()
 	{

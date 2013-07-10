@@ -1,7 +1,7 @@
 <?php
 
 
-class Unit_Application_Controllers_oxTiramizoo_OrderTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_OrderTest extends OxidTestCase
 {
     protected function setUp()
     {

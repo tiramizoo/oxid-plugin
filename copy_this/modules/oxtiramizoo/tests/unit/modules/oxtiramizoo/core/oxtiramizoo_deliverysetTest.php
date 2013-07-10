@@ -22,7 +22,7 @@ class oxTiramizoo_DeliveryTypeTestIsAvailable extends oxTiramizoo_DeliveryType
 	public function isAvailable() { return true; }
 }
 
-class Unit_Core_oxTiramizoo_DeliverySetTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTestCase
 {
 	public function setUp()
 	{

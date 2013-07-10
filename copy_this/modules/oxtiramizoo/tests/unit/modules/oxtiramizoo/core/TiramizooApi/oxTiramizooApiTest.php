@@ -1,7 +1,7 @@
 <?php
 
 
-class unit_core_TiramizooApi_oxTiramizooApiTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooApiTest extends OxidTestCase
 {	
 	protected function setUp()
 	{

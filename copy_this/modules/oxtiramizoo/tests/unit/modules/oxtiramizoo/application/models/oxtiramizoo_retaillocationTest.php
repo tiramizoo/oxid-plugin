@@ -6,7 +6,7 @@ class oxTiramizoo_RetailLocationExposed extends oxTiramizoo_RetailLocation
     public $_aConfigVars = null;
 }
 
-class Unit_Application_Models_oxTiramizoo_RetailLocationTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_RetailLocationTest extends OxidTestCase
 {
 
     protected function tearDown()

@@ -9,7 +9,7 @@ class oxTiramizoo_ArticleExtendedExposed extends oxTiramizoo_ArticleExtended
     }
 }
 
-class Unit_Application_Models_oxTiramizoo_ArticleExtendedTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTest extends OxidTestCase
 {
 
     public function testGetIdByArticleId()

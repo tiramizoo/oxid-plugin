@@ -6,7 +6,7 @@ class oxTiramizoo_PaymentExposed extends oxTiramizoo_Payment
 	public $_aAllSets = null;
 }
 
-class Unit_Application_Controllers_oxTiramizoo_PaymentTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest extends OxidTestCase
 {
     public function testInit()
     {

@@ -30,7 +30,7 @@ class _oxTiramizoo_Setup extends oxTiramizoo_Setup
     }
 }
 
-class Unit_Core_oxTiramizoo_SetupTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 {
 
 	public function tearDown()

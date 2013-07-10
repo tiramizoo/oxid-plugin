@@ -10,7 +10,7 @@ class _oxTiramizoo_oxBasket extends oxTiramizoo_oxbasket
     }
 }
 
-class Unit_Core_oxTiramizoo_oxbasketTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_oxbasketTest extends OxidTestCase
 {
 	protected function setUp()
 	{

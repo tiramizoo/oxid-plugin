@@ -15,7 +15,7 @@ class pudzianExposed extends pudzian
 
 }
 
-class Unit_Lib_pudzian_pudzianTest extends PHPUnit_Framework_TestCase
+class Unit_Modules_oxTiramizoo_Lib_pudzian_pudzianTest extends PHPUnit_Framework_TestCase
 {
     protected $_pudzian = array();
 

@@ -1,6 +1,6 @@
 <?php
 
-class Unit_Core_oxTiramizoo_DeliveryTypeEveningTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeEveningTest extends OxidTestCase
 {
 	protected function setUp()
 	{
