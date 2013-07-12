@@ -26,7 +26,7 @@ Integrates Tiramizoo Delivery module into OXID ESHOP.
 --_calcDeliveryCost
 *order
 --init
---rebder
+--render
 --execute
 *payment
 --getAllSets
