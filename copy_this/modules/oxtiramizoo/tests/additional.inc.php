@@ -15,4 +15,6 @@ oxTestModuleLoader::append( array(
     //"oxarticle" => "vendor/mymodule/core/myarticle.php",
 ));
 
+//include helpers
+require_once dirname( __FILE__ ) . "/libs/helpers.php";
 

@@ -28,7 +28,7 @@ if ( getenv( "oxADMIN_PASSWD" ) ) {
 
 
 if ( getenv( "CODECOVERAGE" ) ) {
-    // PHPUnit_Util_Filter::$addUncoveredFilesFromWhitelist = false;
+    PHPUnit_Util_Filter::$addUncoveredFilesFromWhitelist = false;
     include_once "coverage.inc.php";
 }
 

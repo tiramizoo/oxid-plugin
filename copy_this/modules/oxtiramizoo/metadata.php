@@ -1,15 +1,13 @@
 <?php
 
 /*
- *    This file is part of the module Tiramizoo for OXID eShop Community Edition.
- *
- *
+ *    This file is part of the module Tiramizoo for OXID eShop .
  */
 
 /**
  * Metadata version
  */
-$sMetadataVersion = '0.2.55';
+$sMetadataVersion = '1.0';
 
 /**
  * Module information
@@ -88,8 +86,6 @@ $aModule = array(
                             'oxTiramizoo_InvalidTimeWindowException'    => 'oxtiramizoo/core/exception/oxtiramizoo_invalidtimewindowexception.php',
                             'oxTiramizoo_InvalidDeliveryTypeException'  => 'oxtiramizoo/core/exception/oxtiramizoo_invaliddeliverytypeexception.php',
 
-                            /* libs */
-                            'pudzian'                           => 'oxtiramizoo/lib/pudzian/pudzian.php'
                         ),
 
     'templates'    =>   array(

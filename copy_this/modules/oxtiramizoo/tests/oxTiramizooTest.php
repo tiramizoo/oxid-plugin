@@ -40,6 +40,9 @@ require_once 'PHPUnit/Framework/TestSuite.php';
 
 require_once 'unit/OxidTestCase.php';
 
+require_once 'additional.inc.php';
+
+
 error_reporting( (E_ALL ^ E_NOTICE) | E_STRICT );
 ini_set('display_errors', true);
 
@@ -66,7 +69,7 @@ class oxTiramizooTest extends PHPUnit_Framework_TestCase
 
         $aTestSuiteDirs = array( 'unit/modules/oxtiramizoo' );
 
-        $aTestDirs = array( 'admin', 'application/controllers', 'application/models', 'core', 'core/TiramizooApi', 'lib/pudzian', 'translations' );
+        $aTestDirs = array( 'admin', 'application/controllers', 'application/models', 'core', 'core/TiramizooApi', 'translations' );
         if (getenv('TEST_DIRS')) {
             $aTestDirs = explode('%', getenv('TEST_DIRS'));
         }
