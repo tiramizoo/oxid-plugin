@@ -9,19 +9,23 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_Article_TabTest extends OxidTes
         parent::tearDown();
     }
 
+
+
     public function testRender()
     {
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
-
-        $map = array(
-          array('oxid', false, 'some article id'),
-        );
+        $oConfig = $this->getMock('oxConfig', array('getRequestParameter'), array(), '', false);
 
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
-                ->will($this->returnValueMap($map));
-    	
-        $oTiramizooArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->getMock();
+                ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('oxid', 'some article id'),
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                }));  
+
+        $oTiramizooArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array(), array(), '', false);
         
         $effectiveData = new stdClass();
         $effectiveData->weight = 1;
@@ -34,7 +38,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_Article_TabTest extends OxidTes
                                   ->will($this->returnValue($effectiveData));
         oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oTiramizooArticleExtended);
 
-    	$oArticleTab = $this->getMockBuilder('oxTiramizoo_Article_Tab')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+    	$oArticleTab = $this->getMock('oxTiramizoo_Article_Tab', array('__construct', 'getConfig'), array(), '', false);
         $oArticleTab->expects($this->any())
                     ->method('getConfig')
                     ->will($this->returnValue($oConfig));
@@ -44,18 +48,20 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_Article_TabTest extends OxidTes
 
     public function testSave()
     {
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
-
-        $map = array(
-          array('oxid', false, 'some article id'),
-          array('oxTiramizooArticleExtended', false, array()),
-        );
+        $oConfig = $this->getMock('oxConfig', array('getRequestParameter'), array(), '', false);
 
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
-                ->will($this->returnValueMap($map));
-    	
-        $oTiramizooArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('load', 'assign', 'save'))->getMock();
+                ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('oxid', 'some article id'),
+                        array('oxTiramizooArticleExtended', array()),
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                }));  
+
+        $oTiramizooArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('load', 'assign', 'save'), array(), '', false);
         $oTiramizooArticleExtended->expects($this->once())
                     			  ->method('load');
         $oTiramizooArticleExtended->expects($this->once())
@@ -64,7 +70,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_Article_TabTest extends OxidTes
                     			  ->method('save');
         oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oTiramizooArticleExtended);
 
-    	$oArticleTab = $this->getMockBuilder('oxTiramizoo_Article_Tab')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+    	$oArticleTab = $this->getMock('oxTiramizoo_Article_Tab', array('__construct', 'getConfig'), array(), '', false);
         $oArticleTab->expects($this->any())
                     ->method('getConfig')
                     ->will($this->returnValue($oConfig));

@@ -25,7 +25,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_oxorderTest extends OxidTestCase
              	->method('getShippingId')
              	->will($this->returnValue(oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID));
 
-        $oTiramizooApi = $this->getMockBuilder('oxTiramizoo_Api')->disableOriginalConstructor()->getMock();
+        $oTiramizooApi = $this->getMock('oxTiramizoo_Api', array(), array(), '', false);
 		$oTiramizooApi->expects($this->any())
 	             	  ->method('sendOrder')
 	             	  ->will($this->returnValue(array('http_status' => 201)));
@@ -38,13 +38,13 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_oxorderTest extends OxidTestCase
         oxRegistry::set('oxTiramizoo_DeliverySet', $oDeliverySet);
 
 
-		$oCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderData')->disableOriginalConstructor()->getMock();
+		$oCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderData', array(), array(), '', false);
         oxTestModules::addModuleObject('oxTiramizoo_CreateOrderData', $oCreateOrderData);
 
 
-        $oUser = $this->getMockBuilder('oxuser')->disableOriginalConstructor()->getMock();
+        $oUser = $this->getMock('oxuser', array(), array(), '', false);
 
-     	$oOrder = $this->getMockBuilder('oxTiramizoo_oxorderExposed')->disableOriginalConstructor()->setMethods(array('getUser', 'getDelAddressInfo'))->getMock();
+     	$oOrder = $this->getMock('oxTiramizoo_oxorderExposed', array('getUser', 'getDelAddressInfo'), array(), '', false);
 	    $oOrder->expects($this->any())
                ->method('getUser')
                ->will($this->returnValue($oUser));
@@ -59,7 +59,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_oxorderTest extends OxidTestCase
              	->method('getShippingId')
              	->will($this->returnValue(oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID));
 
-        $oTiramizooApi = $this->getMockBuilder('oxTiramizoo_Api')->disableOriginalConstructor()->getMock();
+        $oTiramizooApi = $this->getMock('oxTiramizoo_Api', array(), array(), '', false);
 		$oTiramizooApi->expects($this->any())
 	             	  ->method('sendOrder')
 	             	  ->will($this->returnValue(array('http_status' => 500)));
@@ -72,16 +72,16 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_oxorderTest extends OxidTestCase
         oxRegistry::set('oxTiramizoo_DeliverySet', $oDeliverySet);
 
 
-		$oCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderData')->disableOriginalConstructor()->getMock();
+		$oCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderData', array(), array(), '', false);
         oxTestModules::addModuleObject('oxTiramizoo_CreateOrderData', $oCreateOrderData);
 
-		$oSendOrderJob = $this->getMockBuilder('oxTiramizoo_SendOrderJob')->disableOriginalConstructor()->getMock();
+		$oSendOrderJob = $this->getMock('oxTiramizoo_SendOrderJob', array(), array(), '', false);
         oxTestModules::addModuleObject('oxTiramizoo_SendOrderJob', $oSendOrderJob);
 
 
-        $oUser = $this->getMockBuilder('oxuser')->disableOriginalConstructor()->getMock();
+        $oUser = $this->getMock('oxuser', array(), array(), '', false);
 
-     	$oOrder = $this->getMockBuilder('oxTiramizoo_oxorderExposed')->disableOriginalConstructor()->setMethods(array('getUser', 'getDelAddressInfo'))->getMock();
+     	$oOrder = $this->getMock('oxTiramizoo_oxorderExposed', array('getUser', 'getDelAddressInfo'), array(), '', false);
 	    $oOrder->expects($this->any())
                ->method('getUser')
                ->will($this->returnValue($oUser));
@@ -96,7 +96,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_oxorderTest extends OxidTestCase
              	->method('getShippingId')
              	->will($this->returnValue(oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID));
 
-        $oTiramizooApi = $this->getMockBuilder('oxTiramizoo_Api')->disableOriginalConstructor()->getMock();
+        $oTiramizooApi = $this->getMock('oxTiramizoo_Api', array(), array(), '', false);
 		$oTiramizooApi->expects($this->any())
 	             	  ->method('sendOrder')
 	             	  ->will($this->returnValue(array('http_status' => 0, 'errno' => oxTiramizoo_Api::CURLE_OPERATION_TIMEDOUT)));
@@ -112,10 +112,10 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_oxorderTest extends OxidTestCase
         oxRegistry::set('oxTiramizoo_DeliverySet', $oDeliverySet);
 
 
-		$oCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderData')->disableOriginalConstructor()->getMock();
+		$oCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderData', array(), array(), '', false);
         oxTestModules::addModuleObject('oxTiramizoo_CreateOrderData', $oCreateOrderData);
 
-		$oSendOrderJob = $this->getMockBuilder('oxTiramizoo_SendOrderJob')->disableOriginalConstructor()->getMock();
+		$oSendOrderJob = $this->getMock('oxTiramizoo_SendOrderJob', array(), array(), '', false);
         oxTestModules::addModuleObject('oxTiramizoo_SendOrderJob', $oSendOrderJob);
 
 		$oEmail = $this->getMock('oxEmail', array('send', 'setBody'));
@@ -123,9 +123,9 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_oxorderTest extends OxidTestCase
 	           ->method('setBody');
         oxTestModules::addModuleObject('oxEmail', $oEmail);
 
-        $oUser = $this->getMockBuilder('oxuser')->disableOriginalConstructor()->getMock();
+        $oUser = $this->getMock('oxuser', array(), array(), '', false);
 
-     	$oOrder = $this->getMockBuilder('oxTiramizoo_oxorderExposed')->disableOriginalConstructor()->setMethods(array('getUser', 'getDelAddressInfo'))->getMock();
+     	$oOrder = $this->getMock('oxTiramizoo_oxorderExposed', array('getUser', 'getDelAddressInfo'), array(), '', false);
 	    $oOrder->expects($this->any())
                ->method('getUser')
                ->will($this->returnValue($oUser));
@@ -135,12 +135,12 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_oxorderTest extends OxidTestCase
 
 	public function testGetOrderExtendedIfExists()
 	{
-        $oTiramizooOrderExtended = $this->getMockBuilder('oxTiramizoo_OrderExtended')->disableOriginalConstructor()->setMethods(array('getIdByOrderId', 'load'))->getMock();
+        $oTiramizooOrderExtended = $this->getMock('oxTiramizoo_OrderExtended', array('getIdByOrderId', 'load'), array(), '', false);
         $oTiramizooOrderExtended->_sOXID = 1;
 
         oxTestModules::addModuleObject('oxTiramizoo_OrderExtended', $oTiramizooOrderExtended);
 
-     	$oOrder = $this->getMockBuilder('oxTiramizoo_oxorder')->disableOriginalConstructor()->setMethods(array('getId'))->getMock();
+     	$oOrder = $this->getMock('oxTiramizoo_oxorder', array('getId'), array(), '', false);
 
         $this->assertEquals($oTiramizooOrderExtended, $oOrder->getOrderExtended());
         $this->assertEquals(1, $oOrder->getOrderExtended()->getId());
@@ -148,11 +148,11 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_oxorderTest extends OxidTestCase
 
 	public function testGetOrderExtendedIfNotExists()
 	{
-        $oTiramizooOrderExtended = $this->getMockBuilder('oxTiramizoo_OrderExtended')->disableOriginalConstructor()->setMethods(array('getIdByOrderId', 'load'))->getMock();
+        $oTiramizooOrderExtended = $this->getMock('oxTiramizoo_OrderExtended', array('getIdByOrderId', 'load'), array(), '', false);
 
         oxTestModules::addModuleObject('oxTiramizoo_OrderExtended', $oTiramizooOrderExtended);
 
-     	$oOrder = $this->getMockBuilder('oxTiramizoo_oxorder')->disableOriginalConstructor()->setMethods(array('getId'))->getMock();
+     	$oOrder = $this->getMock('oxTiramizoo_oxorder', array('getId'), array(), '', false);
 
         $this->assertEquals($oTiramizooOrderExtended, $oOrder->getOrderExtended());
         $this->assertEquals(null, $oOrder->getOrderExtended()->getId());

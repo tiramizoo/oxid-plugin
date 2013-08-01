@@ -17,14 +17,14 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_oxShopControl
 
     public function testProcess()
     {
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->getMock();
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array(), array(), '', false);
 		$oTiramizooConfig->expects($this->any())
 					     ->method('getShopConfVar')
 					     ->will($this->returnValue(0));
 
 		oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
 
-		$oScheduleJobManager = $this->getMockBuilder('oxTiramizoo_ScheduleJobManager')->disableOriginalConstructor()->getMock();
+		$oScheduleJobManager = $this->getMock('oxTiramizoo_ScheduleJobManager', array(), array(), '', false);
 		$oScheduleJobManager->expects($this->any())
 					     	->method('isFinished')
 					     	->will($this->returnValue(0));

@@ -1,6 +1,7 @@
 <?php
 
 
+
 class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCase
 {
 
@@ -8,17 +9,20 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
     {
         parent::setUp();
 
-        $oxLang = $this->getMockBuilder('oxLang')->disableOriginalConstructor()->setMethods(array('translateString', 'getBaseLanguage'))->getMock();
-        $map = array(
-          array('oxTiramizoo_settings_api_url_label', null, true, 'oxTiramizoo_settings_api_url_label'),
-          array('oxTiramizoo_settings_shop_url_label', null, true, 'oxTiramizoo_settings_shop_url_label'),
-          array('oxTiramizoo_payments_required_error', null, true, 'oxTiramizoo_payments_required_error'),
-          array('oxTiramizoo_is_required', null, true, 'oxTiramizoo_is_required'),
-        );
+        $oxLang = $this->getMock('oxLang', array('translateString', 'getBaseLanguage'), array(), '', false);
 
         $oxLang->expects($this->any())
                ->method('translateString')
-               ->will($this->returnValueMap($map));
+               ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                      array('oxTiramizoo_settings_api_url_label', null, true, 'oxTiramizoo_settings_api_url_label'),
+                      array('oxTiramizoo_settings_shop_url_label', null, true, 'oxTiramizoo_settings_shop_url_label'),
+                      array('oxTiramizoo_payments_required_error', null, true, 'oxTiramizoo_payments_required_error'),
+                      array('oxTiramizoo_is_required', null, true, 'oxTiramizoo_is_required'),
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                }));
 
         oxRegistry::set('oxLang', $oxLang);
     }
@@ -33,20 +37,20 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
     public function testInit()
     {
-        $oTiramizooSetup = $this->getMockBuilder('oxTiramizoo_setup')->disableOriginalConstructor()->setMethods(array('install'))->getMock();
+        $oTiramizooSetup = $this->getMock('oxTiramizoo_setup', array('install'), array(), '', false);
         $oTiramizooSetup->expects($this->once())->method('install');
 
         oxTestModules::addModuleObject('oxTiramizoo_setup', $oTiramizooSetup);
 
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct'), array(), '', false);
         $oTiramizooSettings->init();
     }
 
     public function testRender()
     {
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct', 'getPaymentsList'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'getPaymentsList'), array(), '', false);
 
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->setMethods(array('getShopConfVar'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'));
         $oTiramizooConfig->expects($this->any())
                          ->method('getShopConfVar')
                          ->will($this->returnValue(1));
@@ -58,7 +62,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
     public function testGetPaymentsList()
     {
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct'), array(), '', false);
         
         $oPayment1 = oxNew('oxPayment');
         $oPayment1->oxpayments__oxid = new oxField(1);
@@ -70,7 +74,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
         $aPaymentList = array($oPayment1, $oPayment2);
 
-        $oPaymentList = $this->getMockBuilder('Payment_List')->setMethods(array('getItemList', 'init'))->getMock();
+        $oPaymentList = $this->getMock('Payment_List', array('getItemList', 'init'));
         $oPaymentList->expects($this->any())
                      ->method('getItemList')
                      ->will($this->returnValue($aPaymentList));
@@ -95,12 +99,12 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
     {
         $aRequestParameters = array('oxidpayment1' => 0, 'oxidpayment2' => 1, 'oxidpayment3' => 1);
 
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
+        $oConfig = $this->getMock('oxConfig', array('getRequestParameter'), array(), '', false);
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
                 ->will($this->returnValue($aRequestParameters));
 
-        $oObject2Payment = $this->getMockBuilder('oxbase')->disableOriginalConstructor()->getMock();
+        $oObject2Payment = $this->getMock('oxbase', array(), array(), '', false);
         oxTestModules::addModuleObject('oxbase', $oObject2Payment);
 
         $oDb = $this->getMock('stdClass', array('Execute', 'quote', 'getOne'));
@@ -109,7 +113,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
         modDb::getInstance()->modAttach($oDb);
 
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'getConfig'), array(), '', false);
         $oTiramizooSettings->expects($this->any())
                            ->method('getConfig')
                            ->will($this->returnValue($oConfig));
@@ -125,22 +129,26 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
         $aConfAarrs = array('somename' => 'somevalue');
         $aConfInts  = array('somename' => 'somevalue');
 
-        $aMap = array(array('confbools', false, $aConfBools),
-                      array('confstrs', false, $aConfStrs),
-                      array('confarrs', false, $aConfArrs),
-                      array('confaarrs', false, $aConfAarrs),
-                      array('confints', false, $aConfInts));
-
-        $oConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
+        $oConfig = $this->getMock('oxTiramizoo_Config', array('getRequestParameter'), array(), '', false);
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
-                ->will($this->returnValueMap($aMap));
+                ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('confbools', $aConfBools),
+                        array('confstrs', $aConfStrs),
+                        array('confarrs', $aConfArrs),
+                        array('confaarrs', $aConfAarrs),
+                        array('confints', $aConfInts)                    
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                }));  
 
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->setMethods(array('saveShopConfVar'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('saveShopConfVar'));
 
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
 
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'getConfig'), array(), '', false);
         $oTiramizooSettings->expects($this->any())
                            ->method('getConfig')
                            ->will($this->returnValue($oConfig));
@@ -150,19 +158,19 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
     public function testTiramizooApiUrlHasChangedExpectTrue()
     {
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
+        $oConfig = $this->getMock('oxConfig', array('getRequestParameter'), array(), '', false);
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
                 ->will($this->returnValue(array('oxTiramizoo_api_url' => 'http://someapiurl')));
 
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->setMethods(array('getShopConfVar'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'));
         $oTiramizooConfig->expects($this->any())
                          ->method('getShopConfVar')
                          ->will($this->returnValue('http://someapiurl2'));
 
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
 
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'getConfig'), array(), '', false);
         $oTiramizooSettings->expects($this->any())
                            ->method('getConfig')
                            ->will($this->returnValue($oConfig));
@@ -172,19 +180,19 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
     public function testTiramizooApiUrlHasChangedExpectFalse()
     {
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
+        $oConfig = $this->getMock('oxConfig', array('getRequestParameter'), array(), '', false);
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
                 ->will($this->returnValue(array('oxTiramizoo_api_url' => 'http://someapiurl')));
 
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->setMethods(array('getShopConfVar'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'));
         $oTiramizooConfig->expects($this->any())
                          ->method('getShopConfVar')
                          ->will($this->returnValue('http://someapiurl'));
 
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
 
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'getConfig'), array(), '', false);
         $oTiramizooSettings->expects($this->any())
                            ->method('getConfig')
                            ->will($this->returnValue($oConfig));
@@ -194,14 +202,14 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
     public function testSaveEnableShippingMethod()
     {
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->setMethods(array('getShopId'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopId'));
         $oTiramizooConfig->expects($this->any())
                          ->method('getShopConfVar')
                          ->will($this->returnValue('oxbaseshopid1'));
 
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
 
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct', 'validateEnable'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'validateEnable'), array(), '', false);
         $oTiramizooSettings->expects($this->at(0))
                            ->method('validateEnable')
                            ->will($this->returnValue(array('first error', 'second error')));
@@ -214,7 +222,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
     public function testSynchronize()
     {
-        $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->setMethods(array('getApiToken'))->getMock();
+        $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array('getApiToken'), array(), '', false);
 
         $oRetailLocationList = $this->getMock('stdClass', array('loadAll', 'getArray'));
         $oRetailLocationList->expects($this->any())
@@ -223,17 +231,17 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
         oxTestModules::addModuleObject('oxTiramizoo_RetailLocationList', $oRetailLocationList);
 
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->setMethods(array('synchronizeAll'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('synchronizeAll'), array(), '', false);
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
 
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct'), array(), '', false);
 
         $this->assertEquals('oxtiramizoo_settings', $oTiramizooSettings->synchronize());
 
 
         //set exception
 
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->setMethods(array('synchronizeAll'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('synchronizeAll'), array(), '', false);
         $oTiramizooConfig->expects($this->any())
                          ->method('synchronizeAll')
                          ->will($this->throwException(new oxTiramizoo_ApiException('')));
@@ -246,14 +254,14 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
     public function testSave()
     {
-        $oRetailLocation1 = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->setMethods(array('getApiToken', 'delete'))->getMock();
+        $oRetailLocation1 = $this->getMock('oxTiramizoo_RetailLocation', array('getApiToken', 'delete'), array(), '', false);
         $oRetailLocation1->expects($this->once())
                          ->method('delete');
         $oRetailLocation1->expects($this->any())
                          ->method('getApiToken')
                          ->will($this->returnValue('some api save'));
 
-        $oRetailLocation2 = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->setMethods(array('getApiToken', 'delete'))->getMock();
+        $oRetailLocation2 = $this->getMock('oxTiramizoo_RetailLocation', array('getApiToken', 'delete'), array(), '', false);
         $oRetailLocation2->expects($this->never())
                          ->method('delete');
 
@@ -264,10 +272,10 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
         oxTestModules::addModuleObject('oxTiramizoo_RetailLocationList', $oRetailLocationList);
 
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->setMethods(array('synchronizeAll'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('synchronizeAll'), array(), '', false);
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
 
-        $oTiramizooApi = $this->getMockBuilder('oxTiramizoo_Api')->disableOriginalConstructor()->setMethods(array('getRemoteConfiguration'))->getMock();
+        $oTiramizooApi = $this->getMock('oxTiramizoo_Api', array('getRemoteConfiguration'), array(), '', false);
         $oTiramizooApi->expects($this->at(0))
                       ->method('getRemoteConfiguration')
                       ->will($this->throwException(new oxTiramizoo_ApiException));
@@ -275,7 +283,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
         oxTestModules::addModuleObject('oxTiramizoo_Api', $oTiramizooApi);
 
         //test if tiramizoo api url has not changed
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct', 'tiramizooApiUrlHasChanged', 'saveConfVars', 'saveEnableShippingMethod', 'assignPaymentsToTiramizoo'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'tiramizooApiUrlHasChanged', 'saveConfVars', 'saveEnableShippingMethod', 'assignPaymentsToTiramizoo'), array(), '', false);
         $oTiramizooSettings->expects($this->at(0))
                            ->method('tiramizooApiUrlHasChanged')
                            ->will($this->returnValue(false));
@@ -283,7 +291,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
 
         //test if tiramizoo api url has changed
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct', 'tiramizooApiUrlHasChanged', 'saveConfVars', 'saveEnableShippingMethod', 'assignPaymentsToTiramizoo'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'tiramizooApiUrlHasChanged', 'saveConfVars', 'saveEnableShippingMethod', 'assignPaymentsToTiramizoo'), array(), '', false);
         $oTiramizooSettings->expects($this->at(0))
                            ->method('tiramizooApiUrlHasChanged')
                            ->will($this->returnValue(true));
@@ -292,12 +300,12 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
     public function testAddNewLocation()
     {
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
+        $oConfig = $this->getMock('oxConfig', array('getRequestParameter'), array(), '', false);
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
                 ->will($this->returnValue('someApiToken2'));
 
-        $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->setMethods(array('getApiToken', 'delete', 'save', 'getIdByApiToken', 'load'))->getMock();
+        $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array('getApiToken', 'delete', 'save', 'getIdByApiToken', 'load'), array(), '', false);
         $oRetailLocation->expects($this->any())
                         ->method('getIdByApiToken')
                         ->will($this->returnValue('someOxid'));
@@ -309,19 +317,19 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
         oxTestModules::addModuleObject('oxTiramizoo_RetailLocation', $oRetailLocation);
 
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->setMethods(array('synchronizeAll', 'getShopId'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('synchronizeAll', 'getShopId'), array(), '', false);
         $oTiramizooConfig->expects($this->never())
                          ->method('synchronizeAll');
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
 
-        $oTiramizooApi = $this->getMockBuilder('oxTiramizoo_Api')->disableOriginalConstructor()->setMethods(array('getRemoteConfiguration'))->getMock();
+        $oTiramizooApi = $this->getMock('oxTiramizoo_Api', array('getRemoteConfiguration'), array(), '', false);
         $oTiramizooApi->expects($this->at(0))
                       ->method('getRemoteConfiguration')
                       ->will($this->throwException(new oxTiramizoo_ApiException));
 
         oxTestModules::addModuleObject('oxTiramizoo_Api', $oTiramizooApi);
 
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'getConfig'), array(), '', false);
         $oTiramizooSettings->expects($this->any())
                            ->method('getConfig')
                            ->will($this->returnValue($oConfig));
@@ -330,7 +338,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
 
         //test without exception in getting remote configuration
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->setMethods(array('synchronizeAll', 'getShopId'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('synchronizeAll', 'getShopId'), array(), '', false);
         $oTiramizooConfig->expects($this->once())
                         ->method('synchronizeAll');
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
@@ -340,12 +348,12 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
     public function testRemoveLocation()
     {
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
+        $oConfig = $this->getMock('oxConfig', array('getRequestParameter'), array(), '', false);
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
                 ->will($this->returnValue('someApiToken2'));
 
-        $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->setMethods(array('getApiToken', 'delete', 'save', 'getIdByApiToken', 'load'))->getMock();
+        $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array('getApiToken', 'delete', 'save', 'getIdByApiToken', 'load'), array(), '', false);
         $oRetailLocation->expects($this->any())
                         ->method('getIdByApiToken')
                         ->will($this->returnValue('someOxid'));
@@ -353,7 +361,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
                         ->method('delete');
         oxTestModules::addModuleObject('oxTiramizoo_RetailLocation', $oRetailLocation);
 
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'getConfig'), array(), '', false);
         $oTiramizooSettings->expects($this->any())
                            ->method('getConfig')
                            ->will($this->returnValue($oConfig));
@@ -361,20 +369,23 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
         $this->assertEquals('oxtiramizoo_settings', $oTiramizooSettings->removeLocation());
     }
 
+
     public function testValidateEnable1()
     {
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
-
-        $map = array(
-          array('confstrs', false, array()),
-          array('payment', false, array()),
-        );
+        $oConfig = $this->getMock('oxConfig', array('getRequestParameter'), array(), '', false);
 
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
-                ->will($this->returnValueMap($map));
-
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+                ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                      array('confstrs', array()),
+                      array('payment', array()),
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                }));
+    
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'getConfig'), array(), '', false);
         $oTiramizooSettings->expects($this->any())
                            ->method('getConfig')
                            ->will($this->returnValue($oConfig));
@@ -387,18 +398,20 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
     public function testValidateEnable2()
     {
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
-
-        $map = array(
-          array('confstrs', false, array('oxTiramizoo_api_url' => 'some api url')),
-          array('payment', false, array()),
-        );
+        $oConfig = $this->getMock('oxConfig', array('getRequestParameter'), array(), '', false);
 
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
-                ->will($this->returnValueMap($map));
+                ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                      array('confstrs', array('oxTiramizoo_api_url' => 'some api url')),
+                      array('payment', array()),
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                }));
 
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'getConfig'), array(), '', false);
         $oTiramizooSettings->expects($this->any())
                            ->method('getConfig')
                            ->will($this->returnValue($oConfig));
@@ -411,18 +424,20 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
     public function testValidateEnable3()
     {
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
-
-        $map = array(
-          array('confstrs', false, array('oxTiramizoo_api_url' => 'some api url', 'oxTiramizoo_shop_url' => 'some shop url')),
-          array('payment', false, array()),
-        );
+        $oConfig = $this->getMock('oxConfig', array('getRequestParameter'), array(), '', false);
 
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
-                ->will($this->returnValueMap($map));
+                ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                      array('confstrs', array('oxTiramizoo_api_url' => 'some api url', 'oxTiramizoo_shop_url' => 'some shop url')),
+                      array('payment', array()),
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                }));
 
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'getConfig'), array(), '', false);
         $oTiramizooSettings->expects($this->any())
                            ->method('getConfig')
                            ->will($this->returnValue($oConfig));
@@ -435,18 +450,20 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
     public function testValidateEnable4()
     {
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
-
-        $map = array(
-          array('confstrs', false, array('oxTiramizoo_api_url' => 'some api url', 'oxTiramizoo_shop_url' => 'some shop url')),
-          array('payment', false, array('payment name 1' => 0, 'payment name 2' => 1)),
-        );
+        $oConfig = $this->getMock('oxConfig', array('getRequestParameter'), array(), '', false);
 
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
-                ->will($this->returnValueMap($map));
-
-        $oTiramizooSettings = $this->getMockBuilder('oxTiramizoo_settings')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+                ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('confstrs', array('oxTiramizoo_api_url' => 'some api url', 'oxTiramizoo_shop_url' => 'some shop url')),
+                        array('payment', array('payment name 1' => 0, 'payment name 2' => 1)),
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                }));  
+                
+        $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'getConfig'), array(), '', false);
         $oTiramizooSettings->expects($this->any())
                            ->method('getConfig')
                            ->will($this->returnValue($oConfig));

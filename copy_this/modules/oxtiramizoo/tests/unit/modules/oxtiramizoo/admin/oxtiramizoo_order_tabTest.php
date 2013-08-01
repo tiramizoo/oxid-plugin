@@ -9,22 +9,25 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_Order_TabTest extends OxidTestC
         parent::tearDown();
     }
 
+
     public function testRender()
     {
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
-
-        $map = array(
-          array('oxid', false, 'some order id'),
-        );
+        $oConfig = $this->getMock('oxConfig', array('getRequestParameter'), array(), '', false);
 
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
-                ->will($this->returnValueMap($map));
-    	
-        $oTiramizooOrderExtended = $this->getMockBuilder('oxTiramizoo_OrderExtended')->disableOriginalConstructor()->getMock();
+                ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('oxid', 'some order id'),
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                }));    	
+
+        $oTiramizooOrderExtended = $this->getMock('oxTiramizoo_OrderExtended', array(), array(), '', false);
         oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oTiramizooArticleExtended);
 
-    	$oOrderTab = $this->getMockBuilder('oxTiramizoo_Order_Tab')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+    	$oOrderTab = $this->getMock('oxTiramizoo_Order_Tab', array('__construct', 'getConfig'), array(), '', false);
         $oOrderTab->expects($this->any())
                   ->method('getConfig')
                   ->will($this->returnValue($oConfig));

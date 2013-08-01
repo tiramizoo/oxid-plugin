@@ -39,7 +39,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_RetailLocationTest
 
         $aRetailLocationConfigs = array($oRetailLocationConfig1, $oRetailLocationConfig2);
 
-        $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocationExposed')->disableOriginalConstructor()->setMethods(array('__construct', 'getRetailLocationConfigs'))->getMock();
+        $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocationExposed', array('__construct', 'getRetailLocationConfigs'), array(), '', false);
         $oRetailLocation->expects($this->any())
                         ->method('getRetailLocationConfigs')
                         ->will($this->returnValue($aRetailLocationConfigs));
@@ -63,7 +63,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_RetailLocationTest
 
         $aRetailLocationConfigs = array($oRetailLocationConfig1, $oRetailLocationConfig2);
 
-        $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->setMethods(array('__construct', 'getRetailLocationConfigs'))->getMock();
+        $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array('__construct', 'getRetailLocationConfigs'), array(), '', false);
         $oRetailLocation->expects($this->any())
                         ->method('getRetailLocationConfigs')
                         ->will($this->returnValue($aRetailLocationConfigs));
@@ -100,7 +100,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_RetailLocationTest
         $aRemoteConfiguration['response']->some_param1 = 'some value 1';
         $aRemoteConfiguration['response']->some_param_array = array('some value 2');
 
-        $oRetailLocationConfig = $this->getMockBuilder('oxTiramizoo_RetailLocationConfig')->disableOriginalConstructor()->getMock();
+        $oRetailLocationConfig = $this->getMock('oxTiramizoo_RetailLocationConfig', array(), array(), '', false);
 
         $oRetailLocationConfig->expects($this->exactly(2))
                               ->method('save');
@@ -114,17 +114,17 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_RetailLocationTest
 
     public function testDelete()
     {
-        $oRetailLocationConfig1 = $this->getMockBuilder('oxTiramizoo_RetailLocationConfig')->disableOriginalConstructor()->getMock();
+        $oRetailLocationConfig1 = $this->getMock('oxTiramizoo_RetailLocationConfig', array(), array(), '', false);
         $oRetailLocationConfig1->expects($this->once())
                                ->method('delete');
 
-        $oRetailLocationConfig2 = $this->getMockBuilder('oxTiramizoo_RetailLocationConfig')->disableOriginalConstructor()->getMock();
+        $oRetailLocationConfig2 = $this->getMock('oxTiramizoo_RetailLocationConfig', array(), array(), '', false);
         $oRetailLocationConfig2->expects($this->once())
                                ->method('delete');
 
         $aRetailLocationConfigs = array($oRetailLocationConfig1, $oRetailLocationConfig2);
 
-        $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->setMethods(array('__construct', 'getRetailLocationConfigs'))->getMock();
+        $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array('__construct', 'getRetailLocationConfigs'), array(), '', false);
         $oRetailLocation->expects($this->any())
                         ->method('getRetailLocationConfigs')
                         ->will($this->returnValue($aRetailLocationConfigs));
@@ -165,7 +165,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_RetailLocationTest
                                                                                'to'   => '2013-04-02T14:00:00Z')));
 
 
-        $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfVar'))->getMock();
+        $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array('__construct', 'getConfVar'), array(), '', false);
         $oRetailLocation->expects($this->any())
                         ->method('getConfVar')
                         ->will($this->returnValue($aTimeWindows));
@@ -190,7 +190,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_RetailLocationTest
                                                     'delivery' => array('from' => '2013-04-02T12:00:00Z',
                                                                         'to'   => '2013-04-02T14:00:00Z')));
 
-        $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->setMethods(array('__construct', 'getAvailableTimeWindows'))->getMock();
+        $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array('__construct', 'getAvailableTimeWindows'), array(), '', false);
         $oRetailLocation->expects($this->any())
                         ->method('getAvailableTimeWindows')
                         ->will($this->returnValue($aTimeWindows));

@@ -21,7 +21,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_OrderTest ext
 
     public function testInit()
     {
-        $oTiramizooDeliverySet = $this->getMockBuilder('oxTiramizoo_DeliverySet')->disableOriginalConstructor()->getMock();
+        $oTiramizooDeliverySet = $this->getMock('oxTiramizoo_DeliverySet', array(), array(), '', false);
         $oTiramizooDeliverySet->expects($this->any())
                               ->method('isTiramizooAvailable')
                               ->will($this->returnValue(false));
@@ -30,11 +30,19 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_OrderTest ext
 
         oxRegistry::set('oxTiramizoo_DeliverySet', $oTiramizooDeliverySet);
 
-        $oSession = $this->getMockBuilder('oxSession')->disableOriginalConstructor()->getMock();
-        $map = array(array('sShipSet', 'Tiramizoo'));   
-        $oSession->expects($this->any())->method('getVariable')->will($this->returnValueMap($map));
+        $oSession = $this->getMock('oxSession', array(), array(), '', false);
+        
+        $oSession->expects($this->any())
+                 ->method('getVariable')
+                 ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('sShipSet', 'Tiramizoo')
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                 }));
 
-        $oUtils = $this->getMockBuilder('oxUtils')->disableOriginalConstructor()->getMock();
+        $oUtils = $this->getMock('oxUtils', array(), array(), '', false);
         $oUtils->expects($this->once())
                ->method('redirect');
 
@@ -51,7 +59,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_OrderTest ext
     public function testGetTiramizooDeliverySet()
     {
         $oTiramizooOrder = oxNew('oxTiramizoo_Order');
-        $this->assertInstanceOf('oxTiramizoo_DeliverySet', $oTiramizooOrder->getTiramizooDeliverySet());
+        $this->asserttrue($oTiramizooOrder->getTiramizooDeliverySet() instanceof oxTiramizoo_DeliverySet);
     }
 
     public function testRender()
@@ -68,25 +76,28 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_OrderTest ext
 
         $oTimeWindow = oxNew('oxTiramizoo_TimeWindow', $aDataTodayWindow);
 
-        $oTiramizooDeliverySet = $this->getMockBuilder('oxTiramizoo_DeliverySet')->disableOriginalConstructor()->getMock();
+        $oTiramizooDeliverySet = $this->getMock('oxTiramizoo_DeliverySet', array(), array(), '', false);
         $oTiramizooDeliverySet->expects($this->any())
                               ->method('getSelectedTimeWindow')
                               ->will($this->returnValue($oTimeWindow));
         oxRegistry::set('oxTiramizoo_DeliverySet', $oTiramizooDeliverySet);
 
-        $oSession = $this->getMockBuilder('oxSession')->disableOriginalConstructor()->getMock();
+        $oSession = $this->getMock('oxSession', array(), array(), '', false);
         $oSession->expects($this->any())
                  ->method('getVariable')
                  ->will($this->returnValue('Tiramizoo'));
 
-        $oxLang = $this->getMockBuilder('oxLang')->disableOriginalConstructor()->setMethods(array('translateString', 'getBaseLanguage'))->getMock();
-        $map = array(
-          array('oxTiramizoo_Today', null, false, 'Today')
-        );
+        $oxLang = $this->getMock('oxLang', array('translateString', 'getBaseLanguage'), array(), '', false);
 
         $oxLang->expects($this->any())
                ->method('translateString')
-               ->will($this->returnValueMap($map));
+               ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('oxTiramizoo_Today', null, false, 'Today')
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+               }));
 
         oxRegistry::set('oxLang', $oxLang);
 
@@ -108,7 +119,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_OrderTest ext
 
     public function testExecute()
     {
-        $oUtilsView = $this->getMockBuilder('oxUtilsView')->disableOriginalConstructor()->getMock();
+        $oUtilsView = $this->getMock('oxUtilsView', array(), array(), '', false);
         $oUtilsView->expects($this->once())
                    ->method('addErrorToDisplay');
 

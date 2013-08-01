@@ -8,9 +8,10 @@ class oxTiramizoo_PaymentExposed extends oxTiramizoo_Payment
 
 class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest extends OxidTestCase
 {
+
     public function testInit()
     {
-		$oTiramizooDeliverySet = $this->getMockBuilder('oxTiramizoo_DeliverySet')->disableOriginalConstructor()->getMock();
+		$oTiramizooDeliverySet = $this->getMock('oxTiramizoo_DeliverySet', array(), array(), '', false);
 		$oTiramizooDeliverySet->expects($this->once())
 					     	  ->method('init');
 
@@ -23,12 +24,12 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
     public function testGetTiramizooDeliverySet()
     {
 		$oTiramizooPayment = oxNew('oxTiramizoo_Payment');
-		$this->assertInstanceOf('oxTiramizoo_DeliverySet', $oTiramizooPayment->getTiramizooDeliverySet());
+		$this->assertTrue($oTiramizooPayment->getTiramizooDeliverySet() instanceof oxTiramizoo_DeliverySet);
     }
 
     public function testGetAllSetsTiramizooIsNotAvailable()
     {
-  		$oTiramizooDeliverySet = $this->getMockBuilder('oxTiramizoo_DeliverySet')->disableOriginalConstructor()->getMock();
+  		$oTiramizooDeliverySet = $this->getMock('oxTiramizoo_DeliverySet', array(), array(), '', false);
   		$oTiramizooDeliverySet->expects($this->any())
   					     	  ->method('isTiramizooAvailable')
   					     	  ->will($this->returnValue(false));
@@ -36,18 +37,29 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
   		oxRegistry::set('oxTiramizoo_DeliverySet', $oTiramizooDeliverySet);
 
 
-        $oUtils = $this->getMockBuilder('oxUtils')->disableOriginalConstructor()->getMock();
+        $oUtils = $this->getMock('oxUtils', array(), array(), '', false);
         oxRegistry::set('oxUtils', $oUtils);
 
 
-        $oBasket = $this->getMockBuilder('oxBasket')->disableOriginalConstructor()->getMock();
+        $oBasket = $this->getMock('oxBasket', array(), array(), '', false);
 
-    		$oSession = $this->getMockBuilder('oxSession')->disableOriginalConstructor()->getMock();
-    		$map = array(array('sShipSet', 'Tiramizoo'));	
-        $oSession->expects($this->any())->method('getVariable')->will($this->returnValueMap($map));
-        $oSession->expects($this->any())->method('getBasket')->will($this->returnValue($oBasket));
+    		$oSession = $this->getMock('oxSession', array(), array(), '', false);
 
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->getMock();
+        $oSession->expects($this->any())
+                 ->method('getVariable')
+                 ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('sShipSet', 'Tiramizoo')
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                 }));
+
+        $oSession->expects($this->any())
+                 ->method('getBasket')
+                 ->will($this->returnValue($oBasket));
+
+        $oConfig = $this->getMock('oxConfig', array(), array(), '', false);
 
     		$oTiramizooPayment = $this->getMock('oxTiramizoo_PaymentExposed', array('getSession'));
     		$oTiramizooPayment->expects($this->any())
@@ -64,7 +76,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
 
     public function testGetAllSetsTiramizooIsAvailable()
     {
-        $oTiramizooDeliverySet = $this->getMockBuilder('oxTiramizoo_DeliverySet')->disableOriginalConstructor()->getMock();
+        $oTiramizooDeliverySet = $this->getMock('oxTiramizoo_DeliverySet', array(), array(), '', false);
         $oTiramizooDeliverySet->expects($this->any())
                               ->method('isTiramizooAvailable')
                               ->will($this->returnValue(true));
@@ -72,18 +84,29 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
         oxRegistry::set('oxTiramizoo_DeliverySet', $oTiramizooDeliverySet);
 
 
-        $oUtils = $this->getMockBuilder('oxUtils')->disableOriginalConstructor()->getMock();
+        $oUtils = $this->getMock('oxUtils', array(), array(), '', false);
         oxRegistry::set('oxUtils', $oUtils);
 
 
-        $oBasket = $this->getMockBuilder('oxBasket')->disableOriginalConstructor()->getMock();
+        $oBasket = $this->getMock('oxBasket', array(), array(), '', false);
 
-        $oSession = $this->getMockBuilder('oxSession')->disableOriginalConstructor()->getMock();
-        $map = array(array('sShipSet', 'Tiramizoo'));   
-        $oSession->expects($this->any())->method('getVariable')->will($this->returnValueMap($map));
-        $oSession->expects($this->any())->method('getBasket')->will($this->returnValue($oBasket));
+        $oSession = $this->getMock('oxSession', array(), array(), '', false);
 
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->getMock();
+        $oSession->expects($this->any())
+                 ->method('getVariable')
+                 ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('sShipSet', 'Tiramizoo')
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                 }));
+                 
+        $oSession->expects($this->any())
+                 ->method('getBasket')
+                 ->will($this->returnValue($oBasket));
+
+        $oConfig = $this->getMock('oxConfig', array(), array(), '', false);
 
         $oTiramizooPayment = $this->getMock('oxTiramizoo_PaymentExposed', array('getSession'));
         $oTiramizooPayment->expects($this->any())
@@ -112,7 +135,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
 
         $oTimeWindow = oxNew('oxTiramizoo_TimeWindow', $aDataTodayWindow);
 
-        $oTiramizooDeliveryTypeImmediate = $this->getMockBuilder('oxTiramizoo_DeliveryTypeImmediate')->disableOriginalConstructor()->getMock();
+        $oTiramizooDeliveryTypeImmediate = $this->getMock('oxTiramizoo_DeliveryTypeImmediate', array(), array(), '', false);
         $oTiramizooDeliveryTypeImmediate->expects($this->any())
                                         ->method('getDefaultTimeWindow')
                                         ->will($this->returnValue($oTimeWindow));
@@ -120,7 +143,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
                                         ->method('hasTimeWindow')
                                         ->will($this->returnValue(true));
 
-        $oTiramizooDeliverySet = $this->getMockBuilder('oxTiramizoo_DeliverySet')->disableOriginalConstructor()->getMock();
+        $oTiramizooDeliverySet = $this->getMock('oxTiramizoo_DeliverySet', array(), array(), '', false);
         $oTiramizooDeliverySet->expects($this->any())
                               ->method('isTiramizooAvailable')
                               ->will($this->returnValue(false));
@@ -133,21 +156,39 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
 
         oxRegistry::set('oxTiramizoo_DeliverySet', $oTiramizooDeliverySet);
 
-        $oUtilsView = $this->getMockBuilder('oxUtilsView')->disableOriginalConstructor()->getMock();
+        $oUtilsView = $this->getMock('oxUtilsView', array(), array(), '', false);
         oxRegistry::set('oxUtilsView', $oUtilsView);
 
-        $oBasket = $this->getMockBuilder('oxBasket')->disableOriginalConstructor()->getMock();
+        $oBasket = $this->getMock('oxBasket', array(), array(), '', false);
 
-        $oSession = $this->getMockBuilder('oxSession')->disableOriginalConstructor()->getMock();
-        $map = array(array('sShipSet', 'Tiramizoo'));   
-        $oSession->expects($this->any())->method('getVariable')->will($this->returnValueMap($map));
-        $oSession->expects($this->any())->method('getBasket')->will($this->returnValue($oBasket));
+        $oSession = $this->getMock('oxSession', array(), array(), '', false);
 
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->getMock();
-        $map = array(array('sTiramizooDeliveryType', false, 'immediate'),
-                     array('sTiramizooTimeWindow', false, $oTimeWindow->getHash()));   
-        $oConfig->expects($this->any())->method('getRequestParameter')->will($this->returnValueMap($map));
+        $oSession->expects($this->any())
+                 ->method('getVariable')
+                 ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('sShipSet', 'Tiramizoo')
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                 }));
 
+        $oSession->expects($this->any())
+                 ->method('getBasket')
+                 ->will($this->returnValue($oBasket));
+
+        $oConfig = $this->getMock('oxConfig', array(), array(), '', false);
+
+        $oConfig->expects($this->any())
+                ->method('getRequestParameter')
+                 ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('sTiramizooDeliveryType', 'immediate'),
+                        array('sTiramizooTimeWindow', 'c16f5ea1f0a860c7ebcfe5467fe216f0')
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                 }));
 
         $oTiramizooPayment = $this->getMock('oxTiramizoo_PaymentExposed', array('getSession', 'getConfig'));
         $oTiramizooPayment->expects($this->any())
@@ -179,7 +220,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
 
         $oTimeWindow = oxNew('oxTiramizoo_TimeWindow', $aDataTodayWindow);
 
-        $oTiramizooDeliverySet = $this->getMockBuilder('oxTiramizoo_DeliverySet')->disableOriginalConstructor()->getMock();
+        $oTiramizooDeliverySet = $this->getMock('oxTiramizoo_DeliverySet', array(), array(), '', false);
         $oTiramizooDeliverySet->expects($this->any())
                               ->method('isTiramizooAvailable')
                               ->will($this->returnValue(true));
@@ -196,12 +237,12 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
         oxRegistry::set('oxTiramizoo_DeliverySet', $oTiramizooDeliverySet);
 
 
-        $oBasket = $this->getMockBuilder('oxBasket')->disableOriginalConstructor()->getMock();
+        $oBasket = $this->getMock('oxBasket', array(), array(), '', false);
         $oBasket->expects($this->any())
                 ->method('getShippingId')
                 ->will($this->returnValue('Tiramizoo'));
 
-        $oSession = $this->getMockBuilder('oxSession')->disableOriginalConstructor()->getMock();
+        $oSession = $this->getMock('oxSession', array(), array(), '', false);
         $oSession->expects($this->any())
                  ->method('getBasket')
                  ->will($this->returnValue($oBasket));

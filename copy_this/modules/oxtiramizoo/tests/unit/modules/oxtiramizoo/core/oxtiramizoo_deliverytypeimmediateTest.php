@@ -5,7 +5,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeImmediateTest extend
 	protected function setUp()
 	{
 		$this->_aTimeWindows = array();
-	    $this->_oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
+	    $this->_oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 	}
 
 	public function testIsAvailable()
@@ -58,7 +58,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeImmediateTest extend
 
 	public function testIsNotAvailableIfParentIsNotAvailable()
 	{
-	    $this->_oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
+	    $this->_oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 
 		$this->_oRetailLocation->expects($this->at(0))
              ->method('getConfVar')
@@ -79,7 +79,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeImmediateTest extend
 
 	public function testIsNotAvailableIfNotEnabled()
 	{
-	    $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
+	    $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 
 		$oRetailLocation->expects($this->at(1))
              ->method('getConfVar')

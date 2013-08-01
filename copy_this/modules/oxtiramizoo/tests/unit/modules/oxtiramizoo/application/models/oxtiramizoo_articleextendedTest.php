@@ -26,28 +26,28 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
     public function testGetArticle()
     {
-    	$oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', 'loadArticle'))->getMock();
+    	$oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'loadArticle'), array(), '', false);
         $oArticleExtended->expects($this->any())
                          ->method('loadArticle')
                          ->will($this->returnValue(oxNew('oxArticle')));
 
-    	$this->assertInstanceOf('oxArticle', $oArticleExtended->getArticle());
+    	$this->assertTrue($oArticleExtended->getArticle() instanceof oxArticle);
     }
 
     public function testLoadArticle()
     {
-        $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', 'getId'))->getMock();
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getId'), array(), '', false);
 
-        $oArticle = $this->getMockBuilder('oxArticle')->disableOriginalConstructor()->setMethods(array('__construct', 'load'))->getMock();
+        $oArticle = $this->getMock('oxArticle', array('__construct', 'load'), array(), '', false);
 
         oxTestModules::addModuleObject('oxArticle', $oArticle);
 
-        $this->assertInstanceOf('oxArticle', $oArticleExtended->getArticle());
+        $this->assertTrue( $oArticleExtended->getArticle() instanceof oxArticle);
     }
 
     public function testIsEnabled1()
     {
-    	$oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct'))->getMock();
+    	$oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct'), array(), '', false);
 
     	$oArticleExtended->oxtiramizooarticleextended__tiramizoo_enable = new oxField(-1);
 
@@ -56,7 +56,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
     public function testIsEnabled2()
     {
-    	$oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', 'getArticleInheritData'))->getMock();
+    	$oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getArticleInheritData'), array(), '', false);
 		$oArticleExtended->expects($this->any())
 						 ->method('getArticleInheritData')
 						 ->will($this->returnValue(array('tiramizoo_enable' => false)));
@@ -76,7 +76,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
     	$effectiveData->length = 0;
 
 
-    	$oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', 'getArticleInheritData', 'buildArticleEffectiveData'))->getMock();
+    	$oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getArticleInheritData', 'buildArticleEffectiveData'), array(), '', false);
 		$oArticleExtended->expects($this->any())
 						 ->method('getArticleInheritData')
 						 ->will($this->returnValue(array('tiramizoo_enable' => true)));
@@ -99,7 +99,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
     	$effectiveData->length = 10;
 
 
-    	$oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', 'getArticleInheritData', 'buildArticleEffectiveData'))->getMock();
+    	$oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getArticleInheritData', 'buildArticleEffectiveData'), array(), '', false);
 		$oArticleExtended->expects($this->any())
 						 ->method('getArticleInheritData')
 						 ->will($this->returnValue(array('tiramizoo_enable' => true)));
@@ -114,7 +114,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
     public function testHasIndividualPackage1()
     {
-    	$oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', 'getArticleInheritData'))->getMock();
+    	$oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getArticleInheritData'), array(), '', false);
 		$oArticleExtended->oxtiramizooarticleextended__tiramizoo_use_package = new oxField(1);
     	
     	$this->assertEquals(false, $oArticleExtended->hasIndividualPackage());
@@ -122,7 +122,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
     public function testHasIndividualPackage2()
     {
-    	$oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', 'getArticleInheritData'))->getMock();
+    	$oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getArticleInheritData'), array(), '', false);
 		$oArticleExtended->expects($this->any())
 						 ->method('getArticleInheritData')
 						 ->will($this->returnValue(array('tiramizoo_use_package' => 1)));
@@ -132,7 +132,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
     public function testHasIndividualPackage3()
     {
-    	$oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', 'getArticleInheritData'))->getMock();
+    	$oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getArticleInheritData'), array(), '', false);
 		$oArticleExtended->expects($this->any())
 						 ->method('getArticleInheritData')
 						 ->will($this->returnValue(array()));
@@ -142,18 +142,18 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
     public function testGetArticleInheritData1()
     {
-        $oArticle = $this->getMockBuilder('oxArticle')->disableOriginalConstructor()->setMethods(array('__construct', 'getCategory'))->getMock();
+        $oArticle = $this->getMock('oxArticle', array('__construct', 'getCategory'), array(), '', false);
         $oArticle->expects($this->any())
                  ->method('getCategory')
                  ->will($this->returnValue(null));
 
-        $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', 'getArticle'))->getMock();
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getArticle'), array(), '', false);
         $oArticleExtended->expects($this->any())
                          ->method('getArticle')
                          ->will($this->returnValue($oArticle));
 
 
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->setMethods(array('__construct', 'getShopConfVar'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('__construct', 'getShopConfVar'), array(), '', false);
         $oTiramizooConfig->expects($this->any())
                          ->method('getShopConfVar')
                          ->will($this->returnValue(1));
@@ -179,9 +179,9 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
                                      'tiramizoo_height' => 10,
                                      'tiramizoo_length' => 10,));
 
-        $oArticle = $this->getMockBuilder('oxArticle')->disableOriginalConstructor()->setMethods(array('__construct', 'getCategory'))->getMock();
+        $oArticle = $this->getMock('oxArticle', array('__construct', 'getCategory'), array(), '', false);
 
-        $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', '_getParentsCategoryTree'))->getMock();
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', '_getParentsCategoryTree'), array(), '', false);
         $oArticleExtended->expects($this->any())
                          ->method('getArticle')
                          ->will($this->returnValue($oArticle));
@@ -208,13 +208,13 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
         $oExpectedEffectiveData->length = floatval(20);
         $oExpectedEffectiveData->quantity = floatval(0);
 
-        $oArticle = $this->getMockBuilder('oxArticle')->disableOriginalConstructor()->setMethods(array('__construct'))->getMock();
+        $oArticle = $this->getMock('oxArticle', array('__construct'), array(), '', false);
         $oArticle->oxarticles__oxweight = new oxField(1);
         $oArticle->oxarticles__oxwidth = new oxField(0.1);
         $oArticle->oxarticles__oxheight = new oxField(0.15);
         $oArticle->oxarticles__oxlength = new oxField(0.20);
 
-        $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', 'getArticleInheritData', 'getArticle'))->getMock();
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getArticleInheritData', 'getArticle'), array(), '', false);
         $oArticleExtended->expects($this->any())
                          ->method('getArticle')
                          ->will($this->returnValue($oArticle));
@@ -231,7 +231,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
         $oExpectedEffectiveData->length = floatval(10);
         $oExpectedEffectiveData->quantity = floatval(0);
 
-        $oArticle = $this->getMockBuilder('oxArticle')->disableOriginalConstructor()->setMethods(array('__construct'))->getMock();
+        $oArticle = $this->getMock('oxArticle', array('__construct'), array(), '', false);
         $oArticle->oxarticles__oxweight = new oxField(1);
         $oArticle->oxarticles__oxwidth = new oxField(0);
         $oArticle->oxarticles__oxheight = new oxField(0);
@@ -242,7 +242,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
                                'height' => 10,
                                'length' => 10);
 
-        $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', 'getArticleInheritData', 'getArticle'))->getMock();
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getArticleInheritData', 'getArticle'), array(), '', false);
         $oArticleExtended->expects($this->any())
                          ->method('getArticle')
                          ->will($this->returnValue($oArticle));
@@ -255,12 +255,12 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
     public function testGetDisabledCategoryWithNoCategory()
     {
-        $oArticle = $this->getMockBuilder('oxArticle')->disableOriginalConstructor()->setMethods(array('__construct', 'getCategory'))->getMock();
+        $oArticle = $this->getMock('oxArticle', array('__construct', 'getCategory'), array(), '', false);
         $oArticle->expects($this->any())
                  ->method('getCategory')
                  ->will($this->returnValue(null));
 
-        $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', 'getArticleInheritData', 'getArticle'))->getMock();
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getArticleInheritData', 'getArticle'), array(), '', false);
         $oArticleExtended->expects($this->any())
                          ->method('getArticle')
                          ->will($this->returnValue($oArticle));
@@ -275,12 +275,12 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
         oxTestModules::addModuleObject('oxcategory', $oCategory);
 
-        $oArticle = $this->getMockBuilder('oxArticle')->disableOriginalConstructor()->setMethods(array('__construct', 'getCategory'))->getMock();
+        $oArticle = $this->getMock('oxArticle', array('__construct', 'getCategory'), array(), '', false);
         $oArticle->expects($this->any())
                  ->method('getCategory')
                  ->will($this->returnValue($oCategory));
 
-        $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', '_getParentsCategoryTree', 'getArticle'))->getMock();
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', '_getParentsCategoryTree', 'getArticle'), array(), '', false);
         $oArticleExtended->expects($this->any())
                          ->method('getArticle')
                          ->will($this->returnValue($oArticle));
@@ -298,12 +298,12 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
         oxTestModules::addModuleObject('oxcategory', $oCategory);
 
-        $oArticle = $this->getMockBuilder('oxArticle')->disableOriginalConstructor()->setMethods(array('__construct', 'getCategory'))->getMock();
+        $oArticle = $this->getMock('oxArticle', array('__construct', 'getCategory'), array(), '', false);
         $oArticle->expects($this->any())
                  ->method('getCategory')
                  ->will($this->returnValue($oCategory));
 
-        $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', '_getParentsCategoryTree', 'getArticle'))->getMock();
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', '_getParentsCategoryTree', 'getArticle'), array(), '', false);
         $oArticleExtended->expects($this->any())
                          ->method('getArticle')
                          ->will($this->returnValue($oArticle));
@@ -316,12 +316,12 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
     public function testGetInheritedCategoryWithoutAnyCategory()
     {
-        $oArticle = $this->getMockBuilder('oxArticle')->disableOriginalConstructor()->setMethods(array('__construct', 'getCategory'))->getMock();
+        $oArticle = $this->getMock('oxArticle', array('__construct', 'getCategory'), array(), '', false);
         $oArticle->expects($this->any())
                  ->method('getCategory')
                  ->will($this->returnValue(null));
 
-        $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', 'getArticleInheritData', 'getArticle'))->getMock();
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getArticleInheritData', 'getArticle'), array(), '', false);
         $oArticleExtended->expects($this->any())
                          ->method('getArticle')
                          ->will($this->returnValue($oArticle));
@@ -336,7 +336,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
         oxTestModules::addModuleObject('oxcategory', $oCategory);
 
-        $oArticle = $this->getMockBuilder('oxArticle')->disableOriginalConstructor()->setMethods(array('__construct', 'getCategory'))->getMock();
+        $oArticle = $this->getMock('oxArticle', array('__construct', 'getCategory'), array(), '', false);
         $oArticle->expects($this->any())
                  ->method('getCategory')
                  ->will($this->returnValue($oCategory));
@@ -350,7 +350,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
                                      'tiramizoo_length' => 10,));
 
 
-        $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', '_getParentsCategoryTree', 'getArticle'))->getMock();
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', '_getParentsCategoryTree', 'getArticle'), array(), '', false);
         $oArticleExtended->expects($this->any())
                          ->method('getArticle')
                          ->will($this->returnValue($oArticle));
@@ -368,7 +368,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
         oxTestModules::addModuleObject('oxcategory', $oCategory);
 
-        $oArticle = $this->getMockBuilder('oxArticle')->disableOriginalConstructor()->setMethods(array('__construct', 'getCategory'))->getMock();
+        $oArticle = $this->getMock('oxArticle', array('__construct', 'getCategory'), array(), '', false);
         $oArticle->expects($this->any())
                  ->method('getCategory')
                  ->will($this->returnValue($oCategory));
@@ -381,7 +381,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
                                      'tiramizoo_height' => 0,
                                      'tiramizoo_length' => 0,));
 
-        $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->setMethods(array('__construct', '_getParentsCategoryTree', 'getArticle'))->getMock();
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', '_getParentsCategoryTree', 'getArticle'), array(), '', false);
         $oArticleExtended->expects($this->any())
                          ->method('getArticle')
                          ->will($this->returnValue($oArticle));
@@ -394,7 +394,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
     public function testGetParentsCategoryTree()
     {
-        $oParentCategory = $this->getMockBuilder('oxcategory')->disableOriginalConstructor()->setMethods(array('__construct', 'getParentCategory'))->getMock();
+        $oParentCategory = $this->getMock('oxcategory', array('__construct', 'getParentCategory'), array(), '', false);
         $oParentCategory->oxcategories__oxid = new oxField('some parent id');
         $oParentCategory->oxcategories__oxtitle = new oxField('some parent title');
         $oParentCategory->oxcategories__oxsort = new oxField(1);
@@ -402,7 +402,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
                         ->method('getParentCategory')
                         ->will($this->returnValue(null));
 
-        $oCategory = $this->getMockBuilder('oxcategory')->disableOriginalConstructor()->setMethods(array('__construct', 'getParentCategory'))->getMock();
+        $oCategory = $this->getMock('oxcategory', array('__construct', 'getParentCategory'), array(), '', false);
         $oCategory->oxcategories__oxid = new oxField('some category id');
         $oCategory->oxcategories__oxtitle = new oxField('some category title');
         $oCategory->oxcategories__oxsort = new oxField(2);
@@ -410,7 +410,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
                   ->method('getParentCategory')
                   ->will($this->returnValue($oParentCategory));
 
-        $oCategoryExtended = $this->getMockBuilder('oxTiramizoo_CategoryExtended')->disableOriginalConstructor()->setMethods(array('__construct', 'getIdByCategoryId', 'load'))->getMock();
+        $oCategoryExtended = $this->getMock('oxTiramizoo_CategoryExtended', array('__construct', 'getIdByCategoryId', 'load'), array(), '', false);
         $oCategoryExtended->oxtiramizoocategoryextended__tiramizoo_enable = new oxField(1);
         $oCategoryExtended->oxtiramizoocategoryextended__tiramizoo_weight = new oxField(1);
         $oCategoryExtended->oxtiramizoocategoryextended__tiramizoo_width = new oxField(40);
@@ -419,7 +419,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
         oxTestModules::addModuleObject('oxTiramizoo_CategoryExtended', $oCategoryExtended);
 
-        $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtendedExposed')->disableOriginalConstructor()->setMethods(array('__construct', 'getArticle'))->getMock();
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtendedExposed', array('__construct', 'getArticle'), array(), '', false);
         $oArticleExtended->expects($this->any())
                          ->method('getArticle')
                          ->will($this->returnValue($oArticle));

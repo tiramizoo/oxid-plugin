@@ -20,10 +20,10 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_ScheduleJobManagerTest extends O
 
 	public function testRunJobsWith2Jobs()
 	{
-		$oJob1 = $this->getMockBuilder('oxTiramizoo_ScheduleJob')->disableOriginalConstructor()->setMethods(array('run'))->getMock();
+		$oJob1 = $this->getMock('oxTiramizoo_ScheduleJob', array('run'), array(), '', false);
 		$oJob1->expects($this->exactly(1))->method('run');
 
-		$oJob2 = $this->getMockBuilder('oxTiramizoo_ScheduleJob')->disableOriginalConstructor()->setMethods(array('run'))->getMock();
+		$oJob2 = $this->getMock('oxTiramizoo_ScheduleJob', array('run'), array(), '', false);
 		$oJob2->expects($this->exactly(1))->method('run');
 
 	    $aJobs = array($oJob1, $oJob2);
@@ -45,7 +45,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_ScheduleJobManagerTest extends O
 
 	public function testSyncConfigDailyWithAlreadyExists()
 	{
-		$oSyncConfigJob = $this->getMockBuilder('oxTiramizoo_SyncConfigJob')->disableOriginalConstructor()->setMethods(array('getIdTodayByType', 'save'))->getMock();
+		$oSyncConfigJob = $this->getMock('oxTiramizoo_SyncConfigJob', array('getIdTodayByType', 'save'), array(), '', false);
 	    $oSyncConfigJob->expects($this->any())->method('getIdTodayByType')->will($this->returnValue(null));
 	    $oSyncConfigJob->expects($this->exactly(1))->method('save');
 
@@ -58,7 +58,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_ScheduleJobManagerTest extends O
 
 	public function testSyncConfigDailyWithoutAlreadyExists()
 	{
-		$oSyncConfigJob = $this->getMockBuilder('oxTiramizoo_SyncConfigJob')->disableOriginalConstructor()->setMethods(array('getIdTodayByType', 'save'))->getMock();
+		$oSyncConfigJob = $this->getMock('oxTiramizoo_SyncConfigJob', array('getIdTodayByType', 'save'), array(), '', false);
 	    $oSyncConfigJob->expects($this->any())->method('getIdTodayByType')->will($this->returnValue(1));
 
         oxTestModules::addModuleObject( "oxTiramizoo_SyncConfigJob", $oSyncConfigJob );
@@ -70,7 +70,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_ScheduleJobManagerTest extends O
 
 	public function testGetJobsForRun()
 	{
-		$oScheduleJobList = $this->getMockBuilder('oxTiramizoo_ScheduleJobList')->disableOriginalConstructor()->setMethods(array('loadToRun'))->getMock();
+		$oScheduleJobList = $this->getMock('oxTiramizoo_ScheduleJobList', array('loadToRun'), array(), '', false);
 	    $oScheduleJobList->expects($this->exactly(1))->method('loadToRun');
 
         oxTestModules::addModuleObject( "oxTiramizoo_ScheduleJobList", $oScheduleJobList );

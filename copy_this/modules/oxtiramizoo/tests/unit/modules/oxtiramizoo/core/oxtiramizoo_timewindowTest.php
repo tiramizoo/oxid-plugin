@@ -132,7 +132,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_TimeWindowTest extends OxidTestC
 
     public function testGetFormattedDeliveryTimeWindowIfIsToday()
     {
-        $oLang = $this->getMockBuilder('oxLang')->disableOriginalConstructor()->setMethods(array('translateString'))->getMock();
+        $oLang = $this->getMock('oxLang', array('translateString'), array(), '', false);
         $oLang->expects($this->any())->method('translateString')->will($this->returnValue('Today'));
 
         oxRegistry::set('oxLang', $oLang);
@@ -151,7 +151,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_TimeWindowTest extends OxidTestC
 
     public function testGetFormattedDeliveryTimeWindowIfIsTomorrow()
     {
-        $oLang = $this->getMockBuilder('oxLang')->disableOriginalConstructor()->setMethods(array('translateString'))->getMock();
+        $oLang = $this->getMock('oxLang', array('translateString'), array(), '', false);
         $oLang->expects($this->any())->method('translateString')->will($this->returnValue('Tomorrow'));
 
         oxRegistry::set('oxLang', $oLang);
@@ -169,7 +169,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_TimeWindowTest extends OxidTestC
 
     public function testGetFormattedDeliveryTimeWindowIfIsOtherDay()
     {
-        $oLang = $this->getMockBuilder('oxLang')->disableOriginalConstructor()->setMethods(array('translateString'))->getMock();
+        $oLang = $this->getMock('oxLang', array('translateString'), array(), '', false);
         $oLang->expects($this->any())->method('translateString')->will($this->returnValue('Y/m/d'));
 
         oxRegistry::set('oxLang', $oLang);

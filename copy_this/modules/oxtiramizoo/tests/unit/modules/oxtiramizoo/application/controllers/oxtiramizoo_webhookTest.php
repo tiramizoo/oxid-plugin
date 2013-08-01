@@ -22,7 +22,7 @@ class MockPhpStream
 
     protected function buffer_filename()
     {
-        return sys_get_temp_dir().'\php_input.txt';
+        return sys_get_temp_dir().'/php_input.txt';
     }
 
     function stream_open($path, $mode, $options, &$opened_path)
@@ -100,7 +100,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_WebhookTest e
         file_put_contents('php://input', json_encode($oApiResponse));
         
 
-        $oUtils = $this->getMockBuilder('oxUtils')->disableOriginalConstructor()->getMock();
+        $oUtils = $this->getMock('oxUtils', array(), array(), '', false);
         $oUtils->expects($this->never())
                ->method('showMessageAndExit');
 
@@ -112,7 +112,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_WebhookTest e
         
         $oTiramizooWebhook->render();
 
-        $oUtils = $this->getMockBuilder('oxUtils')->disableOriginalConstructor()->getMock();
+        $oUtils = $this->getMock('oxUtils', array(), array(), '', false);
         $oUtils->expects($this->once())
                ->method('showMessageAndExit');
 
@@ -135,7 +135,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_WebhookTest e
         $oDb = $this->getMock('oxDb', array('Execute'));
         modDb::getInstance()->modAttach($oDb);
 
-        $oUtils = $this->getMockBuilder('oxUtils')->disableOriginalConstructor()->getMock();
+        $oUtils = $this->getMock('oxUtils', array(), array(), '', false);
         $oUtils->expects($this->once())
                ->method('showMessageAndExit');
 

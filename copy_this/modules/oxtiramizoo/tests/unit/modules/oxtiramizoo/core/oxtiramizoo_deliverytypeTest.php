@@ -1,18 +1,21 @@
 <?php
 
+class oxTiramizoo_DeliveryTypeExposed extends oxTiramizoo_DeliveryType {}
+
 class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTestCase
 {
 	protected function setUp()
 	{
 		$this->_aTimeWindows = array();
-	    $this->_oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
+	    $this->_oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 
 	    $this->_oSubj = $this->getMockForAbstractClass('oxTiramizoo_DeliveryType', array($this->_oRetailLocation));
 	}
 
 	public function testIsAvailable()
 	{
-		$this->_oRetailLocation->expects($this->any())
+		$oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
+		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
              ->will($this->returnValue(array('address_line_1' => 'test',
              								 'postal_code' => '80639',
@@ -20,14 +23,14 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
              								 'name' => 'me', 
              								 'phone_number' => '5553333666')));
 	    
-	    $this->_oSubj = $this->getMockForAbstractClass('oxTiramizoo_DeliveryType', array($this->_oRetailLocation));
-	    $this->assertEquals(true, $this->_oSubj->isAvailable());
+	    $oxTiramizooDeliveryType = new oxTiramizoo_DeliveryTypeExposed($oRetailLocation);
+	    $this->assertEquals(true, $oxTiramizooDeliveryType->isAvailable());
 	}
 
 	public function testIsNotAvailable()
 	{
 
-	    $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
+	    $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 
 		$oRetailLocation->expects($this->at(0))
              ->method('getConfVar')
@@ -41,7 +44,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 	    $this->assertEquals(true, !$this->_oSubj->isAvailable());
 
 
-	    $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
+	    $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 
 		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
@@ -55,7 +58,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 	    $this->assertEquals(true, !$this->_oSubj->isAvailable());
 
 
-	    $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
+	    $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 
 		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
@@ -71,7 +74,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 
 
 
-	    $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
+	    $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 
 		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
@@ -85,7 +88,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 	    $this->assertEquals(true, !$this->_oSubj->isAvailable());
 
 
-	    $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
+	    $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 
 		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
@@ -101,7 +104,18 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 
 	public function testGetRetailLocation()
 	{
-		$this->assertEquals($this->_oRetailLocation, $this->_oSubj->getRetailLocation());	
+		$oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
+		$oRetailLocation->expects($this->any())
+             ->method('getConfVar')
+             ->will($this->returnValue(array('address_line_1' => 'test',
+             								 'postal_code' => '80639',
+             								 'country_code' =>'de',
+             								 'name' => 'me', 
+             								 'phone_number' => '5553333666')));
+	    
+	    $oxTiramizooDeliveryType = new oxTiramizoo_DeliveryTypeExposed($oRetailLocation);
+
+		$this->assertEquals($oRetailLocation, $oxTiramizooDeliveryType->getRetailLocation());	
 	}
 
 	public function testGetType()
@@ -111,7 +125,9 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 
 	public function testGetName()
 	{
-		$this->assertEquals('oxTiramizoo_delivery_type__name', $this->_oSubj->getName());	
+		$oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
+	    $oxTiramizooDeliveryType = new oxTiramizoo_DeliveryTypeExposed($oRetailLocation);
+		$this->assertEquals('oxTiramizoo_delivery_type__name', $oxTiramizooDeliveryType->getName());	
 	}
 
 	public function testGetTimeWindows()
@@ -132,14 +148,17 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 								  							 'to' 	=> '2013-04-01T18:00:00Z'),
 								  ));
 
-		$this->_oRetailLocation->expects($this->any())
+		$oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
+		$oRetailLocation->expects($this->any())
              ->method('getAvailableTimeWindows')
              ->will($this->returnValue($aTimeWindows));
 
-  	    $this->_oSubj = $this->getMockForAbstractClass('oxTiramizoo_DeliveryType', array($this->_oRetailLocation));
+	    
+	    $oxTiramizooDeliveryType = new oxTiramizoo_DeliveryTypeExposed($oRetailLocation);
 
-		$this->assertEquals($aTimeWindows, $this->_oSubj->getTimeWindows());
+		$this->assertEquals($aTimeWindows, $oxTiramizooDeliveryType->getTimeWindows());
 	}
+
 
 	public function testGetDefaultTimeWindow()
 	{
@@ -159,16 +178,20 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 								  							 'to' 	=> '2013-04-01T18:00:00Z'),
 								  ));
 
-		$this->_oRetailLocation->expects($this->at(0))
+	    $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array('getAvailableTimeWindows'), array(), '', false);
+
+		$oRetailLocation->expects($this->at(0))
              ->method('getAvailableTimeWindows')
              ->will($this->returnValue($aTimeWindows));
 
-	    $this->_oSubj = $this->getMockForAbstractClass('oxTiramizoo_DeliveryType', array($this->_oRetailLocation));
-	    $this->assertEquals(new oxTiramizoo_TimeWindow($aTimeWindows[0]), $this->_oSubj->getDefaultTimeWindow());
+	    $oxTiramizooDeliveryType = new oxTiramizoo_DeliveryTypeExposed($oRetailLocation);
 
 
-	    $this->_oSubj = $this->getMockForAbstractClass('oxTiramizoo_DeliveryType', array($this->_oRetailLocation));
-	    $this->assertEquals(null, $this->_oSubj->getDefaultTimeWindow());
+	    $this->assertEquals((new oxTiramizoo_TimeWindow($aTimeWindows[0])), $oxTiramizooDeliveryType->getDefaultTimeWindow());
+
+	    $oxTiramizooDeliveryType = new oxTiramizoo_DeliveryTypeExposed($oRetailLocation);
+
+	    $this->assertEquals(null, $oxTiramizooDeliveryType->getDefaultTimeWindow());
 	}
 
 	public function testHasTimeWindow()

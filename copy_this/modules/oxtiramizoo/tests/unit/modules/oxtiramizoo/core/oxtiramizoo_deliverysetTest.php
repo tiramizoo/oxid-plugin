@@ -91,7 +91,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 	// delivery and time window are not valid
 	public function testInit5()
 	{
-		$oSession = $this->getMockBuilder('oxSession')->disableOriginalConstructor()->getMock();
+		$oSession = $this->getMock('oxSession', array(), array(), '', false);
         $oSession->expects($this->any())->method('getVariable')->will($this->returnValue('_someVariable'));
 
 		$oTiramizooDeliverySet = $this->getMock('_oxTiramizoo_DeliverySet', array('refreshDeliveryPostalCode', 'isTiramizooAvailable', 'setTiramizooDeliveryType', 'setSelectedTimeWindow', 'setDefaultDeliveryType', 'setDefaultTimeWindow', 'getSession'));
@@ -124,7 +124,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 	// test if  delivery types
 	public function testSetDefaultDeliveryType2()
 	{
-		$oDeliveryTypeTestIsAvailable = $this->getMockBuilder('oxTiramizoo_DeliveryTypeTestIsAvailable')->disableOriginalConstructor()->getMock();
+		$oDeliveryTypeTestIsAvailable = $this->getMock('oxTiramizoo_DeliveryTypeTestIsAvailable', array(), array(), '', false);
         $oDeliveryTypeTestIsAvailable->expects($this->any())->method('getDefaultTimeWindow')->will($this->returnValue(null));
 
 		$aAvailableDeliveryTypes = array('testIsAvailable' => $oDeliveryTypeTestIsAvailable);
@@ -148,7 +148,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 	// test if has not default time window
 	public function testSetDefaultTimeWindow3()
 	{
-		$oDeliveryTypeTestIsAvailable = $this->getMockBuilder('oxTiramizoo_DeliveryTypeTestIsAvailable')->disableOriginalConstructor()->getMock();
+		$oDeliveryTypeTestIsAvailable = $this->getMock('oxTiramizoo_DeliveryTypeTestIsAvailable', array(), array(), '', false);
         $oDeliveryTypeTestIsAvailable->expects($this->any())->method('getDefaultTimeWindow')->will($this->returnValue(null));
 
 		$aAvailableDeliveryTypes = array('testIsAvailable' => $oDeliveryTypeTestIsAvailable);
@@ -162,7 +162,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 	// test if has default time window
 	public function testSetDefaultTimeWindow2()
 	{
-		$oDeliveryTypeTestIsAvailable = $this->getMockBuilder('oxTiramizoo_DeliveryTypeTestIsAvailable')->disableOriginalConstructor()->getMock();
+		$oDeliveryTypeTestIsAvailable = $this->getMock('oxTiramizoo_DeliveryTypeTestIsAvailable', array(), array(), '', false);
         $oDeliveryTypeTestIsAvailable->expects($this->any())->method('getDefaultTimeWindow')->will($this->returnValue(new oxTiramizoo_TimeWindow(array())));
 
 		$aAvailableDeliveryTypes = array('testIsAvailable' => $oDeliveryTypeTestIsAvailable);
@@ -177,7 +177,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 	// test if is valid
 	public function testSetSelectedTimeWindow1()
 	{
-		$oTimeWindow = $this->getMockBuilder('oxTiramizoo_TimeWindow')->disableOriginalConstructor()->getMock();
+		$oTimeWindow = $this->getMock('oxTiramizoo_TimeWindow', array(), array(), '', false);
         $oTimeWindow->expects($this->any())->method('getHash')->will( $this->returnValue('somehash'));		
         $oTimeWindow->expects($this->any())->method('isValid')->will( $this->returnValue(true));
 
@@ -189,7 +189,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 
 		$oTiramizooDeliverySet->setSelectedTimeWindow('somehash');
 
-        $this->assertInstanceOf('oxTiramizoo_TimeWindow', $oTiramizooDeliverySet->_oSelectedTimeWindow);
+        $this->assertTrue($oTiramizooDeliverySet->_oSelectedTimeWindow instanceof oxTiramizoo_TimeWindow);
 	}
 
 	// test if is not valid
@@ -197,7 +197,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 	{
         $this->setExpectedException('oxTiramizoo_InvalidTimeWindowException');
 
-		$oTimeWindow = $this->getMockBuilder('oxTiramizoo_TimeWindow')->disableOriginalConstructor()->getMock();
+		$oTimeWindow = $this->getMock('oxTiramizoo_TimeWindow', array(), array(), '', false);
         $oTimeWindow->expects($this->any())->method('getHash')->will( $this->returnValue('somehash'));		
         $oTimeWindow->expects($this->any())->method('isValid')->will( $this->returnValue(false));
 
@@ -260,7 +260,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 		$oTiramizooDeliverySet->_aDeliveryTypes = array('testIsAvailable', 'testIsNotAvailable');
         $oTiramizooDeliverySet->expects($this->any())->method('getRetailLocation')->will( $this->returnValue(new oxTiramizoo_RetailLocation()));
 
-		$oDeliveryTypeTestIsAvaialble = $this->getMockBuilder('oxTiramizoo_DeliveryTypeTestIsAvaialble')->disableOriginalConstructor()->getMock();
+		$oDeliveryTypeTestIsAvaialble = $this->getMock('oxTiramizoo_DeliveryTypeTestIsAvaialble', array(), array(), '', false);
 
 		$this->assertEquals(array('testIsAvailable' => new oxTiramizoo_DeliveryTypeTestIsAvailable(new oxTiramizoo_RetailLocation())), $oTiramizooDeliverySet->getAvailableDeliveryTypes());
 	}
@@ -348,7 +348,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 		$oTiramizooDeliverySet = $this->getMock('oxTiramizoo_DeliverySet', array('getApiToken'));
         $oTiramizooDeliverySet->expects($this->at(0))->method('getApiToken')->will( $this->returnValue('some_api_token2'));
 
-        $this->assertInstanceOf('oxTiramizoo_RetailLocation', $oTiramizooDeliverySet->getRetailLocation());
+        $this->assertTrue($oTiramizooDeliverySet->getRetailLocation() instanceof oxTiramizoo_RetailLocation);
 
         $oRetailLocation->delete('_test');
 	}
@@ -365,7 +365,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 	// test if available delivery types but not exists
 	public function testGetTiramizooDeliveryTypeObject2()
 	{
-		$oDeliveryType = $this->getMockBuilder('oxTiramizoo_DeliveryType')->disableOriginalConstructor()->getMock();
+		$oDeliveryType = $this->getMock('oxTiramizoo_DeliveryType', array(), array(), '', false);
 
         $oDeliveryType->expects($this->at(0))->method('getType')->will( $this->returnValue('immediate'));
         $oDeliveryType->expects($this->at(1))->method('getType')->will( $this->returnValue('evening'));
@@ -381,8 +381,8 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 	// test if available delivery types if immediate
 	public function testGetTiramizooDeliveryTypeObject3()
 	{
-		$oDeliveryTypeImmediate= $this->getMockBuilder('oxTiramizoo_DeliveryTypeImmediate')->disableOriginalConstructor()->getMock();
-		$oDeliveryTypeEvening = $this->getMockBuilder('oxTiramizoo_DeliveryTypeEvening')->disableOriginalConstructor()->getMock();
+		$oDeliveryTypeImmediate= $this->getMock('oxTiramizoo_DeliveryTypeImmediate', array(), array(), '', false);
+		$oDeliveryTypeEvening = $this->getMock('oxTiramizoo_DeliveryTypeEvening', array(), array(), '', false);
 
         $oDeliveryTypeImmediate->expects($this->any())->method('getType')->will( $this->returnValue('immediate'));
         $oDeliveryTypeEvening->expects($this->any())->method('getType')->will( $this->returnValue('evening'));
@@ -392,14 +392,14 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
         																												   'evening' 	=> $oDeliveryTypeEvening )));
         $oTiramizooDeliverySet->expects($this->any())->method('getTiramizooDeliveryType')->will( $this->returnValue('immediate'));
 
-		$this->assertInstanceOf('oxTiramizoo_DeliveryTypeImmediate', $oTiramizooDeliverySet->getTiramizooDeliveryTypeObject());
+		$this->assertTrue($oTiramizooDeliverySet->getTiramizooDeliveryTypeObject() instanceof oxTiramizoo_DeliveryTypeImmediate);
 	}
 
 	// test if available delivery types if evening
 	public function testGetTiramizooDeliveryTypeObject4()
 	{
-		$oDeliveryTypeImmediate= $this->getMockBuilder('oxTiramizoo_DeliveryTypeImmediate')->disableOriginalConstructor()->getMock();
-		$oDeliveryTypeEvening = $this->getMockBuilder('oxTiramizoo_DeliveryTypeEvening')->disableOriginalConstructor()->getMock();
+		$oDeliveryTypeImmediate= $this->getMock('oxTiramizoo_DeliveryTypeImmediate', array(), array(), '', false);
+		$oDeliveryTypeEvening = $this->getMock('oxTiramizoo_DeliveryTypeEvening', array(), array(), '', false);
 
         $oDeliveryTypeImmediate->expects($this->any())->method('getType')->will( $this->returnValue('immediate'));
         $oDeliveryTypeEvening->expects($this->any())->method('getType')->will( $this->returnValue('evening'));
@@ -409,7 +409,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
         																												   'evening' 	=> $oDeliveryTypeEvening )));
         $oTiramizooDeliverySet->expects($this->any())->method('getTiramizooDeliveryType')->will( $this->returnValue('evening'));
 
-		$this->assertInstanceOf('oxTiramizoo_DeliveryTypeEvening', $oTiramizooDeliverySet->getTiramizooDeliveryTypeObject());
+		$this->assertTrue($oTiramizooDeliverySet->getTiramizooDeliveryTypeObject() instanceof oxTiramizoo_DeliveryTypeEvening);
 	}
 
 	// test if no object passed
@@ -507,7 +507,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 		$oTiramizooDeliverySet = $this->getMock('oxTiramizoo_DeliverySet', array('getApiToken'));
         $oTiramizooDeliverySet->expects($this->any())->method('getApiToken')->will( $this->returnValue('api_token_123edca'));
 
-		$this->assertInstanceOf('oxTiramizoo_Api', $oTiramizooDeliverySet->getTiramizooApi());
+		$this->assertTrue($oTiramizooDeliverySet->getTiramizooApi() instanceof oxTiramizoo_Api);
     }
 
 	public function testGetSelectedTimeWindow()
@@ -593,13 +593,13 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 	{
 		$oTiramizooDeliverySet = new oxTiramizoo_DeliverySet();
 
-		$this->assertInstanceOf('oxBasket', $oTiramizooDeliverySet->getBasket());
+		$this->assertTrue($oTiramizooDeliverySet->getBasket() instanceof oxBasket);
 	}
 
 	public function testGetSession()
 	{
 		$oTiramizooDeliverySet = new oxTiramizoo_DeliverySet();
 
-		$this->assertInstanceOf('oxSession', $oTiramizooDeliverySet->getSession());
+		$this->assertTrue($oTiramizooDeliverySet->getSession() instanceof oxSession);
 	}
 }

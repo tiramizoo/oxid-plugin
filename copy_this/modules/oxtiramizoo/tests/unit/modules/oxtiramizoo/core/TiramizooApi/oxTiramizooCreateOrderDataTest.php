@@ -21,15 +21,81 @@ class oxTiramizoo_CreateOrderDataExposed extends oxTiramizoo_CreateOrderData
     public $_oPickup = null;
     public $_oDelivery = null;
 
+    public function _buildItem($oArticle)
+    {
+    	return parent::_buildItem($oArticle);
+    }
+
 }
 
 
 class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 {	
+	protected $_oTiramizooCreateOrderData = null;
+
+	protected function setUp()
+	{
+		$oBasket = $this->getMock('oxBasket', array(), array(), '', false);
+		$oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
+		$oTimeWindow = $this->getMock('oxTiramizoo_TimeWindow', array(), array(), '', false);
+
+
+	    $this->_oTiramizooCreateOrderData = new oxTiramizoo_CreateOrderDataExposed($oTimeWindow, $oBasket, $oRetailLocation);
+		$this->_oTiramizooCreateOrderData->_oTiramizooData = new stdClass;
+	}
+
 	protected function tearDown()
 	{
         parent::tearDown();
 		oxUtilsObject::resetClassInstances();
+	}
+
+    
+	public function testGetShopUrl()
+	{
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'));
+	    $oTiramizooConfig->expects($this->any())
+             			 ->method('getShopConfVar')
+             			 ->will($this->returnValue('http://someurl.de'));
+
+	    $this->_oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('getTiramizooConfig'), array(), '', false);
+	    $this->_oTiramizooCreateOrderData->expects($this->any())
+             					  ->method('getTiramizooConfig')
+             					  ->will($this->returnValue($oTiramizooConfig));
+
+		$this->assertEquals('http://someurl.de', $this->_oTiramizooCreateOrderData->getShopUrl());
+	}
+
+	public function testGetWebhookUrl()
+	{
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'));
+	    $oTiramizooConfig->expects($this->any())
+             			 ->method('getShopConfVar')
+             			 ->will($this->returnValue('http://someurl.de'));
+
+	    $this->_oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('getTiramizooConfig'), array(), '', false);
+	    $this->_oTiramizooCreateOrderData->expects($this->any())
+             					  ->method('getTiramizooConfig')
+             					  ->will($this->returnValue($oTiramizooConfig));
+
+		$this->assertEquals('http://someurl.de/modules/oxtiramizoo/api.php', $this->_oTiramizooCreateOrderData->getWebhookUrl());
+	}
+
+	public function testGetExternalId()
+	{
+		$sExternalId = $this->_oTiramizooCreateOrderData->getExternalId();
+
+		$this->assertEquals($this->_oTiramizooCreateOrderData->_sExternalId, $sExternalId);
+	}
+
+	public function testGetBasket()
+	{
+		$this->assertTrue($this->_oTiramizooCreateOrderData->getBasket() instanceof oxBasket);
+	}
+
+	public function testGetTiramizooDataObject()
+	{
+		$this->assertEquals(new stdClass, $this->_oTiramizooCreateOrderData->getTiramizooDataObject());
 	}
 
 	public function testCreateTiramizooOrderDataObject()
@@ -43,7 +109,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
         $oExpectedTiramizooData->delivery = oxNew('oxAddress');
         $oExpectedTiramizooData->packages = array();
 
-	    $oTiramizooCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderDataExposed')->disableOriginalConstructor()->setMethods(array('getDescription', 'getExternalId', 'getWebhookUrl'))->getMock();
+	    $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('getDescription', 'getExternalId', 'getWebhookUrl'), array(), '', false);
 	    $oTiramizooCreateOrderData->expects($this->any())
              					  ->method('getDescription')
              					  ->will($this->returnValue('some description'));
@@ -74,7 +140,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
         $oExpectedTiramizooData->delivery = oxNew('oxAddress');
         $oExpectedTiramizooData->packages = array();
 
-	    $oTiramizooCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderDataExposed')->disableOriginalConstructor()->setMethods(array('getDescription', 'getExternalId', 'getWebhookUrl'))->getMock();
+	    $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('getDescription', 'getExternalId', 'getWebhookUrl'), array(), '', false);
 		$oTiramizooCreateOrderData->_oTiramizooData = null;
 	    $oTiramizooCreateOrderData->expects($this->any())
              					  ->method('getDescription')
@@ -113,12 +179,12 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
              		->method('getPickupTo')
              		->will($this->returnValue('2012-04-01T21:00:00Z'));
 
-	    $oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->setMethods(array('getConfVar'))->getMock();
+	    $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array('getConfVar'), array(), '', false);
 	    $oRetailLocation->expects($this->any())
              			->method('getConfVar')
              			->will($this->returnValue((array)$oExpectedPickup));
 
-	    $oTiramizooCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderDataExposed')->disableOriginalConstructor()->setMethods(array('__construct'))->getMock();
+	    $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('__construct'), array(), '', false);
 		$oTiramizooCreateOrderData->_oTimeWindow = $oTimeWindow;
 		$oTiramizooCreateOrderData->_oRetailLocation = $oRetailLocation;
 
@@ -140,7 +206,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 		$oArticle3->oxarticles__oxtitle = new oxField('Test product with very long title so this text should not be presented at all. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book');
 
 
-		$oBasket = $this->getMockBuilder('oxBasket')->disableOriginalConstructor()->setMethods(array('getBasketArticles', 'getArtStockInBasket'))->getMock();
+		$oBasket = $this->getMock('oxBasket', array('getBasketArticles', 'getArtStockInBasket'), array(), '', false);
 	    $oBasket->expects($this->any())
              	->method('getBasketArticles')
              	->will($this->returnValue(array($oArticle1, $oArticle2, $oArticle3)));
@@ -154,7 +220,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
              	->method('getArtStockInBasket')
              	->will($this->returnValue(3));
 
-	    $oTiramizooCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderDataExposed')->disableOriginalConstructor()->setMethods(array('getBasket'))->getMock();
+	    $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('getBasket'), array(), '', false);
 	    $oTiramizooCreateOrderData->expects($this->any())
              					  ->method('getBasket')
              					  ->will($this->returnValue($oBasket));
@@ -175,7 +241,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 		$oExpectedDelivery->after = '2012-04-01T19:00:00Z';
 		$oExpectedDelivery->before = '2012-04-01T21:00:00Z';
 
-		$oUser = $this->getMockBuilder('oxUser')->disableOriginalConstructor()->setMethods(array('__construct'))->getMock();
+		$oUser = $this->getMock('oxUser', array('__construct'), array(), '', false);
 
 		$oUser->oxuser__oxusername = new oxField('some.email@address.de');
 		$oUser->oxuser__oxstreet = new oxField('test address line 1');
@@ -188,7 +254,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 		$oUser->oxuser__oxlname = new oxField('lname');
 		$oUser->oxuser__oxcompany = new oxField('company');
 
-		$oCountry = $this->getMockBuilder('oxcountry')->disableOriginalConstructor()->setMethods(array('load'))->getMock();
+		$oCountry = $this->getMock('oxcountry', array('load'), array(), '', false);
 		$oCountry->oxcountry__oxisoalpha2 = new oxField('de');
         oxTestModules::addModuleObject('oxcountry', $oCountry);
 
@@ -200,7 +266,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
              		->method('getDeliveryTo')
              		->will($this->returnValue('2012-04-01T21:00:00Z'));
 
-	    $oTiramizooCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderDataExposed')->disableOriginalConstructor()->setMethods(array('buildPickup'))->getMock();
+	    $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('buildPickup'), array(), '', false);
 		$oTiramizooCreateOrderData->_oTimeWindow = $oTimeWindow;
 
 		$this->assertEquals($oExpectedDelivery, $oTiramizooCreateOrderData->buildDelivery($oUser, null));
@@ -219,7 +285,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 		$oExpectedDelivery->after = '2012-04-01T19:00:00Z';
 		$oExpectedDelivery->before = '2012-04-01T21:00:00Z';
 
-		$oUser = $this->getMockBuilder('oxUser')->disableOriginalConstructor()->setMethods(array('__construct'))->getMock();
+		$oUser = $this->getMock('oxUser', array('__construct'), array(), '', false);
 
 		$oUser->oxuser__oxusername = new oxField('some.email@address.de');
 		$oUser->oxuser__oxstreet = new oxField('test address line 1');
@@ -233,7 +299,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 		$oUser->oxuser__oxcompany = new oxField('company');
 
 
-		$oDeliveryAddress = $this->getMockBuilder('oxUser')->disableOriginalConstructor()->setMethods(array('__construct'))->getMock();
+		$oDeliveryAddress = $this->getMock('oxUser', array('__construct'), array(), '', false);
 
 		$oDeliveryAddress->oxaddress__oxusername = new oxField('some.email@address.de');
 		$oDeliveryAddress->oxaddress__oxstreet = new oxField('test address line 1');
@@ -246,7 +312,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 		$oDeliveryAddress->oxaddress__oxlname = new oxField('lname');
 		$oDeliveryAddress->oxaddress__oxcompany = new oxField('company');
 
-		$oCountry = $this->getMockBuilder('oxcountry')->disableOriginalConstructor()->setMethods(array('load'))->getMock();
+		$oCountry = $this->getMock('oxcountry', array('load'), array(), '', false);
 		$oCountry->oxcountry__oxisoalpha2 = new oxField('de');
         oxTestModules::addModuleObject('oxcountry', $oCountry);
 
@@ -258,7 +324,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
              		->method('getDeliveryTo')
              		->will($this->returnValue('2012-04-01T21:00:00Z'));
 
-	    $oTiramizooCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderDataExposed')->disableOriginalConstructor()->setMethods(array('buildPickup'))->getMock();
+	    $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('buildPickup'), array(), '', false);
 		$oTiramizooCreateOrderData->_oTimeWindow = $oTimeWindow;
 
 		$this->assertEquals($oExpectedDelivery, $oTiramizooCreateOrderData->buildDelivery($oUser, $oDeliveryAddress));
@@ -292,7 +358,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 
 		$aExpectedItems = array($oItem1, $oItem2, $oItem3);
 
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->setMethods(array('getShopConfVar'))->getMock();
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'));
 	    $oTiramizooConfig->expects($this->any())
              			 ->method('getShopConfVar')
              			 ->will($this->returnValue(1));
@@ -320,7 +386,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 
         oxTestModules::addModuleObject('oxArticle', $oArticle4);
 
-	    $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->getMock();
+	    $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array(), array(), '', false);
 	    $oArticleExtended->expects($this->any())
              			 ->method('isEnabled')
              			 ->will($this->returnValue(true));
@@ -344,7 +410,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 
         $oArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
 
-		$oBasket = $this->getMockBuilder('oxBasket')->disableOriginalConstructor()->setMethods(array('getBasketArticles', 'getArtStockInBasket'))->getMock();
+		$oBasket = $this->getMock('oxBasket', array('getBasketArticles', 'getArtStockInBasket'), array(), '', false);
 	    
 	    $oBasket->expects($this->any())
              	->method('getBasketArticles')
@@ -359,7 +425,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
              	->method('getArtStockInBasket')
              	->will($this->returnValue(3));
 
-	    $oTiramizooCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderDataExposed')->disableOriginalConstructor()->setMethods(array('getTiramizooConfig', 'getBasket'))->getMock();
+	    $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('getTiramizooConfig', 'getBasket'), array(), '', false);
 	    $oTiramizooCreateOrderData->expects($this->any())
              					  ->method('getTiramizooConfig')
              					  ->will($this->returnValue($oTiramizooConfig));
@@ -371,7 +437,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 	}
 
 
-	public function testBuildItemsPackageStrategySinglePackage()
+	public function testBuildItemPackageStrategySinglePackage()
 	{
 		$oItem1 = new stdClass();
 		$oItem1->weight = 2;
@@ -390,19 +456,22 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 
 		$aExpectedItems = array($oItem);
 
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->getMock();
-
-        $map = array(
-          array('oxTiramizoo_package_strategy', null, 'oxTiramizoo', 2),
-          array('oxTiramizoo_std_package_width', null, 'oxTiramizoo', 40),
-          array('oxTiramizoo_std_package_length', null, 'oxTiramizoo', 120),
-          array('oxTiramizoo_std_package_height', null, 'oxTiramizoo', 80),
-          array('oxTiramizoo_std_package_weight', null, 'oxTiramizoo', 15)
-        );
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array(), array(), '', false);
 
 	    $oTiramizooConfig->expects($this->any())
              			 ->method('getShopConfVar')
-             			 ->will($this->returnValueMap($map));
+		                 ->will($this->returnCallback(function(){
+		                    $valueMap = array(
+								array('oxTiramizoo_package_strategy', 2),
+								array('oxTiramizoo_std_package_width', 40),
+								array('oxTiramizoo_std_package_length', 120),
+								array('oxTiramizoo_std_package_height', 80),
+								array('oxTiramizoo_std_package_weight', 15)
+		                    );
+		                    
+							return returnValueMap($valueMap, func_get_args());
+		                 }));
+
 
 		$oArticle1 = oxNew('oxArticle');
 		$oArticle1->oxarticles__oxid = new oxField(1);
@@ -427,7 +496,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 
         oxTestModules::addModuleObject('oxArticle', $oArticle4);
 
-	    $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->getMock();
+	    $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array(), array(), '', false);
 
 	    $oArticleExtended->expects($this->any())
              			 ->method('isEnabled')
@@ -449,7 +518,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 
         $oArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
 
-		$oBasket = $this->getMockBuilder('oxBasket')->disableOriginalConstructor()->setMethods(array('getBasketArticles', 'getArtStockInBasket'))->getMock();
+		$oBasket = $this->getMock('oxBasket', array('getBasketArticles', 'getArtStockInBasket'), array(), '', false);
 	    
 	    $oBasket->expects($this->any())
              	->method('getBasketArticles')
@@ -467,7 +536,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
              	->method('getArtStockInBasket')
              	->will($this->returnValue(3));
 
-	    $oTiramizooCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderDataExposed')->disableOriginalConstructor()->setMethods(array('getTiramizooConfig', 'getBasket'))->getMock();
+	    $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('getTiramizooConfig', 'getBasket'), array(), '', false);
 	    $oTiramizooCreateOrderData->expects($this->any())
              					  ->method('getTiramizooConfig')
              					  ->will($this->returnValue($oTiramizooConfig));
@@ -476,6 +545,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
              					  ->will($this->returnValue($oBasket));
 
 		$this->assertEquals($aExpectedItems, $oTiramizooCreateOrderData->buildItems());
+
 	}
 
 	public function testBuildItemsPackageStrategyIndividualPackage()
@@ -506,15 +576,17 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 
 		$aExpectedItems = array($oItem1, $oItem2, $oItem3);
 
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->setMethods(array('getShopConfVar'))->getMock();
-        
-        $map = array(
-          array('oxTiramizoo_package_strategy', null, 'oxTiramizoo', 0),
-        );
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'));
 
 	    $oTiramizooConfig->expects($this->any())
              			 ->method('getShopConfVar')
-             			 ->will($this->returnValueMap($map));
+		                 ->will($this->returnCallback(function(){
+		                    $valueMap = array(
+          						array('oxTiramizoo_package_strategy', null, 'oxTiramizoo', 0),
+		                    );
+		                    
+							return returnValueMap($valueMap, func_get_args());
+		                 }));
 
 		$oArticle1 = oxNew('oxArticle');
 		$oArticle1->oxarticles__oxid = new oxField(1);
@@ -539,7 +611,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 
         oxTestModules::addModuleObject('oxArticle', $oArticle4);
 
-	    $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->getMock();
+	    $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array(), array(), '', false);
 
 	    $oArticleExtended->expects($this->any())
              			 ->method('isEnabled')
@@ -570,7 +642,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
         $oArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
 
 
-		$oBasket = $this->getMockBuilder('oxBasket')->disableOriginalConstructor()->setMethods(array('getBasketArticles', 'getArtStockInBasket'))->getMock();
+		$oBasket = $this->getMock('oxBasket', array('getBasketArticles', 'getArtStockInBasket'), array(), '', false);
 	    
 	    $oBasket->expects($this->any())
              	->method('getBasketArticles')
@@ -588,7 +660,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
              	->method('getArtStockInBasket')
              	->will($this->returnValue(3));
 
-	    $oTiramizooCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderDataExposed')->disableOriginalConstructor()->setMethods(array('getTiramizooConfig', 'getBasket'))->getMock();
+	    $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('getTiramizooConfig', 'getBasket'), array(), '', false);
 	    $oTiramizooCreateOrderData->expects($this->any())
              					  ->method('getTiramizooConfig')
              					  ->will($this->returnValue($oTiramizooConfig));
@@ -601,7 +673,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 
 	public function testBuildItemsIfNoStockQty()
 	{
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->setMethods(array('getShopConfVar'))->getMock();
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'));
 	    $oTiramizooConfig->expects($this->any())
              			 ->method('getShopConfVar')
              			 ->will($this->returnValue(1));
@@ -629,7 +701,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 
         oxTestModules::addModuleObject('oxArticle', $oArticle4);
 
-	    $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->getMock();
+	    $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array(), array(), '', false);
 	    $oArticleExtended->expects($this->any())
              			 ->method('isEnabled')
              			 ->will($this->returnValue(true));
@@ -642,7 +714,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
         oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oArticleExtended);
 
 
-		$oBasket = $this->getMockBuilder('oxBasket')->disableOriginalConstructor()->setMethods(array('getBasketArticles', 'getArtStockInBasket'))->getMock();
+		$oBasket = $this->getMock('oxBasket', array('getBasketArticles', 'getArtStockInBasket'), array(), '', false);
 	    $oBasket->expects($this->any())
              	->method('getBasketArticles')
              	->will($this->returnValue(array($oArticle1, $oArticle2, $oArticle3)));
@@ -650,7 +722,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
              	->method('getArtStockInBasket')
              	->will($this->returnValue(1));
 
-	    $oTiramizooCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderDataExposed')->disableOriginalConstructor()->setMethods(array('getTiramizooConfig', 'getBasket'))->getMock();
+	    $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('getTiramizooConfig', 'getBasket'), array(), '', false);
 	    $oTiramizooCreateOrderData->expects($this->any())
              					  ->method('getTiramizooConfig')
              					  ->will($this->returnValue($oTiramizooConfig));
@@ -663,7 +735,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 
 	public function testBuildItemsIfNotEnabled()
 	{
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->setMethods(array('getShopConfVar'))->getMock();
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'));
 	    $oTiramizooConfig->expects($this->any())
              			 ->method('getShopConfVar')
              			 ->will($this->returnValue(1));
@@ -691,7 +763,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 
         oxTestModules::addModuleObject('oxArticle', $oArticle4);
 
-	    $oArticleExtended = $this->getMockBuilder('oxTiramizoo_ArticleExtended')->disableOriginalConstructor()->getMock();
+	    $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array(), array(), '', false);
 	    $oArticleExtended->expects($this->any())
              			 ->method('isEnabled')
              			 ->will($this->returnValue(false));
@@ -704,7 +776,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
         oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oArticleExtended);
 
 
-		$oBasket = $this->getMockBuilder('oxBasket')->disableOriginalConstructor()->setMethods(array('getBasketArticles', 'getArtStockInBasket'))->getMock();
+		$oBasket = $this->getMock('oxBasket', array('getBasketArticles', 'getArtStockInBasket'), array(), '', false);
 	    $oBasket->expects($this->any())
              	->method('getBasketArticles')
              	->will($this->returnValue(array($oArticle1, $oArticle2, $oArticle3)));
@@ -712,7 +784,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
              	->method('getArtStockInBasket')
              	->will($this->returnValue(1));
 
-	    $oTiramizooCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderDataExposed')->disableOriginalConstructor()->setMethods(array('getTiramizooConfig', 'getBasket'))->getMock();
+	    $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('getTiramizooConfig', 'getBasket'), array(), '', false);
 	    $oTiramizooCreateOrderData->expects($this->any())
              					  ->method('getTiramizooConfig')
              					  ->will($this->returnValue($oTiramizooConfig));
@@ -723,45 +795,6 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 		$this->assertEquals(false, $oTiramizooCreateOrderData->buildItems());
 	}
 
-	//@Todo: test more complcated basket
 
-	public function testGetters()
-	{
-		$oBasket = $this->getMockBuilder('oxBasket')->disableOriginalConstructor()->getMock();
-		$oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
-		$oTimeWindow = $this->getMockBuilder('oxTiramizoo_TimeWindow')->disableOriginalConstructor()->getMock();
-
-
-	    $oTiramizooCreateOrderData = new oxTiramizoo_CreateOrderDataExposed($oTimeWindow, $oBasket, $oRetailLocation);
-		$oTiramizooCreateOrderData->_oTiramizooData = new stdClass;
-
-		$this->assertEquals(new stdClass, $oTiramizooCreateOrderData->getTiramizooDataObject());
-		
-		$this->assertEquals($oTiramizooCreateOrderData->_oBasket, $oTiramizooCreateOrderData->getBasket());
-
-		$sExternalId = $oTiramizooCreateOrderData->getExternalId();
-
-		$this->assertEquals($oTiramizooCreateOrderData->_sExternalId, $sExternalId);
-
-		$this->assertInstanceOf('oxTiramizoo_Config', $oTiramizooCreateOrderData->getTiramizooConfig());
-
-
-
-
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->setMethods(array('getShopConfVar'))->getMock();
-	    $oTiramizooConfig->expects($this->any())
-             			 ->method('getShopConfVar')
-             			 ->will($this->returnValue('http://someurl.de'));
-
-	    $oTiramizooCreateOrderData = $this->getMockBuilder('oxTiramizoo_CreateOrderDataExposed')->disableOriginalConstructor()->setMethods(array('getTiramizooConfig'))->getMock();
-	    $oTiramizooCreateOrderData->expects($this->any())
-             					  ->method('getTiramizooConfig')
-             					  ->will($this->returnValue($oTiramizooConfig));
-
-		$this->assertEquals('http://someurl.de', $oTiramizooCreateOrderData->getShopUrl());
-
-		$this->assertEquals('http://someurl.de/modules/oxtiramizoo/api.php', $oTiramizooCreateOrderData->getWebhookUrl());
-
-	}
 
 }

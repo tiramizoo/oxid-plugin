@@ -11,7 +11,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_EventsTest extends OxidTestCase
 
 	public function testOnActivate()
 	{
-		$oTiramizooSetup = $this->getMockBuilder('oxTiramizoo_Setup')->disableOriginalConstructor()->getMock();
+		$oTiramizooSetup = $this->getMock('oxTiramizoo_Setup', array(), array(), '', false);
 		$oTiramizooSetup->expects($this->once())->method('install');
 
 		oxRegistry::set('oxTiramizoo_Setup', $oTiramizooSetup);
@@ -22,7 +22,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_EventsTest extends OxidTestCase
 
 	public function testOnActivateWithException()
 	{		
-		$oTiramizooSetup = $this->getMockBuilder('oxTiramizoo_Setup')->disableOriginalConstructor()->getMock();
+		$oTiramizooSetup = $this->getMock('oxTiramizoo_Setup', array(), array(), '', false);
 		$oTiramizooSetup->expects($this->once())->method('install')->will($this->throwException(new oxException));
 
 		oxRegistry::set('oxTiramizoo_Setup', $oTiramizooSetup);

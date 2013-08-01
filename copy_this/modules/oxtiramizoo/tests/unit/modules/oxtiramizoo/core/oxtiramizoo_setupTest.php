@@ -44,7 +44,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 	// if not installed
 	public function testInstall1()
 	{
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->getMock(array('getShopConfVar'));
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'), array(), '', false);
         $oTiramizooConfig->expects($this->at(0))->method('getShopConfVar')->with($this->equalTo('oxTiramizoo_version'))->will($this->returnValue(false));
         $oTiramizooConfig->expects($this->at(1))->method('getShopConfVar')->with($this->equalTo('oxTiramizoo_is_installed'))->will($this->returnValue(false));
 
@@ -59,7 +59,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 	// current version is equal installed version
 	public function testInstall2()
 	{
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->getMock(array('getShopConfVar'));
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'), array(), '', false);
         $oTiramizooConfig->expects($this->at(0))->method('getShopConfVar')->with($this->equalTo('oxTiramizoo_version'))->will($this->returnValue('0.9.0'));
         $oTiramizooConfig->expects($this->at(1))->method('getShopConfVar')->with($this->equalTo('oxTiramizoo_is_installed'))->will($this->returnValue(true));
 
@@ -74,7 +74,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 	// installed version is greater than current
 	public function testInstall3()
 	{
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->getMock(array('getShopConfVar'));
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'), array(), '', false);
         $oTiramizooConfig->expects($this->at(0))->method('getShopConfVar')->with($this->equalTo('oxTiramizoo_version'))->will($this->returnValue('1.0.0'));
         $oTiramizooConfig->expects($this->at(1))->method('getShopConfVar')->with($this->equalTo('oxTiramizoo_is_installed'))->will($this->returnValue(true));
 
@@ -89,7 +89,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 	// current version is greater than installed
 	public function testInstall4()
 	{
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->getMock(array('getShopConfVar'));
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'), array(), '', false);
         $oTiramizooConfig->expects($this->at(0))->method('getShopConfVar')->with($this->equalTo('oxTiramizoo_version'))->will($this->returnValue('0.2.0'));
         $oTiramizooConfig->expects($this->at(1))->method('getShopConfVar')->with($this->equalTo('oxTiramizoo_is_installed'))->will($this->returnValue(true));
 
@@ -106,7 +106,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 	{
         $this->setExpectedException('oxException');
 
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->getMock(array('getShopConfVar'));
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'), array(), '', false);
         $oTiramizooConfig->expects($this->at(0))->method('getShopConfVar')->with($this->equalTo('oxTiramizoo_version'))->will($this->returnValue(false));
         $oTiramizooConfig->expects($this->at(1))->method('getShopConfVar')->with($this->equalTo('oxTiramizoo_is_installed'))->will($this->returnValue(false));
 
@@ -124,13 +124,13 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 	{
 		$oTiramizooSetup = new oxTiramizoo_Setup();
 
-		$this->assertInstanceOf('oxModule', $oTiramizooSetup->getModule());
+		$this->assertTrue($oTiramizooSetup->getModule() instanceof oxModule);
 	}
 
 	// test stop migrations if errors
 	public function testStopMigrationsIfErrors()
 	{
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->getMock();
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array(), array(), '', false);
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
 
 		$oTiramizooSetup = new _oxTiramizoo_Setup();
@@ -148,7 +148,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 	{
         $this->setExpectedException('oxException');
 
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->getMock();
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array(), array(), '', false);
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
 
 		$oTiramizooSetup = $this->getMock('_oxTiramizoo_Setup', array('executeSQL'));
@@ -161,7 +161,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 	// Execute all statements 
 	public function testMigration_0_9_0__2()
 	{
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->getMock();
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array(), array(), '', false);
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
 
 		$oTiramizooSetup = $this->getMock('_oxTiramizoo_Setup', array('executeSQL', 'columnExistsInTable'));
@@ -170,7 +170,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
              			->method('columnExistsInTable')
              			->will($this->returnValue(true));
 
-        $oTiramizooSetup->expects($this->exactly(11))->method('executeSQL');
+        $oTiramizooSetup->expects($this->exactly(5))->method('executeSQL');
 
         $oTiramizooConfig->expects($this->exactly(4))->method('saveShopConfVar');
 
@@ -201,7 +201,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 
 		$oTiramizooSetup = new _oxTiramizoo_Setup();
 
-		$this->assertInstanceOf('stdClass', $oTiramizooSetup->executeSQL('some sql with result'));
+		$this->assertTrue($oTiramizooSetup->executeSQL('some sql with result') instanceof stdClass);
 
         modDb::getInstance()->cleanup();
 	}
@@ -287,7 +287,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 
 	public function testRunMigrations1()
 	{
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->getMock(array('getShopConfVar', 'saveShopConfVar'));
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar', 'saveShopConfVar'), array(), '', false);
         $oTiramizooConfig->expects($this->any())->method('getShopConfVar')->with($this->equalTo('oxTiramizoo_version'))->will($this->returnValue(false));
 
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
@@ -303,7 +303,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 
 	public function testRunMigrations2()
 	{
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->getMock(array('getShopConfVar', 'saveShopConfVar'));
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar', 'saveShopConfVar'), array(), '', false);
         $oTiramizooConfig->expects($this->any())->method('getShopConfVar')->with($this->equalTo('oxTiramizoo_version'))->will($this->returnValue('0.8.2'));
 
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
@@ -321,12 +321,12 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 	{
 		$this->setExpectedException('oxException');
 
-		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->getMock(array('getShopConfVar', 'saveShopConfVar'));
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar', 'saveShopConfVar'), array(), '', false);
         $oTiramizooConfig->expects($this->any())->method('getShopConfVar')->with($this->equalTo('oxTiramizoo_version'))->will($this->returnValue(false));
 
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
 
-		$oTiramizooSetup = $this->getMockBuilder('_oxTiramizoo_Setup')->setMethods(array('stopMigrationsIfErrors', 'migration_0_0_5', 'migration_0_8_5', 'migration_0_9_0', 'migration_1_0_0'))->getMock();
+		$oTiramizooSetup = $this->getMock('_oxTiramizoo_Setup', array('stopMigrationsIfErrors', 'migration_0_0_5', 'migration_0_8_5', 'migration_0_9_0', 'migration_1_0_0'));
         $oTiramizooSetup->expects($this->at(1))->method('stopMigrationsIfErrors')->will($this->returnValue(1));
 
         $oTiramizooSetup->expects($this->exactly(1))->method('migration_0_0_5');
