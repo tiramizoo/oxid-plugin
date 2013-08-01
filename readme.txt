@@ -1,8 +1,8 @@
 ==Title==
-Tiramizoo Delivery Module
+oxTiramizoo
 
 ==Author==
-Tiramizoo
+Tiramizoo GmbH
 
 ==Prefix==
 oxTiramizoo
@@ -17,7 +17,7 @@ http://tiramizoo.com/
 support@tiramizoo.com
 
 ==Description==
-Integrates Tiramizoo Delivery module into OXID ESHOP.
+Integrates Tiramizoo Delivery into OXID ESHOP.
 
 ==Extend==
 *oxorder

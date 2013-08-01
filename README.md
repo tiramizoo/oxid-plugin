@@ -51,6 +51,8 @@ All items added by the user need to have the tiramizoo service enabled, either d
 
 *   Switch to [master](https://github.com/tiramizoo/oxid-plugin/tree/master) branch and download code
 
+*   • Run SQL statements from sql/install.sql file into your database
+
 *   Copy all files from [copy_this](https://github.com/tiramizoo/oxid-plugin/tree/master/copy_this) folder to the OXID eSales installation path. This step does not overwrite any files.
 
 *   If the template does not support blocks, please compare [changed files](https://github.com/tiramizoo/oxid-plugin/tree/master/copy_this/modules/oxtiramizoo/views/blocks) according to [metadata file](https://github.com/tiramizoo/oxid-plugin/blob/master/copy_this/modules/oxtiramizoo/metadata.php#L102)
