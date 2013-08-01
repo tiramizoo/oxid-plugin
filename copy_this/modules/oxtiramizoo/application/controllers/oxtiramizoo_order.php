@@ -1,14 +1,35 @@
 <?php
-
+/**
+ * This file is part of the oxTiramizoo OXID eShop plugin.
+ *
+ * LICENSE: This source file is subject to the MIT license that is available
+ * through the world-wide-web at the following URI:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category  module
+ * @package   oxTiramizoo
+ * @author    Tiramizoo GmbH <support@tiramizoo.com>
+ * @copyright Tiramizoo GmbH
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
 
 /**
- * Tiramizoo Order view. Extends to proccess Tiramizoo delivery
+ * Order manager. Extends checkout proccess with Tiramizoo delivery
  *
- * @package: oxTiramizoo
+ * @extend order
+ * @package oxTiramizoo
  */
 class oxTiramizoo_order extends oxTiramizoo_order_parent
 {
-
+    /**
+     * Executes parent::init(), initialize oxTiramizooDeliverySet
+     * object and redirect back to the payment step
+     * if Tiramizoo Delivery is not available
+     * 
+     * @extend order::init()
+     *
+     * @return null
+     */
     public function init()
     {
         // @codeCoverageIgnoreStart
@@ -17,8 +38,10 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
         }
         // @codeCoverageIgnoreEnd
 
-        $oTiramizooDeliverySet = oxRegistry::get('oxTiramizoo_DeliverySet');
-        $oTiramizooDeliverySet->init($this->getUser(), oxNew( 'oxorder' )->getDelAddressInfo());
+        $oOrder = oxNew( 'oxorder' );
+
+        $oTiramizooDeliverySet = $this->getTiramizooDeliverySet();
+        $oTiramizooDeliverySet->init($this->getUser(), $oOrder->getDelAddressInfo());
 
         //redirect to payment if tiramizoo is not available
         if (!$this->getTiramizooDeliverySet()->isTiramizooAvailable() && ($this->getSession()->getVariable( 'sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID)) {
@@ -26,6 +49,12 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
         }
     }
 
+    /**
+     * Getting current oxTiramizoo_DeliverySet object
+     * from registry
+     * 
+     * @return oxTiramizoo_DeliverySet
+     */
     public function getTiramizooDeliverySet()
     {
         return oxRegistry::get('oxTiramizoo_DeliverySet');
@@ -35,6 +64,8 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
      * Executes parent::render(), pass variable to template to check
      * if tiramizoo module is running now
      * 
+     * @extend order::render()
+     *
      * @return string template file
      */
     public function render()
@@ -46,11 +77,8 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
         // @codeCoverageIgnoreEnd
 
         if ( $this->getSession()->getVariable('sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID ) {
-
             $oTiramizooDeliverySet = $this->getTiramizooDeliverySet();
-
             $oTiramizooWindow = $oTiramizooDeliverySet->getSelectedTimeWindow();
-
             $this->_aViewData['sFormattedTiramizooTimeWindow'] = $oTiramizooWindow->getFormattedDeliveryTimeWindow();
         }
 
@@ -58,8 +86,11 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
     }
 
     /**
-     * Execute save order with tiramizoo shipping
+     * Executes parent::execute(), show errors 
+     * if exception throwed
      * 
+     * @extend order::execute()
+     *
      * @return string
      */
     public function execute()
