@@ -46,7 +46,7 @@ abstract class oxTiramizoo_DeliveryType
 	{
 		$aPickupContact = $this->getRetailLocation()->getConfVar('pickup_contact');
 
-		if (!isset($aPickupContact['address_line_1']) || !$aPickupContact['address_line_1']) {
+		if (!isset($aPickupContact['address_line']) || !$aPickupContact['address_line']) {
 			return false;
 		}
 
