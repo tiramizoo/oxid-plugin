@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class oxTiramizoo_CreateOrderData
 {
@@ -28,7 +28,7 @@ class oxTiramizoo_CreateOrderData
     {
         $this->_oTimeWindow = $oTimeWindow;
         $this->_oBasket = $oBasket;
-        $this->_oRetailLocation = $oRetailLocation;        
+        $this->_oRetailLocation = $oRetailLocation;
     }
 
 
@@ -98,14 +98,14 @@ class oxTiramizoo_CreateOrderData
 
     /**
      * Build description from product's names. Used for build partial data to send order API request
-     * 
+     *
      * @param  oxBasket $oBasket
      * @return string description
      */
     public function getDescription()
     {
         $itemNames = array();
-        foreach ($this->getBasket()->getBasketArticles() as $key => $oArticle) 
+        foreach ($this->getBasket()->getBasketArticles() as $key => $oArticle)
         {
             $itemNames[] = $oArticle->oxarticles__oxtitle->value . ' (x' . $this->getBasket()->getArtStockInBasket($oArticle->oxarticles__oxid->value) . ')';
         }
@@ -115,9 +115,9 @@ class oxTiramizoo_CreateOrderData
     }
 
     /**
-     * Build delivery object from user data. Used for build partial data 
+     * Build delivery object from user data. Used for build partial data
      * to send order API request
-     * 
+     *
      * @param  oxUser $oUser
      * @param  mixed $oDeliveryAddress oxAddress if filled by user or null
      * @return stdClass Delivery object
@@ -126,15 +126,15 @@ class oxTiramizoo_CreateOrderData
     {
         $this->_oDelivery = new stdClass();
 
-        $this->_oDelivery->email = $oUser->oxuser__oxusername->value; 
+        $this->_oDelivery->email = $oUser->oxuser__oxusername->value;
 
         if ($oDeliveryAddress)  {
-            $this->_oDelivery->address_line_1 = $oDeliveryAddress->oxaddress__oxstreet->value . ' ' . $oDeliveryAddress->oxaddress__oxstreetnr->value;
+            $this->_oDelivery->address_line = $oDeliveryAddress->oxaddress__oxstreet->value . ' ' . $oDeliveryAddress->oxaddress__oxstreetnr->value;
             $this->_oDelivery->city = $oDeliveryAddress->oxaddress__oxcity->value;
             $this->_oDelivery->postal_code = $oDeliveryAddress->oxaddress__oxzip->value;
             $this->_oDelivery->country_code = $oDeliveryAddress->oxaddress__oxcountryid->value;
             $this->_oDelivery->phone_number = $oDeliveryAddress->oxaddress__oxfon->value;
-            
+
             $this->_oDelivery->name = $oDeliveryAddress->oxaddress__oxfname->value . ' ' . $oDeliveryAddress->oxaddress__oxlname->value;
 
             if ($oDeliveryAddress->oxaddress__oxcompany->value) {
@@ -142,12 +142,12 @@ class oxTiramizoo_CreateOrderData
             }
 
         } else {
-            $this->_oDelivery->address_line_1 = $oUser->oxuser__oxstreet->value . ' ' . $oUser->oxuser__oxstreetnr->value;
+            $this->_oDelivery->address_line = $oUser->oxuser__oxstreet->value . ' ' . $oUser->oxuser__oxstreetnr->value;
             $this->_oDelivery->city = $oUser->oxuser__oxcity->value;
             $this->_oDelivery->postal_code = $oUser->oxuser__oxzip->value;
             $this->_oDelivery->country_code = $oUser->oxuser__oxcountryid->value;
             $this->_oDelivery->phone_number = $oUser->oxuser__oxfon->value;
-            
+
             $this->_oDelivery->name = $oUser->oxuser__oxfname->value . ' ' . $oUser->oxuser__oxlname->value;
 
             if ($oUser->oxuser__oxcompany->value) {
@@ -168,9 +168,9 @@ class oxTiramizoo_CreateOrderData
 
 
     /**
-     * Build pickup object from tiramizoo config values. Used for build partial data 
+     * Build pickup object from tiramizoo config values. Used for build partial data
      * to send order API request
-     * 
+     *
      * @return stdClass Pickup object
      */
     public function buildPickup()
@@ -179,8 +179,8 @@ class oxTiramizoo_CreateOrderData
 
         $this->_oPickup = new stdClass();
 
-        $this->_oPickup->address_line_1 = $aPickupContact['address_line_1'];
-        
+        $this->_oPickup->address_line = $aPickupContact['address_line'];
+
         if ($aPickupContact['city']) {
             $this->_oPickup->city = $aPickupContact['city'];
         }
@@ -199,9 +199,9 @@ class oxTiramizoo_CreateOrderData
 
     /**
      * Build items data used for both type of request sending order and getting quotes.
-     * If product has no specified params e.g. enable, weight, dimensions it inherits 
+     * If product has no specified params e.g. enable, weight, dimensions it inherits
      * from main category
-     * 
+     *
      * @param  oxBasket $oBasket
      * @return array
      */
@@ -224,7 +224,7 @@ class oxTiramizoo_CreateOrderData
             $standardPackageAddedToItems = 0;
         }
 
-        foreach ($this->getBasket()->getBasketArticles() as $key => $oArticle) 
+        foreach ($this->getBasket()->getBasketArticles() as $key => $oArticle)
         {
             //initialize standard class
             $item = new stdClass();
@@ -242,15 +242,15 @@ class oxTiramizoo_CreateOrderData
                 }
             }
 
-            //NOTICE if article is only variant of parent article then load parent product as article 
+            //NOTICE if article is only variant of parent article then load parent product as article
             if ($oArticle->oxarticles__oxparentid->value) {
                 $parentArticleId = $oArticle->oxarticles__oxparentid->value;
-                
+
                 $oArticleParent = oxNew( 'oxarticle' );
                 $oArticleParent->load($parentArticleId);
                 $oArticle = $oArticleParent;
             }
-            
+
             $oArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
             $sOxid = $oArticleExtended->getIdByArticleId($oArticle->getId());
 
@@ -264,7 +264,7 @@ class oxTiramizoo_CreateOrderData
 
             $item = $oArticleExtended->buildArticleEffectiveData($item);
 
-            $item->description = $oArticle->oxarticles__oxtitle->value;  
+            $item->description = $oArticle->oxarticles__oxtitle->value;
 
             if ($useStandardPackage && !$oArticleExtended->hasIndividualPackage()) {
                 if (!$standardPackageAddedToItems) {

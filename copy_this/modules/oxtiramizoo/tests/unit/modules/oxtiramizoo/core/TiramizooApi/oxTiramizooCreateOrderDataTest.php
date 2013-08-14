@@ -1,7 +1,7 @@
 <?php
 
 
-class oxTiramizoo_CreateOrderDataExposed extends oxTiramizoo_CreateOrderData 
+class oxTiramizoo_CreateOrderDataExposed extends oxTiramizoo_CreateOrderData
 {
     const TIRAMIZOO_SALT = 'oxTiramizoo';
 
@@ -25,7 +25,7 @@ class oxTiramizoo_CreateOrderDataExposed extends oxTiramizoo_CreateOrderData
 
 
 class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
-{	
+{
 	protected function tearDown()
 	{
         parent::tearDown();
@@ -59,7 +59,7 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 
 		$this->assertEquals($oExpectedTiramizooData, $oTiramizooCreateOrderData->createTiramizooOrderDataObject());
 
-		$oTiramizooCreateOrderData->_oPickup = null;	
+		$oTiramizooCreateOrderData->_oPickup = null;
 		$this->assertNotEquals($oExpectedTiramizooData, $oTiramizooCreateOrderData->createTiramizooOrderDataObject());
 	}
 
@@ -96,7 +96,7 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 	public function testBuildPickup()
 	{
 		$oExpectedPickup = new stdClass();
-		$oExpectedPickup->address_line_1 = 'test address line 1';
+		$oExpectedPickup->address_line = 'test address line 1';
 		$oExpectedPickup->city = 'test city';
 		$oExpectedPickup->postal_code = 'test postal_code';
 		$oExpectedPickup->country_code = 'test country_code';
@@ -130,7 +130,7 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 		$oArticle1 = oxNew('oxArticle');
 		$oArticle1->oxarticles__oxid = new oxField(1);
 		$oArticle1->oxarticles__oxtitle = new oxField('Test product 1');
-		
+
 		$oArticle2 = oxNew('oxArticle');
 		$oArticle2->oxarticles__oxid = new oxField(2);
 		$oArticle2->oxarticles__oxtitle = new oxField('Test product 2');
@@ -166,7 +166,7 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 	{
 		$oExpectedDelivery = new stdClass();
 		$oExpectedDelivery->email = 'some.email@address.de';
-		$oExpectedDelivery->address_line_1 = 'test address line 1 number 777';
+		$oExpectedDelivery->address_line = 'test address line 1 number 777';
 		$oExpectedDelivery->city = 'test city';
 		$oExpectedDelivery->postal_code = 'test postal_code';
 		$oExpectedDelivery->country_code = 'de';
@@ -210,7 +210,7 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 	{
 		$oExpectedDelivery = new stdClass();
 		$oExpectedDelivery->email = 'some.email@address.de';
-		$oExpectedDelivery->address_line_1 = 'test address line 1 number 777';
+		$oExpectedDelivery->address_line = 'test address line 1 number 777';
 		$oExpectedDelivery->city = 'test city';
 		$oExpectedDelivery->postal_code = 'test postal_code';
 		$oExpectedDelivery->country_code = 'de';
@@ -301,7 +301,7 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 		$oArticle1->oxarticles__oxid = new oxField(1);
 		$oArticle1->oxarticles__oxtitle = new oxField('Test product 1');
 		$oArticle1->oxarticles__oxstock = new oxField(3);
-		
+
 		$oArticle2 = oxNew('oxArticle');
 		$oArticle2->oxarticles__oxid = new oxField(2);
 		$oArticle2->oxarticles__oxtitle = new oxField('Test product 2');
@@ -345,7 +345,7 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
         $oArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
 
 		$oBasket = $this->getMockBuilder('oxBasket')->disableOriginalConstructor()->setMethods(array('getBasketArticles', 'getArtStockInBasket'))->getMock();
-	    
+
 	    $oBasket->expects($this->any())
              	->method('getBasketArticles')
              	->will($this->returnValue(array($oArticle1, $oArticle2, $oArticle3)));
@@ -408,7 +408,7 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 		$oArticle1->oxarticles__oxid = new oxField(1);
 		$oArticle1->oxarticles__oxtitle = new oxField('Test product 1');
 		$oArticle1->oxarticles__oxstock = new oxField(3);
-		
+
 		$oArticle2 = oxNew('oxArticle');
 		$oArticle2->oxarticles__oxid = new oxField(2);
 		$oArticle2->oxarticles__oxtitle = new oxField('Test product 2');
@@ -450,15 +450,15 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
         $oArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
 
 		$oBasket = $this->getMockBuilder('oxBasket')->disableOriginalConstructor()->setMethods(array('getBasketArticles', 'getArtStockInBasket'))->getMock();
-	    
+
 	    $oBasket->expects($this->any())
              	->method('getBasketArticles')
              	->will($this->returnValue(array($oArticle1, $oArticle2, $oArticle3)));
-	    
+
 	    $oBasket->expects($this->at(1))
              	->method('getArtStockInBasket')
              	->will($this->returnValue(1));
-	    
+
 	    $oBasket->expects($this->at(2))
              	->method('getArtStockInBasket')
              	->will($this->returnValue(2));
@@ -507,7 +507,7 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 		$aExpectedItems = array($oItem1, $oItem2, $oItem3);
 
 		$oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->setMethods(array('getShopConfVar'))->getMock();
-        
+
         $map = array(
           array('oxTiramizoo_package_strategy', null, 'oxTiramizoo', 0),
         );
@@ -520,7 +520,7 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 		$oArticle1->oxarticles__oxid = new oxField(1);
 		$oArticle1->oxarticles__oxtitle = new oxField('Test product 1');
 		$oArticle1->oxarticles__oxstock = new oxField(3);
-		
+
 		$oArticle2 = oxNew('oxArticle');
 		$oArticle2->oxarticles__oxid = new oxField(2);
 		$oArticle2->oxarticles__oxtitle = new oxField('Test product 2');
@@ -571,15 +571,15 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 
 
 		$oBasket = $this->getMockBuilder('oxBasket')->disableOriginalConstructor()->setMethods(array('getBasketArticles', 'getArtStockInBasket'))->getMock();
-	    
+
 	    $oBasket->expects($this->any())
              	->method('getBasketArticles')
              	->will($this->returnValue(array($oArticle1, $oArticle2, $oArticle3)));
-	    
+
 	    $oBasket->expects($this->at(1))
              	->method('getArtStockInBasket')
              	->will($this->returnValue(1));
-	    
+
 	    $oBasket->expects($this->at(2))
              	->method('getArtStockInBasket')
              	->will($this->returnValue(2));
@@ -610,7 +610,7 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 		$oArticle1->oxarticles__oxid = new oxField(1);
 		$oArticle1->oxarticles__oxtitle = new oxField('Test product 1');
 		$oArticle1->oxarticles__oxstock = new oxField(0);
-		
+
 		$oArticle2 = oxNew('oxArticle');
 		$oArticle2->oxarticles__oxid = new oxField(2);
 		$oArticle2->oxarticles__oxtitle = new oxField('Test product 2');
@@ -672,7 +672,7 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 		$oArticle1->oxarticles__oxid = new oxField(1);
 		$oArticle1->oxarticles__oxtitle = new oxField('Test product 1');
 		$oArticle1->oxarticles__oxstock = new oxField(1);
-		
+
 		$oArticle2 = oxNew('oxArticle');
 		$oArticle2->oxarticles__oxid = new oxField(2);
 		$oArticle2->oxarticles__oxtitle = new oxField('Test product 2');
@@ -736,7 +736,7 @@ class unit_core_TiramizooApi_oxTiramizooCreateOrderDataTest extends OxidTestCase
 		$oTiramizooCreateOrderData->_oTiramizooData = new stdClass;
 
 		$this->assertEquals(new stdClass, $oTiramizooCreateOrderData->getTiramizooDataObject());
-		
+
 		$this->assertEquals($oTiramizooCreateOrderData->_oBasket, $oTiramizooCreateOrderData->getBasket());
 
 		$sExternalId = $oTiramizooCreateOrderData->getExternalId();
