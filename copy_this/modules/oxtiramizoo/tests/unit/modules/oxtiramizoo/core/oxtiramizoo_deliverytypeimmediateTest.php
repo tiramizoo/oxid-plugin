@@ -12,19 +12,19 @@ class Unit_Core_oxTiramizoo_DeliveryTypeImmediateTest extends OxidTestCase
 	{
 		$this->_oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line_1' => 'test',
+             ->will($this->returnValue(array('address_line' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
-             								 'name' => 'me', 
+             								 'name' => 'me',
              								 'phone_number' => '5553333666')));
 
 		$this->_oRetailLocation->expects($this->any())
              ->method('getAvailableTimeWindows')
              ->will($this->returnValue(array()));
 
-	    
+
 	    $this->_oSubj = $this->getMock('oxTiramizoo_DeliveryTypeImmediate', array('getImmediateTimeWindow'), array($this->_oRetailLocation));
-	    
+
 	    $this->_oSubj->expects($this->at(0))
 	    	 ->method('getImmediateTimeWindow')
 	    	 ->will($this->returnValue(true));
@@ -37,10 +37,10 @@ class Unit_Core_oxTiramizoo_DeliveryTypeImmediateTest extends OxidTestCase
 	{
 		$this->_oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line_1' => 'test',
+             ->will($this->returnValue(array('address_line' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
-             								 'name' => 'me', 
+             								 'name' => 'me',
              								 'phone_number' => '5553333666')));
 
 		$this->_oRetailLocation->expects($this->any())
@@ -48,7 +48,7 @@ class Unit_Core_oxTiramizoo_DeliveryTypeImmediateTest extends OxidTestCase
              ->will($this->returnValue(array()));
 
 	    $this->_oSubj = $this->getMock('oxTiramizoo_DeliveryTypeImmediate', array('getImmediateTimeWindow'), array($this->_oRetailLocation));
-	    
+
 	    $this->_oSubj->expects($this->any())
 	    	 ->method('getImmediateTimeWindow')
 	    	 ->will($this->returnValue(null));
@@ -69,7 +69,7 @@ class Unit_Core_oxTiramizoo_DeliveryTypeImmediateTest extends OxidTestCase
              ->will($this->returnValue(array()));
 
 	    $this->_oSubj = $this->getMock('oxTiramizoo_DeliveryTypeImmediate', array('getImmediateTimeWindow'), array($this->_oRetailLocation));
-	    
+
 	    $this->_oSubj->expects($this->any())
 	    	 ->method('getImmediateTimeWindow')
 	    	 ->will($this->returnValue(null));
@@ -84,10 +84,10 @@ class Unit_Core_oxTiramizoo_DeliveryTypeImmediateTest extends OxidTestCase
 		$oRetailLocation->expects($this->at(1))
              ->method('getConfVar')
              ->with('pickup_contact')
-             ->will($this->returnValue(array('address_line_1' => 'test',
+             ->will($this->returnValue(array('address_line' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
-             								 'name' => 'me', 
+             								 'name' => 'me',
              								 'phone_number' => '5553333666')));
 
 		$oRetailLocation->expects($this->at(2))
@@ -98,9 +98,9 @@ class Unit_Core_oxTiramizoo_DeliveryTypeImmediateTest extends OxidTestCase
 		$oRetailLocation->expects($this->any())
              ->method('getAvailableTimeWindows')
              ->will($this->returnValue(array()));
-	    
+
 	    $this->_oSubj = $this->getMock('oxTiramizoo_DeliveryTypeImmediate', array('getImmediateTimeWindow'), array($oRetailLocation));
-	    
+
 	    $this->_oSubj->expects($this->any())
 	    	 ->method('getImmediateTimeWindow')
 	    	 ->will($this->returnValue(null));
@@ -151,7 +151,7 @@ class Unit_Core_oxTiramizoo_DeliveryTypeImmediateTest extends OxidTestCase
 		} else {
         	oxTiramizoo_Date::changeCurrentTime('2013-04-01T11:00:00Z');
 		}
-		
+
 	    $this->assertEquals(new oxTiramizoo_TimeWindow($aTimeWindows[1]), $this->_oSubj->getImmediateTimeWindow());
 	    $this->assertNotEquals(new oxTiramizoo_TimeWindow($aTimeWindows[0]), $this->_oSubj->getImmediateTimeWindow());
 	    $this->assertEquals(new oxTiramizoo_TimeWindow($aTimeWindows[1]), $this->_oSubj->getDefaultTimeWindow());
