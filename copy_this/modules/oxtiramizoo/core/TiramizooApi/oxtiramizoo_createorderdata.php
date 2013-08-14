@@ -179,7 +179,7 @@ class oxTiramizoo_CreateOrderData
 
         $this->_oPickup = new stdClass();
 
-        $this->_oPickup->address_line = $aPickupContact['address_line'];
+        $this->_oPickup->address_line = $aPickupContact['address_line_1'];
 
         if ($aPickupContact['city']) {
             $this->_oPickup->city = $aPickupContact['city'];

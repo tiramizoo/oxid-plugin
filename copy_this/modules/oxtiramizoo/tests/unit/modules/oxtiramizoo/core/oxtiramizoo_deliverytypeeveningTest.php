@@ -11,7 +11,7 @@ class Unit_Core_oxTiramizoo_DeliveryTypeEveningTest extends OxidTestCase
 	{
 		$this->_oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line' => 'test',
+             ->will($this->returnValue(array('address_line_1' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
              								 'name' => 'me',
@@ -35,7 +35,7 @@ class Unit_Core_oxTiramizoo_DeliveryTypeEveningTest extends OxidTestCase
 	{
 		$this->_oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line' => 'test',
+             ->will($this->returnValue(array('address_line_1' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
              								 'name' => 'me',
