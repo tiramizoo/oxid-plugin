@@ -14,7 +14,7 @@ class Unit_Core_oxTiramizoo_DeliveryTypeTest extends OxidTestCase
 	{
 		$this->_oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line' => 'test',
+             ->will($this->returnValue(array('address_line_1' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
              								 'name' => 'me',
@@ -31,7 +31,7 @@ class Unit_Core_oxTiramizoo_DeliveryTypeTest extends OxidTestCase
 
 		$oRetailLocation->expects($this->at(0))
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line' => '',
+             ->will($this->returnValue(array('address_line_1' => '',
              								 'postal_code' => '',
              								 'country_code' =>'',
              								 'name' => '',
@@ -45,7 +45,7 @@ class Unit_Core_oxTiramizoo_DeliveryTypeTest extends OxidTestCase
 
 		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line' => 'test',
+             ->will($this->returnValue(array('address_line_1' => 'test',
              								 'postal_code' => '',
              								 'country_code' =>'',
              								 'name' => '',
@@ -59,7 +59,7 @@ class Unit_Core_oxTiramizoo_DeliveryTypeTest extends OxidTestCase
 
 		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line' => 'test',
+             ->will($this->returnValue(array('address_line_1' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'',
              								 'name' => '',
@@ -75,7 +75,7 @@ class Unit_Core_oxTiramizoo_DeliveryTypeTest extends OxidTestCase
 
 		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line' => 'test',
+             ->will($this->returnValue(array('address_line_1' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
              								 'name' => '',
@@ -89,7 +89,7 @@ class Unit_Core_oxTiramizoo_DeliveryTypeTest extends OxidTestCase
 
 		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line' => 'test',
+             ->will($this->returnValue(array('address_line_1' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
              								 'name' => 'test',
