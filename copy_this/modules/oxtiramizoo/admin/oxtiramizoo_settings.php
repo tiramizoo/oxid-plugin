@@ -1,13 +1,37 @@
 <?php
+/**
+ * This file is part of the oxTiramizoo OXID eShop plugin.
+ *
+ * LICENSE: This source file is subject to the MIT license that is available
+ * through the world-wide-web at the following URI:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category  module
+ * @package   oxTiramizoo
+ * @author    Tiramizoo GmbH <support@tiramizoo.com>
+ * @copyright Tiramizoo GmbH
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
 
 /**
-* Tiramizoo settings
-*
-* @package: oxTiramizoo
-*/
+ * Admin tiramizoo API parameters manager.
+ * Collects and Updates API connection properties 
+ * and Tiramizoo deliveryconfiguration. 
+ * Admin Menu: Tiramizoo -> Settings.
+ *
+ * @extend Shop_Config
+ * @package oxTiramizoo
+ */
 class oxTiramizoo_settings extends Shop_Config
 {
-
+    /**
+     * Executes parent::init(), run installation/migration
+     * proccess.
+     * 
+     * @extend oxAdminView::init()
+     *
+     * @return null
+     */
     public function init()
     {
         $oxTiramizooSetup = oxNew('oxTiramizoo_setup');
@@ -21,9 +45,12 @@ class oxTiramizoo_settings extends Shop_Config
     }
 
     /**
-    * Executes parent method parent::render() and returns name of template
-    *
-    * @return string
+     * Executes parent method parent::render() and returns
+     * name of template "oxTiramizoo_settings.tpl"
+     *
+     * @extend Shop_Config::render()
+     *
+     * @return string
     */
     public function render()
     {
@@ -58,6 +85,11 @@ class oxTiramizoo_settings extends Shop_Config
         return 'oxTiramizoo_settings.tpl';
     }
 
+    /**
+    * Retrieve all defined payments
+    *
+    * @return array
+    */
     public function getPaymentsList()
     {
         $oxPaymentList = oxNew('Payment_List');
@@ -80,6 +112,11 @@ class oxTiramizoo_settings extends Shop_Config
         return $aPaymentList;
     }
 
+    /**
+    * Retrieve all defined payments
+    *
+    * @return array
+    */
     public function assignPaymentsToTiramizoo()
     {
         $aPayments = $this->getConfig()->getRequestParameter("payment");
@@ -119,8 +156,6 @@ class oxTiramizoo_settings extends Shop_Config
 
         $aConfBools = $this->getConfig()->getRequestParameter("confbools");
         $aConfStrs  = $this->getConfig()->getRequestParameter("confstrs");
-        $aConfArrs  = $this->getConfig()->getRequestParameter("confarrs");
-        $aConfAarrs = $this->getConfig()->getRequestParameter("confaarrs");
         $aConfInts  = $this->getConfig()->getRequestParameter("confints");
 
         if ( is_array( $aConfBools ) ) {
@@ -135,21 +170,6 @@ class oxTiramizoo_settings extends Shop_Config
           }
         }
 
-        if ( is_array( $aConfArrs ) ) {
-          foreach ( $aConfArrs as $sVarName => $aVarVal ) {
-            if ( !is_array( $aVarVal ) ) {
-              $aVarVal = $this->_multilineToArray($aVarVal);
-            }
-            $oTiramizooConfig->saveShopConfVar("arr", $sVarName, $aVarVal);
-          }
-        }
-
-        if ( is_array( $aConfAarrs ) ) {
-          foreach ( $aConfAarrs as $sVarName => $aVarVal ) {
-            $oTiramizooConfig->saveShopConfVar( "aarr", $sVarName, $this->_multilineToAarray( $aVarVal ));
-          }
-        }
-
         if ( is_array( $aConfInts ) ) {
           foreach ( $aConfInts as $sVarName => $aVarVal ) {
             $oTiramizooConfig->saveShopConfVar( "int", $sVarName, $aVarVal );
@@ -157,7 +177,11 @@ class oxTiramizoo_settings extends Shop_Config
         }
     }
 
-
+    /**
+    * Saves shop configuration variables
+    *
+    * @return bool
+    */
     public function tiramizooApiUrlHasChanged()
     {
         $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
@@ -173,6 +197,8 @@ class oxTiramizoo_settings extends Shop_Config
   
     /**
      * Set active on/off in tiramizoo delivery and delivery set
+     *
+     * @return bool
      */
     public function saveEnableShippingMethod()
     {
@@ -200,13 +226,13 @@ class oxTiramizoo_settings extends Shop_Config
     }
 
     /**
-     * Saves main user parameters.
+     * Synchronize all retail locations.
      *
      * @return mixed
      */
     public function synchronize()
     {
-        try 
+        try
         {
             $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
@@ -228,7 +254,7 @@ class oxTiramizoo_settings extends Shop_Config
 
 
     /**
-     * Saves main user parameters.
+     * Saves main user parameters and redirect back to tiramizoo settings.
      *
      * @return mixed
      */
@@ -261,10 +287,13 @@ class oxTiramizoo_settings extends Shop_Config
         return 'oxtiramizoo_settings';
     }
 
-
+    /**
+     * Add new retail location and redirect back to tiramizoo settings.
+     *
+     * @return mixed
+     */
     public function addNewLocation()
     {
-
         $sApiToken = trim($this->getConfig()->getRequestParameter('api_token'));
         $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
         $oTiramizooRetailLocation = oxNew('oxTiramizoo_RetailLocation');
@@ -274,7 +303,6 @@ class oxTiramizoo_settings extends Shop_Config
             $oTiramizooRetailLocation->load( $sOxid );            
         }
 
-        //@ToDo: change this
         $oTiramizooRetailLocation->oxtiramizooretaillocation__oxname = new oxField(oxTiramizoo_Date::date());
         $oTiramizooRetailLocation->oxtiramizooretaillocation__oxapitoken = new oxField( $sApiToken );
         $oTiramizooRetailLocation->oxtiramizooretaillocation__oxshopid = new oxField( $oTiramizooConfig->getShopId() );
@@ -287,7 +315,6 @@ class oxTiramizoo_settings extends Shop_Config
         } catch (oxTiramizoo_ApiException $e) {
             $oTiramizooRetailLocation->delete();
 
-            //@todo: add errors
             return 'oxtiramizoo_settings';
         }
 
@@ -296,6 +323,11 @@ class oxTiramizoo_settings extends Shop_Config
         return 'oxtiramizoo_settings';
     }
 
+    /**
+     * Remove retail location and redirect back to tiramizoo settings.
+     *
+     * @return mixed
+     */
     public function removeLocation()
     {
         $sApiToken = trim($this->getConfig()->getRequestParameter('api_token'));
@@ -313,7 +345,7 @@ class oxTiramizoo_settings extends Shop_Config
     }
 
     /**
-     * Validate if enable
+     * Validate configuration enabling
      *
      * @return array
      */
@@ -346,5 +378,4 @@ class oxTiramizoo_settings extends Shop_Config
 
         return $errors;
     }
-
 }

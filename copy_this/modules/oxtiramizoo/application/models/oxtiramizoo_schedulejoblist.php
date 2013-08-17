@@ -1,5 +1,24 @@
 <?php
+/**
+ * This file is part of the oxTiramizoo OXID eShop plugin.
+ *
+ * LICENSE: This source file is subject to the MIT license that is available
+ * through the world-wide-web at the following URI:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category  module
+ * @package   oxTiramizoo
+ * @author    Tiramizoo GmbH <support@tiramizoo.com>
+ * @copyright Tiramizoo GmbH
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
 
+/**
+ * Schedule Job List manager.
+ *
+ * @extend oxList
+ * @package oxTiramizoo
+ */
 class oxTiramizoo_ScheduleJobList extends oxList {
 
     /**
@@ -9,12 +28,28 @@ class oxTiramizoo_ScheduleJobList extends oxList {
      */
     protected $_sObjectsInListName = 'oxTiramizoo_ScheduleJob';
 
+    /**
+     * Object core table name
+     *
+     * @var string
+     */
     protected $_sCoreTable = 'oxtiramizooschedulejob';
 
+    /**
+     * Job types with class names
+     *
+     * @var array
+     */
     protected $_aJobTypes = array('send_order'                  => 'oxTiramizoo_SendOrderJob',
                                   'synchronize_configuration'   => 'oxTiramizoo_SyncConfigJob');
 
-
+    /**
+     * Loads limited number of jobs to run 
+     *
+     * @param int $iLimit jobs limit
+     *
+     * @return null;
+     */
     public function loadToRun($iLimit = 10)
     {
         $sTableName = $this->getBaseObject()->getCoreTableName();
@@ -34,7 +69,8 @@ class oxTiramizoo_ScheduleJobList extends oxList {
     } 
 
     /**
-     * Selects and SQL, creates objects and assign them
+     * Selects and SQL, creates objects with specified type
+     * and assign them
      *
      * @param string $sSql SQL select statement
      *

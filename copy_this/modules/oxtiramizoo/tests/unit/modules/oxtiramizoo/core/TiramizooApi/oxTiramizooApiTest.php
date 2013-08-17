@@ -1,7 +1,7 @@
 <?php
 
 
-class unit_core_TiramizooApi_oxTiramizooApiTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooApiTest extends OxidTestCase
 {	
 	protected function setUp()
 	{
@@ -12,7 +12,7 @@ class unit_core_TiramizooApi_oxTiramizooApiTest extends OxidTestCase
 	{
 		$aResult = array('soma_api_result');
 
-		$oTiramizooApi = $this->getMockBuilder('oxTiramizoo_Api')->disableOriginalConstructor()->setMethods(array('request'))->getMock();
+		$oTiramizooApi = $this->getMock('oxTiramizoo_Api', array('request'), array(), '', false);
 		$oTiramizooApi->expects($this->any())->method('request')->will($this->returnValue($aResult));
 
 		$this->assertEquals($aResult, $oTiramizooApi->sendOrder('someData'));
@@ -22,7 +22,7 @@ class unit_core_TiramizooApi_oxTiramizooApiTest extends OxidTestCase
 	{
 		$aResult = array('soma_api_result');
 
-		$oTiramizooApi = $this->getMockBuilder('oxTiramizoo_Api')->disableOriginalConstructor()->setMethods(array('requestGet'))->getMock();
+		$oTiramizooApi = $this->getMock('oxTiramizoo_Api', array('requestGet'), array(), '', false);
 		$oTiramizooApi->expects($this->any())->method('requestGet')->will($this->returnValue($aResult));
 
 		$this->assertEquals($aResult, $oTiramizooApi->getAvailableServiceAreas('someData'));
@@ -32,7 +32,7 @@ class unit_core_TiramizooApi_oxTiramizooApiTest extends OxidTestCase
 	{
 		$aResult = array('soma_api_result', 'http_status' => 200);
 
-		$oTiramizooApi = $this->getMockBuilder('oxTiramizoo_Api')->disableOriginalConstructor()->setMethods(array('requestGet'))->getMock();
+		$oTiramizooApi = $this->getMock('oxTiramizoo_Api', array('requestGet'), array(), '', false);
 		$oTiramizooApi->expects($this->any())->method('requestGet')->will($this->returnValue($aResult));
 
 		$this->assertEquals($aResult, $oTiramizooApi->getRemoteConfiguration('someData'));
@@ -44,7 +44,7 @@ class unit_core_TiramizooApi_oxTiramizooApiTest extends OxidTestCase
 
 		$aResult = array('soma_api_result', 'http_status' => 500);
 
-		$oTiramizooApi = $this->getMockBuilder('oxTiramizoo_Api')->disableOriginalConstructor()->setMethods(array('requestGet'))->getMock();
+		$oTiramizooApi = $this->getMock('oxTiramizoo_Api', array('requestGet'), array(), '', false);
 		$oTiramizooApi->expects($this->any())->method('requestGet')->will($this->returnValue($aResult));
 
 		$this->assertNotEquals($aResult, $oTiramizooApi->getRemoteConfiguration('someData'));

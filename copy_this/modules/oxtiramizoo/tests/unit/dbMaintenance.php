@@ -310,7 +310,7 @@ class dbMaintenance
                 $sEntry = 'null';
                 $sValues.='null,';
             } else {
-                $sEntry = mysql_escape_string($sEntry);
+                $sEntry = mysql_real_escape_string($sEntry);
                 $sValues.='"'.$sEntry.'",';
             }
 

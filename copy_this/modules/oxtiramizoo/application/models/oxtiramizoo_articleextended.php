@@ -1,5 +1,24 @@
 <?php
+/**
+ * This file is part of the oxTiramizoo OXID eShop plugin.
+ *
+ * LICENSE: This source file is subject to the MIT license that is available
+ * through the world-wide-web at the following URI:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category  module
+ * @package   oxTiramizoo
+ * @author    Tiramizoo GmbH <support@tiramizoo.com>
+ * @copyright Tiramizoo GmbH
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
 
+/**
+ * Tiramizoo Article Extended manager.
+ *
+ * @extends oxBase
+ * @package oxTiramizoo
+ */
 class oxTiramizoo_ArticleExtended extends oxBase {
 
     /**
@@ -16,12 +35,13 @@ class oxTiramizoo_ArticleExtended extends oxBase {
      */
     protected $_sClassName = 'oxTiramizoo_ArticleExtended';
 
-    protected $_aConfigVars = null;
 
     protected $_oArticle = null;
 
     /**
      * Class constructor
+     * 
+     * @extend oxBase::__construct()
      *
      * @return null
      */
@@ -139,7 +159,7 @@ class oxTiramizoo_ArticleExtended extends oxBase {
             }
 
             //category can override dimensions and weight but only all or nothing
-            if ($aCategoryData['tiramizoo_weight'] && $aCategoryData['tiramizoo_width'] && $aCategoryData['tiramizoo_height'] && $aCategoryData['tiramizoo_length']) {
+            if ($this->_dataCanBeInheritedByCategoryData($aCategoryData)) {
                 $aTiramizooInheritedData['weight'] = $aCategoryData['tiramizoo_weight'];
                 $aTiramizooInheritedData['width'] = $aCategoryData['tiramizoo_width'];
                 $aTiramizooInheritedData['height'] = $aCategoryData['tiramizoo_height'];
@@ -148,6 +168,11 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         }
 
         return $aTiramizooInheritedData;
+    }
+
+    private function _dataCanBeInheritedByCategoryData($aCategoryData)
+    {
+        return $aCategoryData['tiramizoo_weight'] && $aCategoryData['tiramizoo_width'] && $aCategoryData['tiramizoo_height'] && $aCategoryData['tiramizoo_length'];
     }
 
     /**
@@ -193,19 +218,16 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         $aTiramizooInheritedData = $this->getArticleInheritData();
 
         //article override dimensions and weight but only if all parameters are specified
-        if ($oArticle->oxarticles__oxweight->value && 
-            $oArticle->oxarticles__oxwidth->value &&
-            $oArticle->oxarticles__oxheight->value && 
-            $oArticle->oxarticles__oxlength->value) {
+        if ($this->_hasWeightAndDimensions()) {
                 $item->weight = $oArticle->oxarticles__oxweight->value;
                 $item->width = $oArticle->oxarticles__oxwidth->value * 100;
                 $item->height = $oArticle->oxarticles__oxheight->value * 100;
                 $item->length = $oArticle->oxarticles__oxlength->value * 100;
         } else {
-            $item->weight = isset($aTiramizooInheritedData['weight']) && $aTiramizooInheritedData['weight'] ? $aTiramizooInheritedData['weight'] : 0;
-            $item->width = isset($aTiramizooInheritedData['width']) && $aTiramizooInheritedData['width'] ? $aTiramizooInheritedData['width'] : 0;
-            $item->height = isset($aTiramizooInheritedData['height']) && $aTiramizooInheritedData['height'] ? $aTiramizooInheritedData['height'] : 0;
-            $item->length = isset($aTiramizooInheritedData['length']) && $aTiramizooInheritedData['length'] ? $aTiramizooInheritedData['length'] : 0;
+            $item->weight = $this->_getProperty($aTiramizooInheritedData, 'weight');
+            $item->width = $this->_getProperty($aTiramizooInheritedData, 'width');
+            $item->height = $this->_getProperty($aTiramizooInheritedData, 'height');
+            $item->length = $this->_getProperty($aTiramizooInheritedData, 'length');
         }
 
         //convert to float val
@@ -216,6 +238,21 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         $item->quantity = floatval($item->quantity);
 
         return $item;
+    }
+
+    protected function _getProperty($aTiramizooInheritedData, $sPropertyName)
+    {
+        return isset($aTiramizooInheritedData[$sPropertyName]) && $aTiramizooInheritedData[$sPropertyName] ? $aTiramizooInheritedData[$sPropertyName] : 0;
+    }
+ 
+
+    protected function _hasWeightAndDimensions()
+    {
+        $oArticle = $this->getArticle();
+        return $oArticle->oxarticles__oxweight->value && 
+            $oArticle->oxarticles__oxwidth->value &&
+            $oArticle->oxarticles__oxheight->value && 
+            $oArticle->oxarticles__oxlength->value;
     }
 
     public function getDisabledCategory() 
@@ -257,7 +294,7 @@ class oxTiramizoo_ArticleExtended extends oxBase {
 
         foreach ($aCheckCategories as $aCategoryData) 
         {   
-            if ($aCategoryData['tiramizoo_weight'] && $aCategoryData['tiramizoo_width'] && $aCategoryData['tiramizoo_height'] && $aCategoryData['tiramizoo_length']) {
+            if ($this->_dataCanBeInheritedByCategoryData($aCategoryData)) {
                 $inheritedCategoryId = $aCategoryData['oxid'];
             }
         }
@@ -270,7 +307,4 @@ class oxTiramizoo_ArticleExtended extends oxBase {
 
         return null;
     }
-
-
-
 }

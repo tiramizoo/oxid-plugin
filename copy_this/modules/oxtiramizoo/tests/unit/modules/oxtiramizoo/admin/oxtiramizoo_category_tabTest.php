@@ -1,7 +1,7 @@
 <?php
 
 
-class Unit_Admin_oxTiramizoo_Category_TabTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_Category_TabTest extends OxidTestCase
 {
 
     protected function tearDown()
@@ -11,18 +11,19 @@ class Unit_Admin_oxTiramizoo_Category_TabTest extends OxidTestCase
 
     public function testRender()
     {
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
-
-        $map = array(
-          array('oxid', false, 'some category id'),
-        );
+        $oConfig = $this->getMock('oxConfig', array('getRequestParameter'), array(), '', false);
 
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
-                ->will($this->returnValueMap($map));
-    	
+                ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('oxid', 'some category id'),
+                    );
+                    
+                    return returnValueMap($valueMap, func_get_args());
+                }));    	
 
-    	$oCategoryTab = $this->getMockBuilder('oxTiramizoo_Category_Tab')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+    	$oCategoryTab = $this->getMock('oxTiramizoo_Category_Tab', array('__construct', 'getConfig'), array(), '', false);
         $oCategoryTab->expects($this->any())
                     ->method('getConfig')
                     ->will($this->returnValue($oConfig));
@@ -32,18 +33,23 @@ class Unit_Admin_oxTiramizoo_Category_TabTest extends OxidTestCase
 
     public function testSave()
     {
-        $oConfig = $this->getMockBuilder('oxConfig')->disableOriginalConstructor()->setMethods(array('getRequestParameter'))->getMock();
-
-        $map = array(
-          array('oxid', false, 'some category id'),
-          array('oxTiramizooCategoryExtended', false, array()),
-        );
+        $oConfig = $this->getMock('oxConfig', array('getRequestParameter'), array(), '', false);
 
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
-                ->will($this->returnValueMap($map));
-    	
-        $oTiramizooCategoryExtended = $this->getMockBuilder('oxTiramizoo_CategoryExtended')->disableOriginalConstructor()->setMethods(array('load', 'assign', 'save'))->getMock();
+                ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('oxid', 'some category id'),
+                        array('oxTiramizooCategoryExtended', array()),
+                    );
+                    
+                    $parameters = func_get_args();
+                    $parameterCount = count($parameters);
+
+                    return returnValueMap($valueMap, func_get_args());
+                }));    
+
+        $oTiramizooCategoryExtended = $this->getMock('oxTiramizoo_CategoryExtended', array('load', 'assign', 'save'), array(), '', false);
         $oTiramizooCategoryExtended->expects($this->once())
                     			   ->method('load');
         $oTiramizooCategoryExtended->expects($this->once())
@@ -52,7 +58,7 @@ class Unit_Admin_oxTiramizoo_Category_TabTest extends OxidTestCase
                     			   ->method('save');
         oxTestModules::addModuleObject('oxTiramizoo_CategoryExtended', $oTiramizooCategoryExtended);
 
-    	$oCategoryTab = $this->getMockBuilder('oxTiramizoo_Category_Tab')->disableOriginalConstructor()->setMethods(array('__construct', 'getConfig'))->getMock();
+    	$oCategoryTab = $this->getMock('oxTiramizoo_Category_Tab', array('__construct', 'getConfig'), array(), '', false);
         $oCategoryTab->expects($this->any())
                     ->method('getConfig')
                     ->will($this->returnValue($oConfig));

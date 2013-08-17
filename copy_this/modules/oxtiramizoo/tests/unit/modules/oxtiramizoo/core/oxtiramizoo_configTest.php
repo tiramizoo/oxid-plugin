@@ -2,18 +2,18 @@
 
 
 
-class Unit_Core_oxTiramizoo_ConfigTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_ConfigTest extends OxidTestCase
 {
 
 
 
 	public function testSynchronizeAll()
 	{
-		$oTiramizooApi = $this->getMockBuilder('oxTiramizoo_Api')->disableOriginalConstructor()->getMock();
+		$oTiramizooApi = $this->getMock('oxTiramizoo_Api', array(), array(), '', false);
 
         oxTestModules::addModuleObject('oxTiramizoo_Api', $oTiramizooApi);
 
-		$oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
+		$oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 		$oRetailLocation->expects($this->exactly(2))->method('synchronizeConfiguration');
 
         oxTestModules::addModuleObject('oxTiramizoo_RetailLocation', $oRetailLocation);
@@ -31,7 +31,7 @@ class Unit_Core_oxTiramizoo_ConfigTest extends OxidTestCase
                          'confselects' => array(),
                          'confints' => array('oxTiramizooVariable' => 1));
 
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->setMethods(array('getConfigParam'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getConfigParam'), array(), '', false);
 
         $oResource = new modResource();
         $oResource->recordCount = 1;
@@ -50,7 +50,7 @@ class Unit_Core_oxTiramizoo_ConfigTest extends OxidTestCase
 
 	public function testGetShopConfVar()
 	{
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_Config')->disableOriginalConstructor()->setMethods(array('getConfigParam'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getConfigParam'), array(), '', false);
 
         $oTiramizooConfig->init();
         $sShopId  = $oTiramizooConfig->getShopId();

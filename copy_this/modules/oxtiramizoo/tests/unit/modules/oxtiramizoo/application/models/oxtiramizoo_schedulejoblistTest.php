@@ -1,7 +1,7 @@
 <?php
 
 
-class Unit_Application_Models_oxTiramizoo_ScheduleJobListTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ScheduleJobListTest extends OxidTestCase
 {
 
     protected function tearDown()
