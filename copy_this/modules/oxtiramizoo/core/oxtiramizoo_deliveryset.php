@@ -1,9 +1,22 @@
 <?php
+/**
+ * This file is part of the oxTiramizoo OXID eShop plugin.
+ *
+ * LICENSE: This source file is subject to the MIT license that is available
+ * through the world-wide-web at the following URI:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category  module
+ * @package   oxTiramizoo
+ * @author    Tiramizoo GmbH <support@tiramizoo.com>
+ * @copyright Tiramizoo GmbH
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
 
 /**
- * Manage tiramizoo delivery sets
+ * Main class for Tiramizoo Delivery logic. Manage tiramizoo delivery sets and time windows.
  *
- * @package: oxTiramizoo
+ * @package oxTiramizoo
  */
 class oxTiramizoo_DeliverySet
 {
@@ -94,7 +107,7 @@ class oxTiramizoo_DeliverySet
     /**
      * Initialize 
      * 
-     * @param oxuser|null       $oUser             Userr object
+     * @param oxuser|null       $oUser             User object
      * @param oxaddress|null    $oDeliveryAddress  Delivery address provided in checkout process
      *
      * @return null
@@ -167,9 +180,9 @@ class oxTiramizoo_DeliverySet
     }
 
     /**
-     * Set Default itme window 
+     * Set Default time window 
      * 
-     * @return null
+     * @return bool
      */
     public function setDefaultTimeWindow()
     {
@@ -191,11 +204,12 @@ class oxTiramizoo_DeliverySet
         return false;
     }
 
-
     /**
      * Set current delivery type name if is valid
      * 
-     * @throws oxTiramizoo_InvalidDeliveryTypeException
+     * @param string $sTiramizooDeliveryType delivery type name
+     * @throws oxTiramizoo_InvalidDeliveryTypeException if delivery type is invalid
+     *
      * @return null
      */
     public function setTiramizooDeliveryType($sTiramizooDeliveryType)
@@ -212,7 +226,9 @@ class oxTiramizoo_DeliverySet
     /**
      * Set current time window if is valid
      * 
-     * @throws oxTiramizoo_InvalidTimeWindowException
+     * @param string $sTimeWindow time window hash name     
+     * @throws oxTiramizoo_InvalidTimeWindowException if not found time window object or is not valid
+     *
      * @return null
      */
     public function setSelectedTimeWindow($sTimeWindow)
@@ -233,7 +249,7 @@ class oxTiramizoo_DeliverySet
     /**
      * Gets validated collection of available delivery types
      *
-     * @return mixed
+     * @return array
      */
     public function getAvailableDeliveryTypes()
     {
@@ -306,6 +322,9 @@ class oxTiramizoo_DeliverySet
     /**
      * Choose which postal code should be used in amtching user's postal code and tiramizoo service areas
      * 
+     * @param oxuser       $oUser             User object
+     * @param oxaddress    $oDeliveryAddress  Delivery address provided in checkout process
+     *
      * @return string|null
      */
     public function refreshDeliveryPostalCode($oUser, $oDeliveryAddress)
@@ -328,7 +347,8 @@ class oxTiramizoo_DeliverySet
     /**
      * Gets the API token matched by user's postal code
      * 
-     * @throws oxTiramizoo_NotAvailableException
+     * @throws oxTiramizoo_NotAvailableException if token is not valid
+     * 
      * @return string API token
      */
     public function getApiToken()
@@ -366,7 +386,8 @@ class oxTiramizoo_DeliverySet
     /**
      * Gets the current retail location object from API token
      * 
-     * @throws oxTiramizoo_NotAvailableException
+     * @throws oxTiramizoo_NotAvailableException if retail location is not exists
+     *
      * @return oxTiramizoo_RetailLocation
      */
     public function getRetailLocation()

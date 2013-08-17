@@ -1,10 +1,10 @@
 <?php
 
-class Unit_Core_oxTiramizoo_DeliveryTypeEveningTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeEveningTest extends OxidTestCase
 {
 	protected function setUp()
 	{
-	    $this->_oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
+	    $this->_oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 	}
 
 	public function testIsAvailable()
@@ -14,15 +14,15 @@ class Unit_Core_oxTiramizoo_DeliveryTypeEveningTest extends OxidTestCase
              ->will($this->returnValue(array('address_line_1' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
-             								 'name' => 'me',
+             								 'name' => 'me', 
              								 'phone_number' => '5553333666')));
-
+	    
 		$this->_oRetailLocation->expects($this->any())
              ->method('getAvailableTimeWindows')
              ->will($this->returnValue(array()));
-
+	    
 	    $this->_oSubj = $this->getMock('oxTiramizoo_DeliveryTypeEvening', array('getEveningTimeWindow'), array($this->_oRetailLocation));
-
+	    
 	    $this->_oSubj->expects($this->any())
 	    	 ->method('getEveningTimeWindow')
 	    	 ->will($this->returnValue(true));
@@ -38,15 +38,15 @@ class Unit_Core_oxTiramizoo_DeliveryTypeEveningTest extends OxidTestCase
              ->will($this->returnValue(array('address_line_1' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
-             								 'name' => 'me',
+             								 'name' => 'me', 
              								 'phone_number' => '5553333666')));
-
+	    
 		$this->_oRetailLocation->expects($this->any())
              ->method('getAvailableTimeWindows')
              ->will($this->returnValue(array()));
 
 	    $this->_oSubj = $this->getMock('oxTiramizoo_DeliveryTypeEvening', array('getEveningTimeWindow'), array($this->_oRetailLocation));
-
+	    
 	    $this->_oSubj->expects($this->any())
 	    	 ->method('getEveningTimeWindow')
 	    	 ->will($this->returnValue(null));
@@ -56,18 +56,18 @@ class Unit_Core_oxTiramizoo_DeliveryTypeEveningTest extends OxidTestCase
 
 	public function testIsNotAvailableIfParentIsNotAvailable()
 	{
-	    $this->_oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
+	    $this->_oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 
 		$this->_oRetailLocation->expects($this->at(0))
              ->method('getConfVar')
              ->will($this->returnValue(0));
-
+	    
 		$this->_oRetailLocation->expects($this->any())
              ->method('getAvailableTimeWindows')
              ->will($this->returnValue(array()));
 
 	    $this->_oSubj = $this->getMock('oxTiramizoo_DeliveryTypeEvening', array('getEveningTimeWindow'), array( $this->_oRetailLocation));
-
+	    
 	    $this->_oSubj->expects($this->any())
 	    	 ->method('getEveningTimeWindow')
 	    	 ->will($this->returnValue(null));
@@ -136,7 +136,7 @@ class Unit_Core_oxTiramizoo_DeliveryTypeEveningTest extends OxidTestCase
 
 
 	    // not preset hours
-	    $this->_oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
+	    $this->_oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);	    
 		$this->_oRetailLocation->expects($this->any())
              ->method('getConfVar')
              ->will($this->returnValue(array()));

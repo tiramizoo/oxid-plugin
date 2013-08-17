@@ -1,39 +1,57 @@
 <?php
+/**
+ * This file is part of the oxTiramizoo OXID eShop plugin.
+ *
+ * LICENSE: This source file is subject to the MIT license that is available
+ * through the world-wide-web at the following URI:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category  module
+ * @package   oxTiramizoo
+ * @author    Tiramizoo GmbH <support@tiramizoo.com>
+ * @copyright Tiramizoo GmbH
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
 
 /**
  * oxTiramizoo API class used to connection with Tiramizoo API. Main functionality
- * are getting quotes, sending order and build API data.
- *
- * @package: oxTiramizoo
+ * are getting configuration, sending order and getting service areas. Implement Singleton pattern.
+ * 
+ * @extend TiramizooApi
+ * @package oxTiramizoo
  */
 class oxTiramizoo_Api extends TiramizooApi
 {
     /**
-     * Singleton instance
+     * Array of singleton instances oxTiramizoo_Api class
      * 
-     * @var oxTiramizoo_Api
-     */
-    protected static $_instance = null;
-
-    /**
-     * Singleton instance
-     * 
-     * @var oxTiramizoo_Api
+     * @var array
      */
     protected static $_instances = null;
 
     /**
-     * @var mixed used for lazy loading
-     **/
+     * Array of available working hours used for lazy loading
+     * 
+     * @var mixed 
+     */
     protected $_aAvailableWorkingHours = null;
 
     /**
-     * @var mixed used for lazy loading
-     **/
+     * Array of remote configuration used for lazy loading
+     * 
+     * @var mixed 
+     */
     protected $_aRemoteConfiguration = null;
     
     /**
-     * Create the API object with api token and url get from appliaction config
+     * Create the API object with API token and url
+     * executes parent::_construct()
+     * 
+     * @extend TiramizooApi::_construct()
+     *
+     * @param string $sApiToken API token
+     * 
+     * @return null
      */
     public function __construct( $sApiToken )
     {
@@ -43,7 +61,9 @@ class oxTiramizoo_Api extends TiramizooApi
     }
 
     /**
-     * Get the instance of class
+     * Get the instance by API token
+     *
+     * @param string $sApiToken API token
      * 
      * @return oxTiramizoo_Api
      */
@@ -60,6 +80,7 @@ class oxTiramizoo_Api extends TiramizooApi
      * Send order to the API
      * 
      * @param  mixed $data pickup, delivery and items data
+     *
      * @return mixed Array with status code of request and response data
      */
     public function sendOrder($data)
@@ -70,7 +91,10 @@ class oxTiramizoo_Api extends TiramizooApi
     }
 
     /**
-     * Get configuration
+     * Get remote configuration
+     *
+     * @param string $sApiToken API token
+     * @throws oxTiramizoo_ApiException if status not equal 200
      * 
      * @return mixed Array with status code of request and response data
      */
@@ -93,7 +117,9 @@ class oxTiramizoo_Api extends TiramizooApi
     /**
      * Get service areas
      * 
-     * @param string $sPickupCode
+     * @param string $sPostalCode postal code 
+     * @param string $aRangeDates range dates
+     * 
      * @return mixed Array with status code of request and response data
      */
     public function getAvailableServiceAreas($sPostalCode, $aRangeDates = array())

@@ -15,7 +15,7 @@ class TiramizooApiExposed extends TiramizooApi
     }
 }
 
-class Unit_Core_TiramizooApi_TiramizooApiTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Core_TiramizooApi_TiramizooApiTest extends OxidTestCase
 {	
 	public function setUp()
 	{

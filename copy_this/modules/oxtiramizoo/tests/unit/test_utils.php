@@ -451,7 +451,7 @@ abstract class modOXID
         $oConfig->setAdminMode( null );
 
         if ( OXID_VERSION_EE ) :
-            // $oConfig->setRights( null );
+            $oConfig->setRights( null );
         endif;
         oxTestModules::cleanAllModules();
     }

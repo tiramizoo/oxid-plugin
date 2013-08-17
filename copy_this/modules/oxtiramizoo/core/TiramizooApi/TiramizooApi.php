@@ -1,8 +1,21 @@
 <?php
 /**
- * Pure class used for sending requests to the API via cURL.
+ * This file is part of the oxTiramizoo OXID eShop plugin.
  *
- * @package: oxTiramizoo
+ * LICENSE: This source file is subject to the MIT license that is available
+ * through the world-wide-web at the following URI:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category  module
+ * @package   oxTiramizoo
+ * @author    Tiramizoo GmbH <support@tiramizoo.com>
+ * @copyright Tiramizoo GmbH
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
+/**
+ * Tiramizoo API wrapper class used for sending requests to the API via cURL.
+ *
+ * @package oxTiramizoo
  */
 class TiramizooApi 
 {
@@ -42,8 +55,11 @@ class TiramizooApi
 
     /**
      * Construct the object with api key and url
+     *
      * @param string $api_url   API url
      * @param string $api_token API token to authenticate
+     *
+     * @return null
      */
     protected function __construct($api_url, $api_token) 
     {
@@ -57,6 +73,7 @@ class TiramizooApi
      * @param  string  $path API path
      * @param  array   $data  Data to send
      * @param  boolean $result result
+     *
      * @return boolean Return true if success otherwise false
      */
     public function request($path, $data = array(), &$result = false) 
@@ -97,6 +114,7 @@ class TiramizooApi
      * @param  string  $path API path
      * @param  array   $data  Data to send
      * @param  boolean $result result
+     *
      * @return boolean Return true if success otherwise false
      */
     public function requestGet($path, $data = array(), &$result = false) 
@@ -128,6 +146,7 @@ class TiramizooApi
      * Unescape json items
      * 
      * @param  string $m Element's value
+     *
      * @return string unescaped value
      */
     protected function json_unescape($m) 
@@ -140,7 +159,9 @@ class TiramizooApi
      * 
      * @param  integer $iTimeOut The maximum number of seconds to allow cURL functions to execute.  
      * @param  integer $iConnectionTimeOut The number of seconds to wait while trying to connect
-     * */
+     *
+     * @return null
+     **/
     public static function setConnectionTimeout($iTimeOut, $iConnectionTimeOut)
     {
         // @codeCoverageIgnoreStart

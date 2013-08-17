@@ -1,10 +1,37 @@
 <?php
+/**
+ * This file is part of the oxTiramizoo OXID eShop plugin.
+ *
+ * LICENSE: This source file is subject to the MIT license that is available
+ * through the world-wide-web at the following URI:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category  module
+ * @package   oxTiramizoo
+ * @author    Tiramizoo GmbH <support@tiramizoo.com>
+ * @copyright Tiramizoo GmbH
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
 
 /**
  * Extends oxbasket class. Overrides method to calculate price
+ *
+ * @extends oxbasket
+ * @package oxTiramizoo
  */
 class oxTiramizoo_oxbasket extends oxTiramizoo_oxbasket_parent
 {
+
+    /**
+     * Calculates basket delivery costs if oxTiramizoo_DeliveryPrice
+     * has overrided method
+     * 
+     * @extend oxbasket::_calcDeliveryCost()
+     *
+     * @see oxTiramizoo_DeliveryPrice
+     *
+     * @return oxPrice
+     */
     protected function _calcDeliveryCost()
     {
         $oDeliveryPrice = parent::_calcDeliveryCost();
@@ -26,6 +53,11 @@ class oxTiramizoo_oxbasket extends oxTiramizoo_oxbasket_parent
         return $oDeliveryPrice;
     }
 
+    /**
+     * Check if items in basket are valid to Tiramizoo Delivery
+     *
+     * @return bool
+     */
     public function isValid()
     {
         if (!count($this->getBasketArticles())) {

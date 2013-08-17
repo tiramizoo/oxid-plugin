@@ -1,11 +1,36 @@
 <?php
-
+/**
+ * This file is part of the oxTiramizoo OXID eShop plugin.
+ *
+ * LICENSE: This source file is subject to the MIT license that is available
+ * through the world-wide-web at the following URI:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category  module
+ * @package   oxTiramizoo
+ * @author    Tiramizoo GmbH <support@tiramizoo.com>
+ * @copyright Tiramizoo GmbH
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
 
 /**
- * Extends oxorder class. Overrides method to allow send order to the API
+ * Extends oxorder class. Overrides _loadFromBasket method to allow send order to the API
+ *
+ * @extends oxorder
+ * @package oxTiramizoo
  */
 class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
 {
+    /**
+     * Execute parent::_loadFromBasket(), prepare object to send order, 
+     * save tiramizoo order extended information after sending order to the API.
+     * 
+     * @extend oxorder::_loadFromBasket()
+     *
+     * @param oxBasket $oBasket Shopping basket object
+     *
+     * @return null
+     */
     protected function _loadFromBasket( oxBasket $oBasket )
     {
         parent::_loadFromBasket( $oBasket );
@@ -71,6 +96,11 @@ class oxTiramizoo_oxorder extends oxTiramizoo_oxorder_parent
         }
     }
 
+    /**
+     * Returns tiramizoo order extended related to current order record
+     *
+     * @return oxTiramizoo_OrderExtended
+     */
     public function getOrderExtended()
     {
         $oTiramizooOrderExtended = oxNew('oxTiramizoo_OrderExtended');

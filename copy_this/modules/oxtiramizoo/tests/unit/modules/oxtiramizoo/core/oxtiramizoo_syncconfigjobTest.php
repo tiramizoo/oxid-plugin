@@ -2,7 +2,7 @@
 
 
 
-class Unit_Core_oxTiramizoo_SyncConfigJobTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SyncConfigJobTest extends OxidTestCase
 {
 	protected $_oSubj = null;
 
@@ -41,7 +41,7 @@ class Unit_Core_oxTiramizoo_SyncConfigJobTest extends OxidTestCase
 
 	public function testRun1()
 	{
-		$oSyncConfigJob = $this->getMockBuilder('oxTiramizoo_SyncConfigJob')->disableOriginalConstructor()->setMethods(array('getRepeats', 'closeJob'))->getMock();
+		$oSyncConfigJob = $this->getMock('oxTiramizoo_SyncConfigJob', array('getRepeats', 'closeJob'), array(), '', false);
 		$oSyncConfigJob->expects($this->any())->method('getRepeats')->will($this->returnValue(oxTiramizoo_SyncConfigJob::MAX_REPEATS + 10));
 		$oSyncConfigJob->expects($this->once())->method('closeJob');
 
@@ -51,12 +51,12 @@ class Unit_Core_oxTiramizoo_SyncConfigJobTest extends OxidTestCase
 	// no retail list
 	public function testRun2()
 	{
-		$oSyncConfigJob = $this->getMockBuilder('oxTiramizoo_SyncConfigJob')->disableOriginalConstructor()->setMethods(array('getRepeats', 'closeJob', 'finishJob'))->getMock();
+		$oSyncConfigJob = $this->getMock('oxTiramizoo_SyncConfigJob', array('getRepeats', 'closeJob', 'finishJob'), array(), '', false);
 		$oSyncConfigJob->expects($this->any())->method('getRepeats')->will($this->returnValue(oxTiramizoo_SyncConfigJob::MAX_REPEATS - 5));
 		$oSyncConfigJob->expects($this->never())->method('closeJob');
 		$oSyncConfigJob->expects($this->once())->method('finishJob');
 
-		$oRetailLocationList = $this->getMockBuilder('oxTiramizoo_RetailLocationList')->disableOriginalConstructor()->setMethods(array('loadAll'))->getMock();
+		$oRetailLocationList = $this->getMock('oxTiramizoo_RetailLocationList', array('loadAll'), array(), '', false);
 		$oRetailLocationList->assign(array());
 
         oxTestModules::addModuleObject('oxTiramizoo_RetailLocationList', $oRetailLocationList);
@@ -67,20 +67,20 @@ class Unit_Core_oxTiramizoo_SyncConfigJobTest extends OxidTestCase
 	// with retail list
 	public function testRun3()
 	{
-		$oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->getMock();
+		$oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 		$aRetailLocationList = array($oRetailLocation, $oRetailLocation);
 
-		$oSyncConfigJob = $this->getMockBuilder('oxTiramizoo_SyncConfigJob')->disableOriginalConstructor()->setMethods(array('getRepeats', 'closeJob', 'finishJob'))->getMock();
+		$oSyncConfigJob = $this->getMock('oxTiramizoo_SyncConfigJob', array('getRepeats', 'closeJob', 'finishJob'), array(), '', false);
 		$oSyncConfigJob->expects($this->any())->method('getRepeats')->will($this->returnValue(oxTiramizoo_SyncConfigJob::MAX_REPEATS - 5));
 		$oSyncConfigJob->expects($this->never())->method('closeJob');
 		$oSyncConfigJob->expects($this->once())->method('finishJob');
 
-		$oRetailLocationList = $this->getMockBuilder('oxTiramizoo_RetailLocationList')->disableOriginalConstructor()->setMethods(array('loadAll'))->getMock();
+		$oRetailLocationList = $this->getMock('oxTiramizoo_RetailLocationList', array('loadAll'), array(), '', false);
 		$oRetailLocationList->assign($aRetailLocationList);
 
         oxTestModules::addModuleObject('oxTiramizoo_RetailLocationList', $oRetailLocationList);
 
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_SyncConfigJob')->disableOriginalConstructor()->setMethods(array('synchronizeAll'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_SyncConfigJob', array('synchronizeAll'), array(), '', false);
 		$oTiramizooConfig->expects($this->exactly(2))->method('synchronizeAll');
 
 		oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
@@ -91,22 +91,22 @@ class Unit_Core_oxTiramizoo_SyncConfigJobTest extends OxidTestCase
 	// throw an exception
 	public function testRun4()
 	{
-		$oRetailLocation = $this->getMockBuilder('oxTiramizoo_RetailLocation')->disableOriginalConstructor()->setMethods(array('getApiToken'))->getMock();
+		$oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array('getApiToken'), array(), '', false);
 		$oRetailLocation->expects($this->any())->method('getApiToken')->will($this->throwException(new oxException));
 		$aRetailLocationList = array($oRetailLocation);
 
-		$oSyncConfigJob = $this->getMockBuilder('oxTiramizoo_SyncConfigJob')->disableOriginalConstructor()->setMethods(array('getRepeats', 'closeJob', 'finishJob', 'refreshJob'))->getMock();
+		$oSyncConfigJob = $this->getMock('oxTiramizoo_SyncConfigJob', array('getRepeats', 'closeJob', 'finishJob', 'refreshJob'), array(), '', false);
 		$oSyncConfigJob->expects($this->any())->method('getRepeats')->will($this->returnValue(oxTiramizoo_SyncConfigJob::MAX_REPEATS - 5));
 		$oSyncConfigJob->expects($this->never())->method('closeJob');
 		$oSyncConfigJob->expects($this->never())->method('finishJob');
 		$oSyncConfigJob->expects($this->once())->method('refreshJob');
 
-		$oRetailLocationList = $this->getMockBuilder('oxTiramizoo_RetailLocationList')->disableOriginalConstructor()->setMethods(array('loadAll'))->getMock();
+		$oRetailLocationList = $this->getMock('oxTiramizoo_RetailLocationList', array('loadAll'), array(), '', false);
 		$oRetailLocationList->assign($aRetailLocationList);
 
         oxTestModules::addModuleObject('oxTiramizoo_RetailLocationList', $oRetailLocationList);
 
-        $oTiramizooConfig = $this->getMockBuilder('oxTiramizoo_SyncConfigJob')->disableOriginalConstructor()->setMethods(array('synchronizeAll'))->getMock();
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_SyncConfigJob', array('synchronizeAll'), array(), '', false);
 		$oTiramizooConfig->expects($this->never())->method('synchronizeAll');
 
 		oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);

@@ -1,15 +1,48 @@
 <?php
+/**
+ * This file is part of the oxTiramizoo OXID eShop plugin.
+ *
+ * LICENSE: This source file is subject to the MIT license that is available
+ * through the world-wide-web at the following URI:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category  module
+ * @package   oxTiramizoo
+ * @author    Tiramizoo GmbH <support@tiramizoo.com>
+ * @copyright Tiramizoo GmbH
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
 
 /**
- * Tiramizoo product tab
+ * Admin category extended article parameters manager.
+ * Collects and updates (on user submit) extended article properties ( individual packaging, enable tiramizoo delivery).
+ * Admin Menu: Administer Products -> Products -> Tiramizoo.
  *
- * @package: oxTiramizoo
+ * @extend oxAdminDetails
+ * @package oxTiramizoo
  */
 class oxTiramizoo_Article_Tab extends oxAdminDetails
 {
     /**
+     * @var oxTiramizoo_ArticleExtended
+     */
+    protected $_oTiramizooArticleExtended = null;
+
+    /**
+     * Getter method, returns oxTiramizoo_ArticleExtended object
+     *
+     * @return oxTiramizoo_ArticleExtended
+     */
+    public function getTiramizooArticleExtended()
+    {
+        return $this->_oTiramizooArticleExtended;
+    }
+
+    /**
      * Collects available article extended parameters, passes them to
      * Smarty engine and returns tamplate file name "article_extend.tpl".
+     *
+     * @extend oxAdminDetails::render
      *
      * @return string
      */
@@ -33,9 +66,9 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
         $this->_aViewData['inheritedData'] = $oTiramizooArticleExtended->getArticleInheritData();
         $this->_aViewData['effectiveData'] = $effectiveData = $oTiramizooArticleExtended->buildArticleEffectiveData();
 
-        if ($effectiveData->weight == 0 || 
-            $effectiveData->width  == 0 || 
-            $effectiveData->height == 0 || 
+        if ($effectiveData->weight == 0 ||
+            $effectiveData->width  == 0 ||
+            $effectiveData->height == 0 ||
             $effectiveData->length == 0) {
 
             $this->_aViewData['warningDimensions'] = 'You have to specify dimensions and weight. You can do this in global settings, category tab or article extended tab.';
@@ -57,12 +90,12 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
         $aParams = $this->getConfig()->getRequestParameter( "oxTiramizooArticleExtended");
 
         if ( $soxId != "-1" && isset( $soxId ) ) {
-            $oTiramizooArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
-            $oTiramizooArticleExtended->load($oTiramizooArticleExtended->getIdByArticleId($soxId));
+            $this->_oTiramizooArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
+            $this->_oTiramizooArticleExtended->load($this->_oTiramizooArticleExtended->getIdByArticleId($soxId));
             $aParams['oxarticleid'] = $soxId;
 
-            $oTiramizooArticleExtended->assign( $aParams );
-            $oTiramizooArticleExtended->save();
+            $this->_oTiramizooArticleExtended->assign( $aParams );
+            $this->_oTiramizooArticleExtended->save();
         }
     }
 }

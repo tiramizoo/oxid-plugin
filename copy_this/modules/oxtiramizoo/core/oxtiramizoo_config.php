@@ -1,42 +1,33 @@
 <?php
-
-
+/**
+ * This file is part of the oxTiramizoo OXID eShop plugin.
+ *
+ * LICENSE: This source file is subject to the MIT license that is available
+ * through the world-wide-web at the following URI:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category  module
+ * @package   oxTiramizoo
+ * @author    Tiramizoo GmbH <support@tiramizoo.com>
+ * @copyright Tiramizoo GmbH
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
 
 /**
- * This class contains tiramizoo config
+ * Tiramizoo config class extends oxConfig used for retrieving
+ * module configuration. Synchronize and save config variables.
  *
- * @package: oxTiramizoo
+ * @extends oxConfig
+ * @package oxTiramizoo
  */
 class oxTiramizoo_Config extends oxConfig
 {
     /**
-     * Singleton instance
-     * 
-     * @var oxTiramizoo_Api
-     */
-    protected static $_instance = null;
-
-    /**
-     * Get the instance of class
-     * 
-     * @return oxTiramizoo_Config
-     */
-    public static function getInstance()
-    {
-        if ( !self::$_instance instanceof oxTiramizoo_Config ) {
-            self::$_instance = new oxTiramizoo_Config();
-        }
-
-        return self::$_instance;
-    }
-
-    public function __construct()
-    {
-
-    }
-
-    /**
      * Synchronize all possible configs
+     *
+     * @param string $sApiToken API token
+     *
+     * @return null
      */
     public function synchronizeAll( $sApiToken = null )
     {
@@ -48,7 +39,6 @@ class oxTiramizoo_Config extends oxConfig
         $sOxid = $oRetailLocation->getIdByApiToken($sApiToken);
 
         $oRetailLocation->load($sOxid);
-
         $oRetailLocation->synchronizeConfiguration( $aRemoteConfiguration );
 
         $aPickupAddress = $oRetailLocation->getConfVar('pickup_contact');
@@ -70,17 +60,47 @@ class oxTiramizoo_Config extends oxConfig
         $oRetailLocation->synchronizeConfiguration($aAvaialbleServiceAreas);
     }
 
+    /**
+     * Adds or upfate oxTiramizoo Module configuration to DB.
+     * 
+     * @extend oxConfig::saveShopConfVar()
+     *
+     * @param string $sVarType Variable Type
+     * @param string $sVarName Variable name
+     * @param mixed  $sVarVal  Variable value (can be string, integer or array)
+     * @param string $sShopId  Shop ID, default is current shop
+     * @param string $sModule  Module name (oxTiramizoo for default)
+     *
+     * @return null
+     */
     public function saveShopConfVar( $sVarType, $sVarName, $sVarVal, $sShopId = null, $sModule = 'oxTiramizoo' )
     {
         parent::saveShopConfVar( $sVarType, $sVarName, $sVarVal, $sShopId, $sModule);
     }
 
+    /**
+     * Retrieves oxTiramizoo Module configuration from DB.
+     * 
+     * @extend oxConfig::saveShopConfVar()
+     *
+     * @param string $sVarName Variable name
+     * @param string $sShopId  Shop ID
+     * @param string $sModule  Module name (oxTiramizoo for default)
+     *
+     * @return object - raw configuration value in DB
+     */
     public function getShopConfVar( $sVarName, $sShopId = null, $sModule = 'oxTiramizoo' )
     {
         return parent::getShopConfVar( $sVarName, $sShopId, $sModule);
     }
 
-
+    /**
+     * Retrieves all oxTiramizoo Module configuration from DB.
+     *
+     * @param string $sShopId  Shop ID
+     *
+     * @return array - array of all oxTiramizoo Module configuration values
+     */
     public function getTiramizooConfVars( $sShopId = null )
     {
         if ( !$sShopId ) {

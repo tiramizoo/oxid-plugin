@@ -1,14 +1,34 @@
 <?php
-
+/**
+ * This file is part of the oxTiramizoo OXID eShop plugin.
+ *
+ * LICENSE: This source file is subject to the MIT license that is available
+ * through the world-wide-web at the following URI:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category  module
+ * @package   oxTiramizoo
+ * @author    Tiramizoo GmbH <support@tiramizoo.com>
+ * @copyright Tiramizoo GmbH
+ * @license   http://opensource.org/licenses/mit-license.php MIT License
+ */
 
 /**
- * Tiramizoo Payment view. Extends to proccess Tiramizoo delivery
- *
- * @package: oxTiramizoo
+ * Payment manager. Extends with Tiramizoo delivery.
+ * 
+ * @extend payment
+ * @package oxTiramizoo
  */
 class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 {
-
+    /**
+     * Executes parent::init(), initialize 
+     * oxTiramizooDeliverySet object 
+     * 
+     * @extend payment::init()
+     *
+     * @return null
+     */
     public function init()
     {
         // @codeCoverageIgnoreStart
@@ -21,15 +41,23 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         $oTiramizooDeliverySet->init($this->getUser(), oxNew( 'oxorder' )->getDelAddressInfo());
     }
 
+    /**
+     * Getting current oxTiramizoo_DeliverySet object
+     * from registry
+     * 
+     * @return oxTiramizoo_DeliverySet
+     */
     public function getTiramizooDeliverySet()
     {
         return oxRegistry::get('oxTiramizoo_DeliverySet');
     }
 
     /**
-     * Get all delivery sets, remove Tiramizoo delivery set if basket couldn't be delivered
-     * by Tiramizoo
+     * Get all delivery sets, remove Tiramizoo delivery set if basket 
+     * couldn't be delivered by Tiramizoo. Executes parent::getAllSets()
      * 
+     * @extend payment::getAllSets()
+     *
      * @return array
      */
     public function getAllSets()
@@ -66,7 +94,9 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 
     /**
      * Changes shipping set to chosen one. If selected Tiramizoo set session variable
-     * aTiramizooTimeWindow
+     * aTiramizooTimeWindow. Executes parent::changeshipping()
+     * 
+     * @extend payment::changeshipping()
      *
      * @return null
      */
@@ -100,9 +130,12 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
     }
 
     /**
-     * Executes parent::render(), check if tiramizoo is available if yes pass vars to templates
+     * Executes parent::render(), check if tiramizoo is available 
+     * if yes passes variables to template
+     * 
+     * @extend payment::render()
      *
-     * @return string
+     * @return string template file name
      */
     public function render()
     {

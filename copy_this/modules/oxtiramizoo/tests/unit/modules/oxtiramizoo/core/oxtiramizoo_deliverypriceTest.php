@@ -2,7 +2,7 @@
 
 
 
-class Unit_Core_oxTiramizoo_DeliveryPriceTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryPriceTest extends OxidTestCase
 {
 
 	protected $_oSubj = null;
