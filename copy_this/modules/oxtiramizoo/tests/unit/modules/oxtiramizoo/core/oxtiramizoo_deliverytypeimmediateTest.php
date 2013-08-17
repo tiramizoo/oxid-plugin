@@ -12,7 +12,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeImmediateTest extend
 	{
 		$this->_oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line' => 'test',
+             ->will($this->returnValue(array('address_line_1' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
              								 'name' => 'me',
@@ -37,7 +37,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeImmediateTest extend
 	{
 		$this->_oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line' => 'test',
+             ->will($this->returnValue(array('address_line_1' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
              								 'name' => 'me',
@@ -84,7 +84,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeImmediateTest extend
 		$oRetailLocation->expects($this->at(1))
              ->method('getConfVar')
              ->with('pickup_contact')
-             ->will($this->returnValue(array('address_line' => 'test',
+             ->will($this->returnValue(array('address_line_1' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
              								 'name' => 'me',
