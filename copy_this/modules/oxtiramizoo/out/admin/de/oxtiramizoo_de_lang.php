@@ -228,7 +228,7 @@ $aLang = array(
 'oxTiramizoo_add_location_error'                        => 'The retail location has not been added. Check an API token and Tiramizoo API URL',
 'oxTiramizoo_remove_location_success'                   => 'The retail location has been removed',
 'oxTiramizoo_synchronize_error'                         => 'There are some problems during the synchronization. Please try again later or contact with Tiramizoo.',
-'oxTiramizoo_synchronize_success'                       => 'REtail location\'s configuration has been synchronized.',
+'oxTiramizoo_synchronize_success'                       => 'Retail location\'s configuration has been synchronized.',
 
 
 'oxTiramizoo_api_settings_section_label'                => 'API connection settings',
@@ -245,17 +245,19 @@ $aLang = array(
 'oxTiramizoo_remove_retail_location_button'             => 'Remove this location',
 'oxTiramizoo_sync_button'                               => 'Synchronize',
 'oxTiramizoo_retail_locations_list_label'               => 'Retail locations',
-'oxTiramizoo_retail_locations_empty_label'              => 'There is no API tokens yet',
+'oxTiramizoo_retail_locations_empty_label'              => 'There are no connected API tokens',
 
 'oxTiramizoo_sync_locations_settings_section_help'      => 'Synchronize manually configurations from retail locations. This proccess is automated and runs once per day.',
 
 'oxTiramizoo_settings_payments_help'                    => 'Payment methods which are available for tiramizoo service. Cash on delivery is currently not supported by Tiramizoo',
 'oxTiramizoo_packing_settings_help'                     => 'Select products packing method',
 'oxTiramizoo_packing_settings_label'                    => 'Define Package size',
-'oxTiramizoo_required_info'                             => 'Die mit * gekennzeichneten Felder sind Pflichtfelder'
+'oxTiramizoo_required_info'                             => 'Die mit * gekennzeichneten Felder sind Pflichtfelder',
 
 
+'oxTiramizoo_invalid_delivery_type_error'               => 'Invalid tiramizoo delivery type',
 
+'oxTiramizoo_invalid_time_window_error'                 => 'Selected time window is no longer available. Please select another.'
 
 
 
