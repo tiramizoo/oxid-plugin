@@ -20,7 +20,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
                       array('oxTiramizoo_payments_required_error', null, true, 'oxTiramizoo_payments_required_error'),
                       array('oxTiramizoo_is_required', null, true, 'oxTiramizoo_is_required'),
                     );
-                    
+
                     return returnValueMap($valueMap, func_get_args());
                 }));
 
@@ -32,7 +32,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
         parent::tearDown();
 
         oxUtilsObject::resetClassInstances();
-        oxRegistry::set('oxLang', null);      
+        oxRegistry::set('oxLang', null);
     }
 
     public function testInit()
@@ -63,7 +63,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
     public function testGetPaymentsList()
     {
         $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct'), array(), '', false);
-        
+
         $oPayment1 = oxNew('oxPayment');
         $oPayment1->oxpayments__oxid = new oxField(1);
         $oPayment1->oxpayments__oxdesc = new oxField('some payment 1');
@@ -81,10 +81,10 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
         oxTestModules::addModuleObject('Payment_List', $oPaymentList);
 
-        $oDb = $this->getMock('stdClass', array('getOne', 'quote'));
+        $oDb = $this->getMock('stdClass', array('getOne', 'quote', 'select'));
 
         $oDb->expects($this->at(0))->method('getOne')->will($this->returnValue(null));
-        $oDb->expects($this->at(5))->method('getOne')->will($this->returnValue(1));
+        $oDb->expects($this->at(9))->method('getOne')->will($this->returnValue(1));
 
         modDb::getInstance()->modAttach($oDb);
 
@@ -138,11 +138,11 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
                         array('confstrs', $aConfStrs),
                         array('confarrs', $aConfArrs),
                         array('confaarrs', $aConfAarrs),
-                        array('confints', $aConfInts)                    
+                        array('confints', $aConfInts)
                     );
-                    
+
                     return returnValueMap($valueMap, func_get_args());
-                }));  
+                }));
 
         $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('saveShopConfVar'));
 
@@ -236,7 +236,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
         $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct'), array(), '', false);
 
-        $this->assertEquals('oxtiramizoo_settings', $oTiramizooSettings->synchronize());
+        $oTiramizooSettings->synchronize();
 
 
         //set exception
@@ -248,7 +248,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
 
-        $this->assertEquals('oxTiramizoo_settings.tpl', $oTiramizooSettings->synchronize());
+        $oTiramizooSettings->synchronize();
     }
 
 
@@ -287,7 +287,8 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
         $oTiramizooSettings->expects($this->at(0))
                            ->method('tiramizooApiUrlHasChanged')
                            ->will($this->returnValue(false));
-        $this->assertEquals('oxtiramizoo_settings', $oTiramizooSettings->save());
+
+        $oTiramizooSettings->save();
 
 
         //test if tiramizoo api url has changed
@@ -295,7 +296,8 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
         $oTiramizooSettings->expects($this->at(0))
                            ->method('tiramizooApiUrlHasChanged')
                            ->will($this->returnValue(true));
-        $this->assertEquals('oxtiramizoo_settings', $oTiramizooSettings->save());
+
+        $oTiramizooSettings->save();
     }
 
     public function testAddNewLocation()
@@ -334,7 +336,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
                            ->method('getConfig')
                            ->will($this->returnValue($oConfig));
 
-        $this->assertEquals('oxtiramizoo_settings', $oTiramizooSettings->addNewLocation());
+        $oTiramizooSettings->addNewLocation();
 
 
         //test without exception in getting remote configuration
@@ -343,7 +345,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
                         ->method('synchronizeAll');
         oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
 
-        $this->assertEquals('oxtiramizoo_settings', $oTiramizooSettings->addNewLocation());
+        $oTiramizooSettings->addNewLocation();
     }
 
     public function testRemoveLocation()
@@ -366,7 +368,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
                            ->method('getConfig')
                            ->will($this->returnValue($oConfig));
 
-        $this->assertEquals('oxtiramizoo_settings', $oTiramizooSettings->removeLocation());
+        $oTiramizooSettings->removeLocation();
     }
 
 
@@ -381,10 +383,10 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
                       array('confstrs', array()),
                       array('payment', array()),
                     );
-                    
+
                     return returnValueMap($valueMap, func_get_args());
                 }));
-    
+
         $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'getConfig'), array(), '', false);
         $oTiramizooSettings->expects($this->any())
                            ->method('getConfig')
@@ -407,7 +409,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
                       array('confstrs', array('oxTiramizoo_api_url' => 'some api url')),
                       array('payment', array()),
                     );
-                    
+
                     return returnValueMap($valueMap, func_get_args());
                 }));
 
@@ -433,7 +435,7 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
                       array('confstrs', array('oxTiramizoo_api_url' => 'some api url', 'oxTiramizoo_shop_url' => 'some shop url')),
                       array('payment', array()),
                     );
-                    
+
                     return returnValueMap($valueMap, func_get_args());
                 }));
 
@@ -459,10 +461,10 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
                         array('confstrs', array('oxTiramizoo_api_url' => 'some api url', 'oxTiramizoo_shop_url' => 'some shop url')),
                         array('payment', array('payment name 1' => 0, 'payment name 2' => 1)),
                     );
-                    
+
                     return returnValueMap($valueMap, func_get_args());
-                }));  
-                
+                }));
+
         $oTiramizooSettings = $this->getMock('oxTiramizoo_settings', array('__construct', 'getConfig'), array(), '', false);
         $oTiramizooSettings->expects($this->any())
                            ->method('getConfig')

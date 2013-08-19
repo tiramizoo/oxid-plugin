@@ -15,8 +15,8 @@
 
 /**
  * Admin tiramizoo API parameters manager.
- * Collects and Updates API connection properties 
- * and Tiramizoo deliveryconfiguration. 
+ * Collects and Updates API connection properties
+ * and Tiramizoo deliveryconfiguration.
  * Admin Menu: Tiramizoo -> Settings.
  *
  * @extend Shop_Config
@@ -27,7 +27,7 @@ class oxTiramizoo_settings extends Shop_Config
     /**
      * Executes parent::init(), run installation/migration
      * proccess.
-     * 
+     *
      * @extend oxAdminView::init()
      *
      * @return null
@@ -67,7 +67,7 @@ class oxTiramizoo_settings extends Shop_Config
         $sCurrentAdminShop = $oTiramizooConfig->getShopId();
 
         $aShopConfVars = $oTiramizooConfig->getTiramizooConfVars();
-        
+
         $this->_aViewData['confstrs'] = $aShopConfVars['confstrs'];
         $this->_aViewData['confarrs'] = $aShopConfVars['confarrs'];
         $this->_aViewData['confaarrs'] = $aShopConfVars['confaarrs'];
@@ -85,6 +85,7 @@ class oxTiramizoo_settings extends Shop_Config
         return 'oxTiramizoo_settings.tpl';
     }
 
+
     /**
     * Retrieve all defined payments
     *
@@ -99,15 +100,18 @@ class oxTiramizoo_settings extends Shop_Config
         $soxId = 'Tiramizoo';
         $oDb = oxDb::getDb();
 
-        foreach ($oxPaymentList->getItemList() as $key => $oPayment) 
+        foreach ($oxPaymentList->getItemList() as $key => $oPayment)
         {
             $aPaymentList[$oPayment->oxpayments__oxid->value] = array();
+
+            $oPayment->loadInLang(oxRegistry::getLang()->getTplLanguage(), $oPayment->getId());
+
             $aPaymentList[$oPayment->oxpayments__oxid->value]['desc'] = $oPayment->oxpayments__oxdesc->value;
 
             $sID = $oDb->getOne("select oxid from oxobject2payment where oxpaymentid = " . $oDb->quote( $oPayment->oxpayments__oxid->value ) . "  and oxobjectid = ".$oDb->quote( $soxId )." and oxtype = 'oxdelset'", false, false);
 
             $aPaymentList[$oPayment->oxpayments__oxid->value]['checked'] = isset($sID) && $sID;
-        }  
+        }
 
         return $aPaymentList;
     }
@@ -126,7 +130,7 @@ class oxTiramizoo_settings extends Shop_Config
 
         $oDb = oxDb::getDb();
 
-        foreach ( $aPayments as $sPaymentId => $isAssigned) 
+        foreach ( $aPayments as $sPaymentId => $isAssigned)
         {
             if ($isAssigned) {
                 // check if we have this entry already in
@@ -144,6 +148,7 @@ class oxTiramizoo_settings extends Shop_Config
             }
         }
     }
+
 
     /**
     * Saves shop configuration variables
@@ -194,7 +199,7 @@ class oxTiramizoo_settings extends Shop_Config
 
         return false;
     }
-  
+
     /**
      * Set active on/off in tiramizoo delivery and delivery set
      *
@@ -210,6 +215,13 @@ class oxTiramizoo_settings extends Shop_Config
 
         if (count($errors)) {
             $isTiramizooEnable = 0;
+
+            foreach ($errors as $error)
+            {
+                $this->addMessage('error', $error);
+            }
+        } else {
+            $this->addMessage('success', oxRegistry::getLang()->translateString('oxTiramizoo_settings_saved_success', oxRegistry::getLang()->getTplLanguage(), true));
         }
 
         $sql = "UPDATE oxdelivery
@@ -239,17 +251,16 @@ class oxTiramizoo_settings extends Shop_Config
             $oRetailLocationList = oxNew('oxTiramizoo_RetailLocationList');
             $oRetailLocationList->loadAll();
 
-            foreach ($oRetailLocationList->getArray() as $oRetailLocation) 
+            foreach ($oRetailLocationList->getArray() as $oRetailLocation)
             {
                 $oTiramizooConfig->synchronizeAll( $oRetailLocation->getApiToken() );
             }
 
-        } catch (oxTiramizoo_ApiException $e) {
-            echo $e->getMessage();
-            return 'oxTiramizoo_settings.tpl';
-        }
+            $this->addMessage('success', oxRegistry::getLang()->translateString('oxTiramizoo_synchronize_success', oxRegistry::getLang()->getTplLanguage(), true));
 
-        return 'oxtiramizoo_settings';
+        } catch (oxTiramizoo_ApiException $e) {
+            $this->addMessage('error', oxRegistry::getLang()->translateString('oxTiramizoo_synchronize_error', oxRegistry::getLang()->getTplLanguage(), true));
+        }
     }
 
 
@@ -262,13 +273,13 @@ class oxTiramizoo_settings extends Shop_Config
     {
         // saving config params
         if ($this->tiramizooApiUrlHasChanged()) {
-            
+
             $this->saveConfVars();
 
             $oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
             $oRetailLocationList->loadAll();
 
-            foreach ($oRetailLocationList->getArray() as $oRetailLocation) 
+            foreach ($oRetailLocationList->getArray() as $oRetailLocation)
             {
                 try
                 {
@@ -276,15 +287,13 @@ class oxTiramizoo_settings extends Shop_Config
                 } catch (oxTiramizoo_ApiException $e) {
                     $oRetailLocation->delete();
                 }
-            }    
+            }
         } else {
             $this->saveConfVars();
         }
 
-        $this->saveEnableShippingMethod();       
+        $this->saveEnableShippingMethod();
         $this->assignPaymentsToTiramizoo();
-    
-        return 'oxtiramizoo_settings';
     }
 
     /**
@@ -297,10 +306,10 @@ class oxTiramizoo_settings extends Shop_Config
         $sApiToken = trim($this->getConfig()->getRequestParameter('api_token'));
         $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
         $oTiramizooRetailLocation = oxNew('oxTiramizoo_RetailLocation');
-        
-        if ($sOxid = $oTiramizooRetailLocation->getIdByApiToken( $sApiToken )) 
+
+        if ($sOxid = $oTiramizooRetailLocation->getIdByApiToken( $sApiToken ))
         {
-            $oTiramizooRetailLocation->load( $sOxid );            
+            $oTiramizooRetailLocation->load( $sOxid );
         }
 
         $oTiramizooRetailLocation->oxtiramizooretaillocation__oxname = new oxField(oxTiramizoo_Date::date());
@@ -312,15 +321,15 @@ class oxTiramizoo_settings extends Shop_Config
         try
         {
             oxTiramizoo_Api::getApiInstance( $sApiToken )->getRemoteConfiguration();
+            $oTiramizooConfig->synchronizeAll( $sApiToken );
+
+            $this->addMessage('success', oxRegistry::getLang()->translateString('oxTiramizoo_add_location_success', oxRegistry::getLang()->getTplLanguage(), true));
+
         } catch (oxTiramizoo_ApiException $e) {
             $oTiramizooRetailLocation->delete();
 
-            return 'oxtiramizoo_settings';
+            $this->addMessage('error', oxRegistry::getLang()->translateString('oxTiramizoo_add_location_error', oxRegistry::getLang()->getTplLanguage(), true));
         }
-
-        $oTiramizooConfig->synchronizeAll( $sApiToken );
-        
-        return 'oxtiramizoo_settings';
     }
 
     /**
@@ -335,13 +344,13 @@ class oxTiramizoo_settings extends Shop_Config
         $oRetailLocation = oxNew('oxTiramizoo_RetailLocation');
         $sOxid = $oRetailLocation->getIdByApiToken($sApiToken);
 
-        if ($sOxid) 
+        if ($sOxid)
         {
             $oRetailLocation->load($sOxid);
-            $oRetailLocation->delete();            
-        }
+            $oRetailLocation->delete();
 
-        return 'oxtiramizoo_settings';
+            $this->addMessage('success', oxRegistry::getLang()->translateString('oxTiramizoo_remove_location_success', oxRegistry::getLang()->getTplLanguage(), true));
+        }
     }
 
     /**
@@ -357,15 +366,15 @@ class oxTiramizoo_settings extends Shop_Config
         $errors = array();
 
         if (!trim($aConfStrs['oxTiramizoo_api_url'])) {
-            $errors[] = oxRegistry::getLang()->translateString('oxTiramizoo_settings_api_url_label', oxRegistry::getLang()->getBaseLanguage(), true) . ' ' . oxRegistry::getLang()->translateString('oxTiramizoo_is_required', oxRegistry::getLang()->getBaseLanguage(), true);
+            $errors[] = oxRegistry::getLang()->translateString('oxTiramizoo_settings_api_url_label', oxRegistry::getLang()->getTplLanguage(), true) . ' ' . oxRegistry::getLang()->translateString('oxTiramizoo_is_required', oxRegistry::getLang()->getTplLanguage(), true);
         }
 
         if (!trim($aConfStrs['oxTiramizoo_shop_url'])) {
-            $errors[] = oxRegistry::getLang()->translateString('oxTiramizoo_settings_shop_url_label', oxRegistry::getLang()->getBaseLanguage(), true) . ' ' . oxRegistry::getLang()->translateString('oxTiramizoo_is_required', oxRegistry::getLang()->getBaseLanguage(), true);
+            $errors[] = oxRegistry::getLang()->translateString('oxTiramizoo_settings_shop_url_label', oxRegistry::getLang()->getTplLanguage(), true) . ' ' . oxRegistry::getLang()->translateString('oxTiramizoo_is_required', oxRegistry::getLang()->getTplLanguage(), true);
         }
 
         $paymentsAreValid = 0;
-        foreach ($aPayments as $paymentName => $paymentIsEnable) 
+        foreach ($aPayments as $paymentName => $paymentIsEnable)
         {
             if ($paymentIsEnable) {
                $paymentsAreValid = 1;
@@ -373,9 +382,36 @@ class oxTiramizoo_settings extends Shop_Config
         }
 
         if (!$paymentsAreValid) {
-            $errors[] = oxRegistry::getLang()->translateString('oxTiramizoo_payments_required_error', oxRegistry::getLang()->getBaseLanguage(), true);
+            $errors[] = oxRegistry::getLang()->translateString('oxTiramizoo_payments_required_error', oxRegistry::getLang()->getTplLanguage(), true);
         }
 
         return $errors;
+    }
+
+    /**
+     * Adds message to view
+     *
+     * @param $sType string type
+     * @param $sDescription string message
+     *
+     * @return void
+     */
+    protected function addMessage($sType, $sDescription)
+    {
+        if (!isset($this->_aViewData['aMessages'])) {
+            $this->_aViewData['aMessages'] = array();
+        }
+
+        $this->_aViewData['aMessages'][] = array('type' => $sType, 'description' => $sDescription);
+    }
+
+    /**
+     * Get messages
+     *
+     * @return array
+     */
+    public function getMessages()
+    {
+        return isset($this->_aViewData['aMessages']) ? $this->_aViewData['aMessages'] : array();
     }
 }
