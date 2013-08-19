@@ -24,8 +24,8 @@ $aLang = array(
 
 'oxTiramizoo_settings_title'                            => 'Tiramizoo settings',
 
-'oxTiramizoo_settings_api_url_label'                    => 'Tiramizoo URL',
-'oxTiramizoo_settings_api_url_help'                     => 'Production version probably https://www.tiramizoo.com/api/v1, testing version https://sandbox.tiramizoo.com/api/v1',
+'oxTiramizoo_settings_api_url_label'                    => 'Tiramizoo API URL',
+'oxTiramizoo_settings_api_url_help'                     => 'Production version https://www.tiramizoo.com/api/v1, testing version https://sandbox.tiramizoo.com/api/v1',
 
 'oxTiramizoo_settings_api_token_label'                  => 'Tiramizoo API token',
 'oxTiramizoo_settings_api_token_help'                   => 'Can be obtained via your user profile',
@@ -165,7 +165,7 @@ $aLang = array(
 
 'oxTiramizoo_article_tab_article_is_enabled'            => 'Article is enabled',
 'oxTiramizoo_article_tab_article_is_disabled'           => 'Article is disabled',
-'oxTiramizoo_article_tab_disabled_by_category_1'        => 'in tiramizoo shipping because parent category', 
+'oxTiramizoo_article_tab_disabled_by_category_1'        => 'in tiramizoo shipping because parent category',
 'oxTiramizoo_article_tab_disabled_by_category_2'        => 'is disabled. Please check the tiramizoo tab in category settings',
 
 'oxTiramizoo_article_tab_effective_values_warning'      => 'You have to specify dimensions and weight. You can do this in global settings, category tab or article extended tab.',
@@ -222,10 +222,44 @@ $aLang = array(
 
 'oxTiramizoo_order_tab_request_label'                   => 'Tiramizoo API request',
 'oxTiramizoo_order_tab_request_help'                    => 'Tiramizoo API request data',
- 
+
 
 'oxTiramizoo_order_tab_webhook_response_label'          => 'Tiramizoo webhook response',
 'oxTiramizoo_order_tab_webhook_response_help'           => 'Tiramizoo webhook response data',
+
+'oxTiramizoo_settings_saved_success'                    => 'Configuration has been saved',
+'oxTiramizoo_add_location_success'                      => 'The retail location has been added',
+'oxTiramizoo_add_location_error'                        => 'The retail location has not been added. Check an API token and Tiramizoo API URL',
+'oxTiramizoo_remove_location_success'                   => 'The retail location has been removed',
+'oxTiramizoo_synchronize_error'                         => 'There are some problems during the synchronization. Please try again later or contact with Tiramizoo.',
+'oxTiramizoo_synchronize_success'                       => 'REtail location\'s configuration has been synchronized.',
+
+
+
+'oxTiramizoo_api_settings_section_label'                => 'API connection settings',
+'oxTiramizoo_packing_settings_section_label'            => 'Packing strategy',
+'oxTiramizoo_default_dimensions_settings_section_label' => 'Default dimensions and weight',
+'oxTiramizoo_payments_settings_section_label'           => 'Available payment methods',
+'oxTiramizoo_stock_enable_settings_section_label'       => 'Enabling shipping method',
+'oxTiramizoo_retail_locations_settings_section_label'   => 'Retail locations',
+'oxTiramizoo_sync_locations_settings_section_label'     => 'Synchronize all configuration',
+'oxTiramizoo_new_token_settings_section_label'          => 'New API token',
+'oxTiramizoo_add_new_token_settings_button_label'       => 'Add new retail location',
+'oxTiramizoo_new_token_label'                           => 'API token',
+'oxTiramizoo_dashboard_link'                            => 'Go to dashboard',
+'oxTiramizoo_remove_retail_location_button'             => 'Remove this location',
+'oxTiramizoo_sync_button'                               => 'Synchronize',
+'oxTiramizoo_retail_locations_list_label'               => 'Retail locations',
+'oxTiramizoo_retail_locations_empty_label'              => 'There is no API tokens yet',
+
+'oxTiramizoo_sync_locations_settings_section_help'      => 'Synchronize manually configurations from retail locations. This proccess is automated and runs once per day.',
+
+'oxTiramizoo_settings_payments_help'                    => 'Payment methods which are available for tiramizoo service. Cash on delivery is currently not supported by Tiramizoo',
+'oxTiramizoo_packing_settings_help'                     => 'Select products packing method',
+'oxTiramizoo_packing_settings_label'                    => 'Define Package size',
+'oxTiramizoo_required_info'                             => 'Fields marked with * are mandatory'
+
+
 
 
 

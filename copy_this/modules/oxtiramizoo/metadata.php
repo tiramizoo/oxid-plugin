@@ -47,7 +47,7 @@ $aModule = array(
                             'oxTiramizoo_CreateOrderData'       => 'oxtiramizoo/core/TiramizooApi/oxtiramizoo_createorderdata.php',
                             'oxTiramizoo_Events'                => 'oxtiramizoo/core/oxtiramizoo_events.php',
                             'oxTiramizoo_Config'                 => 'oxtiramizoo/core/oxtiramizoo_config.php',
-                            
+
                             'oxTiramizoo_DeliverySet'           => 'oxtiramizoo/core/oxtiramizoo_deliveryset.php',
                             'oxTiramizoo_DeliveryPrice'         => 'oxtiramizoo/core/oxtiramizoo_deliveryprice.php',
                             'oxTiramizoo_DeliveryType'          => 'oxtiramizoo/core/oxtiramizoo_deliverytype.php',
@@ -56,7 +56,7 @@ $aModule = array(
                             'oxTiramizoo_TimeWindow'            => 'oxtiramizoo/core/oxtiramizoo_timewindow.php',
                             'oxTiramizoo_Date'                  => 'oxtiramizoo/core/oxtiramizoo_date.php',
 
-                            'oxTiramizoo_Webhook'               => 'oxtiramizoo/application/controllers/oxtiramizoo_webhook.php',           
+                            'oxTiramizoo_Webhook'               => 'oxtiramizoo/application/controllers/oxtiramizoo_webhook.php',
 
                             'oxTiramizoo_ScheduleJobManager'    => 'oxtiramizoo/core/oxtiramizoo_schedulejobmanager.php',
 
@@ -70,12 +70,12 @@ $aModule = array(
 
                             'oxTiramizoo_RetailLocationConfig'      => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationconfig.php',
                             'oxTiramizoo_RetailLocationConfigList'  => 'oxtiramizoo/application/models/oxtiramizoo_retaillocationconfiglist.php',
-                            
+
                             'oxTiramizoo_ArticleExtended'       => 'oxtiramizoo/application/models/oxtiramizoo_articleextended.php',
                             'oxTiramizoo_CategoryExtended'      => 'oxtiramizoo/application/models/oxtiramizoo_categoryextended.php',
-                            
+
                             'oxTiramizoo_OrderExtended'         => 'oxtiramizoo/application/models/oxtiramizoo_orderextended.php',
-                            
+
                             'oxTiramizoo_ScheduleJob'           => 'oxtiramizoo/application/models/oxtiramizoo_schedulejob.php',
                             'oxTiramizoo_ScheduleJobList'       => 'oxtiramizoo/application/models/oxtiramizoo_schedulejoblist.php',
 
@@ -101,23 +101,23 @@ $aModule = array(
 
 
     'blocks'       =>   array(
-                            array(  'template'  =>  'page/checkout/payment.tpl',    
-                                    'block'     =>  'act_shipping',              
+                            array(  'template'  =>  'page/checkout/payment.tpl',
+                                    'block'     =>  'act_shipping',
                                     'file'      =>  'views/blocks/oxTiramizoo_act_shipping.tpl'
                             ),
 
-                            array(  'template'  =>  'page/checkout/order.tpl',    
-                                    'block'     =>  'shippingAndPayment',              
+                            array(  'template'  =>  'page/checkout/order.tpl',
+                                    'block'     =>  'shippingAndPayment',
                                     'file'      =>  'views/blocks/oxTiramizoo_shippingAndPayment.tpl'
                             ),
 
-                            array(  'template'  =>  'email/html/order_cust.tpl',    
-                                    'block'     =>  'email_html_order_cust_deliveryinfo',              
+                            array(  'template'  =>  'email/html/order_cust.tpl',
+                                    'block'     =>  'email_html_order_cust_deliveryinfo',
                                     'file'      =>  'views/blocks/oxTiramizoo_email_html_order_cust.tpl'
                             ),
 
-                            array(  'template'  =>  'email/html/order_cust.tpl',    
-                                    'block'     =>  'email_plain_order_cust_deliveryinfo',              
+                            array(  'template'  =>  'email/plain/order_cust.tpl',
+                                    'block'     =>  'email_plain_order_cust_deliveryinfo',
                                     'file'      =>  'views/blocks/oxTiramizoo_email_html_order_cust.tpl'
                             ),
                         ),

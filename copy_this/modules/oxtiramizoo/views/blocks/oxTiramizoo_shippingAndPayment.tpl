@@ -1,3 +1,6 @@
+[{assign var="oShipSet" value=$oView->getShipSet() }]
+
+[{if $oShipSet->getId() == 'Tiramizoo'}]
 <div id="orderShipping">
 <form action="[{ $oViewConf->getSslSelfLink() }]" method="post">
     <h3 class="section">
@@ -8,7 +11,6 @@
         <button type="submit" class="submitButton largeButton">[{ oxmultilang ident="PAGE_CHECKOUT_ORDER_MODIFY2" }]</button>
     </h3>
 </form>
-[{assign var="oShipSet" value=$oView->getShipSet() }]
 [{ $oShipSet->oxdeliveryset__oxtitle->value }]
 
 [{* oxtiramizoo BEGIN *}]
@@ -32,7 +34,8 @@
     [{assign var="payment" value=$oView->getPayment() }]
     [{ $payment->oxpayments__oxdesc->value }]
 </div>
-
-
+[{else}]
+  [{$smarty.block.parent}]
+[{/if}]
 
 

@@ -11,7 +11,7 @@ The checkout has 5 steps. Step 1 - Cart, Step 2 - Address, Step 3 - Payment, Ste
 
 All items added by the user need to have the tiramizoo service enabled, either directly or by their parent category.
 
-*   User adds items to the basket. 
+*   User adds items to the basket.
 
 *   User goes to the checkout (Step 1)
 
@@ -34,9 +34,9 @@ All items added by the user need to have the tiramizoo service enabled, either d
 
 ## Demo ##
 
-*   The Demo shop is available here: [http://staging.oxid-demo.tiramizoo.com](http://staging.oxid-demo.tiramizoo.com)
+*   The Demo shop is available here: [http://oxid-demo.tiramizoo.com](http://oxid-demo.tiramizoo.com)
 
-*   Admin panel access: [http://staging.oxid-demo.tiramizoo.com/admin](http://staging.oxid-demo.tiramizoo.com/admin)
+*   Admin panel access: [http://oxid-demo.tiramizoo.com/admin](http://oxid-demo.tiramizoo.com/admin)
 
 *   Admin username: oxid-demo@tiramizoo.com password: secret
 
@@ -59,7 +59,7 @@ All items added by the user need to have the tiramizoo service enabled, either d
 
 *   Go to **eShop Admin -> Extensions -> Modules**, select the **"OXID Tiramizoo.com"** extension and press the "Activate" button in the "Overview" tab.
 
-*   After these steps, the "Tirazmizoo" menu item appears in the eShop Admin navigation   
+*   After these steps, the "Tirazmizoo" menu item appears in the eShop Admin navigation
 
 
 
@@ -70,7 +70,7 @@ All items added by the user need to have the tiramizoo service enabled, either d
 *  At **Tiramizoo -> Settings**
 
     The configuration form has to be filled in with proper data:
-    
+
     * **Tiramizoo URL:** The URL of the tiramizoo service endpoint (production version [https://api.tiramizoo.com/v1](https://api.tiramizoo.com/v1), testing version [https://sandbox.tiramizoo.com/api/v1](https://sandbox.tiramizoo.com/api/v1))
 
     * **Shop URL:** URL used to build the webhook url for order creation. The tiramizoo service will send a request to the url each time an order status change occurs.
@@ -88,7 +88,7 @@ All items added by the user need to have the tiramizoo service enabled, either d
     * **Default dimensions and weight:**
     Tiramizoo delivery works only if every article in basket has specified dimensions and weight. The module allows to specify global dimensions and weight. These values are applied for each product without specified dimensions and weight.
 
-    * **Tiramizoo payment methods assigned** 
+    * **Tiramizoo payment methods assigned**
     Payment methods which are available for tiramizoo service. *Warning: Cash on delivery is currently not supported by Tiramizoo.
 
     * **Enable only articles with stock:**
@@ -96,7 +96,7 @@ All items added by the user need to have the tiramizoo service enabled, either d
 
     * **Retail Locations**
     The user api tokens available in the user dashboard after registration on the tiramizoo.com site. The API token is required to authenticate api requests.
-    Plugin offers to connect for more than one tiramizoo account. Shop can deliver orders from more than one retail location. The decision which api token is going to be used is made by postal codes comparisons. 
+    Plugin offers to connect for more than one tiramizoo account. Shop can deliver orders from more than one retail location. The decision which api token is going to be used is made by postal codes comparisons.
 
     * **Synchronize all configuration:**
     Configuration options from all retail locations (tiramizoo accounts) are synchronized daily. This process is performed in the first http request to the shop after midnight. It is possible to synchronize configuration directly by pressing the "Synchronize" button
@@ -122,11 +122,11 @@ All items added by the user need to have the tiramizoo service enabled, either d
 The main configuration of tiramizoo delivery is available on the tiramizoo website.
 
 -   **Packages presets:** (Profile -> Default packages sizes)
-    Retail location admin is able to specify package sizes that they use to pack products. 
+    Retail location admin is able to specify package sizes that they use to pack products.
 
--   **Pickup contact:** 
+-   **Pickup contact:**
 
-    Go to **Profile -> Account** and click on "Add Contact" link
+    Go to **Profile -> Account** and click on "New Contact" link
 
     ![Add pickup contact step 1](readme/images/tiramizoo_add_new_contact_step1.png)
 
@@ -156,7 +156,7 @@ The main configuration of tiramizoo delivery is available on the tiramizoo websi
 The tiramizoo delivery option is only available if the following rules are met:
 
 *   **Tiramizoo account configuration:**
-    
+
     * Pickup contact is selected and has valid postal code
     * Immediate delivery type or Evening delivery type is enabled
     * Package presets are specified if shop use "Specific dimensions of packages" as packing strategy
@@ -169,7 +169,7 @@ The tiramizoo delivery option is only available if the following rules are met:
     * The API Token is added
 
 *   **Article in basket configuration**
-    
+
     * Article has specified dimensions and weight directly or inherited by global / category settings.
     * Article is enabled with Tiramizoo Delivery
     * Article's main category and its parent categories are enabled with Tiramizoo Delivery
@@ -185,7 +185,7 @@ The tiramizoo delivery option is only available if the following rules are met:
 ## Additional features / Tips ##
 
 -   **WebHook notifications**
-    
+
     The plugin is able to receive push notification sent by tiramizoo each time the order status has changed. The order state is then changed on shop level as well. Go to Order tab to check the current order status. Webhook url needs to be accessible for POST request.
 
 -   **Disable tiramizoo service for individual product**
@@ -201,7 +201,7 @@ The tiramizoo delivery option is only available if the following rules are met:
     Available on category page
 
 -   **Mark each product within category as individual product to not be packed with others - standalone**
-    
+
     Available on category page
 
 -   **Change cost calculation method of delivery**
