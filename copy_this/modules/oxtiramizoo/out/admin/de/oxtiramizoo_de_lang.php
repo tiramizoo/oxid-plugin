@@ -222,42 +222,43 @@ $aLang = array(
 'oxTiramizoo_order_tab_webhook_response_help'           => 'Tiramizoo webhook response data',
 
 
-
-'oxTiramizoo_settings_saved_success'                    => 'Configuration has been saved',
-'oxTiramizoo_add_location_success'                      => 'The retail location has been added',
-'oxTiramizoo_add_location_error'                        => 'The retail location has not been added. Check an API token and Tiramizoo API URL',
-'oxTiramizoo_remove_location_success'                   => 'The retail location has been removed',
-'oxTiramizoo_synchronize_error'                         => 'There are some problems during the synchronization. Please try again later or contact with Tiramizoo.',
-'oxTiramizoo_synchronize_success'                       => 'Retail location\'s configuration has been synchronized.',
+'oxTiramizoo_settings_saved_success'                    => 'Die Konfiguration wurde gespeichert.',
+'oxTiramizoo_add_location_success'                      => 'Die Filialadresse wurde hinzugefügt.',
+'oxTiramizoo_add_location_error'                        => 'Die Filialadresse wurde nicht hinzugefügt. Bitte überprüfen Sie das API-Token und die Tiramizoo API URL.',
+'oxTiramizoo_remove_location_success'                   => 'Die Filialadresse wurde entfernt.',
+'oxTiramizoo_synchronize_error'                         => 'Bei der Synchronisation sind Fehler aufgetreten. Bitte versuchen Sie es zu einem späteren Zeitpunkt nochmal oder kontaktieren Sie Tiramizoo.',
 
 
-'oxTiramizoo_api_settings_section_label'                => 'API connection settings',
-'oxTiramizoo_packing_settings_section_label'            => 'Packing strategy',
-'oxTiramizoo_default_dimensions_settings_section_label' => 'Default dimensions and weight',
-'oxTiramizoo_payments_settings_section_label'           => 'Available payment methods',
-'oxTiramizoo_stock_enable_settings_section_label'       => 'Enabling shipping method',
-'oxTiramizoo_retail_locations_settings_section_label'   => 'Retail locations',
-'oxTiramizoo_sync_locations_settings_section_label'     => 'Synchronize all configuration',
-'oxTiramizoo_new_token_settings_section_label'          => 'New API token',
-'oxTiramizoo_add_new_token_settings_button_label'       => 'Add new retail location',
+'oxTiramizoo_synchronize_success'                       => 'Filialadressenkonfiguration wurde synchronisiert.',
+
+
+'oxTiramizoo_api_settings_section_label'                => 'Settings der API-Verbindung',
+'oxTiramizoo_packing_settings_section_label'            => 'Verpackungsstrategie',
+'oxTiramizoo_default_dimensions_settings_section_label' => 'Grundeinstellungen Maße und Gewichte',
+'oxTiramizoo_payments_settings_section_label'           => 'Verfügbare Zahlungsmethoden',
+'oxTiramizoo_stock_enable_settings_section_label'       => 'Freischalten Liefermethode',
+'oxTiramizoo_retail_locations_settings_section_label'   => 'Filialadressen',
+'oxTiramizoo_sync_locations_settings_section_label'     => 'Synchronisation aller Konfigurationen',
+'oxTiramizoo_new_token_settings_section_label'          => 'Neues API Token',
+'oxTiramizoo_add_new_token_settings_button_label'       => 'Hinzufügen neuer Filialadresse',
 'oxTiramizoo_new_token_label'                           => 'API token',
-'oxTiramizoo_dashboard_link'                            => 'Go to dashboard',
-'oxTiramizoo_remove_retail_location_button'             => 'Remove this location',
-'oxTiramizoo_sync_button'                               => 'Synchronize',
-'oxTiramizoo_retail_locations_list_label'               => 'Retail locations',
-'oxTiramizoo_retail_locations_empty_label'              => 'There are no connected API tokens',
+'oxTiramizoo_dashboard_link'                            => 'Gehen Sie zu Dashboard',
+'oxTiramizoo_remove_retail_location_button'             => 'Entfernen diese Filiale',
+'oxTiramizoo_sync_button'                               => 'Synchronisiere',
+'oxTiramizoo_retail_locations_list_label'               => 'Filialen',
+'oxTiramizoo_retail_locations_empty_label'              => 'Keine verbundene API Tokens vorhanden',
 
-'oxTiramizoo_sync_locations_settings_section_help'      => 'Synchronize manually configurations from retail locations. This proccess is automated and runs once per day.',
+'oxTiramizoo_sync_locations_settings_section_help'      => 'Manuelles Synchronisieren der Konfigurationen der Filialadressen. Dieser Prozess ist automatisiert und läuft einmal täglich.',
 
-'oxTiramizoo_settings_payments_help'                    => 'Payment methods which are available for tiramizoo service. Cash on delivery is currently not supported by Tiramizoo',
-'oxTiramizoo_packing_settings_help'                     => 'Select products packing method',
-'oxTiramizoo_packing_settings_label'                    => 'Define Package size',
+'oxTiramizoo_settings_payments_help'                    => 'Bezahlmethoden, die für den tiramizoo-Service verfügbar sind. Bezahlung per Nachnahme ist z.Zt. über tiramizoo nicht möglich.',
+'oxTiramizoo_packing_settings_help'                     => 'Wählen Sie die Verpackungsmethode für das Produkt',
+'oxTiramizoo_packing_settings_label'                    => 'Definieren Sie die Paktegrösse',
 'oxTiramizoo_required_info'                             => 'Die mit * gekennzeichneten Felder sind Pflichtfelder',
 
 
-'oxTiramizoo_invalid_delivery_type_error'               => 'Invalid tiramizoo delivery type',
+'oxTiramizoo_invalid_delivery_type_error'               => 'Unzulässige Liefermethode',
 
-'oxTiramizoo_invalid_time_window_error'                 => 'Selected time window is no longer available. Please select another.'
+'oxTiramizoo_invalid_time_window_error'                 => 'Ihr ausgewähltes Zeitfenster kann leider nicht mehr bedient werden. Bitte wählen Sie ein neues Zeitfenster.'
 
 
 

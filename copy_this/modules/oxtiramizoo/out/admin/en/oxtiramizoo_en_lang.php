@@ -227,11 +227,11 @@ $aLang = array(
 'oxTiramizoo_order_tab_webhook_response_label'          => 'Tiramizoo webhook response',
 'oxTiramizoo_order_tab_webhook_response_help'           => 'Tiramizoo webhook response data',
 
-'oxTiramizoo_settings_saved_success'                    => 'Die Konfiguration wurde gespeichert.',
-'oxTiramizoo_add_location_success'                      => 'Die Filialadresse wurde hinzugefügt.',
-'oxTiramizoo_add_location_error'                        => 'Die Filialadresse wurde nicht hinzugefügt. Bitte überprüfen Sie das API-Token und die Tiramizoo API URL.',
-'oxTiramizoo_remove_location_success'                   => 'Die Filialadresse wurde entfernt.',
-'oxTiramizoo_synchronize_error'                         => 'Bei der Synchronisation sind Fehler aufgetreten. Bitte versuchen Sie es zu einem späteren Zeitpunkt nochmal oder kontaktieren Sie Tiramizoo.',
+'oxTiramizoo_settings_saved_success'                    => 'Configuration has been saved',
+'oxTiramizoo_add_location_success'                      => 'The retail location has been added',
+'oxTiramizoo_add_location_error'                        => 'The retail location has not been added. Check an API token and Tiramizoo API URL',
+'oxTiramizoo_remove_location_success'                   => 'The retail location has been removed',
+'oxTiramizoo_synchronize_error'                         => 'There are some problems during the synchronization. Please try again later or contact with Tiramizoo.',
 'oxTiramizoo_synchronize_success'                       => 'Retail location\'s configuration has been synchronized.',
 
 
