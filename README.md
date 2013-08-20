@@ -9,17 +9,16 @@ The module works with the following OXID eSales versions: 4.7.x/5.0.x.
 
 The checkout has 5 steps. Step 1 - Cart, Step 2 - Address, Step 3 - Payment, Step 4 - Ordering, Step 5 - Confirmation
 
-All items added by the user need to have the tiramizoo service enabled, either directly or by their parent category.
-
 *   User adds items to the basket.
 
 *   User goes to the checkout (Step 1)
 
 *   User specifies the delivery address (Step 2)
 
-*   User selects tiramizoo as delivery option (Step 3)
+*   User selects tiramizoo as delivery option (Step 3).
 
-*   User selects the delivery time window (when he wants the courier to deliver) (Step 3)
+*   User selects the delivery time window (Step 3)
+![Time window](readme/images/oxid-tiramizoo-delivery.png)
 
 *   User selects payment method (Step 3)
 
@@ -27,9 +26,7 @@ All items added by the user need to have the tiramizoo service enabled, either d
 
 *   Between Step 4 and Step 5 the plugin sends a request to tiramizoo.com to create the order
 
-*   User sees the thank you page and receives an email with the tracking url
-
-
+*   User sees the thank you page and receives an email with the tracking url to tiramizoo service
 
 
 ## Demo ##
@@ -45,13 +42,16 @@ All items added by the user need to have the tiramizoo service enabled, either d
 *   Demo shop settings and data are reverted to default every 4h
 
 
+## Prerequisites ##
+
+*   Register an account on tiramizoo website  (production version [https://tiramizoo.com](https://tiramizoo.com/), testing version [https://sandbox.tiramizoo.com](https://sandbox.tiramizoo.com/))
 
 
 ## Installation ##
 
 *   Switch to [master](https://github.com/tiramizoo/oxid-plugin/tree/master) branch and download code
 
-*   • Run SQL statements from sql/install.sql file into your database
+*   Run SQL statements from sql/install.sql file into your database
 
 *   Copy all files from [copy_this](https://github.com/tiramizoo/oxid-plugin/tree/master/copy_this) folder to the OXID eSales installation path. This step does not overwrite any files.
 
@@ -60,7 +60,6 @@ All items added by the user need to have the tiramizoo service enabled, either d
 *   Go to **eShop Admin -> Extensions -> Modules**, select the **"OXID Tiramizoo.com"** extension and press the "Activate" button in the "Overview" tab.
 
 *   After these steps, the "Tirazmizoo" menu item appears in the eShop Admin navigation
-
 
 
 
@@ -95,7 +94,7 @@ All items added by the user need to have the tiramizoo service enabled, either d
     Admin is able to turn on/off stock monitoring. That means if any of products in customer's basket are not available in the shop's stock, the tiramizoo delivery option will not show up.
 
     * **Retail Locations**
-    The user api tokens available in the user dashboard after registration on the tiramizoo.com site. The API token is required to authenticate api requests.
+    API token are available on the user dashboard after registration on the tiramizoo.com site. The API token is required to authenticate api requests.
     Plugin offers to connect for more than one tiramizoo account. Shop can deliver orders from more than one retail location. The decision which api token is going to be used is made by postal codes comparisons.
 
     * **Synchronize all configuration:**
@@ -117,7 +116,7 @@ All items added by the user need to have the tiramizoo service enabled, either d
     You can enable or disable Tiramizoo delivery for selected product. This page contains preview of the effective dimensions
 
 
-## Configure the account ##
+## Configure the account (retail location) ##
 
 The main configuration of tiramizoo delivery is available on the tiramizoo website.
 
@@ -152,7 +151,7 @@ The main configuration of tiramizoo delivery is available on the tiramizoo websi
 
 
 
-## Minimal configurations ##
+## Minimal configurations and rules ##
 The tiramizoo delivery option is only available if the following rules are met:
 
 *   **Tiramizoo account configuration:**
@@ -179,7 +178,11 @@ The tiramizoo delivery option is only available if the following rules are met:
 
     * **Tiramizoo Delivery Set** is active
     * **Tiramizoo Cost rule** is active and assigned to **Tiramizoo Delivery Set**
-    * Warning: We highly recommend to set customer's phone number as a required field. It enables courier to contact customer when necessary*
+    * Warning: We highly recommend to set customer's phone number as a required field. It enables courier to contact customer when necessary
+
+*   **Delivery address and ordering date time**
+    * Customer's postal code matches to the retail location's area  [Service coverage](https://www.tiramizoo.com/coverage)
+    * Current date time should be fit with Tiramizoo open hours in specified area and shop business hours
 
 
 ## Additional features / Tips ##
@@ -212,7 +215,7 @@ The tiramizoo delivery option is only available if the following rules are met:
 
 ## Troubleshooting and bugs ##
 
-* Check "Minimal configurations" section of this document
-* Use the newest version of plugin from [master branch](https://github.com/tiramizoo/oxid-plugin/tree/master) and Your eShop version is 4.7.x/5.0.x.
-* In case of any issues or suggestions please let us know through [github issues](https://github.com/tiramizoo/oxid-plugin/issues)
+*   Check "Minimal configurations" section of this document
+*   Use the newest version of plugin from [master branch](https://github.com/tiramizoo/oxid-plugin/tree/master) and Your eShop version is 4.7.x/5.0.x.
+*   In case of any issues or suggestions please let us know through [github issues](https://github.com/tiramizoo/oxid-plugin/issues)
 
