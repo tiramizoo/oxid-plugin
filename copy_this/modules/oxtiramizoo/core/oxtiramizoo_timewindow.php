@@ -168,24 +168,24 @@ class oxTiramizoo_TimeWindow
 	}
 
     /**
-     * Get formatted delivery time window using oxlang entries. 
+     * Get formatted delivery time window using oxlang entries.
      *
      * @return string
      */
 	public function getFormattedDeliveryTimeWindow()
 	{
         if ($this->isToday()) {
-            return oxRegistry::getLang()->translateString('oxTiramizoo_Today', oxRegistry::getLang()->getBaseLanguage(), false) . ' ' . $this->getDeliveryHoursFormated($this->_aData);
+            return oxRegistry::getLang()->translateString('oxTiramizoo_Today', oxRegistry::getLang()->getTplLanguage(), false) . ' ' . $this->getDeliveryHoursFormated($this->_aData);
         } else if ($this->isTomorrow()){
-            return oxRegistry::getLang()->translateString('oxTiramizoo_Tomorrow', oxRegistry::getLang()->getBaseLanguage(), false) . ' ' .  $this->getDeliveryHoursFormated($this->_aData);
+            return oxRegistry::getLang()->translateString('oxTiramizoo_Tomorrow', oxRegistry::getLang()->getTplLanguage(), false) . ' ' .  $this->getDeliveryHoursFormated($this->_aData);
         } else {
-            return $this->getDeliveryFromDate()->get(oxRegistry::getLang()->translateString('oxTiramizoo_time_window_date_format', oxRegistry::getLang()->getBaseLanguage(), false)) . ' ' . $this->getDeliveryHoursFormated($this->_aData);
+            return $this->getDeliveryFromDate()->get(oxRegistry::getLang()->translateString('oxTiramizoo_time_window_date_format', oxRegistry::getLang()->getTplLanguage(), false)) . ' ' . $this->getDeliveryHoursFormated($this->_aData);
         }
 
 	}
 
     /**
-     * Get formatted delivery time window hours. 
+     * Get formatted delivery time window hours.
      *
      * @return string
      */
@@ -195,7 +195,7 @@ class oxTiramizoo_TimeWindow
     }
 
     /**
-     * Check if time window is valid according to current datetime. 
+     * Check if time window is valid according to current datetime.
      *
      * @return bool
      */
@@ -215,42 +215,42 @@ class oxTiramizoo_TimeWindow
     }
 
     /**
-     * Check if time window is today according to current datetime. 
+     * Check if time window is today according to current datetime.
      *
      * @return bool
      */
     public function isToday()
     {
-        return $this->getPickupFromDate()->isToday() && 
-               $this->getPickupToDate()->isToday() && 
-               $this->getDeliveryFromDate()->isToday() && 
+        return $this->getPickupFromDate()->isToday() &&
+               $this->getPickupToDate()->isToday() &&
+               $this->getDeliveryFromDate()->isToday() &&
                $this->getDeliveryToDate()->isToday();
     }
 
     /**
-     * Check if time window is tommorow according to current datetime. 
+     * Check if time window is tommorow according to current datetime.
      *
      * @return bool
      */
     public function isTomorrow()
     {
-        return $this->getPickupFromDate()->isTomorrow() && 
-               $this->getPickupToDate()->isTomorrow() && 
-               $this->getDeliveryFromDate()->isTomorrow() && 
+        return $this->getPickupFromDate()->isTomorrow() &&
+               $this->getPickupToDate()->isTomorrow() &&
+               $this->getDeliveryFromDate()->isTomorrow() &&
                $this->getDeliveryToDate()->isTomorrow();
     }
 
     /**
-     * Check if time window has specified hours. 
+     * Check if time window has specified hours.
      *
      * @param array $aHours array of hours
      * @return bool
      */
     public function hasHours($aHours)
     {
-        return $this->getPickupFromDate()->isOnTime($aHours['pickup_after']) && 
-               $this->getPickupToDate()->isOnTime($aHours['pickup_before']) && 
-               $this->getDeliveryFromDate()->isOnTime($aHours['delivery_after']) && 
+        return $this->getPickupFromDate()->isOnTime($aHours['pickup_after']) &&
+               $this->getPickupToDate()->isOnTime($aHours['pickup_before']) &&
+               $this->getDeliveryFromDate()->isOnTime($aHours['delivery_after']) &&
                $this->getDeliveryToDate()->isOnTime($aHours['delivery_before']);
     }
 }
