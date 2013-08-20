@@ -21,92 +21,92 @@
 class oxTiramizoo_DeliverySet
 {
     /**
-     * Is class initialized 
-     * 
-     * @var bool 
+     * Is class initialized
+     *
+     * @var bool
      */
     protected $_isInitialized = false;
 
     /**
      * Is tiramizoo avialable
-     * 
-     * @var bool 
+     *
+     * @var bool
      */
     protected $_isTiramizooAvailable = null;
 
     /**
      * User's postal code get from user's address or checkout address
-     * 
+     *
      * @var string
      */
     protected $_sDeliveryPostalcode = null;
 
     /**
      * Current tiramizoo delivery type
-     * 
+     *
      * @var string
-     */ 
+     */
     protected $_sTiramizooDeliveryType = null;
-    
+
     /**
      * Current seleceted in checkout process time window
-     * 
+     *
      * @var oxTiramizoo_TimeWindow
-     */ 
+     */
     protected $_oSelectedTimeWindow = null;
 
     /**
      * All tiramizoo delivery types
-     * 
+     *
      * @var mixed
      */
     protected $_aDeliveryTypes = array('immediate', 'evening');
-    
+
     /**
-     * All delivery types available in user's area 
-     * 
+     * All delivery types available in user's area
+     *
      * @var mixed
      */
     protected $_aAvailableDeliveryTypes = null;
 
     /**
      * Current Api token selected by postal code
-     * 
+     *
      * @var string
      */
     protected $_sCurrentApiToken = null;
 
     /**
      * Tiramizoo shipping id
-     * 
+     *
      * @var constant
      */
     const TIRAMIZOO_DELIVERY_SET_ID = 'Tiramizoo';
 
     /**
      * Tiramizoo packing strategy that pack each products in another package
-     * 
+     *
      * @var constant
      */
     const TIRAMIZOO_PACKING_STRATEGY_INDIVIDUAL_DIMENSIONS = 0;
 
     /**
      * Tiramizoo packing strategy that pack articles to packages specified in tiramizoo dashboard
-     * 
+     *
      * @var constant
      */
     const TIRAMIZOO_PACKING_STRATEGY_PACKAGE_PRESETS = 1;
 
     /**
      * Tiramizoo packing strategy that pack all articles to one single package
-     * 
+     *
      * @var constant
      */
     const TIRAMIZOO_PACKING_STRATEGY_SINGLE_PACKAGE = 2;
 
     /**
-     * Initialize 
-     * 
+     * Initialize
+     *
      * @param oxuser|null       $oUser             User object
      * @param oxaddress|null    $oDeliveryAddress  Delivery address provided in checkout process
      *
@@ -114,7 +114,7 @@ class oxTiramizoo_DeliverySet
      */
     public function init($oUser, $oDeliveryAddress)
     {
-        if (!$this->_isInitialized) {        
+        if (!$this->_isInitialized) {
             $this->_sDeliveryPostalcode = $this->refreshDeliveryPostalCode($oUser, $oDeliveryAddress);
 
             if ($this->isTiramizooAvailable()) {
@@ -160,8 +160,8 @@ class oxTiramizoo_DeliverySet
     }
 
     /**
-     * Set default delivery type 
-     * 
+     * Set default delivery type
+     *
      * @return null
      */
     public function setDefaultDeliveryType()
@@ -180,8 +180,8 @@ class oxTiramizoo_DeliverySet
     }
 
     /**
-     * Set Default time window 
-     * 
+     * Set Default time window
+     *
      * @return bool
      */
     public function setDefaultTimeWindow()
@@ -206,7 +206,7 @@ class oxTiramizoo_DeliverySet
 
     /**
      * Set current delivery type name if is valid
-     * 
+     *
      * @param string $sTiramizooDeliveryType delivery type name
      * @throws oxTiramizoo_InvalidDeliveryTypeException if delivery type is invalid
      *
@@ -218,15 +218,15 @@ class oxTiramizoo_DeliverySet
             oxSession::setVar( 'sTiramizooDeliveryType',  $sTiramizooDeliveryType );
             $this->_sTiramizooDeliveryType = $sTiramizooDeliveryType;
         } else {
-            $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_invalid_delivery_type_error', oxLang::getInstance()->getBaseLanguage(), false);
+            $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_invalid_delivery_type_error', oxRegistry::getLang()->getTplLanguage(), false);
             throw new oxTiramizoo_InvalidDeliveryTypeException($errorMessage);
         }
     }
 
     /**
      * Set current time window if is valid
-     * 
-     * @param string $sTimeWindow time window hash name     
+     *
+     * @param string $sTimeWindow time window hash name
      * @throws oxTiramizoo_InvalidTimeWindowException if not found time window object or is not valid
      *
      * @return null
@@ -241,7 +241,7 @@ class oxTiramizoo_DeliverySet
         }
 
         if (!$oTimeWindow || !$oTimeWindow->isValid()) {
-            $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_invalid_time_window_error', oxLang::getInstance()->getBaseLanguage(), false);
+            $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_invalid_time_window_error', oxRegistry::getLang()->getTplLanguage(), false);
             throw new oxTiramizoo_InvalidTimeWindowException($errorMessage);
         }
     }
@@ -255,11 +255,11 @@ class oxTiramizoo_DeliverySet
     {
         if ($this->_aAvailableDeliveryTypes === null) {
             $this->_aAvailableDeliveryTypes = array();
-            
-            foreach ($this->_aDeliveryTypes as $sDeliveryType) 
+
+            foreach ($this->_aDeliveryTypes as $sDeliveryType)
             {
                 $sClass = 'oxTiramizoo_DeliveryType' . ucfirst($sDeliveryType);
-                
+
                 $oDeliveryType = oxnew($sClass, $this->getRetailLocation());
 
                 if ($oDeliveryType->isAvailable()) {
@@ -303,13 +303,13 @@ class oxTiramizoo_DeliverySet
 
 
     /**
-     * Gets the current tiramizoo delivery type object 
-     * 
+     * Gets the current tiramizoo delivery type object
+     *
      * @return oxTiramizoo_DeliveryType|null
-     */ 
+     */
     public function getTiramizooDeliveryTypeObject()
     {
-        foreach ($this->getAvailableDeliveryTypes() as $oDeliveryType) 
+        foreach ($this->getAvailableDeliveryTypes() as $oDeliveryType)
         {
             if ($oDeliveryType->getType() == $this->getTiramizooDeliveryType()) {
                 return $oDeliveryType;
@@ -321,7 +321,7 @@ class oxTiramizoo_DeliverySet
 
     /**
      * Choose which postal code should be used in amtching user's postal code and tiramizoo service areas
-     * 
+     *
      * @param oxuser       $oUser             User object
      * @param oxaddress    $oDeliveryAddress  Delivery address provided in checkout process
      *
@@ -346,9 +346,9 @@ class oxTiramizoo_DeliverySet
 
     /**
      * Gets the API token matched by user's postal code
-     * 
+     *
      * @throws oxTiramizoo_NotAvailableException if token is not valid
-     * 
+     *
      * @return string API token
      */
     public function getApiToken()
@@ -358,7 +358,7 @@ class oxTiramizoo_DeliverySet
             $oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
             $oRetailLocationList->loadAll();
 
-            foreach ($oRetailLocationList as $oRetailLocation) 
+            foreach ($oRetailLocationList as $oRetailLocation)
             {
                 $aAvailablePostalCodes = $oRetailLocation->getConfVar('postal_codes');
 
@@ -375,7 +375,7 @@ class oxTiramizoo_DeliverySet
 
     /**
      * Gets the instance of current API object
-     * 
+     *
      * @return oxTiramizoo_Api
      */
     public function getTiramizooApi()
@@ -385,7 +385,7 @@ class oxTiramizoo_DeliverySet
 
     /**
      * Gets the current retail location object from API token
-     * 
+     *
      * @throws oxTiramizoo_NotAvailableException if retail location is not exists
      *
      * @return oxTiramizoo_RetailLocation
@@ -405,16 +405,16 @@ class oxTiramizoo_DeliverySet
     }
 
     /**
-     * Validate if tiramizoo service is available with delivery address 
-     * 
+     * Validate if tiramizoo service is available with delivery address
+     *
      * @return bool
      */
-    public function isTiramizooAvailable() 
+    public function isTiramizooAvailable()
     {
         if ($this->_isTiramizooAvailable === null) {
 
             if (!$this->getBasket()->isValid()) {
-                return $this->_isTiramizooAvailable = false;                
+                return $this->_isTiramizooAvailable = false;
             }
 
             //check if retail location is fit to postal code service is available in this area
@@ -426,7 +426,7 @@ class oxTiramizoo_DeliverySet
 
             //check if exists delivery types
             if (count($this->getAvailableDeliveryTypes()) == 0) {
-                return $this->_isTiramizooAvailable = false;   
+                return $this->_isTiramizooAvailable = false;
             }
 
             $this->_isTiramizooAvailable = true;

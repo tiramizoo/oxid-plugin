@@ -46,8 +46,8 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 
 	protected function tearDown()
 	{
-        parent::tearDown();
 		oxUtilsObject::resetClassInstances();
+        parent::tearDown();
 	}
 
 
@@ -391,28 +391,34 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
         oxTestModules::addModuleObject('oxArticle', $oArticle4);
 
 	    $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array(), array(), '', false);
-	    $oArticleExtended->expects($this->any())
+
+        $oArticleExtended->expects($this->any())
              			 ->method('isEnabled')
              			 ->will($this->returnValue(true));
+
 	    $oArticleExtended->expects($this->any())
              			 ->method('hasIndividualPackage')
              			 ->will($this->returnValue(false));
-	    $oArticleExtended->expects($this->at(3))
+
+
+
+
+	    $oArticleExtended->expects($this->at(2))
              			 ->method('buildArticleEffectiveData')
              			 ->will($this->returnValue($oItem1));
-	    $oArticleExtended->expects($this->at(8))
+
+	    $oArticleExtended->expects($this->at(6))
              			 ->method('buildArticleEffectiveData')
              			 ->will($this->returnValue($oItem2));
-	    $oArticleExtended->expects($this->at(13))
+
+	    $oArticleExtended->expects($this->at(10))
              			 ->method('buildArticleEffectiveData')
              			 ->will($this->returnValue($oItem3));
-	    $oArticleExtended->expects($this->any())
-             			 ->method('getIdByArticleId')
-             			 ->will($this->returnValue('someID'));
+
+
 
         oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oArticleExtended);
 
-        $oArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
 
 		$oBasket = $this->getMock('oxBasket', array('getBasketArticles', 'getArtStockInBasket'), array(), '', false);
 
@@ -554,6 +560,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 
 	public function testBuildItemsPackageStrategyIndividualPackage()
 	{
+
 		$oItem1 = new stdClass();
 		$oItem1->weight = 2;
 		$oItem1->width = 30;
@@ -625,15 +632,15 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
              			 ->method('hasIndividualPackage')
              			 ->will($this->returnValue(true));
 
-	    $oArticleExtended->expects($this->at(3))
+	    $oArticleExtended->expects($this->at(2))
              			 ->method('buildArticleEffectiveData')
              			 ->will($this->returnValue($oItem1));
 
-	    $oArticleExtended->expects($this->at(7))
+	    $oArticleExtended->expects($this->at(5))
              			 ->method('buildArticleEffectiveData')
              			 ->will($this->returnValue($oItem2));
 
-	    $oArticleExtended->expects($this->at(11))
+	    $oArticleExtended->expects($this->at(8))
              			 ->method('buildArticleEffectiveData')
              			 ->will($this->returnValue($oItem3));
 
@@ -642,8 +649,6 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
              			 ->will($this->returnValue('someID'));
 
         oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oArticleExtended);
-
-        $oArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
 
 
 		$oBasket = $this->getMock('oxBasket', array('getBasketArticles', 'getArtStockInBasket'), array(), '', false);

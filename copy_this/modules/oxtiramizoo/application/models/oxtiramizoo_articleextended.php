@@ -35,12 +35,16 @@ class oxTiramizoo_ArticleExtended extends oxBase {
      */
     protected $_sClassName = 'oxTiramizoo_ArticleExtended';
 
-
+    /**
+     * Article object
+     *
+     * @var oxArticle
+     */
     protected $_oArticle = null;
 
     /**
      * Class constructor
-     * 
+     *
      * @extend oxBase::__construct()
      *
      * @return null
@@ -50,30 +54,53 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         $this->init( 'oxtiramizooarticleextended' );
     }
 
-    public function getIdByArticleId($sArticleId) 
+    /**
+     * Returns
+     *
+     * @param  string $sArticleId article oxid
+     *
+     * @return string oxid
+     */
+    public function getIdByArticleId($sArticleId)
     {
         $oDb = oxDb::getDb();
         $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE OXARTICLEID = '" . $sArticleId . "';";
         return $oDb->getOne($sQ);
     }
 
+    /**
+     * Loads object with article and set the article
+     *
+     * @param  oxArticle $oArticle
+     *
+     * @return void
+     */
+    public function loadByArticle($oArticle)
+    {
+        $this->_oArticle = $oArticle;
+
+        $soxId = $this->getIdByArticleId($oArticle->getId());
+
+        if ($soxId) {
+            $this->load($soxId);
+        }
+    }
+
+    /**
+     * Returns article
+     *
+     * @return oxArticle
+     */
     public function getArticle()
     {
-        if ($this->_oArticle === null) {
-            $this->_oArticle = $this->loadArticle();
-        }
-
         return $this->_oArticle;
     }
 
-    protected function loadArticle()
-    {
-        $oArticle = oxNew( 'oxarticle' );
-        $oArticle->load($this->getId());
-
-        return $oArticle;
-    }
-
+    /**
+     * Check if article is enabled. Inherit enable property from category and global settings.
+     *
+     * @return boolean
+     */
     public function isEnabled()
     {
         if ($this->oxtiramizooarticleextended__tiramizoo_enable->value == -1) {
@@ -95,7 +122,11 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         return true;
     }
 
-
+    /**
+     * Returns information about individual packaging
+     *
+     * @return boolean
+     */
     public function hasIndividualPackage()
     {
         $aTiramizooInheritedData = $this->getArticleInheritData();
@@ -111,8 +142,9 @@ class oxTiramizoo_ArticleExtended extends oxBase {
 
     /**
      * Get product data (enable, weight, dimensions) from main category or parents
-     * 
+     *
      * @param  oxArticle $oArticle
+     *
      * @return array
      */
     public function getArticleInheritData()
@@ -137,6 +169,7 @@ class oxTiramizoo_ArticleExtended extends oxBase {
 
         $oArticle = $this->getArticle();
 
+
         $oCategory = $oArticle->getCategory();
 
         // if article has no assigned categories return only global settings
@@ -146,8 +179,9 @@ class oxTiramizoo_ArticleExtended extends oxBase {
 
         $aCheckCategories = $this->_getParentsCategoryTree($oCategory);
 
-        foreach ($aCheckCategories as $aCategoryData) 
-        {   
+
+        foreach ($aCheckCategories as $aCategoryData)
+        {
             //if some category in category parent tree is disabled the whole subtree is disabled
             if (($aCategoryData['tiramizoo_enable']) == -1) {
                 $aTiramizooInheritedData['tiramizoo_enable'] = 0;
@@ -164,7 +198,7 @@ class oxTiramizoo_ArticleExtended extends oxBase {
                 $aTiramizooInheritedData['width'] = $aCategoryData['tiramizoo_width'];
                 $aTiramizooInheritedData['height'] = $aCategoryData['tiramizoo_height'];
                 $aTiramizooInheritedData['length'] = $aCategoryData['tiramizoo_length'];
-            }                                    
+            }
         }
 
         return $aTiramizooInheritedData;
@@ -177,9 +211,10 @@ class oxTiramizoo_ArticleExtended extends oxBase {
 
     /**
      * Recursive method for getting array of arrays product data (enable, weight, dimensions)
-     * 
+     *
      * @param  oxCategory $oCategory
      * @param  array  $returnCategories
+     *
      * @return array Array of categories hierarchy
      */
     protected function _getParentsCategoryTree($oCategory, $returnCategories = array())
@@ -187,10 +222,13 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         $oTiramizooCategoryExtended = oxNew('oxTiramizoo_CategoryExtended');
         $oTiramizooCategoryExtended->load($oTiramizooCategoryExtended->getIdByCategoryId($oCategory->getId()));
 
+        $oTiramizooCategoryExtended->getIdByCategoryId($oCategory->getId());
+
         $aTiramizooCategoryData = array();
         $aTiramizooCategoryData['oxid'] = $oCategory->oxcategories__oxid->value;
         $aTiramizooCategoryData['oxtitle'] = $oCategory->oxcategories__oxtitle->value;
         $aTiramizooCategoryData['oxsort'] = $oCategory->oxcategories__oxsort->value;
+        $aTiramizooCategoryData['tiramizoo_use_package'] = $oTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_use_package->value;
         $aTiramizooCategoryData['tiramizoo_enable'] = $oTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_enable->value;
         $aTiramizooCategoryData['tiramizoo_weight'] = $oTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_weight->value;
         $aTiramizooCategoryData['tiramizoo_width'] = $oTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_width->value;
@@ -206,6 +244,13 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         return $returnCategories;
     }
 
+    /**
+     * Get weight and dimensions inherited from global, category or product settings
+     *
+     * @param  stdClass $item
+     *
+     * @return stdClass Modified item
+     */
     public function buildArticleEffectiveData($item = null)
     {
         if (!$item) {
@@ -240,22 +285,39 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         return $item;
     }
 
+    /**
+     * Get value from array if isset
+     *
+     * @param  array $aTiramizooInheritedData
+     * @param  string $sPropertyName
+     *
+     * @return mixed
+     */
     protected function _getProperty($aTiramizooInheritedData, $sPropertyName)
     {
         return isset($aTiramizooInheritedData[$sPropertyName]) && $aTiramizooInheritedData[$sPropertyName] ? $aTiramizooInheritedData[$sPropertyName] : 0;
     }
- 
 
+    /**
+     * Check if article has own dimensions
+     *
+     * @return boolean
+     */
     protected function _hasWeightAndDimensions()
     {
         $oArticle = $this->getArticle();
-        return $oArticle->oxarticles__oxweight->value && 
+        return $oArticle->oxarticles__oxweight->value &&
             $oArticle->oxarticles__oxwidth->value &&
-            $oArticle->oxarticles__oxheight->value && 
+            $oArticle->oxarticles__oxheight->value &&
             $oArticle->oxarticles__oxlength->value;
     }
 
-    public function getDisabledCategory() 
+    /**
+     * Returns article's category if not enabled to tiramizoo
+     *
+     * @return mixed
+     */
+    public function getDisabledCategory()
     {
         $oArticle = $this->getArticle();
         $oCategory = $oArticle->getCategory();
@@ -267,8 +329,8 @@ class oxTiramizoo_ArticleExtended extends oxBase {
 
         $aCheckCategories = $this->_getParentsCategoryTree($oCategory);
 
-        foreach ($aCheckCategories as $aCategoryData) 
-        {   
+        foreach ($aCheckCategories as $aCategoryData)
+        {
             //if some category in category parent tree is disabled the wole subtree is disabled
             if (($aCategoryData['tiramizoo_enable']) == -1) {
                 $oCategory = oxNew( 'oxcategory' );
@@ -278,7 +340,12 @@ class oxTiramizoo_ArticleExtended extends oxBase {
         }
     }
 
-    public function getInheritedCategory() 
+    /**
+     * Returns article's ingerited category object
+     *
+     * @return oxCategory
+     */
+    public function getInheritedCategory()
     {
         $oArticle = $this->getArticle();
         $oCategory = $oArticle->getCategory();
@@ -292,8 +359,8 @@ class oxTiramizoo_ArticleExtended extends oxBase {
 
         $inheritedCategoryId = null;
 
-        foreach ($aCheckCategories as $aCategoryData) 
-        {   
+        foreach ($aCheckCategories as $aCategoryData)
+        {
             if ($this->_dataCanBeInheritedByCategoryData($aCategoryData)) {
                 $inheritedCategoryId = $aCategoryData['oxid'];
             }

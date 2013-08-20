@@ -20,7 +20,7 @@
  * @extends oxBase
  * @package oxTiramizoo
  */
-class oxTiramizoo_CategoryExtended extends oxBase 
+class oxTiramizoo_CategoryExtended extends oxBase
 {
     /**
      * Object core table name
@@ -38,7 +38,7 @@ class oxTiramizoo_CategoryExtended extends oxBase
 
     /**
      * Model constructor, init fields
-     * 
+     *
      * @extend oxBase::__construct()
      *
      * @return null
@@ -51,16 +51,16 @@ class oxTiramizoo_CategoryExtended extends oxBase
 
     /**
      * Returns category extended id by category id
-     * 
+     *
      * @param string $sCategoryId category id
      *
      * @return string
      */
-    public function getIdByCategoryId($sCategoryId) 
+    public function getIdByCategoryId($sCategoryId)
     {
         $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
         $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE oxcategoryid = " . $oDb->quote( $sCategoryId );
-        
+
         return $oDb->getOne($sQ);
     }
 }

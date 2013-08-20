@@ -65,12 +65,12 @@ function editThis( sID )
               [{ oxmultilang ident="oxTiramizoo_article_tab_enable_tiramizoo_label" }]
             </td>
             <td class="edittext">
-              
+
                 <select name="oxTiramizooArticleExtended[oxtiramizooarticleextended__tiramizoo_enable]">
                     <option value="1" [{if ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_enable->value == 1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_yes_value" }]</option>
                     <option value="-1" [{if ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_enable->value == -1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_no_value" }]</option>
                 </select>
-                
+
                 [{ oxinputhelp ident="oxTiramizoo_article_tab_enable_tiramizoo_help" }]
 
                 [{if (($inheritedData.tiramizoo_enable) && ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_enable->value != -1 )) }]
@@ -85,7 +85,7 @@ function editThis( sID )
                   </div>
                 [{/if}]
 
-                
+
 
 
             </td>
@@ -105,7 +105,7 @@ function editThis( sID )
           </tr>
 
 
-          <tr>          
+          <tr>
             <td class="edittext"></td>
             <td class="edittext">
               <input type="submit" class="edittext" name="save" value="[{ oxmultilang ident="GENERAL_SAVE" }]" onClick="Javascript:document.myedit.fnc.value='save'" ><br>
@@ -116,7 +116,7 @@ function editThis( sID )
 
 
 
-          <tr>          
+          <tr>
             <td class="edittext">[{ oxmultilang ident="oxTiramizoo_article_tab_article_effective_label" }]</td>
             <td class="edittext">
               <p>

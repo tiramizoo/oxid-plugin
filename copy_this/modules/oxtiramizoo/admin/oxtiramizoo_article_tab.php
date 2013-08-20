@@ -58,8 +58,11 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
 
         $soxId = $this->getConfig()->getRequestParameter( 'oxid' );
 
+        $oArticle = oxNew('oxArticle');
+        $oArticle->load($soxId);
+
         $oTiramizooArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
-        $oTiramizooArticleExtended->load($oTiramizooArticleExtended->getIdByArticleId($soxId));
+        $oTiramizooArticleExtended->loadByArticle($oArticle);
 
         $this->_aViewData['oxTiramizooArticleExtended'] = $oTiramizooArticleExtended;
 
@@ -90,8 +93,11 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
         $aParams = $this->getConfig()->getRequestParameter( "oxTiramizooArticleExtended");
 
         if ( $soxId != "-1" && isset( $soxId ) ) {
+            $oArticle = oxNew('oxArticle');
+            $oArticle->load($soxId);
+
             $this->_oTiramizooArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
-            $this->_oTiramizooArticleExtended->load($this->_oTiramizooArticleExtended->getIdByArticleId($soxId));
+            $this->_oTiramizooArticleExtended->loadByArticle($oArticle);
             $aParams['oxarticleid'] = $soxId;
 
             $this->_oTiramizooArticleExtended->assign( $aParams );
