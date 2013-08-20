@@ -406,9 +406,8 @@ class oxTiramizoo_CreateOrderData
         }
 
         $oArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
-        $sOxid = $oArticleExtended->getIdByArticleId($oArticle->getId());
 
-        $oArticleExtended->load($sOxid);
+        $oArticleExtended->loadByArticle($oArticle);
 
         if (!$oArticleExtended->isEnabled()) {
             return false;

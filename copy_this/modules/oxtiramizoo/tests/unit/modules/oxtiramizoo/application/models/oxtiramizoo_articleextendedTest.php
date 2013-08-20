@@ -24,27 +24,6 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
     }
 
 
-    public function testGetArticle()
-    {
-    	$oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'loadArticle'), array(), '', false);
-        $oArticleExtended->expects($this->any())
-                         ->method('loadArticle')
-                         ->will($this->returnValue(oxNew('oxArticle')));
-
-    	$this->assertTrue($oArticleExtended->getArticle() instanceof oxArticle);
-    }
-
-    public function testLoadArticle()
-    {
-        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getId'), array(), '', false);
-
-        $oArticle = $this->getMock('oxArticle', array('__construct', 'load'), array(), '', false);
-
-        oxTestModules::addModuleObject('oxArticle', $oArticle);
-
-        $this->assertTrue( $oArticleExtended->getArticle() instanceof oxArticle);
-    }
-
     public function testIsEnabled1()
     {
     	$oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct'), array(), '', false);
@@ -116,7 +95,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
     {
     	$oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getArticleInheritData'), array(), '', false);
 		$oArticleExtended->oxtiramizooarticleextended__tiramizoo_use_package = new oxField(1);
-    	
+
     	$this->assertEquals(false, $oArticleExtended->hasIndividualPackage());
     }
 
@@ -172,7 +151,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
     public function testGetArticleInheritData2()
     {
-        $aCategoryData = array(array('tiramizoo_enable' => -1, 
+        $aCategoryData = array(array('tiramizoo_enable' => -1,
                                      'tiramizoo_use_package' => -1,
                                      'tiramizoo_weight' => 1,
                                      'tiramizoo_width' => 10,
@@ -181,7 +160,12 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
         $oArticle = $this->getMock('oxArticle', array('__construct', 'getCategory'), array(), '', false);
 
-        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', '_getParentsCategoryTree'), array(), '', false);
+        $oArticle->expects($this->any())
+                 ->method('getCategory')
+                 ->will($this->returnValue(new oxCategory()));
+
+
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', '_getParentsCategoryTree', 'getArticle'), array(), '', false);
         $oArticleExtended->expects($this->any())
                          ->method('getArticle')
                          ->will($this->returnValue($oArticle));
@@ -195,6 +179,8 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
                                         'width' => 10,
                                         'height' => 10,
                                         'length' => 10);
+
+        $oArticleExtended->loadByArticle($oArticle);
 
         $this->assertEquals($aExpectedInheritedData, $oArticleExtended->getArticleInheritData());
     }
@@ -342,7 +328,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
                  ->will($this->returnValue($oCategory));
 
         $aCategoryData = array(array('oxid' => 'some category id',
-                                     'tiramizoo_enable' => -1, 
+                                     'tiramizoo_enable' => -1,
                                      'tiramizoo_use_package' => -1,
                                      'tiramizoo_weight' => 1,
                                      'tiramizoo_width' => 10,
@@ -374,7 +360,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
                  ->will($this->returnValue($oCategory));
 
         $aCategoryData = array(array('oxid' => 'some category id',
-                                     'tiramizoo_enable' => -1, 
+                                     'tiramizoo_enable' => -1,
                                      'tiramizoo_use_package' => -1,
                                      'tiramizoo_weight' => 0,
                                      'tiramizoo_width' => 0,
@@ -411,6 +397,7 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
                   ->will($this->returnValue($oParentCategory));
 
         $oCategoryExtended = $this->getMock('oxTiramizoo_CategoryExtended', array('__construct', 'getIdByCategoryId', 'load'), array(), '', false);
+        $oCategoryExtended->oxtiramizoocategoryextended__tiramizoo_use_package = new oxField(1);
         $oCategoryExtended->oxtiramizoocategoryextended__tiramizoo_enable = new oxField(1);
         $oCategoryExtended->oxtiramizoocategoryextended__tiramizoo_weight = new oxField(1);
         $oCategoryExtended->oxtiramizoocategoryextended__tiramizoo_width = new oxField(40);
@@ -425,22 +412,24 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
                          ->will($this->returnValue($oArticle));
 
         $aExpectedCategoryData = array(array('oxid' => 'some parent id',
-                                             'oxtitle' => 'some parent title', 
+                                             'oxtitle' => 'some parent title',
                                              'oxsort' => 1,
-                                             'tiramizoo_enable' => 1,                                             
+                                             'tiramizoo_use_package' => 1,
+                                             'tiramizoo_enable' => 1,
                                              'tiramizoo_weight' => 1,
                                              'tiramizoo_width' => 40,
                                              'tiramizoo_height' => 50,
                                              'tiramizoo_length' => 20),
                                        array('oxid' => 'some category id',
-                                             'oxtitle' => 'some category title', 
+                                             'oxtitle' => 'some category title',
                                              'oxsort' => 2,
-                                             'tiramizoo_enable' => 1,                                             
+                                             'tiramizoo_use_package' => 1,
+                                             'tiramizoo_enable' => 1,
                                              'tiramizoo_weight' => 1,
                                              'tiramizoo_width' => 40,
                                              'tiramizoo_height' => 50,
                                              'tiramizoo_length' => 20));
 
-        $this->assertEquals($aExpectedCategoryData, $oArticleExtended->_getParentsCategoryTree($oCategory, array()));                         
+        $this->assertEquals($aExpectedCategoryData, $oArticleExtended->_getParentsCategoryTree($oCategory, array()));
     }
 }

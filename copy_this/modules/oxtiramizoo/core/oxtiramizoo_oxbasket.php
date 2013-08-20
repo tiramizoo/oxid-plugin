@@ -25,7 +25,7 @@ class oxTiramizoo_oxbasket extends oxTiramizoo_oxbasket_parent
     /**
      * Calculates basket delivery costs if oxTiramizoo_DeliveryPrice
      * has overrided method
-     * 
+     *
      * @extend oxbasket::_calcDeliveryCost()
      *
      * @see oxTiramizoo_DeliveryPrice
@@ -42,14 +42,14 @@ class oxTiramizoo_oxbasket extends oxTiramizoo_oxbasket_parent
             $oTiramizooDeliverySet->init($this->getUser(), oxNew( 'oxorder' )->getDelAddressInfo());
 
             if ($oTiramizooDeliverySet->isTiramizooAvailable()) {
-                $oTiramizooDeliveryPrice = oxNew('oxTiramizoo_DeliveryPrice'); 
-                
+                $oTiramizooDeliveryPrice = oxNew('oxTiramizoo_DeliveryPrice');
+
                 $oDeliveryPrice = $oTiramizooDeliveryPrice->calculateDeliveryPrice($oTiramizooDeliverySet, $this->getUser(), $this, $oDeliveryPrice);
 
                 return $oDeliveryPrice;
             }
         }
-        
+
         return $oDeliveryPrice;
     }
 
@@ -66,7 +66,7 @@ class oxTiramizoo_oxbasket extends oxTiramizoo_oxbasket_parent
 
         $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
-        foreach ($this->getBasketArticles() as $key => $oArticle) 
+        foreach ($this->getBasketArticles() as $key => $oArticle)
         {
             //check if deliverable is set for articles with stock > 0
             if ($oTiramizooConfig->getShopConfVar('oxTiramizoo_articles_stock_gt_0')) {
@@ -75,17 +75,17 @@ class oxTiramizoo_oxbasket extends oxTiramizoo_oxbasket_parent
                 }
             }
 
-            //NOTICE if article is only variant of parent article then load parent product as article 
+            //NOTICE if article is only variant of parent article then load parent product as article
             if ($oArticle->oxarticles__oxparentid->value) {
                 $parentArticleId = $oArticle->oxarticles__oxparentid->value;
-                
+
                 $oArticleParent = oxNew( 'oxarticle' );
                 $oArticleParent->load($parentArticleId);
                 $oArticle = $oArticleParent;
             }
 
             $oArticleExtended = oxnew('oxTiramizoo_ArticleExtended');
-            $oArticleExtended->load($oArticle->getId());
+            $oArticleExtended->loadByArticle($oArticle);
 
             if (!$oArticleExtended->isEnabled()) {
                 return false;
