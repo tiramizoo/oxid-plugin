@@ -203,7 +203,7 @@ $aLang = array(
 'oxTiramizoo_category_tab_dimensions_unit'              => 'cm',
 'oxTiramizoo_category_tab_dimensions_help'              => 'L-length, W - width, H - height. These dimensions will be assigned to all products in this category without dimensions specified',
 
-'oxTiramizoo_category_tab_use_package_label'            => 'Articles has individual package',
+'oxTiramizoo_category_tab_use_package_label'            => 'All products have individual packages',
 'oxTiramizoo_category_tab_use_package_value'            => 'Yes',
 'oxTiramizoo_category_tab_use_package_help'             => 'Items in this category will not be packaged into a box, use dimensions directly',
 
