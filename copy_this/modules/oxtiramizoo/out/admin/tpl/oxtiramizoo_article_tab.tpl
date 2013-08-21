@@ -67,26 +67,27 @@ function editThis( sID )
             <td class="edittext">
 
                 <select name="oxTiramizooArticleExtended[oxtiramizooarticleextended__tiramizoo_enable]">
+                    <option value="0" [{if ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_enable->value == 0)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_inherit_value" }]</option>
                     <option value="1" [{if ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_enable->value == 1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_yes_value" }]</option>
                     <option value="-1" [{if ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_enable->value == -1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_no_value" }]</option>
                 </select>
 
-                [{ oxinputhelp ident="oxTiramizoo_article_tab_enable_tiramizoo_help" }]
-
-                [{if (($inheritedData.tiramizoo_enable) && ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_enable->value != -1 )) }]
-                  <span style="color:green;">[{ oxmultilang ident="oxTiramizoo_article_tab_article_is_enabled" }]</span>
-                  [{else}]
-                  <div>
-                  <span style="color:red;">[{ oxmultilang ident="oxTiramizoo_article_tab_article_is_disabled" }]</span>
-
-                    [{if ($disabledCategory) }]
-                      <span style="color:red;">[{ oxmultilang ident="oxTiramizoo_article_tab_disabled_by_category_1"  }] [{$disabledCategory->oxcategories__oxtitle->value }] [{ oxmultilang  ident="oxTiramizoo_article_tab_disabled_by_category_2"  }] </span>
+                [{if ( !$oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_enable->value) }]
+                    [{if ($effectiveData.tiramizoo_enable) }]
+                        <span style="color:green;">[{ oxmultilang ident="oxTiramizoo_article_tab_article_is_enabled" }]
+                    [{else}]
+                        <span style="color:red;">[{ oxmultilang ident="oxTiramizoo_article_tab_article_is_disabled"  }]
                     [{/if}]
-                  </div>
+
+                        [{if ($effectiveData.tiramizoo_enable_inherited_from == 'category') }]
+                             ([{ oxmultilang ident="oxTiramizoo_category_label"  }]: [{ $effectiveData.tiramizoo_enable_inherited_from_category_title }])
+                        [{elseif ($effectiveData.tiramizoo_enable_inherited_from == 'global') }]
+                            ([{ oxmultilang ident="oxTiramizoo_tiramizoo_settings_path" }])
+                        [{/if}]
+                        </span>
                 [{/if}]
 
-
-
+                [{ oxinputhelp ident="oxTiramizoo_article_tab_enable_tiramizoo_help" }]
 
             </td>
           </tr>
@@ -97,9 +98,28 @@ function editThis( sID )
               [{ oxmultilang ident="oxTiramizoo_article_tab_use_package_label" }]
             </td>
             <td class="edittext">
-                <input type="hidden" name="oxTiramizooArticleExtended[oxtiramizooarticleextended__tiramizoo_use_package]" value="1" />
-                <input type="checkbox" name="oxTiramizooArticleExtended[oxtiramizooarticleextended__tiramizoo_use_package]" value="0" [{if ($oxTiramizooArticleExtended->hasIndividualPackage())}]checked="checked"[{/if}] />
-                [{ oxmultilang ident="oxTiramizoo_article_tab_use_package_value" }]
+
+                <select name="oxTiramizooArticleExtended[oxtiramizooarticleextended__tiramizoo_use_package]">
+                    <option value="0" [{if ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_use_package->value == 0)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_inherit_value" }]</option>
+                    <option value="1" [{if ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_use_package->value == 1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_yes_value" }]</option>
+                    <option value="-1" [{if ($oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_use_package->value == -1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_no_value" }]</option>
+                </select>
+
+                [{if ( !$oxTiramizooArticleExtended->oxtiramizooarticleextended__tiramizoo_use_package->value) }]
+                    [{if ($effectiveData.tiramizoo_use_package) }]
+                        <span>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_no_value" }]
+                    [{else}]
+                        <span>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_yes_value"  }]
+                    [{/if}]
+
+                        [{if ($effectiveData.tiramizoo_use_package_inherited_from == 'category') }]
+                             ([{ oxmultilang ident="oxTiramizoo_category_label"  }]: [{ $effectiveData.tiramizoo_use_package_inherited_from_category_title }])
+                        [{elseif ($effectiveData.tiramizoo_use_package_inherited_from == 'global') }]
+                            ([{ oxmultilang ident="oxTiramizoo_tiramizoo_settings_path" }])
+                        [{/if}]
+                        </span>
+                [{/if}]
+
                 [{ oxinputhelp ident="oxTiramizoo_article_tab_use_package_help" }]
             </td>
           </tr>
@@ -117,19 +137,23 @@ function editThis( sID )
 
 
           <tr>
-            <td class="edittext">[{ oxmultilang ident="oxTiramizoo_article_tab_article_effective_label" }]</td>
+            <td class="edittext">[{ oxmultilang ident="oxTiramizoo_article_tab_article_effective_label" }]
+
+            [{if ($effectiveData.tiramizoo_dimensions_inherited_from == 'category') }]
+                 <br />([{ oxmultilang ident="oxTiramizoo_category_label"  }]: [{ $effectiveData.tiramizoo_enable_inherited_from_category_title }])
+            [{elseif ($effectiveData.tiramizoo_dimensions_inherited_from == 'global') }]
+                <br />([{ oxmultilang ident="oxTiramizoo_tiramizoo_settings_path" }])
+            [{/if}]
+
+            </td>
             <td class="edittext">
               <p>
 
-              [{oxmultilang ident="oxTiramizoo_article_tab_weight_label"}]: [{$effectiveData->weight}] [{oxmultilang ident="oxTiramizoo_article_tab_weight_unit"}].<br />
-              [{oxmultilang ident="oxTiramizoo_article_tab_width_label"}]: [{$effectiveData->width}] [{oxmultilang ident="oxTiramizoo_article_tab_dimensions_unit"}].<br />
-              [{oxmultilang ident="oxTiramizoo_article_tab_height_unit"}]: [{$effectiveData->height}] [{oxmultilang ident="oxTiramizoo_article_tab_dimensions_unit"}].<br />
-              [{oxmultilang ident="oxTiramizoo_article_tab_length_unit"}]: [{$effectiveData->length}] [{oxmultilang ident="oxTiramizoo_article_tab_dimensions_unit"}].<br />
+              [{oxmultilang ident="oxTiramizoo_article_tab_weight_label"}]: [{$effectiveData.weight}] [{oxmultilang ident="oxTiramizoo_article_tab_weight_unit"}].<br />
+              [{oxmultilang ident="oxTiramizoo_article_tab_width_label"}]: [{$effectiveData.width}] [{oxmultilang ident="oxTiramizoo_article_tab_dimensions_unit"}].<br />
+              [{oxmultilang ident="oxTiramizoo_article_tab_height_unit"}]: [{$effectiveData.height}] [{oxmultilang ident="oxTiramizoo_article_tab_dimensions_unit"}].<br />
+              [{oxmultilang ident="oxTiramizoo_article_tab_length_unit"}]: [{$effectiveData.length}] [{oxmultilang ident="oxTiramizoo_article_tab_dimensions_unit"}].<br />
               </p>
-
-                [{if ($warningDimensions)}]
-                  <span style="color:red;">[{oxmultilang ident="oxTiramizoo_article_tab_effective_values_warning"}]</span>
-                [{/if}]
 
 
             </td>

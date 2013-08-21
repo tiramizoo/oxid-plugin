@@ -59,9 +59,15 @@ class oxTiramizoo_Category_Tab extends oxAdminDetails
 
         $soxId = $this->getConfig()->getRequestParameter( "oxid");
 
+        $oCategory = oxNew('oxCategory');
+        $oCategory->load($soxId);
+
         $oTiramizooCategoryExtended = oxNew('oxTiramizoo_CategoryExtended');
         $oTiramizooCategoryExtended->load($oTiramizooCategoryExtended->getIdByCategoryId($soxId));
         $this->_aViewData['oxTiramizooCategoryExtended'] = $oTiramizooCategoryExtended;
+
+        $oArticleInheritedData = oxNew('oxTiramizoo_ArticleInheritedData');
+        $this->_aViewData['effectiveData'] = $oArticleInheritedData->getCategoryEffectiveData($oCategory, true);
 
         return "oxTiramizoo_category_tab.tpl";
     }

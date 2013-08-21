@@ -258,7 +258,12 @@ $aLang = array(
 
 'oxTiramizoo_invalid_delivery_type_error'               => 'Unzulässige Liefermethode',
 
-'oxTiramizoo_invalid_time_window_error'                 => 'Ihr ausgewähltes Zeitfenster kann leider nicht mehr bedient werden. Bitte wählen Sie ein neues Zeitfenster.'
+'oxTiramizoo_invalid_time_window_error'                 => 'Ihr ausgewähltes Zeitfenster kann leider nicht mehr bedient werden. Bitte wählen Sie ein neues Zeitfenster.',
+
+
+'oxTiramizoo_category_label'                            => 'Kategorie',
+
+'oxTiramizoo_tiramizoo_settings_path'                   => 'Tiramizoo -> Einstellungen'
 
 
 
