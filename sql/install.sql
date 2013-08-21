@@ -17,19 +17,19 @@ CREATE TABLE IF NOT EXISTS oxtiramizooretaillocationconfig (
 
 CREATE TABLE IF NOT EXISTS oxtiramizooarticleextended (
                         OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL PRIMARY KEY,
-                        TIRAMIZOO_ENABLE INT(1) NOT NULL DEFAULT 0,
-                        TIRAMIZOO_USE_PACKAGE INT(1) NOT NULL DEFAULT 1,
+                        TIRAMIZOO_ENABLE INT(1) NULL,
+                        TIRAMIZOO_USE_PACKAGE INT(1) NULL,
                         OXARTICLEID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL
                    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS oxtiramizoocategoryextended (
                         OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL PRIMARY KEY,
                         TIRAMIZOO_ENABLE INT(1) NOT NULL DEFAULT 1,
-                        TIRAMIZOO_WIDTH FLOAT NOT NULL DEFAULT 0,
-                        TIRAMIZOO_HEIGHT FLOAT NOT NULL DEFAULT 0,
-                        TIRAMIZOO_LENGTH FLOAT NOT NULL DEFAULT 0,
-                        TIRAMIZOO_WEIGHT FLOAT NOT NULL DEFAULT 0,
-                        TIRAMIZOO_USE_PACKAGE INT(1) NOT NULL DEFAULT 1,
+                        TIRAMIZOO_WIDTH FLOAT,
+                        TIRAMIZOO_HEIGHT FLOAT,
+                        TIRAMIZOO_LENGTH FLOAT,
+                        TIRAMIZOO_WEIGHT FLOAT,
+                        TIRAMIZOO_USE_PACKAGE INT(1),
                         OXCATEGORYID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL
                    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

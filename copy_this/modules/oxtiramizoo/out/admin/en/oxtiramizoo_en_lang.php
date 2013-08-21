@@ -262,8 +262,12 @@ $aLang = array(
 
 'oxTiramizoo_invalid_delivery_type_error'               => 'Invalid tiramizoo delivery type',
 
-'oxTiramizoo_invalid_time_window_error'                 => 'Selected time window is no longer available. Please select another.'
+'oxTiramizoo_invalid_time_window_error'                 => 'Selected time window is no longer available. Please select another.',
 
+
+'oxTiramizoo_category_label'                            => 'Category',
+
+'oxTiramizoo_tiramizoo_settings_path'                   => 'Tiramizoo -> Settings'
 
 );
 

@@ -38,9 +38,29 @@ function loadLang(obj)
             </td>
             <td class="edittext">
                 <select name="oxTiramizooCategoryExtended[oxtiramizoocategoryextended__tiramizoo_enable]">
+                    <option value="0" [{if ($oxTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_enable->value == 0)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_category_tab_enable_inherit_value" }]</option>
+
                     <option value="1" [{if ($oxTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_enable->value == 1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_category_tab_enable_yes_value" }]</option>
+
                     <option value="-1" [{if ($oxTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_enable->value == -1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_category_tab_enable_no_value" }]</option>
                 </select>
+
+
+                [{if ( !$oxTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_enable->value) }]
+                    [{if ($effectiveData.tiramizoo_enable) }]
+                        <span style="color:green;">[{ oxmultilang ident="oxTiramizoo_article_tab_article_is_enabled" }]
+                    [{else}]
+                        <span style="color:red;">[{ oxmultilang ident="oxTiramizoo_article_tab_article_is_disabled"  }]
+                    [{/if}]
+
+                        [{if ($effectiveData.tiramizoo_enable_inherited_from == 'category') }]
+                             ([{ oxmultilang ident="oxTiramizoo_category_label"  }]: [{ $effectiveData.tiramizoo_enable_inherited_from_category_title }])
+                        [{elseif ($effectiveData.tiramizoo_enable_inherited_from == 'global') }]
+                            ([{ oxmultilang ident="oxTiramizoo_tiramizoo_settings_path" }])
+                        [{/if}]
+                        </span>
+                [{/if}]
+
                 [{ oxinputhelp ident="oxTiramizoo_category_tab_enable_tiramizoo_help" }]
             </td>
           </tr>
@@ -50,9 +70,30 @@ function loadLang(obj)
               [{ oxmultilang ident="oxTiramizoo_category_tab_use_package_label" }]
             </td>
             <td class="edittext">
-                <input type="hidden" name="oxTiramizooCategoryExtended[oxtiramizoocategoryextended__tiramizoo_use_package]" value="1" />
-                <input type="checkbox" name="oxTiramizooCategoryExtended[oxtiramizoocategoryextended__tiramizoo_use_package]" value="-1" [{if ($oxTiramizooCategoryExtended->getId() && $oxTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_use_package->value == -1)}]checked="checked"[{/if}] />
-                [{ oxmultilang ident="oxTiramizoo_category_tab_use_package_value" }]
+
+                <select name="oxTiramizooCategoryExtended[oxtiramizoocategoryextended__tiramizoo_use_package]">
+                    <option value="0" [{if ($oxTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_use_package->value == 0)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_category_tab_enable_inherit_value" }]</option>
+
+                    <option value="1" [{if ($oxTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_use_package->value == 1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_category_tab_enable_yes_value" }]</option>
+
+                    <option value="-1" [{if ($oxTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_use_package->value == -1)}]selected="selected"[{/if}]>[{ oxmultilang ident="oxTiramizoo_category_tab_enable_no_value" }]</option>
+                </select>
+
+                [{if ( !$oxTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_use_package->value) }]
+                    [{if ($effectiveData.tiramizoo_use_package) }]
+                        <span>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_no_value" }]
+                    [{else}]
+                        <span>[{ oxmultilang ident="oxTiramizoo_article_tab_enable_yes_value"  }]
+                    [{/if}]
+
+                        [{if ($effectiveData.tiramizoo_use_package_inherited_from == 'category') }]
+                             ([{ oxmultilang ident="oxTiramizoo_category_label"  }]: [{ $effectiveData.tiramizoo_use_package_inherited_from_category_title }])
+                        [{elseif ($effectiveData.tiramizoo_use_package_inherited_from == 'global') }]
+                            ([{ oxmultilang ident="oxTiramizoo_tiramizoo_settings_path" }])
+                        [{/if}]
+                        </span>
+                [{/if}]
+
                 [{ oxinputhelp ident="oxTiramizoo_category_tab_use_package_help" }]
             </td>
           </tr>
