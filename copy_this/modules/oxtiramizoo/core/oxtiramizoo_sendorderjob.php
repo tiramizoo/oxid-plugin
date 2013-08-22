@@ -41,7 +41,7 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
      */
 	public function run()
 	{
-		try 
+		try
 		{
 			if ($soxId = $this->getExternalId()) {
 		        $oOrder = oxNew( "oxorder" );
@@ -52,7 +52,7 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
 				$this->closeJob();
 				return true;
 			}
-			
+
 	        $oTiramizooOrderExtended = oxNew('oxTiramizoo_OrderExtended');
 	        $sOxId = $oTiramizooOrderExtended->getIdByOrderId($oOrder->getId());
 	        $oTiramizooOrderExtended->load($sOxId);
@@ -72,7 +72,7 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
             $oTiramizooOrderExtended->save();
 
 	        if (!in_array($tiramizooResult['http_status'], array(201))) {
-                $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_post_order_error', oxLang::getInstance()->getBaseLanguage(), false);
+                $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_post_order_error', oxLang::getInstance()->getTplLanguage(), true);
                 throw new oxTiramizoo_SendOrderException( $errorMessage );
 	        }
 
@@ -100,17 +100,17 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
     /**
      * Setting object with default data. Execute parent::setDefaultData().
      * Add date range when running is available
-     * 
+     *
      * @extend oxTiramizoo_ScheduleJob::setDefaultData()
      *
      * @return null
      */
-	public function setDefaultData() 
+	public function setDefaultData()
 	{
 		parent::setDefaultData();
 
 		$this->oxtiramizooschedulejob__oxcreatedat = new oxField(oxTiramizoo_Date::date());
-		
+
 		$oRunAfterDate = new oxTiramizoo_Date();
 		$oRunAfterDate->modify('+1 minutes');
 		$this->oxtiramizooschedulejob__oxrunafter = new oxField($oRunAfterDate->get());
@@ -125,7 +125,7 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
     /**
      * Saves (updates) user object data information in DB. Set default data.
      * executes parent::save()
-     * 
+     *
      * @extend oxBase::save()
      *
      * @return null
@@ -140,7 +140,7 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
 	}
 
     /**
-     * Modify job state and increment repeat counter. 
+     * Modify job state and increment repeat counter.
      * Change after date exponentially based on repeat counter.
      * Update record in DB.
      *
@@ -150,23 +150,23 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
 	{
 		$sCreatedAt = $this->oxtiramizooschedulejob__oxcreatedat->value;
 		$iRepeats = ++$this->oxtiramizooschedulejob__oxrepeatcounter->value;
-		
+
 		$iMinutes = pow(2, $iRepeats);
 
 		$oRunAfterDate = oxNew('oxTiramizoo_Date', $sCreatedAt);
 		$oRunAfterDate->modify('+' . $iMinutes . ' minutes');
 
 		$this->oxtiramizooschedulejob__oxrunafter = new oxField($oRunAfterDate->get());
-		
+
 		$this->oxtiramizooschedulejob__oxstate = new oxField('retry');
-		
+
 		$this->save();
 	}
 
     /**
      * Change state to finished. Set email with tracking url to Tiramizoo
      * executes parent::finishJob()
-     * 
+     *
      * @extend oxBase::finishJob()
      *
      * @return null
@@ -174,7 +174,7 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
     public function finishJob()
     {
     	parent::finishJob();
-		
+
 		if ($soxId = $this->getExternalId()) {
 	        $oOrder = oxNew( "oxorder" );
 	        $oOrder->load( $soxId );
@@ -191,7 +191,7 @@ class oxTiramizoo_SendOrderJob extends oxTiramizoo_ScheduleJob
 	        $oEmail->setSmtp( $oShop );
 	        $oEmail->setBody('Tracking URL:' . $oOrderExtended->getTrackingUrl());
 	        $oEmail->setSubject( 'Tiramizoo tracking URL');
-	        
+
 	        $oUser = $oOrder->getOrderUser();
 	        $sFullName = $oUser->oxuser__oxfname->value . " " . $oUser->oxuser__oxlname->value;
 
