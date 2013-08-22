@@ -218,7 +218,7 @@ class oxTiramizoo_DeliverySet
             oxSession::setVar( 'sTiramizooDeliveryType',  $sTiramizooDeliveryType );
             $this->_sTiramizooDeliveryType = $sTiramizooDeliveryType;
         } else {
-            $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_invalid_delivery_type_error', oxRegistry::getLang()->getTplLanguage(), false);
+            $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_invalid_delivery_type_error', oxRegistry::getLang()->getTplLanguage(), true);
             throw new oxTiramizoo_InvalidDeliveryTypeException($errorMessage);
         }
     }
@@ -241,7 +241,7 @@ class oxTiramizoo_DeliverySet
         }
 
         if (!$oTimeWindow || !$oTimeWindow->isValid()) {
-            $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_invalid_time_window_error', oxRegistry::getLang()->getTplLanguage(), false);
+            $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_invalid_time_window_error', oxRegistry::getLang()->getTplLanguage(), true);
             throw new oxTiramizoo_InvalidTimeWindowException($errorMessage);
         }
     }
