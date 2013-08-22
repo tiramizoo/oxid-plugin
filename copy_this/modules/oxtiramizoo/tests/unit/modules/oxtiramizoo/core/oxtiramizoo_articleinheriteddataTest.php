@@ -488,6 +488,47 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_ArticleInheritedDataTest extends
 
     }
 
+    public function testGetArticleEffectiveDataIfInheritedFromGlobal()
+    {
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'));
+        $oTiramizooConfig->expects($this->any())
+                         ->method('getShopConfVar')
+                         ->will($this->returnValue(1));
+
+        oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
+
+        $oArticle = $this->getMock('oxArticle', array('__construct', 'getCategory'), array(), '', false);
+        $oArticle->oxarticles__oxweight = new oxField(3);
+        $oArticle->oxarticles__oxwidth = new oxField(0.11);
+        $oArticle->oxarticles__oxheight = new oxField(0.12);
+        $oArticle->oxarticles__oxlength = new oxField(0.13);
+        $oArticle->expects($this->any())
+                 ->method('getCategory')
+                 ->will($this->returnValue(null));
+
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct'), array(), '', false);
+        $oArticleExtended->oxtiramizooarticleextended__tiramizoo_enable = new oxField(0);
+        $oArticleExtended->oxtiramizooarticleextended__tiramizoo_use_package = new oxField(0);
+
+        oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oArticleExtended);
+
+        $oArticleInheritedData = oxNew('oxTiramizoo_ArticleInheritedData');
+
+        $aExpectedData = array();
+        $aExpectedData['tiramizoo_enable'] = true;
+        $aExpectedData['tiramizoo_use_package'] = true;
+        $aExpectedData['weight'] = 3;
+        $aExpectedData['width'] = 11;
+        $aExpectedData['height'] = 12;
+        $aExpectedData['length'] = 13;
+        $aExpectedData['tiramizoo_enable_inherited_from'] = 'global';
+        $aExpectedData['tiramizoo_use_package_inherited_from'] = 'global';
+        $aExpectedData['tiramizoo_dimensions_inherited_from'] = 'self';
+
+        $this->assertEquals($aExpectedData, $oArticleInheritedData->getArticleEffectiveData($oArticle));
+
+        $this->assertEquals(false, $oArticleExtended->hasIndividualPackage());
+    }
 
 
     public function testDimensionsAndWeightCanBeInherited()

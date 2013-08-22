@@ -129,7 +129,7 @@ class oxTiramizoo_ArticleExtended extends oxBase {
      */
     public function hasIndividualPackage()
     {
-        if (!$this->getEffectiveDataValue('tiramizoo_use_package')) {
+        if ($this->getEffectiveDataValue('tiramizoo_use_package')) {
             return false;
         }
 

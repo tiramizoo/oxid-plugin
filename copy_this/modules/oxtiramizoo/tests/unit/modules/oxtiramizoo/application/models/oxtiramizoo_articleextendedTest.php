@@ -185,22 +185,72 @@ class Unit_Modules_oxTiramizoo_Application_Models_oxTiramizoo_ArticleExtendedTes
 
         $oArticleExtended->expects($this->at(0))
                          ->method('getEffectiveDataValue')
-                         ->will($this->returnValue(false));
+                         ->will($this->returnValue(true));
 
 
         $this->assertEquals(false, $oArticleExtended->hasIndividualPackage());
     }
 
-    public function testHasIndividualPackageUInheritedsePackageTrue()
+    public function testHasIndividualPackageInheritedsePackageTrue()
     {
         $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getEffectiveDataValue'), array(), '', false);
 
         $oArticleExtended->expects($this->at(0))
                          ->method('getEffectiveDataValue')
-                         ->will($this->returnValue(true));
+                         ->will($this->returnValue(false));
 
 
         $this->assertEquals(true, $oArticleExtended->hasIndividualPackage());
+    }
+
+    public function testHasIndividualPackageTrueIfGlobalSettingsTrue()
+    {
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'));
+        $oTiramizooConfig->expects($this->any())
+                         ->method('getShopConfVar')
+                         ->will($this->returnValue(0));
+
+        oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
+
+        $oArticle = $this->getMock('oxArticle', array('__construct', 'getCategory'), array(), '', false);
+        $oArticle->expects($this->any())
+                 ->method('getCategory')
+                 ->will($this->returnValue(null));
+
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getIdByArticleId'), array(), '', false);
+        $oArticleExtended->oxtiramizooarticleextended__tiramizoo_enable = new oxField(0);
+        $oArticleExtended->oxtiramizooarticleextended__tiramizoo_use_package = new oxField(0);
+
+        $oArticleExtended->loadByArticle($oArticle);
+
+        oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oArticleExtended);
+
+        $this->assertEquals(true, $oArticleExtended->hasIndividualPackage());
+    }
+
+    public function testHasIndividualPackageTrueIfGlobalSettingsFalse()
+    {
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'));
+        $oTiramizooConfig->expects($this->any())
+                         ->method('getShopConfVar')
+                         ->will($this->returnValue(1));
+
+        oxRegistry::set('oxTiramizoo_Config', $oTiramizooConfig);
+
+        $oArticle = $this->getMock('oxArticle', array('__construct', 'getCategory'), array(), '', false);
+        $oArticle->expects($this->any())
+                 ->method('getCategory')
+                 ->will($this->returnValue(null));
+
+        $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array('__construct', 'getIdByArticleId'), array(), '', false);
+        $oArticleExtended->oxtiramizooarticleextended__tiramizoo_enable = new oxField(0);
+        $oArticleExtended->oxtiramizooarticleextended__tiramizoo_use_package = new oxField(0);
+
+        $oArticleExtended->loadByArticle($oArticle);
+
+        oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oArticleExtended);
+
+        $this->assertEquals(false, $oArticleExtended->hasIndividualPackage());
     }
 
     public function testHasWeightAndDimensions()
