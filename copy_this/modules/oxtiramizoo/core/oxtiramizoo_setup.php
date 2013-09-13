@@ -23,7 +23,7 @@ class oxTiramizoo_Setup
     /**
      * Current version of oxTiramizoo module
      */
-    const VERSION = '0.9.0';
+    const VERSION = '1.0.1';
 
     /**
      * Error message
@@ -43,7 +43,7 @@ class oxTiramizoo_Setup
         $tiramizooIsInstalled = $oTiramizooConfig->getShopConfVar('oxTiramizoo_is_installed');
 
         try
-        { 
+        {
             if (!$tiramizooIsInstalled || !$currentInstalledVersion) {
                 $this->runMigrations();
                 $oTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 1);
@@ -53,7 +53,7 @@ class oxTiramizoo_Setup
 
         } catch(oxException $e) {
             $errorMessage = $e->getMessage() . "<ul><li>" . implode("</li><li>", $this->_migrationErrors) . "</li></ul>";
-            
+
             $this->getModule()->deactivate();
 
             throw new oxException($errorMessage);
@@ -88,7 +88,7 @@ class oxTiramizoo_Setup
                     if ($this->stopMigrationsIfErrors()) {
                         throw new oxException('<p>Cannot execute the following sql queries:</p>');
                     }
-                    $oTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_version', $methodVersion);                    
+                    $oTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_version', $methodVersion);
                 }
             }
         }
@@ -100,14 +100,14 @@ class oxTiramizoo_Setup
 
         $migrationsMethods = array();
 
-        foreach ($methodsNames as $methodName) 
+        foreach ($methodsNames as $methodName)
         {
             if (strpos($methodName, 'migration_') === 0) {
                 $methodVersion = str_replace('migration_', '', $methodName);
                 $methodVersion = str_replace('_', '.', $methodVersion);
                 $migrationsMethods[$methodVersion] = $methodName;
             }
-        }        
+        }
 
         uksort($migrationsMethods, 'version_compare');
 
@@ -129,7 +129,7 @@ class oxTiramizoo_Setup
     }
 
     /**
-     * Update database to version 0.9.0 
+     * Update database to version 0.9.0
      */
     public function migration_0_9_0()
     {
@@ -189,7 +189,7 @@ class oxTiramizoo_Setup
                                 OXDELID = 'TiramizooStandardDelivery',
                                 OXDELSETID = 'Tiramizoo';");
 
-        $oTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/api/v1'); 
+        $oTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_api_url', 'https://sandbox.tiramizoo.com/api/v1');
         $oTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_shop_url', '');
         $oTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_articles_stock_gt_0', 1);
         $oTiramizooConfig->saveShopConfVar( "int", 'oxTiramizoo_package_strategy', 0);
@@ -198,7 +198,7 @@ class oxTiramizoo_Setup
 
     /**
      * Execute sql query
-     * 
+     *
      * @param string $sql SQL query to execute
      * @return: SQL query result
      */
@@ -215,7 +215,7 @@ class oxTiramizoo_Setup
 
     /**
      * Create sql query add column to table
-     * 
+     *
      * @param string $tableName  Table name
      * @param string $columnName Column name
      * @param string $columnData Column datatype
@@ -230,7 +230,7 @@ class oxTiramizoo_Setup
 
     /**
      * Check if column exists in table
-     * 
+     *
      * @param string $tableName  Table name
      * @param string $columnName Column name
      * @return boolean

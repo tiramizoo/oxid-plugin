@@ -1,6 +1,9 @@
 ==0.1.0==
 * Initial release of module.
-==0.9.0==
+==1.0.0==
 * Configuration works with api
 * Adding new checkout proccess behaviour
 * Rewriting the module
+==1.0.1==
+* Fixed bugs with product property inheritiance
+* Adding PHP UNIT tests

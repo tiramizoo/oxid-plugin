@@ -8,7 +8,7 @@ Tiramizoo GmbH
 oxTiramizoo
 
 ==Version==
-0.9.0
+1.0.1
 
 ==Link==
 http://tiramizoo.com/
@@ -37,7 +37,7 @@ Integrates Tiramizoo Delivery into OXID ESHOP.
 --_process
 
 ==Installation==
-Add the module entries in admin. 
+Add the module entries in admin.
 
 ==Modules==
 oxorder       => oxtiramizoo/core/oxtiramizoo_oxorder
