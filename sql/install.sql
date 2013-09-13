@@ -1,4 +1,4 @@
--- version 0.9.0
+-- version 1.0.1
 CREATE TABLE IF NOT EXISTS oxtiramizooretaillocation (
                         OXID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL PRIMARY KEY,
                         OXSHOPID char(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
