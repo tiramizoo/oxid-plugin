@@ -47,7 +47,7 @@ class oxTiramizoo_Setup
             if (!$tiramizooIsInstalled || !$currentInstalledVersion) {
                 $this->runMigrations();
                 $oTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 1);
-            } else if ($tiramizooIsInstalled && (version_compare(oxTiramizoo_setup::VERSION, $currentInstalledVersion) > 0)) {
+            } else if ($tiramizooIsInstalled && (version_compare($this->getVersion(), $currentInstalledVersion) > 0)) {
                 $this->runMigrations();
             }
 
@@ -68,6 +68,11 @@ class oxTiramizoo_Setup
         return $oModule;
     }
 
+    public function getVersion()
+    {
+        return oxTiramizoo_setup::VERSION;
+    }
+
     /**
      * This method executes all migration methods newer than already installed version and older than new version
      */
@@ -82,7 +87,7 @@ class oxTiramizoo_Setup
         foreach($migrationsMethods as $methodVersion => $migrationMethod)
         {
             if (version_compare($methodVersion, $currentInstalledVersion) > 0) {
-                if (version_compare($methodVersion, oxTiramizoo_setup::VERSION) <= 0) {
+                if (version_compare($methodVersion, $this->getVersion()) <= 0) {
                     call_user_func_array(array($this, $migrationMethod), array());
 
                     if ($this->stopMigrationsIfErrors()) {
