@@ -7,3 +7,5 @@
 ==1.0.1==
 * Fixed bugs with product property inheritiance
 * Adding PHP UNIT tests
+==1.0.2==
+* Little changes in setup class

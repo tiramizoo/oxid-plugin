@@ -8,7 +8,7 @@ Tiramizoo GmbH
 oxTiramizoo
 
 ==Version==
-1.0.1
+1.0.2
 
 ==Link==
 http://tiramizoo.com/
