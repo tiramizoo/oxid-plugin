@@ -9,7 +9,7 @@ class _oxTiramizoo_Setup extends oxTiramizoo_Setup
     public function migration_0_8_5() {}
     public function migration_1_0_0() {}
 
-    public function executeSQL($sql) 
+    public function executeSQL($sql)
     {
     	return parent::executeSQL($sql);
     }
@@ -27,6 +27,11 @@ class _oxTiramizoo_Setup extends oxTiramizoo_Setup
     public function getMigrationMethods($class = __CLASS__)
     {
     	return parent::getMigrationMethods($class);
+    }
+
+    public function getVersion()
+    {
+        return '0.9.0';
     }
 }
 
@@ -158,7 +163,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 		$oTiramizooSetup->migration_0_9_0();
 	}
 
-	// Execute all statements 
+	// Execute all statements
 	public function testMigration_0_9_0__2()
 	{
 		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array(), array(), '', false);
