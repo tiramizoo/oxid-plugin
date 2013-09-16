@@ -23,7 +23,7 @@ class oxTiramizoo_Setup
     /**
      * Current version of oxTiramizoo module
      */
-    const VERSION = '1.0.1';
+    const VERSION = '1.0.2';
 
     /**
      * Error message

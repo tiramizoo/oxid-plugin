@@ -21,7 +21,7 @@ $aModule = array(
                         ),
 
     'thumbnail'    =>   'oxTiramizoo.png',
-    'version'      =>   '1.0.1',
+    'version'      =>   '1.0.2',
     'author'       =>   'tiramizoo',
     'url'          =>   'http://github.com/tiramizoo/oxid-plugin/',
     'email'        =>   'support@tiramizoo.com',
