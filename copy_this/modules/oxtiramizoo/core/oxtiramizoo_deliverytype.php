@@ -14,7 +14,7 @@
  */
 
 /**
- * Tiramizoo Delivery type class, provides all basic functions, 
+ * Tiramizoo Delivery type class, provides all basic functions,
  * needed for describe Tiramizoo Delivery.
  *
  * @package oxTiramizoo
@@ -46,7 +46,7 @@ abstract class oxTiramizoo_DeliveryType
 	 * Class constructor, assign retail location object and available time windows.
 	 *
 	 * @param oxTiramizoo_RetailLocation $oRetailLocation Retail Location object
-	 * 
+	 *
 	 * @return oxTiramizoo
 	 */
 	public function __construct($oRetailLocation)
@@ -54,7 +54,7 @@ abstract class oxTiramizoo_DeliveryType
 		$this->_aTimeWindows = $oRetailLocation->getAvailableTimeWindows();
 		$this->_oRetailLocation = $oRetailLocation;
 	}
-	
+
 	/**
 	 * Returns Retail location object
 	 *
@@ -82,7 +82,7 @@ abstract class oxTiramizoo_DeliveryType
 	 */
 	public function getName()
 	{
-		return oxLang::getInstance()->translateString('oxTiramizoo_delivery_type_' . $this->_sType .'_name');
+		return oxRegistry::getLang()->translateString('oxTiramizoo_delivery_type_' . $this->_sType .'_name');
 	}
 
 	/**
@@ -102,12 +102,14 @@ abstract class oxTiramizoo_DeliveryType
 	 */
 	public function getDefaultTimeWindow()
 	{
+		$oReturn = null;
+
 		if (count($this->_aTimeWindows)) {
 			$aKeys = array_keys($this->_aTimeWindows);
-			return oxNew('oxTiramizoo_TimeWindow', $this->_aTimeWindows[array_shift($aKeys)]);
+			$oReturn = oxNew('oxTiramizoo_TimeWindow', $this->_aTimeWindows[array_shift($aKeys)]);
 		}
 
-		return null;
+		return $oReturn;
 	}
 
 	/**
@@ -119,25 +121,31 @@ abstract class oxTiramizoo_DeliveryType
 	{
 		$aPickupContact = $this->getRetailLocation()->getConfVar('pickup_contact');
 
-		$aPickupContact = array_merge(array('address_line_1' => null, 
-											'postal_code' => null, 
-											'country_code' => null, 
-											'name' => null, 
-											'phone_number' => null), (array)$aPickupContact);
+		$aPickupContact = array_merge(
+			array(	'address_line' => null,
+					'postal_code' => null,
+					'country_code' => null,
+					'name' => null,
+					'phone_number' => null),
+			(array)$aPickupContact
+		);
 
-		if (!$aPickupContact['address_line_1'] || 
-			!$aPickupContact['postal_code'] || 
-			!$aPickupContact['country_code'] || 
-			!$aPickupContact['name'] || 
-			!$aPickupContact['phone_number']) {
-			return false;
+		$blReturn = true;
+
+		if (!($aPickupContact['address_line'])
+			|| !$aPickupContact['postal_code']
+			|| !$aPickupContact['country_code']
+			|| !$aPickupContact['name']
+			|| !$aPickupContact['phone_number']
+		) {
+			$blReturn = false;
 		}
 
-		return true;
+		return $blReturn;
 	}
 
 	/**
-	 * Checks if time window is in available time windows 
+	 * Checks if time window is in available time windows
 	 *
 	 * @return bool
 	 */
