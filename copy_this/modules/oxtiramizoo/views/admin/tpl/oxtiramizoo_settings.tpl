@@ -33,8 +33,8 @@
         [{assign var="aConfigValues" value=$oView->getConfigValues() }]
 
 
-        [{if $aMessages|@count gt 0}]
-          [{foreach from=$aMessages item=aMessage}]
+        [{if $oView->getMessages()|@count gt 0}]
+          [{foreach from=$oView->getMessages() item=aMessage}]
             <div class="[{$aMessage.type}]Message requestMessage">[{$aMessage.description}]</div>
           [{/foreach}]
         [{/if}]
