@@ -3,7 +3,7 @@
 
 
 class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SendOrderJobTest extends OxidTestCase
-{	
+{
 	protected function setUp()
 	{
         parent::setUp();
@@ -22,7 +22,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SendOrderJobTest extends OxidTes
 	public function testRefreshJob()
 	{
 		$this->assertEquals(0, $this->_oSubj->getRepeats());
-		
+
 		$this->_oSubj->refreshJob();
 		$this->assertEquals(1, $this->_oSubj->getRepeats());
 
@@ -121,7 +121,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SendOrderJobTest extends OxidTes
 		$oSendOrderJob->expects($this->never())->method('refreshJob');
 		$oSendOrderJob->expects($this->once())->method('finishJob');
 
-		$oOrder = $this->getMock('oxorder', array('load'), array(), '', false);
+		$oOrder = $this->getMock('oxorder', array('load', 'saveOrderExtended'), array(), '', false);
 		$oOrder->expects($this->once())->method('load');
 
         oxTestModules::addModuleObject('oxorder', $oOrder);

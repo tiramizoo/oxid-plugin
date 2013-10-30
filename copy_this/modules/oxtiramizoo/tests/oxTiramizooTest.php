@@ -69,7 +69,7 @@ class oxTiramizooTest extends PHPUnit_Framework_TestCase
 
         $aTestSuiteDirs = array( 'unit/modules/oxtiramizoo' );
 
-        $aTestDirs = array( 'admin', 'application/controllers', 'application/models', 'core', 'core/TiramizooApi', 'translations' );
+        $aTestDirs = array( 'application/controllers/admin', 'application/controllers', 'application/models', 'core', 'core/TiramizooApi', 'translations' );
         if (getenv('TEST_DIRS')) {
             $aTestDirs = explode('%', getenv('TEST_DIRS'));
         }

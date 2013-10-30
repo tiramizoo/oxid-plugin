@@ -1,7 +1,7 @@
 <?php
 
 
-class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_Order_TabTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Application_Controllers_Admin_oxTiramizoo_Order_TabTest extends OxidTestCase
 {
 
     protected function tearDown()
@@ -20,9 +20,9 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_Order_TabTest extends OxidTestC
                     $valueMap = array(
                         array('oxid', 'some order id'),
                     );
-                    
+
                     return returnValueMap($valueMap, func_get_args());
-                }));    	
+                }));
 
         $oTiramizooOrderExtended = $this->getMock('oxTiramizoo_OrderExtended', array(), array(), '', false);
         oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oTiramizooArticleExtended);

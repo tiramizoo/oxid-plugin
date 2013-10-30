@@ -32,8 +32,8 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 	public function tearDown()
 	{
         parent::tearDown();
-        oxSession::deleteVar('sTiramizooDeliveryType');
-        oxSession::deleteVar('sTiramizooTimeWindow');
+        oxRegistry::getSession()->deleteVariable('sTiramizooDeliveryType');
+        oxRegistry::getSession()->deleteVariable('sTiramizooTimeWindow');
 	}
 
 
@@ -81,7 +81,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
         $oTiramizooDeliverySet->expects($this->any())->method('setSelectedTimeWindow')->will($this->throwException(new oxTiramizoo_InvalidTimeWindowException()));
         $oTiramizooDeliverySet->expects($this->any())->method('setDefaultDeliveryType')->will($this->returnValue(true));
         $oTiramizooDeliverySet->expects($this->any())->method('setDefaultTimeWindow')->will($this->returnValue(true));
-        
+
         $oTiramizooDeliverySet->expects($this->once())->method('setDefaultDeliveryType');
         $oTiramizooDeliverySet->expects($this->once())->method('setDefaultTimeWindow');
 
@@ -102,7 +102,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
         $oTiramizooDeliverySet->expects($this->any())->method('setSelectedTimeWindow')->will($this->throwException(new oxTiramizoo_InvalidTimeWindowException()));
         $oTiramizooDeliverySet->expects($this->any())->method('setDefaultDeliveryType')->will($this->returnValue(true));
         $oTiramizooDeliverySet->expects($this->any())->method('setDefaultTimeWindow')->will($this->returnValue(true));
-        
+
         $oTiramizooDeliverySet->expects($this->once())->method('setDefaultDeliveryType');
         $oTiramizooDeliverySet->expects($this->once())->method('setDefaultTimeWindow');
 
@@ -178,7 +178,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
 	public function testSetSelectedTimeWindow1()
 	{
 		$oTimeWindow = $this->getMock('oxTiramizoo_TimeWindow', array(), array(), '', false);
-        $oTimeWindow->expects($this->any())->method('getHash')->will( $this->returnValue('somehash'));		
+        $oTimeWindow->expects($this->any())->method('getHash')->will( $this->returnValue('somehash'));
         $oTimeWindow->expects($this->any())->method('isValid')->will( $this->returnValue(true));
 
 		$oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array('getTimeWindowByHash'));
@@ -198,7 +198,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
         $this->setExpectedException('oxTiramizoo_InvalidTimeWindowException');
 
 		$oTimeWindow = $this->getMock('oxTiramizoo_TimeWindow', array(), array(), '', false);
-        $oTimeWindow->expects($this->any())->method('getHash')->will( $this->returnValue('somehash'));		
+        $oTimeWindow->expects($this->any())->method('getHash')->will( $this->returnValue('somehash'));
         $oTimeWindow->expects($this->any())->method('isValid')->will( $this->returnValue(false));
 
 		$oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array('getTimeWindowByHash'));
@@ -317,7 +317,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliverySetTest extends OxidTest
         {
 	        $oTiramizooDeliverySet = new _oxTiramizoo_DeliverySet();
 	        $oTiramizooDeliverySet->_sDeliveryPostalcode = '1111';
-			$this->assertEquals('some_api_token', $oTiramizooDeliverySet->getApiToken());        	
+			$this->assertEquals('some_api_token', $oTiramizooDeliverySet->getApiToken());
         } catch (oxTiramizoo_NotAvailableException $oEx){
         	$oRetailLocation->delete('_test');
             throw new oxTiramizoo_NotAvailableException($oEx->getMessage());

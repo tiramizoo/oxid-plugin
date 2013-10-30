@@ -27,9 +27,9 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_TimeWindowTest extends OxidTestC
 
     public function tearDown()
     {
-        parent::tearDown();        
+        parent::tearDown();
 
-        oxRegistry::set('oxLang', null);        
+        oxRegistry::set('oxLang', null);
     }
 
     public function testIsToday()
@@ -45,18 +45,10 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_TimeWindowTest extends OxidTestC
 
     public function testHasHours()
     {
-        // daylight saving time
-        if (date('I') == '1') { 
-            $aHours = array('pickup_after' => '14:00', 
-                            'pickup_before' => '16:00', 
-                            'delivery_after' => '14:00', 
-                            'delivery_before' => '16:00');
-        } else {
-            $aHours = array('pickup_after' => '13:00', 
-                            'pickup_before' => '15:00', 
-                            'delivery_after' => '13:00', 
-                            'delivery_before' => '15:00');
-        }
+        $aHours = array('pickup_after' => '14:00',
+                        'pickup_before' => '16:00',
+                        'delivery_after' => '14:00',
+                        'delivery_before' => '16:00');
 
         $this->assertEquals(true, $this->_oSubj->hasHours($aHours));
     }
@@ -75,12 +67,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_TimeWindowTest extends OxidTestC
 
     public function testGetDeliveryHoursFormated()
     {
-        // daylight saving time
-        if (date('I') == '1') { 
-            $sExpectedString = '14:00 - 16:00';
-        } else {
-            $sExpectedString = '13:00 - 15:00';
-        }
+        $sExpectedString = '14:00 - 16:00';
 
         $this->assertEquals($sExpectedString, $this->_oSubj->getDeliveryHoursFormated());
     }
@@ -140,11 +127,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_TimeWindowTest extends OxidTestC
         //if isToday
         oxTiramizoo_Date::changeCurrentTime('2013-04-01 09:00:00');
 
-        if (date('I') == '1') { 
-            $sExpectedString = 'Today 14:00 - 16:00';
-        } else {
-            $sExpectedString = 'Today 13:00 - 15:00';
-        }
+        $sExpectedString = 'Today 14:00 - 16:00';
 
         $this->assertEquals($sExpectedString, $this->_oSubj->getFormattedDeliveryTimeWindow());
     }
@@ -158,11 +141,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_TimeWindowTest extends OxidTestC
         //if isTomorrow
         oxTiramizoo_Date::changeCurrentTime('2013-03-31 09:00:00');
 
-        if (date('I') == '1') { 
-            $sExpectedString = 'Tomorrow 14:00 - 16:00';
-        } else {
-            $sExpectedString = 'Tomorrow 13:00 - 15:00';
-        }
+        $sExpectedString = 'Tomorrow 14:00 - 16:00';
 
         $this->assertEquals($sExpectedString, $this->_oSubj->getFormattedDeliveryTimeWindow());
     }
@@ -177,11 +156,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_TimeWindowTest extends OxidTestC
         //if isTomorrow
         oxTiramizoo_Date::changeCurrentTime('2013-03-30 09:00:00');
 
-        if (date('I') == '1') { 
-            $sExpectedString = '2013/04/01 14:00 - 16:00';
-        } else {
-            $sExpectedString = '2013/04/01 13:00 - 15:00';
-        }
+        $sExpectedString = '2013/04/01 14:00 - 16:00';
 
         $mock = $this->getMock('oxLang', array('translateString'));
 

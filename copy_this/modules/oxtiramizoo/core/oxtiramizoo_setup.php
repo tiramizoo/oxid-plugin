@@ -23,7 +23,7 @@ class oxTiramizoo_Setup
     /**
      * Current version of oxTiramizoo module
      */
-    const VERSION = '1.0.2';
+    const VERSION = '1.0.3';
 
     /**
      * Error message
@@ -47,12 +47,13 @@ class oxTiramizoo_Setup
             if (!$tiramizooIsInstalled || !$currentInstalledVersion) {
                 $this->runMigrations();
                 $oTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_is_installed', 1);
-            } else if ($tiramizooIsInstalled && (version_compare($this->getVersion(), $currentInstalledVersion) > 0)) {
+            } elseif ($tiramizooIsInstalled && (version_compare($this->getVersion(), $currentInstalledVersion) > 0)) {
                 $this->runMigrations();
             }
 
         } catch(oxException $e) {
-            $errorMessage = $e->getMessage() . "<ul><li>" . implode("</li><li>", $this->_migrationErrors) . "</li></ul>";
+            $sErros = implode("</li><li>", $this->_migrationErrors);
+            $errorMessage = $e->getMessage() . "<ul><li>" . $sErros . "</li></ul>";
 
             $this->getModule()->deactivate();
 
@@ -80,7 +81,9 @@ class oxTiramizoo_Setup
     {
         $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
-        $currentInstalledVersion = $oTiramizooConfig->getShopConfVar('oxTiramizoo_version') ? $oTiramizooConfig->getShopConfVar('oxTiramizoo_version') : '0.0.0';
+        $currentInstalledVersion = $oTiramizooConfig->getShopConfVar('oxTiramizoo_version')
+                                        ? $oTiramizooConfig->getShopConfVar('oxTiramizoo_version')
+                                        : '0.0.0';
 
         $migrationsMethods = $this->getMigrationMethods();
 
@@ -126,11 +129,13 @@ class oxTiramizoo_Setup
         if (count($this->_migrationErrors)) {
             //disable tiramizoo if db errors
             $oTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_enable_module', 0);
-            return true;
+            $blReturn = true;
         } else {
             $oTiramizooConfig->saveShopConfVar( "str", 'oxTiramizoo_update_errors', '');
-            return false;
+            $blReturn = false;
         }
+
+        return $blReturn;
     }
 
     /**

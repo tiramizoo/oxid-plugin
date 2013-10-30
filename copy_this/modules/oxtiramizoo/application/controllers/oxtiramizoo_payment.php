@@ -15,16 +15,85 @@
 
 /**
  * Payment manager. Extends with Tiramizoo delivery.
- * 
+ *
  * @extend payment
  * @package oxTiramizoo
  */
 class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
 {
     /**
-     * Executes parent::init(), initialize 
-     * oxTiramizooDeliverySet object 
-     * 
+     * Current ship set id
+     *
+     * @var string
+     */
+    protected $_sCurrentShipSet;
+
+    /**
+     * Current Tiramizoo Delivery Type
+     *
+     * @var string
+     */
+    protected $_sTiramizooDeliveryType;
+
+    /**
+     * Current Tiramizoo Time Window
+     *
+     * @var string
+     */
+    protected $_sSelectedTimeWindow;
+
+
+    /**
+     * Array of available Tiramizoo Delivery Types
+     *
+     * @var array
+     */
+    protected $_aAvailableDeliveryTypes;
+
+    /**
+     * Getter method, returns Current ship set id
+     *
+     * @return string
+     */
+    public function getCurrentShipSet()
+    {
+        return $this->_sCurrentShipSet;
+    }
+
+    /**
+     * Getter method, returns current Tiramizoo Delivery Type
+     *
+     * @return string
+     */
+    public function getTiramizooDeliveryType()
+    {
+        return $this->_sTiramizooDeliveryType;
+    }
+
+    /**
+     * Getter method, returns current Tiramizoo Time Window
+     *
+     * @return string
+     */
+    public function getSelectedTimeWindow()
+    {
+        return $this->_sSelectedTimeWindow;
+    }
+
+    /**
+     * Getter method, returns an array of available Tiramizoo Delivery Types
+     *
+     * @return array
+     */
+    public function getAvailableDeliveryTypes()
+    {
+        return $this->_aAvailableDeliveryTypes;
+    }
+
+    /**
+     * Executes parent::init(), initialize
+     * oxTiramizooDeliverySet object
+     *
      * @extend payment::init()
      *
      * @return null
@@ -44,7 +113,7 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
     /**
      * Getting current oxTiramizoo_DeliverySet object
      * from registry
-     * 
+     *
      * @return oxTiramizoo_DeliverySet
      */
     public function getTiramizooDeliverySet()
@@ -53,9 +122,9 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
     }
 
     /**
-     * Get all delivery sets, remove Tiramizoo delivery set if basket 
+     * Get all delivery sets, remove Tiramizoo delivery set if basket
      * couldn't be delivered by Tiramizoo. Executes parent::getAllSets()
-     * 
+     *
      * @extend payment::getAllSets()
      *
      * @return array
@@ -76,7 +145,9 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         }
 
         // if tiramizoo was selected and is not available set the first delivery set
-        if ($unsetTiramizoo && ($this->getSession()->getVariable( 'sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID)) {
+        if ($unsetTiramizoo
+            && ($this->getSession()->getVariable( 'sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID)
+        ) {
 
             $sNewShippingMethod = key($this->_aAllSets);
 
@@ -95,7 +166,7 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
     /**
      * Changes shipping set to chosen one. If selected Tiramizoo set session variable
      * aTiramizooTimeWindow. Executes parent::changeshipping()
-     * 
+     *
      * @extend payment::changeshipping()
      *
      * @return null
@@ -107,21 +178,23 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         $oConfig = $this->getConfig();
 
         if ($oConfig->getRequestParameter( 'sTiramizooDeliveryType' )) {
-            
+
             $sTiramizooTimeWindow = $oConfig->getRequestParameter('sTiramizooTimeWindow');
 
             try {
+                $sTiramizooDeliveryType = $oConfig->getRequestParameter('sTiramizooDeliveryType');
+
                 $oTiramizooDeliverySet = $this->getTiramizooDeliverySet();
-                $oTiramizooDeliverySet->setTiramizooDeliveryType($oConfig->getRequestParameter('sTiramizooDeliveryType'));
-                
+                $oTiramizooDeliverySet->setTiramizooDeliveryType($sTiramizooDeliveryType);
+
                 $oTiramizooDeliveryTypeObject = $oTiramizooDeliverySet->getTiramizooDeliveryTypeObject();
 
                 if ($sTiramizooTimeWindow && $oTiramizooDeliveryTypeObject->hasTimeWindow($sTiramizooTimeWindow)) {
-                    $oTiramizooDeliverySet->setSelectedTimeWindow($sTiramizooTimeWindow);      
-                } else if ($oDefaultTimeWindow = $oTiramizooDeliveryTypeObject->getDefaultTimeWindow()) {
-                    $oTiramizooDeliverySet->setSelectedTimeWindow($oDefaultTimeWindow->getHash());      
+                    $oTiramizooDeliverySet->setSelectedTimeWindow($sTiramizooTimeWindow);
+                } elseif ($oDefaultTimeWindow = $oTiramizooDeliveryTypeObject->getDefaultTimeWindow()) {
+                    $oTiramizooDeliverySet->setSelectedTimeWindow($oDefaultTimeWindow->getHash());
                 }
-            } catch (oxTiramizoo_InvalidTiramizooDeliveryTypeException $oEx) {
+            } catch (oxTiramizoo_InvalidDeliveryTypeException $oEx) {
                 oxRegistry::get("oxUtilsView")->addErrorToDisplay( $oEx );
             } catch (oxTiramizoo_InvalidTimeWindowException $oEx) {
                 oxRegistry::get("oxUtilsView")->addErrorToDisplay( $oEx );
@@ -130,9 +203,9 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
     }
 
     /**
-     * Executes parent::render(), check if tiramizoo is available 
+     * Executes parent::render(), check if tiramizoo is available
      * if yes passes variables to template
-     * 
+     *
      * @extend payment::render()
      *
      * @return string template file name
@@ -142,20 +215,27 @@ class oxTiramizoo_Payment extends oxTiramizoo_Payment_parent
         $oTiramizooDeliverySet = $this->getTiramizooDeliverySet();
         $oBasket = $this->getSession()->getBasket();
 
-        $this->_aViewData['sCurrentShipSet'] = $oBasket->getShippingId();
+        $this->_sCurrentShipSet = $oBasket->getShippingId();
 
         if ($oTiramizooDeliverySet->isTiramizooAvailable()) {
-            $this->_aViewData['sTiramizooDeliveryType'] = $oTiramizooDeliverySet->getTiramizooDeliveryType();
-            $this->_aViewData['sSelectedTimeWindow'] = $oTiramizooDeliverySet->getSelectedTimeWindow() ? $oTiramizooDeliverySet->getSelectedTimeWindow()->getHash() : '';
-            $this->_aViewData['aAvailableDeliveryTypes'] = $oTiramizooDeliverySet->getAvailableDeliveryTypes();
+            $this->_sTiramizooDeliveryType = $oTiramizooDeliverySet->getTiramizooDeliveryType();
+
+            $this->_sSelectedTimeWindow = $oTiramizooDeliverySet->getSelectedTimeWindow()
+                                                        ? $oTiramizooDeliverySet->getSelectedTimeWindow()->getHash()
+                                                        : '';
+
+            $this->_aAvailableDeliveryTypes = $oTiramizooDeliverySet->getAvailableDeliveryTypes();
         }
+
+
+        $oReturn = $this->_sThisTemplate;
 
         // @codeCoverageIgnoreStart
         if (!defined('OXID_PHP_UNIT')) {
-            return parent::render();
-        } else {
-            return $this->_sThisTemplate;
+            $this->_sThisTemplate = parent::render();
         }
         // @codeCoverageIgnoreEnd
+
+        return $oReturn;
     }
 }

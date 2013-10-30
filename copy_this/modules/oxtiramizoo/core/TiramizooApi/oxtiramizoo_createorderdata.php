@@ -244,7 +244,8 @@ class oxTiramizoo_CreateOrderData
         $itemNames = array();
         foreach ($this->getBasket()->getBasketArticles() as $key => $oArticle)
         {
-            $itemNames[] = $oArticle->oxarticles__oxtitle->value . ' (x' . $this->getBasket()->getArtStockInBasket($oArticle->oxarticles__oxid->value) . ')';
+            $itemNames[] = $oArticle->oxarticles__oxtitle->value
+                         . ' (x' . $this->getBasket()->getArtStockInBasket($oArticle->oxarticles__oxid->value) . ')';
         }
 
         //string should be contains at least 255 chars
@@ -267,20 +268,25 @@ class oxTiramizoo_CreateOrderData
         $this->_oDelivery->email = $oUser->oxuser__oxusername->value;
 
         if ($oDeliveryAddress)  {
-            $this->_oDelivery->address_line = $oDeliveryAddress->oxaddress__oxstreet->value . ' ' . $oDeliveryAddress->oxaddress__oxstreetnr->value;
+            $this->_oDelivery->address_line = $oDeliveryAddress->oxaddress__oxstreet->value
+                                            . ' ' . $oDeliveryAddress->oxaddress__oxstreetnr->value;
+
             $this->_oDelivery->city = $oDeliveryAddress->oxaddress__oxcity->value;
             $this->_oDelivery->postal_code = $oDeliveryAddress->oxaddress__oxzip->value;
             $this->_oDelivery->country_code = $oDeliveryAddress->oxaddress__oxcountryid->value;
             $this->_oDelivery->phone_number = $oDeliveryAddress->oxaddress__oxfon->value;
 
-            $this->_oDelivery->name = $oDeliveryAddress->oxaddress__oxfname->value . ' ' . $oDeliveryAddress->oxaddress__oxlname->value;
+            $this->_oDelivery->name = $oDeliveryAddress->oxaddress__oxfname->value
+                                    . ' ' . $oDeliveryAddress->oxaddress__oxlname->value;
 
             if ($oDeliveryAddress->oxaddress__oxcompany->value) {
-                $this->_oDelivery->name = $oDeliveryAddress->oxaddress__oxcompany->value . ' / ' . $this->_oDelivery->name;
+                $this->_oDelivery->name = $oDeliveryAddress->oxaddress__oxcompany->value
+                                        . ' / ' . $this->_oDelivery->name;
             }
 
         } else {
-            $this->_oDelivery->address_line = $oUser->oxuser__oxstreet->value . ' ' . $oUser->oxuser__oxstreetnr->value;
+            $this->_oDelivery->address_line = $oUser->oxuser__oxstreet->value
+                                            . ' ' . $oUser->oxuser__oxstreetnr->value;
             $this->_oDelivery->city = $oUser->oxuser__oxcity->value;
             $this->_oDelivery->postal_code = $oUser->oxuser__oxzip->value;
             $this->_oDelivery->country_code = $oUser->oxuser__oxcountryid->value;
@@ -316,7 +322,7 @@ class oxTiramizoo_CreateOrderData
 
         $this->_oPickup = new stdClass();
 
-        $this->_oPickup->address_line = $aPickupContact['address_line_1'];
+        $this->_oPickup->address_line = $aPickupContact['address_line'];
 
         if ($aPickupContact['city']) {
             $this->_oPickup->city = $aPickupContact['city'];
@@ -352,7 +358,14 @@ class oxTiramizoo_CreateOrderData
             $stdPackageLength = $oTiramizooConfig->getShopConfVar('oxTiramizoo_std_package_length');
             $stdPackageHeight = $oTiramizooConfig->getShopConfVar('oxTiramizoo_std_package_height');
             $stdPackageWeight = $oTiramizooConfig->getShopConfVar('oxTiramizoo_std_package_weight');
-            $this->_useStandardPackage = $this->_useStandardPackage($stdPackageWidth, $stdPackageLength, $stdPackageHeight, $stdPackageWeight);
+
+            $this->_useStandardPackage = $this->_useStandardPackage(
+                $stdPackageWidth,
+                $stdPackageLength,
+                $stdPackageHeight,
+                $stdPackageWeight
+            );
+
             $this->_standardPackageAddedToItems = 0;
         }
 
@@ -363,11 +376,17 @@ class oxTiramizoo_CreateOrderData
             $bItemWasBuilt = $this->_buildItem($oArticle);
 
             if (!$bItemWasBuilt) {
-                return false;
+                $oReturn = false;
+                break;
             }
         }
 
-        return $this->_aPackages = $this->_items;
+        if ($bItemWasBuilt) {
+            $oReturn = $this->_aPackages = $this->_items;
+        }
+
+        return $oReturn;
+
     }
 
     /**
@@ -380,6 +399,8 @@ class oxTiramizoo_CreateOrderData
      */
     protected function _buildItem($oArticle)
     {
+        $blReturn = true;
+
         //initialize standard class
         $item = new stdClass();
         $item->weight = null;
@@ -392,39 +413,41 @@ class oxTiramizoo_CreateOrderData
         $oTiramizooConfig = $this->getTiramizooConfig();
 
         //check if deliverable is set for articles with stock > 0
-        if ($oTiramizooConfig->getShopConfVar('oxTiramizoo_articles_stock_gt_0') && $oArticle->oxarticles__oxstock->value <= 0) {
-            return false;
+        if ($oTiramizooConfig->getShopConfVar('oxTiramizoo_articles_stock_gt_0')
+            && $oArticle->oxarticles__oxstock->value <= 0
+        ) {
+            $blReturn = false;
+        } else {
+            //NOTICE if article is only variant of parent article then load parent product as article
+            if ($oArticle->oxarticles__oxparentid->value) {
+                $parentArticleId = $oArticle->oxarticles__oxparentid->value;
+
+                $oArticleParent = oxNew( 'oxArticle' );
+                $oArticleParent->load($parentArticleId);
+                $oArticle = $oArticleParent;
+            }
+
+            $oArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
+            $oArticleExtended->loadByArticle($oArticle);
+
+            if (!$oArticleExtended->isEnabled()) {
+                $blReturn = false;
+            } else {
+                $aArticleEffectiveData = $oArticleExtended->getEffectiveData();
+
+                $item->weight = $aArticleEffectiveData['weight'];
+                $item->width = $aArticleEffectiveData['width'];
+                $item->height = $aArticleEffectiveData['height'];
+                $item->length = $aArticleEffectiveData['length'];
+
+                $item->description = $oArticle->oxarticles__oxtitle->value;
+
+                //insert item to container
+                $this->_insertItem($oArticleExtended, $item);
+            }
         }
 
-        //NOTICE if article is only variant of parent article then load parent product as article
-        if ($oArticle->oxarticles__oxparentid->value) {
-            $parentArticleId = $oArticle->oxarticles__oxparentid->value;
-
-            $oArticleParent = oxNew( 'oxArticle' );
-            $oArticleParent->load($parentArticleId);
-            $oArticle = $oArticleParent;
-        }
-
-        $oArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
-        $oArticleExtended->loadByArticle($oArticle);
-
-        if (!$oArticleExtended->isEnabled()) {
-            return false;
-        }
-
-        $aArticleEffectiveData = $oArticleExtended->getEffectiveData();
-
-        $item->weight = $aArticleEffectiveData['weight'];
-        $item->width = $aArticleEffectiveData['width'];
-        $item->height = $aArticleEffectiveData['height'];
-        $item->length = $aArticleEffectiveData['length'];
-
-        $item->description = $oArticle->oxarticles__oxtitle->value;
-
-        //insert item to container
-        $this->_insertItem($oArticleExtended, $item);
-
-        return true;
+        return $blReturn;
     }
 
     /**
@@ -456,7 +479,8 @@ class oxTiramizoo_CreateOrderData
 
                 $this->_items[] = $item;
             }
-        } else if (($sPackageStrategy == oxTiramizoo_DeliverySet::TIRAMIZOO_PACKING_STRATEGY_PACKAGE_PRESETS) && !$oArticleExtended->hasIndividualPackage()) {
+        } elseif (($sPackageStrategy == oxTiramizoo_DeliverySet::TIRAMIZOO_PACKING_STRATEGY_PACKAGE_PRESETS)
+                  && !$oArticleExtended->hasIndividualPackage()) {
             $item->bundle = true;
             $this->_items[] = $item;
         } else {
@@ -476,6 +500,9 @@ class oxTiramizoo_CreateOrderData
      */
     protected function _useStandardPackage($stdPackageWidth, $stdPackageLength, $stdPackageHeight, $stdPackageWeight)
     {
-        return $stdPackageWidth && $stdPackageLength && $stdPackageHeight && $stdPackageWeight;
+        return  $stdPackageWidth
+                && $stdPackageLength
+                && $stdPackageHeight
+                && $stdPackageWeight;
     }
 }

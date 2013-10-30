@@ -59,7 +59,9 @@ class oxTiramizoo_CategoryExtended extends oxBase
     public function getIdByCategoryId($sCategoryId)
     {
         $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-        $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE oxcategoryid = " . $oDb->quote( $sCategoryId );
+        $sQ = "SELECT oxid
+                    FROM " . $this->_sCoreTbl . "
+                        WHERE oxcategoryid = " . $oDb->quote( $sCategoryId );
 
         return $oDb->getOne($sQ);
     }

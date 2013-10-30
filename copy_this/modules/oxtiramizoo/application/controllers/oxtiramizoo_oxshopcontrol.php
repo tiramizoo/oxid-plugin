@@ -16,7 +16,7 @@
 /**
  * Add to every shop action CRON like scheduler mechanism
  * to synchronize config and try to resend order to Tiramizoo API
- * 
+ *
  * @extend oxShopControl
  * @package oxTiramizoo
  */
@@ -24,7 +24,7 @@ class oxTiramizoo_oxShopControl extends oxTiramizoo_oxShopControl_parent
 {
     /**
      * Check if scheduler manager is enabled
-     * Executes jobs if necessary. 
+     * Executes jobs if necessary.
      * Executes parent::_process()
      *
      * @extend oxShopControl::_process()
@@ -35,7 +35,7 @@ class oxTiramizoo_oxShopControl extends oxTiramizoo_oxShopControl_parent
      * @param array  $aViewsChain Array of views names that should be initialized also
      *
      * @return null
-     */    
+     */
     public function _process( $sClass = null, $sFunction = null, $aParams = null, $aViewsChain = null )
     {
     	try
@@ -43,12 +43,14 @@ class oxTiramizoo_oxShopControl extends oxTiramizoo_oxShopControl_parent
 			$oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 			$oScheduleJobManager = oxRegistry::get('oxTiramizoo_ScheduleJobManager');
 
-			if (!$oTiramizooConfig->getShopConfVar('cron_is_enabled') && !$oScheduleJobManager->isFinished()) {
+			if (!$oTiramizooConfig->getShopConfVar('cron_is_enabled')
+                && !$oScheduleJobManager->isFinished()
+            ) {
 				$oScheduleJobManager->addTasks();
 				$oScheduleJobManager->runJobs();
-			}    		
+			}
     	} catch (oxSystemComponentException $e) {
-    		
+
     	}
 
         // @codeCoverageIgnoreStart

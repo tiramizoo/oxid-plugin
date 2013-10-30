@@ -44,9 +44,10 @@ class oxTiramizoo_oxbasket extends oxTiramizoo_oxbasket_parent
             if ($oTiramizooDeliverySet->isTiramizooAvailable()) {
                 $oTiramizooDeliveryPrice = oxNew('oxTiramizoo_DeliveryPrice');
 
-                $oDeliveryPrice = $oTiramizooDeliveryPrice->calculateDeliveryPrice($oTiramizooDeliverySet, $this->getUser(), $this, $oDeliveryPrice);
-
-                return $oDeliveryPrice;
+                $oDeliveryPrice = $oTiramizooDeliveryPrice->calculateDeliveryPrice( $oTiramizooDeliverySet,
+                                                                                    $this->getUser(),
+                                                                                    $this,
+                                                                                    $oDeliveryPrice);
             }
         }
 
@@ -60,38 +61,42 @@ class oxTiramizoo_oxbasket extends oxTiramizoo_oxbasket_parent
      */
     public function isValid()
     {
+        $blReturn = true;
+
         if (!count($this->getBasketArticles())) {
-            return false;
-        }
+            $blReturn = false;
+        } else {
+            $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
-        $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
+            foreach ($this->getBasketArticles() as $key => $oArticle)
+            {
+                //check if deliverable is set for articles with stock > 0
+                if ($oTiramizooConfig->getShopConfVar('oxTiramizoo_articles_stock_gt_0')) {
+                    if ($oArticle->oxarticles__oxstock->value <= 0) {
+                        $blReturn = false;
+                        break;
+                    }
+                }
 
-        foreach ($this->getBasketArticles() as $key => $oArticle)
-        {
-            //check if deliverable is set for articles with stock > 0
-            if ($oTiramizooConfig->getShopConfVar('oxTiramizoo_articles_stock_gt_0')) {
-                if ($oArticle->oxarticles__oxstock->value <= 0) {
-                    return false;
+                //NOTICE if article is only variant of parent article then load parent product as article
+                if ($oArticle->oxarticles__oxparentid->value) {
+                    $parentArticleId = $oArticle->oxarticles__oxparentid->value;
+
+                    $oArticleParent = oxNew( 'oxarticle' );
+                    $oArticleParent->load($parentArticleId);
+                    $oArticle = $oArticleParent;
+                }
+
+                $oArticleExtended = oxnew('oxTiramizoo_ArticleExtended');
+                $oArticleExtended->loadByArticle($oArticle);
+
+                if (!$oArticleExtended->isEnabled()) {
+                    $blReturn = false;
+                    break;
                 }
             }
-
-            //NOTICE if article is only variant of parent article then load parent product as article
-            if ($oArticle->oxarticles__oxparentid->value) {
-                $parentArticleId = $oArticle->oxarticles__oxparentid->value;
-
-                $oArticleParent = oxNew( 'oxarticle' );
-                $oArticleParent->load($parentArticleId);
-                $oArticle = $oArticleParent;
-            }
-
-            $oArticleExtended = oxnew('oxTiramizoo_ArticleExtended');
-            $oArticleExtended->loadByArticle($oArticle);
-
-            if (!$oArticleExtended->isEnabled()) {
-                return false;
-            }
         }
 
-        return true;
+        return $blReturn;
     }
 }

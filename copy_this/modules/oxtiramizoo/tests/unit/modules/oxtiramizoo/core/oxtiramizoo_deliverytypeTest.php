@@ -17,12 +17,12 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 		$oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line_1' => 'test',
+             ->will($this->returnValue(array('address_line' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
-             								 'name' => 'me', 
+             								 'name' => 'me',
              								 'phone_number' => '5553333666')));
-	    
+
 	    $oxTiramizooDeliveryType = new oxTiramizoo_DeliveryTypeExposed($oRetailLocation);
 	    $this->assertEquals(true, $oxTiramizooDeliveryType->isAvailable());
 	}
@@ -34,12 +34,12 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 
 		$oRetailLocation->expects($this->at(0))
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line_1' => '',
+             ->will($this->returnValue(array('address_line' => '',
              								 'postal_code' => '',
              								 'country_code' =>'',
-             								 'name' => '', 
+             								 'name' => '',
              								 'phone_number' => '')));
-	    
+
 	    $this->_oSubj = $this->getMockForAbstractClass('oxTiramizoo_DeliveryType', array($oRetailLocation));
 	    $this->assertEquals(true, !$this->_oSubj->isAvailable());
 
@@ -48,12 +48,12 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 
 		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line_1' => 'test',
+             ->will($this->returnValue(array('address_line' => 'test',
              								 'postal_code' => '',
              								 'country_code' =>'',
-             								 'name' => '', 
+             								 'name' => '',
              								 'phone_number' => '')));
-	    
+
 	    $this->_oSubj = $this->getMockForAbstractClass('oxTiramizoo_DeliveryType', array($oRetailLocation));
 	    $this->assertEquals(true, !$this->_oSubj->isAvailable());
 
@@ -62,12 +62,12 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 
 		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line_1' => 'test',
+             ->will($this->returnValue(array('address_line' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'',
-             								 'name' => '', 
+             								 'name' => '',
              								 'phone_number' => '')));
-	    
+
 	    $this->_oSubj = $this->getMockForAbstractClass('oxTiramizoo_DeliveryType', array($oRetailLocation));
 	    $this->assertEquals(true, !$this->_oSubj->isAvailable());
 
@@ -78,12 +78,12 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 
 		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line_1' => 'test',
+             ->will($this->returnValue(array('address_line' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
-             								 'name' => '', 
+             								 'name' => '',
              								 'phone_number' => '')));
-	    
+
 	    $this->_oSubj = $this->getMockForAbstractClass('oxTiramizoo_DeliveryType', array($oRetailLocation));
 	    $this->assertEquals(true, !$this->_oSubj->isAvailable());
 
@@ -92,12 +92,12 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 
 		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line_1' => 'test',
+             ->will($this->returnValue(array('address_line' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
-             								 'name' => 'test', 
+             								 'name' => 'test',
              								 'phone_number' => '')));
-	    
+
 	    $this->_oSubj = $this->getMockForAbstractClass('oxTiramizoo_DeliveryType', array($oRetailLocation));
 	    $this->assertEquals(true, !$this->_oSubj->isAvailable());
 	}
@@ -107,27 +107,27 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
 		$oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 		$oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line_1' => 'test',
+             ->will($this->returnValue(array('address_line' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
-             								 'name' => 'me', 
+             								 'name' => 'me',
              								 'phone_number' => '5553333666')));
-	    
+
 	    $oxTiramizooDeliveryType = new oxTiramizoo_DeliveryTypeExposed($oRetailLocation);
 
-		$this->assertEquals($oRetailLocation, $oxTiramizooDeliveryType->getRetailLocation());	
+		$this->assertEquals($oRetailLocation, $oxTiramizooDeliveryType->getRetailLocation());
 	}
 
 	public function testGetType()
 	{
-		$this->assertEquals($this->_sType, $this->_oSubj->getType());	
+		$this->assertEquals($this->_sType, $this->_oSubj->getType());
 	}
 
 	public function testGetName()
 	{
 		$oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 	    $oxTiramizooDeliveryType = new oxTiramizoo_DeliveryTypeExposed($oRetailLocation);
-		$this->assertEquals('oxTiramizoo_delivery_type__name', $oxTiramizooDeliveryType->getName());	
+		$this->assertEquals('oxTiramizoo_delivery_type__name', $oxTiramizooDeliveryType->getName());
 	}
 
 	public function testGetTimeWindows()
@@ -153,7 +153,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeTest extends OxidTes
              ->method('getAvailableTimeWindows')
              ->will($this->returnValue($aTimeWindows));
 
-	    
+
 	    $oxTiramizooDeliveryType = new oxTiramizoo_DeliveryTypeExposed($oRetailLocation);
 
 		$this->assertEquals($aTimeWindows, $oxTiramizooDeliveryType->getTimeWindows());

@@ -20,7 +20,7 @@
  * @extends oxBase
  * @package oxTiramizoo
  */
-class oxTiramizoo_OrderExtended extends oxBase 
+class oxTiramizoo_OrderExtended extends oxBase
 {
     /**
      * Object core table name
@@ -38,12 +38,12 @@ class oxTiramizoo_OrderExtended extends oxBase
 
     /**
      * Model constructor, init fields
-     * 
+     *
      * @extend oxBase::__construct()
      *
      * @return null
      */
-    public function __construct() 
+    public function __construct()
     {
         parent::__construct();
         $this->init( 'oxtiramizooorderextended' );
@@ -51,15 +51,17 @@ class oxTiramizoo_OrderExtended extends oxBase
 
     /**
      * Returns order extended id by order id
-     * 
+     *
      * @param string $sOrderId order id
      *
      * @return string
      */
-    public function getIdByOrderId($sOrderId) 
+    public function getIdByOrderId($sOrderId)
     {
         $oDb = oxDb::getDb(  );
-        $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE OXORDERID = '" . $sOrderId . "';";
+        $sQ = "SELECT oxid
+                    FROM " . $this->_sCoreTbl . "
+                        WHERE OXORDERID = '" . $sOrderId . "';";
         return $oDb->getOne($sQ);
     }
 
@@ -80,7 +82,9 @@ class oxTiramizoo_OrderExtended extends oxBase
      */
     public function setTiramizooData($oTiramizooData)
     {
-        $this->oxtiramizooorderextended__tiramizoo_request_data = new oxField( base64_encode( serialize( $oTiramizooData ) ) );
+        $this->oxtiramizooorderextended__tiramizoo_request_data = new oxField(
+            base64_encode( serialize( $oTiramizooData ) )
+        );
     }
 
     /**

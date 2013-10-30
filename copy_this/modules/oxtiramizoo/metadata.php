@@ -21,7 +21,7 @@ $aModule = array(
                         ),
 
     'thumbnail'    =>   'oxTiramizoo.png',
-    'version'      =>   '1.0.2',
+    'version'      =>   '1.0.3',
     'author'       =>   'tiramizoo',
     'url'          =>   'http://github.com/tiramizoo/oxid-plugin/',
     'email'        =>   'support@tiramizoo.com',
@@ -36,10 +36,10 @@ $aModule = array(
 
 
     'files'        =>   array(
-                            'oxTiramizoo_settings'              => 'oxtiramizoo/admin/oxtiramizoo_settings.php',
-                            'oxTiramizoo_Article_tab'           => 'oxtiramizoo/admin/oxtiramizoo_article_tab.php',
-                            'oxTiramizoo_Category_tab'          => 'oxtiramizoo/admin/oxtiramizoo_category_tab.php',
-                            'oxTiramizoo_Order_Tab'             => 'oxtiramizoo/admin/oxtiramizoo_order_tab.php',
+                            'oxTiramizoo_settings'              => 'oxtiramizoo/application/controllers/admin/oxtiramizoo_settings.php',
+                            'oxTiramizoo_Article_tab'           => 'oxtiramizoo/application/controllers/admin/oxtiramizoo_article_tab.php',
+                            'oxTiramizoo_Category_tab'          => 'oxtiramizoo/application/controllers/admin/oxtiramizoo_category_tab.php',
+                            'oxTiramizoo_Order_Tab'             => 'oxtiramizoo/application/controllers/admin/oxtiramizoo_order_tab.php',
 
                             'oxTiramizoo_Setup'                 => 'oxtiramizoo/core/oxtiramizoo_setup.php',
                             'TiramizooApi'                      => 'oxtiramizoo/core/TiramizooApi/TiramizooApi.php',
@@ -91,10 +91,10 @@ $aModule = array(
                         ),
 
     'templates'    =>   array(
-                            'oxTiramizoo_settings.tpl'      => 'oxtiramizoo/out/admin/tpl/oxtiramizoo_settings.tpl',
-                            'oxTiramizoo_article_tab.tpl'   => 'oxtiramizoo/out/admin/tpl/oxtiramizoo_article_tab.tpl',
-                            'oxTiramizoo_category_tab.tpl'  => 'oxtiramizoo/out/admin/tpl/oxtiramizoo_category_tab.tpl',
-                            'oxTiramizoo_order_tab.tpl'     => 'oxtiramizoo/out/admin/tpl/oxtiramizoo_order_tab.tpl',
+                            'oxTiramizoo_settings.tpl'      => 'oxtiramizoo/views/admin/tpl/oxtiramizoo_settings.tpl',
+                            'oxTiramizoo_article_tab.tpl'   => 'oxtiramizoo/views/admin/tpl/oxtiramizoo_article_tab.tpl',
+                            'oxTiramizoo_category_tab.tpl'  => 'oxtiramizoo/views/admin/tpl/oxtiramizoo_category_tab.tpl',
+                            'oxTiramizoo_order_tab.tpl'     => 'oxtiramizoo/views/admin/tpl/oxtiramizoo_order_tab.tpl',
                         ),
 
     'events'       =>   array(

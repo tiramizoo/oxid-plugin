@@ -72,7 +72,9 @@ class oxTiramizoo_ArticleExtended extends oxBase {
     public function getIdByArticleId($sArticleId)
     {
         $oDb = oxDb::getDb();
-        $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE OXARTICLEID = '" . $sArticleId . "';";
+        $sQ = "SELECT oxid
+                    FROM " . $this->_sCoreTbl . "
+                        WHERE OXARTICLEID = '" . $sArticleId . "';";
         return $oDb->getOne($sQ);
     }
 
@@ -111,15 +113,19 @@ class oxTiramizoo_ArticleExtended extends oxBase {
      */
     public function isEnabled()
     {
+        $blReturn = true;
+
         if (!$this->getEffectiveDataValue('tiramizoo_enable')) {
-            return false;
+            $blReturn = false;
+        }elseif (!$this->getEffectiveDataValue('weight')
+            || !$this->getEffectiveDataValue('width')
+            || !$this->getEffectiveDataValue('height')
+            || !$this->getEffectiveDataValue('length')
+        ) {
+            $blReturn = false;
         }
 
-        if (!$this->getEffectiveDataValue('weight') || !$this->getEffectiveDataValue('width') || !$this->getEffectiveDataValue('height') || !$this->getEffectiveDataValue('length')) {
-            return false;
-        }
-
-        return true;
+        return $blReturn;
     }
 
     /**
@@ -129,11 +135,13 @@ class oxTiramizoo_ArticleExtended extends oxBase {
      */
     public function hasIndividualPackage()
     {
+        $blReturn = true;
+
         if ($this->getEffectiveDataValue('tiramizoo_use_package')) {
-            return false;
+            $blReturn = false;
         }
 
-        return true;
+        return $blReturn;
     }
 
     /**
@@ -154,7 +162,7 @@ class oxTiramizoo_ArticleExtended extends oxBase {
      * Getting effective data for product and assign value to object property lazy loading.
      *
      * @param  boolean $bForce if true force build
-     * @return array          contains effective value for product's dimensions and weight, enable, individual packaging
+     * @return array contains effective value for product's dimensions and weight, enable, individual packaging
      */
     public function buildEffectiveData($bForce = false)
     {

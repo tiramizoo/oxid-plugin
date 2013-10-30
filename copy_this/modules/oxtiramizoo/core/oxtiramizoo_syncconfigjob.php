@@ -25,58 +25,63 @@ class oxTiramizoo_SyncConfigJob extends oxTiramizoo_ScheduleJob
      * Maximum number of repeating running job
      */
     const MAX_REPEATS = 10;
-    
+
     /**
      * Job type
-     */	
+     */
 	const JOB_TYPE = 'synchronize_configuration';
 
     /**
      * Check if job could be fired. Run job and save state as finished.
-     * 
+     *
      * @return null
      */
 	public function run()
 	{
-		try 
-		{
-			if ($this->getRepeats() >= self::MAX_REPEATS) {
-				$this->closeJob();
-				return true;
-			}
+        $blReturn = true;
 
-			$oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
-			$oRetailLocationList->loadAll();
+		if ($this->getRepeats() >= self::MAX_REPEATS) {
+			$this->closeJob();
+		} else {
+    		$oRetailLocationList = oxnew('oxTiramizoo_RetailLocationList');
+    		$oRetailLocationList->loadAll();
 
-			$oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
+            try
+            {
 
-	        foreach ($oRetailLocationList as $oRetailLocation) 
-	        {
-	            $oTiramizooConfig->synchronizeAll( $oRetailLocation->getApiToken() );
-	        }
+    			$oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
 
-	        $this->finishJob();
+    	        foreach ($oRetailLocationList as $oRetailLocation)
+    	        {
+    	            $oTiramizooConfig->synchronizeAll( $oRetailLocation->getApiToken() );
+    	        }
 
-		} catch (oxException $oEX) {
-	        $this->refreshJob();
+    	        $this->finishJob();
+
+    		} catch (oxException $oEX) {
+    	        $this->refreshJob();
+                $blReturn = false;
+            }
 		}
+
+        return $blReturn;
 	}
 
 
     /**
      * Setting object with default data. Execute parent::setDefaultData().
      * Add date range when running is available
-     * 
+     *
      * @extend oxTiramizoo_ScheduleJob::setDefaultData()
      *
      * @return null
      */
-	public function setDefaultData() 
+	public function setDefaultData()
 	{
 		parent::setDefaultData();
 
 		$this->oxtiramizooschedulejob__oxcreatedat = new oxField(oxTiramizoo_Date::date());
-		
+
 		$oRunAfterDate = new oxTiramizoo_Date();
 		$this->oxtiramizooschedulejob__oxrunafter = new oxField($oRunAfterDate->get('Y-m-d'));
 
@@ -90,7 +95,7 @@ class oxTiramizoo_SyncConfigJob extends oxTiramizoo_ScheduleJob
     /**
      * Saves (updates) user object data information in DB. Set default data.
      * executes parent::save()
-     * 
+     *
      * @extend oxBase::save()
      *
      * @return null
@@ -110,7 +115,7 @@ class oxTiramizoo_SyncConfigJob extends oxTiramizoo_ScheduleJob
      * @return null
      */
 	public function refreshJob()
-	{		
+	{
 		$this->oxtiramizooschedulejob__oxstate = new oxField('retry');
 		$this->oxtiramizooschedulejob__oxrepeatcounter->value++;
 		$this->save();

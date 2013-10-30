@@ -11,18 +11,18 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeEveningTest extends 
 	{
 		$this->_oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line_1' => 'test',
+             ->will($this->returnValue(array('address_line' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
-             								 'name' => 'me', 
+             								 'name' => 'me',
              								 'phone_number' => '5553333666')));
-	    
+
 		$this->_oRetailLocation->expects($this->any())
              ->method('getAvailableTimeWindows')
              ->will($this->returnValue(array()));
-	    
+
 	    $this->_oSubj = $this->getMock('oxTiramizoo_DeliveryTypeEvening', array('getEveningTimeWindow'), array($this->_oRetailLocation));
-	    
+
 	    $this->_oSubj->expects($this->any())
 	    	 ->method('getEveningTimeWindow')
 	    	 ->will($this->returnValue(true));
@@ -35,18 +35,18 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeEveningTest extends 
 	{
 		$this->_oRetailLocation->expects($this->any())
              ->method('getConfVar')
-             ->will($this->returnValue(array('address_line_1' => 'test',
+             ->will($this->returnValue(array('address_line' => 'test',
              								 'postal_code' => '80639',
              								 'country_code' =>'de',
-             								 'name' => 'me', 
+             								 'name' => 'me',
              								 'phone_number' => '5553333666')));
-	    
+
 		$this->_oRetailLocation->expects($this->any())
              ->method('getAvailableTimeWindows')
              ->will($this->returnValue(array()));
 
 	    $this->_oSubj = $this->getMock('oxTiramizoo_DeliveryTypeEvening', array('getEveningTimeWindow'), array($this->_oRetailLocation));
-	    
+
 	    $this->_oSubj->expects($this->any())
 	    	 ->method('getEveningTimeWindow')
 	    	 ->will($this->returnValue(null));
@@ -61,13 +61,13 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeEveningTest extends 
 		$this->_oRetailLocation->expects($this->at(0))
              ->method('getConfVar')
              ->will($this->returnValue(0));
-	    
+
 		$this->_oRetailLocation->expects($this->any())
              ->method('getAvailableTimeWindows')
              ->will($this->returnValue(array()));
 
 	    $this->_oSubj = $this->getMock('oxTiramizoo_DeliveryTypeEvening', array('getEveningTimeWindow'), array( $this->_oRetailLocation));
-	    
+
 	    $this->_oSubj->expects($this->any())
 	    	 ->method('getEveningTimeWindow')
 	    	 ->will($this->returnValue(null));
@@ -93,17 +93,10 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeEveningTest extends 
 								  							 'to' 	=> '2013-04-01T18:00:00Z'),
 								  ));
 
-		if (date('I')) {
-			$aPresetHours = array('delivery_after' 	=> '18:00',
- 								 'delivery_before' 	=> '20:00',
- 								 'pickup_after' 	=> '18:00',
- 								 'pickup_before' 	=> '20:00');
-		} else {
-			$aPresetHours = array('delivery_after' 	=> '17:00',
- 								 'delivery_before' 	=> '19:00',
- 								 'pickup_after' 	=> '17:00',
- 								 'pickup_before' 	=> '19:00');
-		}
+		$aPresetHours = array('delivery_after' 	=> '18:00',
+   							  'delivery_before' 	=> '20:00',
+							  'pickup_after' 	=> '18:00',
+							  'pickup_before' 	=> '20:00');
 
 		$this->_oRetailLocation->expects($this->any())
              ->method('getConfVar')
@@ -136,7 +129,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DeliveryTypeEveningTest extends 
 
 
 	    // not preset hours
-	    $this->_oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);	    
+	    $this->_oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array(), array(), '', false);
 		$this->_oRetailLocation->expects($this->any())
              ->method('getConfVar')
              ->will($this->returnValue(array()));
