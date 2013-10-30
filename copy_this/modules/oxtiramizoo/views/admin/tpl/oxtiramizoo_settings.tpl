@@ -8,7 +8,7 @@
 
 [{cycle assign="_clear_" values=",2" }]
 
-<h2>[{ oxmultilang ident="oxTiramizoo_settings_title" }] <span style="font-size: 9px;">version [{$version}]</span></h2>
+<h2>[{ oxmultilang ident="oxTiramizoo_settings_title" }] <span style="font-size: 9px;">version [{$oView->getVersion()}]</span></h2>
 
 <style type="text/css">
   .editinput {width:240px;}
@@ -29,8 +29,12 @@
         <input type="hidden" name="oxid" value="[{$oxid}]">
         <input type="hidden" name="editval[oxshops__oxid]" value="[{$oxid}]">
 
-        [{if $aMessages|@count gt 0}]
-          [{foreach from=$aMessages item=aMessage}]
+
+        [{assign var="aConfigValues" value=$oView->getConfigValues() }]
+
+
+        [{if $oView->getMessages()|@count gt 0}]
+          [{foreach from=$oView->getMessages() item=aMessage}]
             <div class="[{$aMessage.type}]Message requestMessage">[{$aMessage.description}]</div>
           [{/foreach}]
         [{/if}]
@@ -49,7 +53,7 @@
                         <tr>
                             <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_api_url_label" }]*</td>
                             <td valign="top" class="edittext">
-                            <input type=text class="editinput" name=confstrs[oxTiramizoo_api_url] value="[{$confstrs.oxTiramizoo_api_url}]" maxlength="100" />
+                            <input type=text class="editinput" name=confstrs[oxTiramizoo_api_url] value="[{$aConfigValues.confstrs.oxTiramizoo_api_url}]" maxlength="100" />
                                 [{ oxinputhelp ident="oxTiramizoo_settings_api_url_help" }]
                             </td>
                         </tr>
@@ -57,7 +61,7 @@
                         <tr>
                             <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_settings_shop_url_label" }]*</td>
                             <td valign="top" class="edittext">
-                            <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_url] value="[{$confstrs.oxTiramizoo_shop_url}]" maxlength="100" />
+                            <input type=text class="editinput" name=confstrs[oxTiramizoo_shop_url] value="[{$aConfigValues.confstrs.oxTiramizoo_shop_url}]" maxlength="100" />
                                 [{ oxinputhelp ident="oxTiramizoo_settings_shop_url_help" }]
                             </td>
                         </tr>
@@ -71,9 +75,9 @@
                         <tr>
                             <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="oxTiramizoo_packing_settings_label" }]</td>
                             <td valign="top" class="edittext" id="selectPackageStrategyRadiosCell">
-                                <input class="selectPackageStrategyRadios" type="radio" name=confints[oxTiramizoo_package_strategy] [{if ($confints.oxTiramizoo_package_strategy == 0)}]checked="checked"[{/if}] value="0" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_1_label" }]<br />
-                                <input class="selectPackageStrategyRadios" type="radio" name=confints[oxTiramizoo_package_strategy] [{if ($confints.oxTiramizoo_package_strategy == 1)}]checked="checked"[{/if}] value="1" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_2_label" }] (specified from tiramizoo dashboard) <br />
-                                <input class="selectPackageStrategyRadios" type="radio" name=confints[oxTiramizoo_package_strategy] [{if ($confints.oxTiramizoo_package_strategy == 2)}]checked="checked"[{/if}] value="2" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_3_label" }]<br />
+                                <input class="selectPackageStrategyRadios" type="radio" name=confints[oxTiramizoo_package_strategy] [{if ($aConfigValues.confints.oxTiramizoo_package_strategy == 0)}]checked="checked"[{/if}] value="0" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_1_label" }]<br />
+                                <input class="selectPackageStrategyRadios" type="radio" name=confints[oxTiramizoo_package_strategy] [{if ($aConfigValues.confints.oxTiramizoo_package_strategy == 1)}]checked="checked"[{/if}] value="1" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_2_label" }] (specified from tiramizoo dashboard) <br />
+                                <input class="selectPackageStrategyRadios" type="radio" name=confints[oxTiramizoo_package_strategy] [{if ($aConfigValues.confints.oxTiramizoo_package_strategy == 2)}]checked="checked"[{/if}] value="2" /> [{ oxmultilang ident="oxTiramizoo_settings_package_sizes_strategy_3_label" }]<br />
                             </td>
                         </tr>
 
@@ -109,19 +113,19 @@
                         </script>
 
 
-                        <tr class="oxTiramizoo_package_strategy_row oxTiramizoo_package_strategy_2" [{if ($confints.oxTiramizoo_package_strategy != 2)}]style="display:none;"[{/if}]>
+                        <tr class="oxTiramizoo_package_strategy_row oxTiramizoo_package_strategy_2" [{if ($aConfigValues.confints.oxTiramizoo_package_strategy != 2)}]style="display:none;"[{/if}]>
                             <td valign="top" class="edittext" nowrap="">
                                 [{oxmultilang ident="oxTiramizoo_settings_package_std_size_weight_label"}]*
                             </td>
                             <td valign="top" class="edittext">
 
-                                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_width_label"}]: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_width]" value="[{$confstrs.oxTiramizoo_std_package_width}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
+                                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_width_label"}]: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_width]" value="[{$aConfigValues.confstrs.oxTiramizoo_std_package_width}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
 
-                                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_length_label"}]: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_length]" value="[{$confstrs.oxTiramizoo_std_package_length}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
+                                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_length_label"}]: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_length]" value="[{$aConfigValues.confstrs.oxTiramizoo_std_package_length}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
 
-                                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_height_label"}]: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_height]" value="[{$confstrs.oxTiramizoo_std_package_height}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
+                                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_height_label"}]: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_height]" value="[{$aConfigValues.confstrs.oxTiramizoo_std_package_height}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_dimensions_unit" }]
 
-                                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_weight_label"}]: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_weight]" value="[{$confstrs.oxTiramizoo_std_package_weight}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_weight_unit" }]
+                                [{oxmultilang ident="oxTiramizoo_settings_dimensions_short_weight_label"}]: <input type=text class="editinput" name="confstrs[oxTiramizoo_std_package_weight]" value="[{$aConfigValues.confstrs.oxTiramizoo_std_package_weight}]" maxlength="10" style="width:40px;" /> [{ oxmultilang ident="oxTiramizoo_settings_weight_unit" }]
 
                                 [{ oxinputhelp ident="oxTiramizoo_settings_package_std_size_weight_help" }]
 
@@ -141,7 +145,7 @@
                                 [{ oxmultilang ident="oxTiramizoo_settings_weight_label" }]
                             </td>
                             <td class="edittext">
-                                <input type="text" class="editinput" size="10" maxlength="10" style="width:40px;" name="confstrs[oxTiramizoo_global_weight]" value="[{$confstrs.oxTiramizoo_global_weight}]">[{ oxmultilang ident="oxTiramizoo_category_tab_weight_unit" }] [{ oxinputhelp ident="oxTiramizoo_settings_weight_help" }]
+                                <input type="text" class="editinput" size="10" maxlength="10" style="width:40px;" name="confstrs[oxTiramizoo_global_weight]" value="[{$aConfigValues.confstrs.oxTiramizoo_global_weight}]">[{ oxmultilang ident="oxTiramizoo_category_tab_weight_unit" }] [{ oxinputhelp ident="oxTiramizoo_settings_weight_help" }]
                             </td>
                         </tr>
 
@@ -150,9 +154,9 @@
                                 [{ oxmultilang ident="oxTiramizoo_settings_dimensions_label" }]
                             </td>
                             <td class="edittext">
-                                L:&nbsp;<input type="text" class="editinput" size="3" maxlength="10" style="width:40px;" name="confstrs[oxTiramizoo_global_length]" value="[{$confstrs.oxTiramizoo_global_length}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
-                                W:&nbsp;<input type="text" class="editinput" size="3" maxlength="" style="width:40px;" name="confstrs[oxTiramizoo_global_width]" value="[{$confstrs.oxTiramizoo_global_width}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
-                                H:&nbsp;<input type="text" class="editinput" size="3" maxlength="" style="width:40px;" name="confstrs[oxTiramizoo_global_height]" value="[{$confstrs.oxTiramizoo_global_height}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
+                                L:&nbsp;<input type="text" class="editinput" size="3" maxlength="10" style="width:40px;" name="confstrs[oxTiramizoo_global_length]" value="[{$aConfigValues.confstrs.oxTiramizoo_global_length}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
+                                W:&nbsp;<input type="text" class="editinput" size="3" maxlength="" style="width:40px;" name="confstrs[oxTiramizoo_global_width]" value="[{$aConfigValues.confstrs.oxTiramizoo_global_width}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
+                                H:&nbsp;<input type="text" class="editinput" size="3" maxlength="" style="width:40px;" name="confstrs[oxTiramizoo_global_height]" value="[{$aConfigValues.confstrs.oxTiramizoo_global_height}]">[{ oxmultilang ident="oxTiramizoo_category_tab_dimensions_unit" }]
 
                                 [{ oxinputhelp ident="oxTiramizoo_settings_dimensions_help" }]
                             </td>
@@ -170,7 +174,7 @@
                             </td>
                             <td>
                                 <ul>
-                                    [{foreach from=$oPaymentsList key=sPaymentId item=aPayment}]
+                                    [{foreach from=$oView->getPaymentsList() key=sPaymentId item=aPayment}]
                                      <li style="background:transparent;">
                                         <input type="hidden" name="payment[[{$sPaymentId}]]" value="0" />
                                         <input type="checkbox" name="payment[[{$sPaymentId}]]" value="1" [{if ($aPayment.checked)}]checked="checked"[{/if}] />
@@ -191,7 +195,7 @@
                             </td>
                             <td valign="top" class="edittext">
                                 <input type="hidden"  name="confbools[oxTiramizoo_articles_stock_gt_0]" value"0" />
-                                <input type="checkbox" name="confbools[oxTiramizoo_articles_stock_gt_0]" value"1" [{ if $confbools.oxTiramizoo_articles_stock_gt_0}]checked="checked"[{ /if }]>
+                                <input type="checkbox" name="confbools[oxTiramizoo_articles_stock_gt_0]" value"1" [{ if $aConfigValues.confbools.oxTiramizoo_articles_stock_gt_0}]checked="checked"[{ /if }]>
                                 [{ oxinputhelp ident="oxTiramizoo_settings_articles_with_stock_gt_0_help" }]
                             </td>
                         </tr>
@@ -259,8 +263,8 @@
                         </td>
                     </tr>
 
-                [{if $aRetailLocations|@count}]
-                    [{foreach from=$aRetailLocations item=oRetaiLocation}]
+                [{if $oView->getRetailLocationList()|@count}]
+                    [{foreach from=$oView->getRetailLocationList() item=oRetaiLocation}]
                     <tr>
                         <td coslpan="2">
 

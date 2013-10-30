@@ -51,18 +51,19 @@ class oxTiramizoo_Config extends oxConfig
         $startDate = $oStartDate->getForRestApi();
         $endDate = $oEndDate->getForRestApi();
 
-        $aRangeDates = array('express_from' => $startDate, 
+        $aRangeDates = array('express_from' => $startDate,
                              'express_to' => $endDate,
                              'standard_from' => $startDate,
                              'standard_to' => $endDate);
 
-        $aAvaialbleServiceAreas = $oTiramizooApi->getAvailableServiceAreas($aPickupAddress['postal_code'], $aRangeDates);
+        $aAvaialbleServiceAreas = $oTiramizooApi
+                                        ->getAvailableServiceAreas($aPickupAddress['postal_code'], $aRangeDates);
         $oRetailLocation->synchronizeConfiguration($aAvaialbleServiceAreas);
     }
 
     /**
      * Adds or upfate oxTiramizoo Module configuration to DB.
-     * 
+     *
      * @extend oxConfig::saveShopConfVar()
      *
      * @param string $sVarType Variable Type
@@ -80,7 +81,7 @@ class oxTiramizoo_Config extends oxConfig
 
     /**
      * Retrieves oxTiramizoo Module configuration from DB.
-     * 
+     *
      * @extend oxConfig::saveShopConfVar()
      *
      * @param string $sVarName Variable name
@@ -117,7 +118,13 @@ class oxTiramizoo_Config extends oxConfig
                             "int"    => 'confints');
 
         $oDb = oxDb::getDb();
-        $sQ  = "select oxvarname, oxvartype, DECODE( oxvarvalue, '".$this->getConfigParam( 'sConfigKey' )."') as oxvarvalue from oxconfig where oxshopid = '{$sShopId}' AND oxmodule ='{$sModule}';";
+        $sQ  = "SELECT  oxvarname,
+                        oxvartype,
+                        DECODE( oxvarvalue, '".$this->getConfigParam( 'sConfigKey' )."')
+                                                AS oxvarvalue
+                    FROM oxconfig
+                        WHERE oxshopid = '{$sShopId}'
+                            AND oxmodule ='{$sModule}';";
         $oRs = $oDb->Execute( $sQ );
 
         $aValues = array('confbools' => array(),
@@ -129,7 +136,7 @@ class oxTiramizoo_Config extends oxConfig
 
         if ( $oRs != false && $oRs->recordCount() > 0 ) {
             while (!$oRs->EOF) {
-                
+
                 //using array_values prevent against problems with fetch type in EE fetch_assoc, CE fetch_num
                 list($sVarName, $sVarType, $sVarVal) = array_values($oRs->fields);
                 $aValues[$aTypeArray[$sVarType]][$sVarName] = $this->decodeValue($sVarType, $sVarVal);

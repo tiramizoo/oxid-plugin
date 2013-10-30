@@ -120,6 +120,8 @@ class oxTiramizoo_DeliverySet
             if ($this->isTiramizooAvailable()) {
                 $sTiramizooDeliveryType = $this->getSession()->getVariable('sTiramizooDeliveryType');
 
+                $oConfig = oxRegistry::getConfig();
+
                 try {
                     $this->setTiramizooDeliveryType($sTiramizooDeliveryType);
                 } catch (oxTiramizoo_InvalidDeliveryTypeException $oEx) {
@@ -132,7 +134,7 @@ class oxTiramizoo_DeliverySet
                     // if was setted redirect
                     if ($sTiramizooDeliveryType) {
                         oxUtilsView::getInstance()->addErrorToDisplay( $oEx->getMessage() );
-                        oxUtils::getInstance()->redirect( oxConfig::getInstance()->getShopHomeURL() .'cl=payment', true, 302 );
+                        oxUtils::getInstance()->redirect( $oConfig->getShopHomeURL() .'cl=payment', true, 302 );
                     }
                 }
 
@@ -150,7 +152,7 @@ class oxTiramizoo_DeliverySet
                     // if was setted redirect
                     if ($sSelectedTimeWindow) {
                         oxUtilsView::getInstance()->addErrorToDisplay( $oEx->getMessage() );
-                        oxUtils::getInstance()->redirect( oxConfig::getInstance()->getShopHomeURL() .'cl=payment', true, 302 );
+                        oxUtils::getInstance()->redirect( $oConfig->getShopHomeURL() .'cl=payment', true, 302 );
                     }
                 }
             }
@@ -166,6 +168,8 @@ class oxTiramizoo_DeliverySet
      */
     public function setDefaultDeliveryType()
     {
+        $blReturn = false;
+
         $aAvailableDeliveryTypes = $this->getAvailableDeliveryTypes();
 
         if (count($aAvailableDeliveryTypes)) {
@@ -173,10 +177,10 @@ class oxTiramizoo_DeliverySet
             $sFirstIndex = $aAvailableDeliveryTypeNames[0];
             $this->setTiramizooDeliveryType($aAvailableDeliveryTypes[$sFirstIndex]->getType());
 
-            return true;
+            $blReturn = true;
         }
 
-        return false;
+        return $blReturn;
     }
 
     /**
@@ -186,22 +190,22 @@ class oxTiramizoo_DeliverySet
      */
     public function setDefaultTimeWindow()
     {
+        $blReturn = false;
+
         $aAvailableDeliveryTypes = $this->getAvailableDeliveryTypes();
 
-        if (!count($aAvailableDeliveryTypes)) {
-            return false;
+        if (count($aAvailableDeliveryTypes)) {
+            $aAvailableDeliveryTypeNames = array_keys($aAvailableDeliveryTypes);
+            $sFirstIndex = $aAvailableDeliveryTypeNames[0];
+
+            if ($aAvailableDeliveryTypes[$sFirstIndex]->getDefaultTimeWindow()) {
+                $this->setSelectedTimeWindow($aAvailableDeliveryTypes[$sFirstIndex]->getDefaultTimeWindow()->getHash());
+
+                $blReturn = true;
+            }
         }
 
-        $aAvailableDeliveryTypeNames = array_keys($aAvailableDeliveryTypes);
-        $sFirstIndex = $aAvailableDeliveryTypeNames[0];
-
-        if ($aAvailableDeliveryTypes[$sFirstIndex]->getDefaultTimeWindow()) {
-            $this->setSelectedTimeWindow($aAvailableDeliveryTypes[$sFirstIndex]->getDefaultTimeWindow()->getHash());
-
-            return true;
-        }
-
-        return false;
+        return $blReturn;
     }
 
     /**
@@ -215,10 +219,13 @@ class oxTiramizoo_DeliverySet
     public function setTiramizooDeliveryType($sTiramizooDeliveryType)
     {
         if ($this->isTiramizooDeliveryTypeValid($sTiramizooDeliveryType)) {
-            oxSession::setVar( 'sTiramizooDeliveryType',  $sTiramizooDeliveryType );
+            $this->getSession()->setVariable( 'sTiramizooDeliveryType',  $sTiramizooDeliveryType );
             $this->_sTiramizooDeliveryType = $sTiramizooDeliveryType;
         } else {
-            $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_invalid_delivery_type_error', oxRegistry::getLang()->getTplLanguage(), true);
+            $oLang = oxRegistry::getLang();
+            $sTplLanguage = $oLang->getTplLanguage();
+
+            $errorMessage = $oLang->translateString('oxTiramizoo_invalid_delivery_type_error', $sTplLanguage, true);
             throw new oxTiramizoo_InvalidDeliveryTypeException($errorMessage);
         }
     }
@@ -235,13 +242,16 @@ class oxTiramizoo_DeliverySet
     {
         if ($oTimeWindow = $this->getRetailLocation()->getTimeWindowByHash($sTimeWindow)) {
             if ($oTimeWindow->isValid()) {
-                oxSession::setVar( 'sTiramizooTimeWindow',  $oTimeWindow->getHash() );
+                $this->getSession()->setVariable( 'sTiramizooTimeWindow',  $oTimeWindow->getHash() );
                 $this->_oSelectedTimeWindow = $oTimeWindow;
             }
         }
 
         if (!$oTimeWindow || !$oTimeWindow->isValid()) {
-            $errorMessage = oxLang::getInstance()->translateString('oxTiramizoo_invalid_time_window_error', oxRegistry::getLang()->getTplLanguage(), true);
+            $oLang = oxRegistry::getLang();
+            $sTplLanguage = $oLang->getTplLanguage();
+
+            $errorMessage = $oLang->translateString('oxTiramizoo_invalid_time_window_error', $sTplLanguage, true);
             throw new oxTiramizoo_InvalidTimeWindowException($errorMessage);
         }
     }
@@ -309,14 +319,17 @@ class oxTiramizoo_DeliverySet
      */
     public function getTiramizooDeliveryTypeObject()
     {
+        $oReturn = null;
+
         foreach ($this->getAvailableDeliveryTypes() as $oDeliveryType)
         {
             if ($oDeliveryType->getType() == $this->getTiramizooDeliveryType()) {
-                return $oDeliveryType;
+                $oReturn = $oDeliveryType;
+                break;
             }
         }
 
-        return null;
+        return $oReturn;
     }
 
     /**
@@ -329,19 +342,15 @@ class oxTiramizoo_DeliverySet
      */
     public function refreshDeliveryPostalCode($oUser, $oDeliveryAddress)
     {
-        if ($oDeliveryAddress) {
-            if ($sDeliveryPostalCode = $oDeliveryAddress->oxaddress__oxzip->value) {
-                return $sDeliveryPostalCode;
-            }
+        $oReturn = null;
+
+        if ($oDeliveryAddress && $sDeliveryPostalCode = $oDeliveryAddress->oxaddress__oxzip->value) {
+            $oReturn = $sDeliveryPostalCode;
+        } elseif ($oUser && $sDeliveryPostalCode = $oUser->oxuser__oxzip->value) {
+            $oReturn = $sDeliveryPostalCode;
         }
 
-        if ($oUser) {
-            if ($sDeliveryPostalCode = $oUser->oxuser__oxzip->value) {
-                return $sDeliveryPostalCode;
-            }
-        }
-
-        return null;
+        return $oReturn;
     }
 
     /**
@@ -362,12 +371,16 @@ class oxTiramizoo_DeliverySet
             {
                 $aAvailablePostalCodes = $oRetailLocation->getConfVar('postal_codes');
 
-                if (is_array($aAvailablePostalCodes) && in_array($this->_sDeliveryPostalcode, $aAvailablePostalCodes)) {
-                    return $this->_sCurrentApiToken = $oRetailLocation->getApiToken();
+                if (is_array($aAvailablePostalCodes)
+                    && in_array($this->_sDeliveryPostalcode, $aAvailablePostalCodes)
+                ) {
+                    $this->_sCurrentApiToken = $oRetailLocation->getApiToken();
                 }
             }
 
-            throw new oxTiramizoo_NotAvailableException('This postal code id not supported');
+            if (!$this->_sCurrentApiToken) {
+                throw new oxTiramizoo_NotAvailableException('This postal code id not supported');
+            }
         }
 
         return $this->_sCurrentApiToken;
@@ -414,23 +427,23 @@ class oxTiramizoo_DeliverySet
         if ($this->_isTiramizooAvailable === null) {
 
             if (!$this->getBasket()->isValid()) {
-                return $this->_isTiramizooAvailable = false;
+                $this->_isTiramizooAvailable = false;
+            } else {
+                //check if retail location is fit to postal code service is available in this area
+                try {
+                    $oRetailLocation = $this->getRetailLocation();
+
+                    //check if exists delivery types
+                    if (count($this->getAvailableDeliveryTypes()) == 0) {
+                        $this->_isTiramizooAvailable = false;
+                    } else {
+                        $this->_isTiramizooAvailable = true;
+                    }
+
+                } catch(oxException $oEx) {
+                    $this->_isTiramizooAvailable = false;
+                }
             }
-
-            //check if retail location is fit to postal code service is available in this area
-            try {
-                $oRetailLocation = $this->getRetailLocation();
-            } catch(oxException $oEx) {
-                return $this->_isTiramizooAvailable = false;
-            }
-
-            //check if exists delivery types
-            if (count($this->getAvailableDeliveryTypes()) == 0) {
-                return $this->_isTiramizooAvailable = false;
-            }
-
-            $this->_isTiramizooAvailable = true;
-
         }
 
         return $this->_isTiramizooAvailable;

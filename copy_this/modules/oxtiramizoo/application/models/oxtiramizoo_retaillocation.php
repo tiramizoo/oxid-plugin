@@ -20,7 +20,7 @@
  * @extends oxBase
  * @package oxTiramizoo
  */
-class oxTiramizoo_RetailLocation extends oxBase 
+class oxTiramizoo_RetailLocation extends oxBase
 {
     /**
      * Object core table name
@@ -46,7 +46,7 @@ class oxTiramizoo_RetailLocation extends oxBase
 
     /**
      * Class constructor
-     * 
+     *
      * @extend oxBase::__construct()
      *
      * @return null
@@ -59,16 +59,19 @@ class oxTiramizoo_RetailLocation extends oxBase
 
     /**
      * Returns retail location id by API token
-     * 
+     *
      * @param string $sApiToken API token
      *
      * @return string
      */
-    public function getIdByApiToken($sApiToken) 
+    public function getIdByApiToken($sApiToken)
     {
 	    $oDb = oxDb::getDb( oxDb::FETCH_MODE_ASSOC );
-	    $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE OXSHOPID = '" . $this->getConfig()->getShopId() . "' AND oxapitoken = " . $oDb->quote( $sApiToken );
-        
+	    $sQ = "SELECT oxid
+                    FROM " . $this->_sCoreTbl . "
+                        WHERE OXSHOPID = '" . $this->getConfig()->getShopId() . "'
+                            AND oxapitoken = " . $oDb->quote( $sApiToken );
+
         return $oDb->getOne($sQ);
     }
 
@@ -84,29 +87,33 @@ class oxTiramizoo_RetailLocation extends oxBase
 
             $aRetailLocationConfigs = $this->getRetailLocationConfigs();
 
-            foreach ($aRetailLocationConfigs as $oRetailLocationConfig) 
+            foreach ($aRetailLocationConfigs as $oRetailLocationConfig)
             {
-                $this->_aConfigVars[$oRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarname->value] = $oRetailLocationConfig;
-                $this->_aConfigVars[$oRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarname->value]->getValue();
+                $sVarName = $oRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarname->value;
+                $this->_aConfigVars[$sVarName] = $oRetailLocationConfig;
+                $this->_aConfigVars[$sVarName]->getValue();
             }
         }
     }
 
     /**
      * Repopulate config vars for current retail location.
-     * 
+     *
      * @param $sConfVarName
-     * 
+     *
      * @return null
      */
     public function getConfVar($sConfVarName)
     {
+        $oReturn = null;
+
         $this->refreshConfigVars();
 
         if (isset($this->_aConfigVars[$sConfVarName])) {
-            return $this->_aConfigVars[$sConfVarName]->getValue();
+            $oReturn = $this->_aConfigVars[$sConfVarName]->getValue();
         }
-        return null;
+
+        return $oReturn;
     }
 
     /**
@@ -135,9 +142,9 @@ class oxTiramizoo_RetailLocation extends oxBase
     /**
      * Save configuration variables for retail location
      *
-     * @param mixed $response 
+     * @param mixed $response
      * @throws oxTiramizoo_ApiException if response status is not equal 200
-     * 
+     *
      * @return null
      */
     public function synchronizeConfiguration($response)
@@ -148,7 +155,7 @@ class oxTiramizoo_RetailLocation extends oxBase
 
         $aResponse = $this->objectToArray($response['response']);
 
-        foreach ($aResponse as $sConfigIndex => $sValue) 
+        foreach ($aResponse as $sConfigIndex => $sValue)
         {
             if(is_array($sValue)) {
                 $sVarType = 'aarr';
@@ -157,12 +164,17 @@ class oxTiramizoo_RetailLocation extends oxBase
             }
 
             $oRetailLocationConfig = oxNew('oxTiramizoo_RetailLocationConfig');
-            $oRetailLocationConfig->load($oRetailLocationConfig->getIdByRetailLocationIdAndVarName($this->getId(), $sConfigIndex));
+            $oRetailLocationConfig->load($oRetailLocationConfig
+                                  ->getIdByRetailLocationIdAndVarName($this->getId(), $sConfigIndex));
 
             $oRetailLocationConfig->oxtiramizooretaillocationconfig__oxretaillocationid = new oxField($this->getId());
             $oRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarname = new oxField($sConfigIndex);
             $oRetailLocationConfig->oxtiramizooretaillocationconfig__oxvartype = new oxField($sVarType);
-            $oRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarvalue = new oxField( base64_encode( serialize( $sValue ) ) );
+
+            $oRetailLocationConfig->oxtiramizooretaillocationconfig__oxvarvalue = new oxField(
+                base64_encode( serialize( $sValue ) )
+            );
+
             $oRetailLocationConfig->oxtiramizooretaillocationconfig__oxlastsync = new oxField(oxTiramizoo_Date::date());
 
             $oRetailLocationConfig->save();
@@ -171,16 +183,16 @@ class oxTiramizoo_RetailLocation extends oxBase
 
     /**
      * Deletes retail location with all configuration variables.
-     * 
+     *
      * @extend oxBase::delete()
      *
      * @param string $sOXID
-     * 
+     *
      * @return bool
      */
     public function delete($sOXID = null)
     {
-        foreach ($this->getRetailLocationConfigs() as $oRetailLocationConfig) 
+        foreach ($this->getRetailLocationConfigs() as $oRetailLocationConfig)
         {
             $oRetailLocationConfig->delete();
         }
@@ -192,15 +204,15 @@ class oxTiramizoo_RetailLocation extends oxBase
      * Returns Time windows assigned to retail location.
      *
      * @param string $sOXID
-     * 
+     *
      * @return array
      */
     public function getAvailableTimeWindows()
     {
         if ($aTimeWindows = $this->getConfVar('time_windows')) {
-            
+
             //sort by delivery from date
-            foreach ($aTimeWindows as $oldKey => $aTimeWindow) 
+            foreach ($aTimeWindows as $oldKey => $aTimeWindow)
             {
                 $oTimeWindow = oxNew('oxTiramizoo_TimeWindow', $aTimeWindow);
 
@@ -218,31 +230,36 @@ class oxTiramizoo_RetailLocation extends oxBase
      * Retrieve oxTiramizoo_TimeWindow from avbailable time windows if exists.
      *
      * @param string $sHash time window hash
-     * 
-     * @return mixed 
+     *
+     * @return mixed
      */
-    public function getTimeWindowByHash($sHash) 
+    public function getTimeWindowByHash($sHash)
     {
-        foreach ($this->getAvailableTimeWindows() as $aTimeWindow) 
+        $oReturn = null;
+
+        foreach ($this->getAvailableTimeWindows() as $aTimeWindow)
         {
             $oTimeWindow = oxNew('oxTiramizoo_TimeWindow', $aTimeWindow);
-            
+
             if ($oTimeWindow->getHash() == $sHash) {
-                return $oTimeWindow;
+                $oReturn = $oTimeWindow;
             }
         }
-        return null;
+
+        return $oReturn;
     }
 
     /**
      * Convert recursively stdClass object into an array.
      *
      * @param mixed $data array or stdClass object
-     * 
-     * @return mixed 
+     *
+     * @return mixed
      */
     public function objectToArray($data)
     {
+        $oReturn = $data;
+
         if (is_array($data) || is_object($data))
         {
             $result = array();
@@ -250,8 +267,9 @@ class oxTiramizoo_RetailLocation extends oxBase
             {
                 $result[$key] = $this->objectToArray($value);
             }
-            return $result;
+            $oReturn = $result;
         }
-        return $data;
+
+        return $oReturn;
     }
 }

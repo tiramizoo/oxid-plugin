@@ -19,6 +19,7 @@ $aLang = array(
 'oxTiramizoo_post_order_error'                          => 'Tiramizoo konnte diese Bestellung nicht verarbeiten, bitte versuchen Sie es später noch einmal oder ändern Sie Ihre Versandart',
 'oxTiramizoo_delivery_type_immediate_name'				=> 'tiramizoo.com "Sofortlieferung" ',
 'oxTiramizoo_delivery_type_evening_name'				=> 'tiramizoo.com "Abendzustellung"',
-'oxTiramizoo_time_window_date_format'					=> 'Y-m-d',
+'oxTiramizoo_time_window_date_format'                   => 'Y-m-d',
+'oxTiramizoo_tracking_url'					            => 'Tracking-URL',
 
 );

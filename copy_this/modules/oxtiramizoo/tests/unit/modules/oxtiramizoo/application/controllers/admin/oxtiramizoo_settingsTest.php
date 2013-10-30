@@ -2,7 +2,7 @@
 
 
 
-class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCase
+class Unit_Modules_oxTiramizoo_Application_Controllers_Admin_oxTiramizoo_settingsTest extends OxidTestCase
 {
 
     protected function setUp()
@@ -123,22 +123,17 @@ class Unit_Modules_oxTiramizoo_Admin_oxTiramizoo_settingsTest extends OxidTestCa
 
     public function testSaveConfVars()
     {
-        $aConfBools = array('somename' => 'somevalue');
-        $aConfStrs  = array('somename' => 'somevalue');
-        $aConfArrs  = array('somename' => 'somevalue');
-        $aConfAarrs = array('somename' => 'somevalue');
-        $aConfInts  = array('somename' => 'somevalue');
-
-        $oConfig = $this->getMock('oxTiramizoo_Config', array('getRequestParameter'), array(), '', false);
+        $oConfig = $this->getMock('oxConfig', array('__construct', 'getRequestParameter'), array(), '', false);
         $oConfig->expects($this->any())
                 ->method('getRequestParameter')
                 ->will($this->returnCallback(function(){
+
                     $valueMap = array(
-                        array('confbools', $aConfBools),
-                        array('confstrs', $aConfStrs),
-                        array('confarrs', $aConfArrs),
-                        array('confaarrs', $aConfAarrs),
-                        array('confints', $aConfInts)
+                        array('confbools', array('somename' => 'somevalue')),
+                        array('confstrs', array('somename' => 'somevalue')),
+                        array('confarrs', array('somename' => 'somevalue')),
+                        array('confaarrs', array('somename' => 'somevalue')),
+                        array('confints', array('somename' => 'somevalue'))
                     );
 
                     return returnValueMap($valueMap, func_get_args());

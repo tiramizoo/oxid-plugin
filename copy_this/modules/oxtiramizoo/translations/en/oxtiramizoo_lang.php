@@ -20,6 +20,7 @@ $aLang = array(
 'oxTiramizoo_delivery_type_immediate_name'				=> 'tiramizoo.com "Immediate" ',
 'oxTiramizoo_delivery_type_evening_name'				=> 'tiramizoo.com "Evening"',
 'oxTiramizoo_time_window_date_format'					=> 'Y-m-d',
+'oxTiramizoo_tracking_url'                              => 'Tracking URL',
 
 );
 

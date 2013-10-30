@@ -22,10 +22,27 @@
 class oxTiramizoo_order extends oxTiramizoo_order_parent
 {
     /**
+     * Formatted Tiramizoo time window
+     *
+     * @var string
+     */
+    protected $_sFormattedTiramizooTimeWindow;
+
+    /**
+     * Getter method, returns formatted Tiramizoo time window string
+     *
+     * @return string
+     */
+    public function getFormattedTiramizooTimeWindow()
+    {
+        return $this->_sFormattedTiramizooTimeWindow;
+    }
+
+    /**
      * Executes parent::init(), initialize oxTiramizooDeliverySet
      * object and redirect back to the payment step
      * if Tiramizoo Delivery is not available
-     * 
+     *
      * @extend order::init()
      *
      * @return null
@@ -44,7 +61,9 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
         $oTiramizooDeliverySet->init($this->getUser(), $oOrder->getDelAddressInfo());
 
         //redirect to payment if tiramizoo is not available
-        if (!$this->getTiramizooDeliverySet()->isTiramizooAvailable() && ($this->getSession()->getVariable( 'sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID)) {
+        if (!$this->getTiramizooDeliverySet()->isTiramizooAvailable()
+            && ($this->getSession()->getVariable( 'sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID)
+        ) {
             oxRegistry::get('oxUtils')->redirect( $this->getConfig()->getShopHomeURL() .'cl=payment', true, 302 );
         }
     }
@@ -52,7 +71,7 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
     /**
      * Getting current oxTiramizoo_DeliverySet object
      * from registry
-     * 
+     *
      * @return oxTiramizoo_DeliverySet
      */
     public function getTiramizooDeliverySet()
@@ -63,7 +82,7 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
     /**
      * Executes parent::render(), pass variable to template to check
      * if tiramizoo module is running now
-     * 
+     *
      * @extend order::render()
      *
      * @return string template file
@@ -79,16 +98,18 @@ class oxTiramizoo_order extends oxTiramizoo_order_parent
         if ( $this->getSession()->getVariable('sShipSet') == oxTiramizoo_DeliverySet::TIRAMIZOO_DELIVERY_SET_ID ) {
             $oTiramizooDeliverySet = $this->getTiramizooDeliverySet();
             $oTiramizooWindow = $oTiramizooDeliverySet->getSelectedTimeWindow();
-            $this->_aViewData['sFormattedTiramizooTimeWindow'] = $oTiramizooWindow->getFormattedDeliveryTimeWindow();
+            $this->_sFormattedTiramizooTimeWindow = $oTiramizooWindow->getFormattedDeliveryTimeWindow();
         }
 
         return $this->_sThisTemplate;
     }
 
+
+
     /**
-     * Executes parent::execute(), show errors 
+     * Executes parent::execute(), show errors
      * if exception throwed
-     * 
+     *
      * @extend order::execute()
      *
      * @return string

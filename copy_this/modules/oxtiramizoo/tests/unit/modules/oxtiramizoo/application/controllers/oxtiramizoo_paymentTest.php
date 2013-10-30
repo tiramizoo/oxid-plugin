@@ -21,10 +21,11 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
 		$oTiramizooPayment->init();
     }
 
+
     public function testGetTiramizooDeliverySet()
     {
-		$oTiramizooPayment = oxNew('oxTiramizoo_Payment');
-		$this->assertTrue($oTiramizooPayment->getTiramizooDeliverySet() instanceof oxTiramizoo_DeliverySet);
+  		$oTiramizooPayment = oxNew('oxTiramizoo_Payment');
+  		$this->assertTrue($oTiramizooPayment->getTiramizooDeliverySet() instanceof oxTiramizoo_DeliverySet);
     }
 
     public function testGetAllSetsTiramizooIsNotAvailable()
@@ -43,7 +44,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
 
         $oBasket = $this->getMock('oxBasket', array(), array(), '', false);
 
-    		$oSession = $this->getMock('oxSession', array(), array(), '', false);
+    	$oSession = $this->getMock('oxSession', array(), array(), '', false);
 
         $oSession->expects($this->any())
                  ->method('getVariable')
@@ -51,7 +52,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
                     $valueMap = array(
                         array('sShipSet', 'Tiramizoo')
                     );
-                    
+
                     return returnValueMap($valueMap, func_get_args());
                  }));
 
@@ -98,10 +99,10 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
                     $valueMap = array(
                         array('sShipSet', 'Tiramizoo')
                     );
-                    
+
                     return returnValueMap($valueMap, func_get_args());
                  }));
-                 
+
         $oSession->expects($this->any())
                  ->method('getBasket')
                  ->will($this->returnValue($oBasket));
@@ -157,6 +158,9 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
         oxRegistry::set('oxTiramizoo_DeliverySet', $oTiramizooDeliverySet);
 
         $oUtilsView = $this->getMock('oxUtilsView', array(), array(), '', false);
+        $oUtilsView->expects($this->once())
+                   ->method('addErrorToDisplay');
+
         oxRegistry::set('oxUtilsView', $oUtilsView);
 
         $oBasket = $this->getMock('oxBasket', array(), array(), '', false);
@@ -169,7 +173,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
                     $valueMap = array(
                         array('sShipSet', 'Tiramizoo')
                     );
-                    
+
                     return returnValueMap($valueMap, func_get_args());
                  }));
 
@@ -186,7 +190,94 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
                         array('sTiramizooDeliveryType', 'immediate'),
                         array('sTiramizooTimeWindow', 'c16f5ea1f0a860c7ebcfe5467fe216f0')
                     );
-                    
+
+                    return returnValueMap($valueMap, func_get_args());
+                 }));
+
+        $oTiramizooPayment = $this->getMock('oxTiramizoo_PaymentExposed', array('getSession', 'getConfig'));
+        $oTiramizooPayment->expects($this->any())
+                          ->method('getSession')
+                          ->will($this->returnValue($oSession));
+        $oTiramizooPayment->expects($this->any())
+                          ->method('getConfig')
+                          ->will($this->returnValue($oConfig));
+
+        $oTiramizooPayment->_aAllSets = array('some delivery' => oxNew('oxDeliverySet'), 'some delivery 2' => oxNew('oxDeliverySet'), 'Tiramizoo' => oxNew('oxDeliverySet'));
+
+        $oTiramizooPayment->changeshipping();
+
+    }
+
+
+    public function testChangeshipping2()
+    {
+        oxTiramizoo_Date::changeCurrentTime('2013-04-01 09:00:00');
+
+        $aDataTodayWindow = array('delivery_type' => 'express',
+                                  'cut_off' => '0',
+                                  'pickup' => array('from' => '2013-04-01T12:00:00Z',
+                                                      'to' => '2013-04-01T14:00:00Z'),
+
+                                  'delivery' => array('from' => '2013-04-01T12:00:00Z',
+                                                      'to' => '2013-04-01T14:00:00Z'));
+
+        $oTimeWindow = oxNew('oxTiramizoo_TimeWindow', $aDataTodayWindow);
+
+        $oTiramizooDeliveryTypeImmediate = $this->getMock('oxTiramizoo_DeliveryTypeImmediate', array(), array(), '', false);
+        $oTiramizooDeliveryTypeImmediate->expects($this->any())
+                                        ->method('getDefaultTimeWindow')
+                                        ->will($this->returnValue($oTimeWindow));
+        $oTiramizooDeliveryTypeImmediate->expects($this->any())
+                                        ->method('hasTimeWindow')
+                                        ->will($this->returnValue(false));
+
+        $oTiramizooDeliverySet = $this->getMock('oxTiramizoo_DeliverySet', array(), array(), '', false);
+        $oTiramizooDeliverySet->expects($this->any())
+                              ->method('isTiramizooAvailable')
+                              ->will($this->returnValue(false));
+        $oTiramizooDeliverySet->expects($this->any())
+                              ->method('getTiramizooDeliveryTypeObject')
+                              ->will($this->returnValue($oTiramizooDeliveryTypeImmediate));
+        $oTiramizooDeliverySet->expects($this->any())
+                              ->method('setSelectedTimeWindow')
+                              ->will($this->throwException(new oxTiramizoo_InvalidDeliveryTypeException));
+
+        oxRegistry::set('oxTiramizoo_DeliverySet', $oTiramizooDeliverySet);
+
+        $oUtilsView = $this->getMock('oxUtilsView', array(), array(), '', false);
+        $oUtilsView->expects($this->once())
+                   ->method('addErrorToDisplay');
+
+        oxRegistry::set('oxUtilsView', $oUtilsView);
+
+        $oBasket = $this->getMock('oxBasket', array(), array(), '', false);
+
+        $oSession = $this->getMock('oxSession', array(), array(), '', false);
+
+        $oSession->expects($this->any())
+                 ->method('getVariable')
+                 ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('sShipSet', 'Tiramizoo')
+                    );
+
+                    return returnValueMap($valueMap, func_get_args());
+                 }));
+
+        $oSession->expects($this->any())
+                 ->method('getBasket')
+                 ->will($this->returnValue($oBasket));
+
+        $oConfig = $this->getMock('oxConfig', array(), array(), '', false);
+
+        $oConfig->expects($this->any())
+                ->method('getRequestParameter')
+                 ->will($this->returnCallback(function(){
+                    $valueMap = array(
+                        array('sTiramizooDeliveryType', 'immediate'),
+                        array('sTiramizooTimeWindow', 'c16f5ea1f0a860c7ebcfe5467fe216f0')
+                    );
+
                     return returnValueMap($valueMap, func_get_args());
                  }));
 
@@ -202,7 +293,6 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
 
         $oTiramizooPayment->changeshipping();
     }
-
 
 
 
@@ -255,10 +345,10 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_PaymentTest e
 
         $oTiramizooPayment->render();
 
-        $this->assertEquals('Tiramizoo', $oTiramizooPayment->getViewDataElement('sCurrentShipSet'));
-        $this->assertEquals('immediate', $oTiramizooPayment->getViewDataElement('sTiramizooDeliveryType'));
-        $this->assertEquals($oTimeWindow->getHash(), $oTiramizooPayment->getViewDataElement('sSelectedTimeWindow'));
-        $this->assertContains('immediate', $oTiramizooPayment->getViewDataElement('aAvailableDeliveryTypes'));
-        $this->assertContains('evening', $oTiramizooPayment->getViewDataElement('aAvailableDeliveryTypes'));
+        $this->assertEquals('Tiramizoo', $oTiramizooPayment->getCurrentShipSet());
+        $this->assertEquals('immediate', $oTiramizooPayment->getTiramizooDeliveryType());
+        $this->assertEquals($oTimeWindow->getHash(), $oTiramizooPayment->getSelectedTimeWindow());
+        $this->assertContains('immediate', $oTiramizooPayment->getAvailableDeliveryTypes());
+        $this->assertContains('evening', $oTiramizooPayment->getAvailableDeliveryTypes());
     }
 }

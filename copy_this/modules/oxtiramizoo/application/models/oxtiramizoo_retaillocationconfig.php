@@ -38,12 +38,12 @@ class oxTiramizoo_RetailLocationConfig extends oxBase {
 
     /**
      * Class constructor, initialize fields
-     * 
+     *
      * @extend oxBase::__construct()
      *
      * @return null
      */
-    public function __construct() 
+    public function __construct()
     {
         parent::__construct();
         $this->init( 'oxtiramizooretaillocationconfig' );
@@ -60,18 +60,21 @@ class oxTiramizoo_RetailLocationConfig extends oxBase {
     }
 
     /**
-     * Returns retail location config id 
+     * Returns retail location config id
      * by retail location id and variable name
-     * 
-     * @param string $sRetailLocationId retail location config 
+     *
+     * @param string $sRetailLocationId retail location config
      * @param string $sRetailLocationId retail location config variable name
      *
      * @return string
      */
-    public function getIdByRetailLocationIdAndVarName($sRetailLocationId, $sVarName) 
+    public function getIdByRetailLocationIdAndVarName($sRetailLocationId, $sVarName)
     {
         $oDb = oxDb::getDb(  );
-        $sQ = "SELECT oxid FROM " . $this->_sCoreTbl . " WHERE OXRETAILLOCATIONID = '" . $sRetailLocationId . "' AND OXVARNAME = '" . $sVarName . "';";
+        $sQ = "SELECT oxid
+                    FROM " . $this->_sCoreTbl . "
+                    WHERE OXRETAILLOCATIONID = '" . $sRetailLocationId . "'
+                        AND OXVARNAME = '" . $sVarName . "';";
         return $oDb->getOne($sQ);
     }
 }

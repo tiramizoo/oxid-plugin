@@ -54,12 +54,30 @@ class oxTiramizoo_ArticleInheritedData
         $aTiramizooCategoryData['oxid'] = $oCategory->oxcategories__oxid->value;
         $aTiramizooCategoryData['oxtitle'] = $oCategory->oxcategories__oxtitle->value;
         $aTiramizooCategoryData['oxsort'] = $oCategory->oxcategories__oxsort->value;
-        $aTiramizooCategoryData['tiramizoo_use_package'] = $oTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_use_package->value;
-        $aTiramizooCategoryData['tiramizoo_enable'] = $oTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_enable->value;
-        $aTiramizooCategoryData['tiramizoo_weight'] = $oTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_weight->value;
-        $aTiramizooCategoryData['tiramizoo_width'] = $oTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_width->value;
-        $aTiramizooCategoryData['tiramizoo_height'] = $oTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_height->value;
-        $aTiramizooCategoryData['tiramizoo_length'] = $oTiramizooCategoryExtended->oxtiramizoocategoryextended__tiramizoo_length->value;
+
+        $aTiramizooCategoryData['tiramizoo_use_package'] = $oTiramizooCategoryExtended
+                                                            ->oxtiramizoocategoryextended__tiramizoo_use_package
+                                                            ->value;
+
+        $aTiramizooCategoryData['tiramizoo_enable'] = $oTiramizooCategoryExtended
+                                                        ->oxtiramizoocategoryextended__tiramizoo_enable
+                                                        ->value;
+
+        $aTiramizooCategoryData['tiramizoo_weight'] = $oTiramizooCategoryExtended
+                                                        ->oxtiramizoocategoryextended__tiramizoo_weight
+                                                        ->value;
+
+        $aTiramizooCategoryData['tiramizoo_width'] = $oTiramizooCategoryExtended
+                                                        ->oxtiramizoocategoryextended__tiramizoo_width
+                                                        ->value;
+
+        $aTiramizooCategoryData['tiramizoo_height'] = $oTiramizooCategoryExtended
+                                                        ->oxtiramizoocategoryextended__tiramizoo_height
+                                                        ->value;
+
+        $aTiramizooCategoryData['tiramizoo_length'] = $oTiramizooCategoryExtended
+                                                        ->oxtiramizoocategoryextended__tiramizoo_length
+                                                        ->value;
 
         array_unshift($returnCategories, $aTiramizooCategoryData);
 
@@ -110,9 +128,20 @@ class oxTiramizoo_ArticleInheritedData
 
         foreach ($aCheckCategories as $aCategoryData)
         {
-            $aData = $this->buildCategoryEffectiveDataEnable($aData, $oCategory, $aCategoryData, $bExcludeCurrentCategory);
-            $aData = $this->buildCategoryEffectiveDataUsePackage($aData, $oCategory, $aCategoryData, $bExcludeCurrentCategory);
-            $aData = $this->buildCategoryEffectiveDataDimensions($aData, $oCategory, $aCategoryData, $bExcludeCurrentCategory);
+            $aData = $this->buildCategoryEffectiveDataEnable($aData,
+                                                             $oCategory,
+                                                             $aCategoryData,
+                                                             $bExcludeCurrentCategory);
+
+            $aData = $this->buildCategoryEffectiveDataUsePackage($aData,
+                                                                 $oCategory,
+                                                                 $aCategoryData,
+                                                                 $bExcludeCurrentCategory);
+
+            $aData = $this->buildCategoryEffectiveDataDimensions($aData,
+                                                                 $oCategory,
+                                                                 $aCategoryData,
+                                                                 $bExcludeCurrentCategory);
         }
 
         return $aData;
@@ -128,7 +157,9 @@ class oxTiramizoo_ArticleInheritedData
      *
      * @return array
      */
-    public function buildCategoryEffectiveDataEnable($aData, $oCategory, $aCategoryData, $bExcludeCurrentCategory = false)
+    public function buildCategoryEffectiveDataEnable($aData, $oCategory, $aCategoryData,
+        $bExcludeCurrentCategory = false
+    )
     {
         if ($aCategoryData['tiramizoo_enable'] == -1) {
             $aData['tiramizoo_enable'] = false;
@@ -159,7 +190,9 @@ class oxTiramizoo_ArticleInheritedData
      *
      * @return array
      */
-    public function buildCategoryEffectiveDataUsePackage($aData, $oCategory, $aCategoryData, $bExcludeCurrentCategory = false)
+    public function buildCategoryEffectiveDataUsePackage($aData, $oCategory, $aCategoryData,
+        $bExcludeCurrentCategory = false
+    )
     {
         if ($aCategoryData['tiramizoo_use_package'] == -1) {
             $aData['tiramizoo_use_package'] = false;
@@ -190,7 +223,9 @@ class oxTiramizoo_ArticleInheritedData
      *
      * @return array
      */
-    public function buildCategoryEffectiveDataDimensions($aData, $oCategory, $aCategoryData, $bExcludeCurrentCategory = false)
+    public function buildCategoryEffectiveDataDimensions($aData, $oCategory, $aCategoryData,
+        $bExcludeCurrentCategory = false
+    )
     {
         //category can override dimensions and weight but only all or nothing
         if ($this->dimensionsAndWeightCanBeInherited($aCategoryData)) {
@@ -219,7 +254,10 @@ class oxTiramizoo_ArticleInheritedData
      */
     public function dimensionsAndWeightCanBeInherited($aCategoryData)
     {
-        return $aCategoryData['tiramizoo_weight'] && $aCategoryData['tiramizoo_width'] && $aCategoryData['tiramizoo_height'] && $aCategoryData['tiramizoo_length'];
+        return  $aCategoryData['tiramizoo_weight']
+                && $aCategoryData['tiramizoo_width']
+                && $aCategoryData['tiramizoo_height']
+                && $aCategoryData['tiramizoo_length'];
     }
 
     /**

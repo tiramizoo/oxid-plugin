@@ -24,21 +24,21 @@ class oxTiramizoo_Date
      * Date as a string
      *
      * @var string
-     */ 
+     */
     protected $_sDate;
 
     /**
      * Current "Real" time, all of comparisions based rely on this date
      *
      * @var string
-     */ 
+     */
     protected static $_sCurrentTime = 'now';
 
     /**
      * Default date format
      *
      * @var string
-     */ 
+     */
     protected static $_sFormat = 'Y-m-d H:i:s';
 
     /**
@@ -47,10 +47,12 @@ class oxTiramizoo_Date
      * @param string $_sDate init date
      *
      * @return null
-     */ 
+     */
     public function __construct($sDate = null)
     {
-        $this->_sDate = strtotime($sDate, strtotime(self::$_sCurrentTime)) ? strtotime($sDate, strtotime(self::$_sCurrentTime)) : strtotime(self::$_sCurrentTime);
+        $this->_sDate = strtotime($sDate, strtotime(self::$_sCurrentTime))
+                            ? strtotime($sDate, strtotime(self::$_sCurrentTime))
+                            : strtotime(self::$_sCurrentTime);
     }
 
     /**
@@ -59,13 +61,13 @@ class oxTiramizoo_Date
      * @param string $sCurrentTime real date time
      *
      * @return null
-     */ 
+     */
     public static function changeCurrentTime($sCurrentTime = 'now')
     {
         // @codeCoverageIgnoreStart
         if ( !defined( 'OXID_PHP_UNIT' ) ) {
             return;
-        }       
+        }
         // @codeCoverageIgnoreEnd
 
         self::$_sCurrentTime = $sCurrentTime;
@@ -75,7 +77,7 @@ class oxTiramizoo_Date
      * Reset current date time to real.
      *
      * @return null
-     */ 
+     */
     public static function resetCurrentTime()
     {
     	self::$_sCurrentTime = 'now';
@@ -87,11 +89,11 @@ class oxTiramizoo_Date
      * @param string $sFormat date format
      *
      * @return string
-     */ 
+     */
 	public static function date($sFormat = null)
 	{
 		$oDate = new oxTiramizoo_Date();
-		return $oDate->get($sFormat); 
+		return $oDate->get($sFormat);
 	}
 
     /**
@@ -100,7 +102,7 @@ class oxTiramizoo_Date
      * @param string $sFormat date format
      *
      * @return string
-     */ 
+     */
     public function get($sFormat = null)
     {
     	$sFormat = $sFormat ? $sFormat : self::$_sFormat;
@@ -109,9 +111,9 @@ class oxTiramizoo_Date
 
     /**
      * Retrieve date in REST API format.
-     *     
+     *
      * @return string
-     */ 
+     */
     public function getForRestApi()
     {
         $oDateForApi = new oxTiramizoo_Date($this->get());
@@ -124,9 +126,9 @@ class oxTiramizoo_Date
 
     /**
      * Returns timestamp.
-     *     
+     *
      * @return string
-     */ 
+     */
     public function getTimestamp()
     {
         return $this->_sDate;
@@ -134,9 +136,9 @@ class oxTiramizoo_Date
 
     /**
      * Check if is today.
-     *     
+     *
      * @return bool
-     */ 
+     */
     public function isToday()
     {
     	$oToday = new oxTiramizoo_Date();
@@ -145,9 +147,9 @@ class oxTiramizoo_Date
 
     /**
      * Check if is today.
-     *     
+     *
      * @return bool
-     */ 
+     */
     public function isTomorrow()
     {
     	$oTomorrow = new oxTiramizoo_Date('+1 days');
@@ -158,22 +160,24 @@ class oxTiramizoo_Date
      * Check if is time is equal to passed.
      *
      * @param string $sTime time in format (H, H:i, H:i:s)
-     *     
+     *
      * @return bool
-     */ 
+     */
     public function isOnTime($sTime)
     {
     	$aTimeFormats = array('H', 'H:i', 'H:i:s');
-    	$sFormat = isset($aTimeFormats[substr_count($sTime, ':')]) ? $aTimeFormats[substr_count($sTime, ':')] : 'H:i:s';
+    	$sFormat = isset($aTimeFormats[substr_count($sTime, ':')])
+                        ? $aTimeFormats[substr_count($sTime, ':')]
+                        : 'H:i:s';
 
     	return $this->get($sFormat) == $sTime;
     }
 
     /**
      * Modiy current time with interval.
-     *     
+     *
      * @return oxTiramizoo_Date
-     */ 
+     */
     public function modify($sModify)
     {
     	$this->_sDate = strtotime($sModify, $this->_sDate);
@@ -194,9 +198,9 @@ class oxTiramizoo_Date
      * Check if date is equal to.
      *
      * @param oxTiramizoo_Date $oDate comparision date
-     *     
+     *
      * @return bool
-     */ 
+     */
     public function isEqualTo(oxTiramizoo_Date $oDate)
     {
         return $this->getTimestamp() == $oDate->getTimestamp();
@@ -206,9 +210,9 @@ class oxTiramizoo_Date
      * Check if date is lather than.
      *
      * @param oxTiramizoo_Date $oDate comparision date
-     *     
+     *
      * @return bool
-     */ 
+     */
     public function isLaterThan(oxTiramizoo_Date $oDate)
     {
     	return $this->getTimestamp() > $oDate->getTimestamp();
@@ -218,9 +222,9 @@ class oxTiramizoo_Date
      * Check if date is equal to.
      *
      * @param oxTiramizoo_Date $oDate comparision date
-     *     
+     *
      * @return bool
-     */ 
+     */
     public function isLaterOrEqualTo(oxTiramizoo_Date $oDate)
     {
         return $this->isLaterThan($oDate) || $oDate->isEqualTo($oDate);
@@ -230,9 +234,9 @@ class oxTiramizoo_Date
      * Check if date is earlier.
      *
      * @param oxTiramizoo_Date $oDate comparision date
-     *     
+     *
      * @return bool
-     */ 
+     */
     public function isEarlierThan(oxTiramizoo_Date $oDate)
     {
         return $this->getTimestamp() < $oDate->getTimestamp();
@@ -242,9 +246,9 @@ class oxTiramizoo_Date
      * Check if date is earlier or equal to.
      *
      * @param oxTiramizoo_Date $oDate comparision date
-     *     
+     *
      * @return bool
-     */ 
+     */
     public function isEarlierOrEqualTo(oxTiramizoo_Date $oDate)
     {
         return $this->isEarlierThan($oDate) || $oDate->isEqualTo($oDate);
