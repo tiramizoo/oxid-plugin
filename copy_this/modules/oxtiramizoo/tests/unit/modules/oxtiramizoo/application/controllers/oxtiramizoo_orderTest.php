@@ -12,7 +12,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_OrderTest ext
     {
         parent::tearDown();
 
-        oxUtilsObject::resetClassInstances();        
+        oxUtilsObject::resetClassInstances();
         oxRegistry::set('oxLang', null);
         oxRegistry::set('oxTiramizoo_DeliverySet', null);
         oxRegistry::set('oxUtils', null);
@@ -31,14 +31,14 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_OrderTest ext
         oxRegistry::set('oxTiramizoo_DeliverySet', $oTiramizooDeliverySet);
 
         $oSession = $this->getMock('oxSession', array(), array(), '', false);
-        
+
         $oSession->expects($this->any())
                  ->method('getVariable')
                  ->will($this->returnCallback(function(){
                     $valueMap = array(
                         array('sShipSet', 'Tiramizoo')
                     );
-                    
+
                     return returnValueMap($valueMap, func_get_args());
                  }));
 
@@ -95,7 +95,7 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_OrderTest ext
                     $valueMap = array(
                         array('oxTiramizoo_Today', null, false, 'Today')
                     );
-                    
+
                     return returnValueMap($valueMap, func_get_args());
                }));
 
@@ -108,13 +108,9 @@ class Unit_Modules_oxTiramizoo_Application_Controllers_oxTiramizoo_OrderTest ext
 
         $oTiramizooOrder->render();
 
-        if (date('I') == '1') { 
-            $sExpectedString = 'Today 14:00 - 16:00';
-        } else {
-            $sExpectedString = 'Today 13:00 - 15:00';
-        }
+        $sExpectedString = 'Today 14:00 - 16:00';
 
-        $this->assertEquals($sExpectedString, $oTiramizooOrder->getViewDataElement('sFormattedTiramizooTimeWindow'));
+        $this->assertEquals($sExpectedString, $oTiramizooOrder->getFormattedTiramizooTimeWindow());
     }
 
     public function testExecute()

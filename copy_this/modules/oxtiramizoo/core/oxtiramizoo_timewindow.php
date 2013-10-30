@@ -174,14 +174,24 @@ class oxTiramizoo_TimeWindow
      */
 	public function getFormattedDeliveryTimeWindow()
 	{
+        $sReturn = '';
+        $oLang = oxRegistry::getLang();
+
+        $sTplLangugage = oxRegistry::getLang()->getTplLanguage();
+
         if ($this->isToday()) {
-            return oxRegistry::getLang()->translateString('oxTiramizoo_Today', oxRegistry::getLang()->getTplLanguage(), false) . ' ' . $this->getDeliveryHoursFormated($this->_aData);
+            $sReturn  = $oLang->translateString('oxTiramizoo_Today', $sTplLangugage, false);
+            $sReturn .= ' ' . $this->getDeliveryHoursFormated($this->_aData);
         } else if ($this->isTomorrow()){
-            return oxRegistry::getLang()->translateString('oxTiramizoo_Tomorrow', oxRegistry::getLang()->getTplLanguage(), false) . ' ' .  $this->getDeliveryHoursFormated($this->_aData);
+            $sReturn  = $oLang->translateString('oxTiramizoo_Tomorrow', $sTplLangugage, false);
+            $sReturn .= ' ' .  $this->getDeliveryHoursFormated($this->_aData);
         } else {
-            return $this->getDeliveryFromDate()->get(oxRegistry::getLang()->translateString('oxTiramizoo_time_window_date_format', oxRegistry::getLang()->getTplLanguage(), false)) . ' ' . $this->getDeliveryHoursFormated($this->_aData);
+            $sFormat = $oLang->translateString('oxTiramizoo_time_window_date_format', $sTplLangugage, false);
+            $sReturn  = $this->getDeliveryFromDate()->get($sFormat);
+            $sReturn .= ' ' . $this->getDeliveryHoursFormated($this->_aData);
         }
 
+        return $sReturn;
 	}
 
     /**
@@ -201,17 +211,20 @@ class oxTiramizoo_TimeWindow
      */
     public function isValid()
     {
+        $blReturn = false;
         $oDueDate = oxnew('oxTiramizoo_Date');
 
         if ($iMinutes = $this->_aData['cut_off']) {
             $oDueDate->modify('+' . $iMinutes . ' minutes');
         }
 
-        if ($this->getPickupFromDate()->isLaterThan($oDueDate) && $this->getDeliveryFromDate()->isLaterThan($oDueDate)) {
-            return true;
+        if ($this->getPickupFromDate()->isLaterThan($oDueDate)
+            && $this->getDeliveryFromDate()->isLaterThan($oDueDate)
+        ) {
+            $blReturn = true;
         }
 
-        return false;
+        return $blReturn;
     }
 
     /**
@@ -221,10 +234,10 @@ class oxTiramizoo_TimeWindow
      */
     public function isToday()
     {
-        return $this->getPickupFromDate()->isToday() &&
-               $this->getPickupToDate()->isToday() &&
-               $this->getDeliveryFromDate()->isToday() &&
-               $this->getDeliveryToDate()->isToday();
+        return  $this->getPickupFromDate()->isToday()
+                && $this->getPickupToDate()->isToday()
+                && $this->getDeliveryFromDate()->isToday()
+                && $this->getDeliveryToDate()->isToday();
     }
 
     /**
@@ -234,10 +247,10 @@ class oxTiramizoo_TimeWindow
      */
     public function isTomorrow()
     {
-        return $this->getPickupFromDate()->isTomorrow() &&
-               $this->getPickupToDate()->isTomorrow() &&
-               $this->getDeliveryFromDate()->isTomorrow() &&
-               $this->getDeliveryToDate()->isTomorrow();
+        return  $this->getPickupFromDate()->isTomorrow()
+                && $this->getPickupToDate()->isTomorrow()
+                && $this->getDeliveryFromDate()->isTomorrow()
+                && $this->getDeliveryToDate()->isTomorrow();
     }
 
     /**
@@ -248,9 +261,9 @@ class oxTiramizoo_TimeWindow
      */
     public function hasHours($aHours)
     {
-        return $this->getPickupFromDate()->isOnTime($aHours['pickup_after']) &&
-               $this->getPickupToDate()->isOnTime($aHours['pickup_before']) &&
-               $this->getDeliveryFromDate()->isOnTime($aHours['delivery_after']) &&
-               $this->getDeliveryToDate()->isOnTime($aHours['delivery_before']);
+        return  $this->getPickupFromDate()->isOnTime($aHours['pickup_after'])
+                && $this->getPickupToDate()->isOnTime($aHours['pickup_before'])
+                && $this->getDeliveryFromDate()->isOnTime($aHours['delivery_after'])
+                && $this->getDeliveryToDate()->isOnTime($aHours['delivery_before']);
     }
 }

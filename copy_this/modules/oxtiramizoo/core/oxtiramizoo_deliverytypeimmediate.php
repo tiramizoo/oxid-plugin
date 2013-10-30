@@ -25,52 +25,55 @@ class oxTiramizoo_DeliveryTypeImmediate extends oxTiramizoo_DeliveryType
 	 * Delivery type name
 	 *
 	 * @var string
-	 */	
+	 */
 	protected $_sType = 'immediate';
 
 	/**
 	 * Checks if is available depends on configuration and current time
-     * 
+     *
      * @extend oxTiramizoo_DeliveryType::isAvailable()
      *
 	 * @return bool
 	 */
 	public function isAvailable()
 	{
+        $blReturn = true;
+
 		if (parent::isAvailable() == false) {
-			return false;
-		}
+			$blReturn = false;
+		} elseif (!$this->getRetailLocation()->getConfVar('immediate_time_window_enabled')) {
+			$blReturn = false;
+		} else {
+    		$oTimeWindow = $this->getImmediateTimeWindow();
 
-		if (!$this->getRetailLocation()->getConfVar('immediate_time_window_enabled')) {
-			return false;
-		}
+    		if ($oTimeWindow === null) {
+    			$blReturn = false;
+    		}
+        }
 
-		$oTimeWindow = $this->getImmediateTimeWindow();
-
-		if ($oTimeWindow === null) {
-			return false;
-		}
-
-		return true;
+		return $blReturn;
 	}
 
 	/**
-	 * Retrieve first next Time window if is today 
+	 * Retrieve first next Time window if is today
 	 *
 	 * @return oxTiramizoo_TimeWindow|null
 	 */
     public function getImmediateTimeWindow()
     {
-        foreach ($this->_aTimeWindows as $aTimeWindow) 
+        $oReturn = null;
+
+        foreach ($this->_aTimeWindows as $aTimeWindow)
         {
         	$oTimeWindow = oxNew('oxTiramizoo_TimeWindow', $aTimeWindow);
 
             if ($oTimeWindow->isValid() && $oTimeWindow->isToday()) {
-                return $oTimeWindow;
+                $oReturn = $oTimeWindow;
+                break;
             }
         }
 
-        return null;
+        return $oReturn;
     }
 
 	/**
@@ -84,7 +87,7 @@ class oxTiramizoo_DeliveryTypeImmediate extends oxTiramizoo_DeliveryType
 	}
 
 	/**
-	 * Checks if time window is in available time windows 
+	 * Checks if time window is in available time windows
 	 *
 	 * @return bool
 	 */

@@ -25,12 +25,7 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DateTest extends OxidTestCase
 	{
 		$oDate = new oxTiramizoo_Date('2013-04-01 05:04:02');
 
-        // daylight saving time
-        if (date('I') == '1') { 
-            $sExpectedDate = '2013-04-01T03:04:02Z';
-        } else {
-            $sExpectedDate = '2013-04-01T04:04:02Z';
-        }
+        $sExpectedDate = '2013-04-01T03:04:02Z';
 
 		$this->assertEquals($sExpectedDate, $oDate->getForRestApi());
 	}

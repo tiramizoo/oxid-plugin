@@ -29,6 +29,16 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
     protected $_oTiramizooArticleExtended = null;
 
     /**
+     * @var array
+     */
+    protected $_aEffectiveData = null;
+
+    /**
+     * @var oxArticle
+     */
+    protected $_oArticle = null;
+
+    /**
      * Getter method, returns oxTiramizoo_ArticleExtended object
      *
      * @return oxTiramizoo_ArticleExtended
@@ -36,6 +46,26 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
     public function getTiramizooArticleExtended()
     {
         return $this->_oTiramizooArticleExtended;
+    }
+
+    /**
+     * Getter method, returns array with article effective data
+     *
+     * @return array
+     */
+    public function getEffectiveData()
+    {
+        return $this->_aEffectiveData;
+    }
+
+    /**
+     * Getter method, returns oxArticle object
+     *
+     * @return oxArticle
+     */
+    public function getArticle()
+    {
+        return $this->_oArticle;
     }
 
     /**
@@ -54,7 +84,7 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
         }
         // @codeCoverageIgnoreEnd
 
-        $this->_aViewData['edit'] = oxNew( 'oxarticle' );
+        $this->_oArticle = oxNew( 'oxarticle' );
 
         $soxId = $this->getConfig()->getRequestParameter( 'oxid' );
 
@@ -64,9 +94,8 @@ class oxTiramizoo_Article_Tab extends oxAdminDetails
         $oTiramizooArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
         $oTiramizooArticleExtended->loadByArticle($oArticle);
 
-        $this->_aViewData['oxTiramizooArticleExtended'] = $oTiramizooArticleExtended;
-
-        $this->_aViewData['effectiveData'] = $oTiramizooArticleExtended->getEffectiveData();
+        $this->_oTiramizooArticleExtended = $oTiramizooArticleExtended;
+        $this->_aEffectiveData = $oTiramizooArticleExtended->getEffectiveData();
 
         return "oxTiramizoo_article_tab.tpl";
     }

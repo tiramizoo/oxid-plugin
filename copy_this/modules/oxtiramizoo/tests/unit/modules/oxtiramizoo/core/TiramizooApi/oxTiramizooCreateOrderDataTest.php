@@ -180,7 +180,7 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 	    $oRetailLocation = $this->getMock('oxTiramizoo_RetailLocation', array('getConfVar'), array(), '', false);
 
         $aExpectedPickup = (array)$oExpectedPickup;
-        $aExpectedPickup['address_line_1'] = 'test address line 1';
+        $aExpectedPickup['address_line'] = 'test address line 1';
 
 	    $oRetailLocation->expects($this->any())
              			->method('getConfVar')
@@ -332,246 +332,246 @@ class Unit_Modules_oxTiramizoo_core_TiramizooApi_oxTiramizooCreateOrderDataTest 
 		$this->assertEquals($oExpectedDelivery, $oTiramizooCreateOrderData->buildDelivery($oUser, $oDeliveryAddress));
 	}
 
-	// public function testBuildItems()
-	// {
- //        $aArticle1EffectiveData = array();
-	// 	$aArticle1EffectiveData['weight'] = 2;
-	// 	$aArticle1EffectiveData['width'] = 30;
- //        $aArticle1EffectiveData['length'] = 30;
- //        $aArticle1EffectiveData['height'] = 30;
+	public function testBuildItems()
+	{
+        $aArticle1EffectiveData = array();
+		$aArticle1EffectiveData['weight'] = 2;
+		$aArticle1EffectiveData['width'] = 30;
+        $aArticle1EffectiveData['length'] = 30;
+        $aArticle1EffectiveData['height'] = 30;
 
- //        $aArticle2EffectiveData = array();
- //        $aArticle2EffectiveData['weight'] = 3;
- //        $aArticle2EffectiveData['width'] = 3;
- //        $aArticle2EffectiveData['length'] = 5;
- //        $aArticle2EffectiveData['height'] = 6;
+        $aArticle2EffectiveData = array();
+        $aArticle2EffectiveData['weight'] = 3;
+        $aArticle2EffectiveData['width'] = 3;
+        $aArticle2EffectiveData['length'] = 5;
+        $aArticle2EffectiveData['height'] = 6;
 
- //        $aArticle3EffectiveData = array();
- //        $aArticle3EffectiveData['weight'] = 4;
- //        $aArticle3EffectiveData['width'] = 11;
- //        $aArticle3EffectiveData['length'] = 11;
- //        $aArticle3EffectiveData['height'] = 11;
+        $aArticle3EffectiveData = array();
+        $aArticle3EffectiveData['weight'] = 4;
+        $aArticle3EffectiveData['width'] = 11;
+        $aArticle3EffectiveData['length'] = 11;
+        $aArticle3EffectiveData['height'] = 11;
 
- //        $oItem1 = new stdClass();
- //        $oItem1->weight = 2;
- //        $oItem1->width = 30;
- //        $oItem1->height = 30;
- //        $oItem1->length = 30;
- //        $oItem1->quantity = 1;
- //        $oItem1->description = 'Test product 1';
- //        $oItem1->bundle = true;
+        $oItem1 = new stdClass();
+        $oItem1->weight = 2;
+        $oItem1->width = 30;
+        $oItem1->height = 30;
+        $oItem1->length = 30;
+        $oItem1->quantity = 1;
+        $oItem1->description = 'Test product 1';
+        $oItem1->bundle = true;
 
- //        $oItem2 = new stdClass();
- //        $oItem2->weight = 3;
- //        $oItem2->width = 3;
- //        $oItem2->height = 6;
- //        $oItem2->length = 5;
- //        $oItem2->quantity = 2;
- //        $oItem2->description = 'Test product 2';
- //        $oItem2->bundle = true;
+        $oItem2 = new stdClass();
+        $oItem2->weight = 3;
+        $oItem2->width = 3;
+        $oItem2->height = 6;
+        $oItem2->length = 5;
+        $oItem2->quantity = 2;
+        $oItem2->description = 'Test product 2';
+        $oItem2->bundle = true;
 
- //        $oItem3 = new stdClass();
- //        $oItem3->weight = 4;
- //        $oItem3->width = 11;
- //        $oItem3->height = 11;
- //        $oItem3->length = 11;
- //        $oItem3->quantity = 3;
- //        $oItem3->description = 'Test product 4';
- //        $oItem3->bundle = true;
+        $oItem3 = new stdClass();
+        $oItem3->weight = 4;
+        $oItem3->width = 11;
+        $oItem3->height = 11;
+        $oItem3->length = 11;
+        $oItem3->quantity = 3;
+        $oItem3->description = 'Test product 4';
+        $oItem3->bundle = true;
 
- //        $aExpectedItems = array($oItem1, $oItem2, $oItem3);
+        $aExpectedItems = array($oItem1, $oItem2, $oItem3);
 
-	// 	$oArticle1 = oxNew('oxArticle');
-	// 	$oArticle1->oxarticles__oxid = new oxField(1);
-	// 	$oArticle1->oxarticles__oxtitle = new oxField('Test product 1');
-	// 	$oArticle1->oxarticles__oxstock = new oxField(3);
+		$oArticle1 = oxNew('oxArticle');
+		$oArticle1->oxarticles__oxid = new oxField(1);
+		$oArticle1->oxarticles__oxtitle = new oxField('Test product 1');
+		$oArticle1->oxarticles__oxstock = new oxField(3);
 
-	// 	$oArticle2 = oxNew('oxArticle');
-	// 	$oArticle2->oxarticles__oxid = new oxField(2);
-	// 	$oArticle2->oxarticles__oxtitle = new oxField('Test product 2');
-	// 	$oArticle2->oxarticles__oxstock = new oxField(2);
+		$oArticle2 = oxNew('oxArticle');
+		$oArticle2->oxarticles__oxid = new oxField(2);
+		$oArticle2->oxarticles__oxtitle = new oxField('Test product 2');
+		$oArticle2->oxarticles__oxstock = new oxField(2);
 
-	// 	$oArticle3 = oxNew('oxArticle');
-	// 	$oArticle3->oxarticles__oxid = new oxField(3);
-	// 	$oArticle3->oxarticles__oxtitle = new oxField('Test product 3');
-	// 	$oArticle3->oxarticles__oxstock = new oxField(4);
-	// 	$oArticle3->oxarticles__oxparentid = new oxField(4);
+		$oArticle3 = oxNew('oxArticle');
+		$oArticle3->oxarticles__oxid = new oxField(3);
+		$oArticle3->oxarticles__oxtitle = new oxField('Test product 3');
+		$oArticle3->oxarticles__oxstock = new oxField(4);
+		$oArticle3->oxarticles__oxparentid = new oxField(4);
 
-	// 	$oArticle4 = oxNew('oxArticle');
-	// 	$oArticle4->oxarticles__oxid = new oxField(3);
-	// 	$oArticle4->oxarticles__oxtitle = new oxField('Test product 4');
-	// 	$oArticle4->oxarticles__oxstock = new oxField(4);
-
-
- //        oxTestModules::addModuleObject('oxArticle', $oArticle4);
-
-	//     $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array(), array(), '', false);
-
- //        $oArticleExtended->expects($this->any())
- //             			 ->method('isEnabled')
- //             			 ->will($this->returnValue(true));
-
-	//     $oArticleExtended->expects($this->any())
- //             			 ->method('hasIndividualPackage')
- //             			 ->will($this->returnValue(false));
-
-	//     $oArticleExtended->expects($this->at(2))
- //             			 ->method('getEffectiveData')
- //             			 ->will($this->returnValue($aArticle1EffectiveData));
-
-	//     $oArticleExtended->expects($this->at(6))
- //             			 ->method('getEffectiveData')
- //             			 ->will($this->returnValue($aArticle2EffectiveData));
-
-	//     $oArticleExtended->expects($this->at(10))
- //             			 ->method('getEffectiveData')
- //             			 ->will($this->returnValue($aArticle3EffectiveData));
-
- //        oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oArticleExtended);
+		$oArticle4 = oxNew('oxArticle');
+		$oArticle4->oxarticles__oxid = new oxField(3);
+		$oArticle4->oxarticles__oxtitle = new oxField('Test product 4');
+		$oArticle4->oxarticles__oxstock = new oxField(4);
 
 
-	// 	$oBasket = $this->getMock('oxBasket', array('getBasketArticles', 'getArtStockInBasket'), array(), '', false);
+        oxTestModules::addModuleObject('oxArticle', $oArticle4);
 
-	//     $oBasket->expects($this->any())
- //             	->method('getBasketArticles')
- //             	->will($this->returnValue(array($oArticle1, $oArticle2, $oArticle3)));
-	//     $oBasket->expects($this->at(1))
- //             	->method('getArtStockInBasket')
- //             	->will($this->returnValue(1));
-	//     $oBasket->expects($this->at(2))
- //             	->method('getArtStockInBasket')
- //             	->will($this->returnValue(2));
-	//     $oBasket->expects($this->at(3))
- //             	->method('getArtStockInBasket')
- //             	->will($this->returnValue(3));
+	    $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array(), array(), '', false);
 
- //        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'));
- //        $oTiramizooConfig->expects($this->any())
- //                         ->method('getShopConfVar')
- //                         ->will($this->returnValue(1));
+        $oArticleExtended->expects($this->any())
+             			 ->method('isEnabled')
+             			 ->will($this->returnValue(true));
 
-	//     $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('getTiramizooConfig', 'getBasket'), array(), '', false);
-	//     $oTiramizooCreateOrderData->expects($this->any())
- //             					  ->method('getTiramizooConfig')
- //             					  ->will($this->returnValue($oTiramizooConfig));
-	//     $oTiramizooCreateOrderData->expects($this->any())
- //             					  ->method('getBasket')
- //             					  ->will($this->returnValue($oBasket));
+	    $oArticleExtended->expects($this->any())
+             			 ->method('hasIndividualPackage')
+             			 ->will($this->returnValue(false));
 
-	// 	$this->assertEquals($aExpectedItems, $oTiramizooCreateOrderData->buildItems());
-	// }
+	    $oArticleExtended->expects($this->at(2))
+             			 ->method('getEffectiveData')
+             			 ->will($this->returnValue($aArticle1EffectiveData));
+
+	    $oArticleExtended->expects($this->at(6))
+             			 ->method('getEffectiveData')
+             			 ->will($this->returnValue($aArticle2EffectiveData));
+
+	    $oArticleExtended->expects($this->at(10))
+             			 ->method('getEffectiveData')
+             			 ->will($this->returnValue($aArticle3EffectiveData));
+
+        oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oArticleExtended);
 
 
-	// public function testBuildItemPackageStrategySinglePackage()
-	// {
- //        $aArticle1EffectiveData = array();
- //        $aArticle1EffectiveData['enable'] = true;
- //        $aArticle1EffectiveData['tiramizoo_use_package'] = true;
- //        $aArticle1EffectiveData['weight'] = 2;
- //        $aArticle1EffectiveData['width'] = 30;
- //        $aArticle1EffectiveData['length'] = 30;
- //        $aArticle1EffectiveData['height'] = 30;
+		$oBasket = $this->getMock('oxBasket', array('getBasketArticles', 'getArtStockInBasket'), array(), '', false);
 
-	// 	$oItem = new stdClass();
-	// 	$oItem->weight = 15;
- //        $oItem->width = 40;
- //        $oItem->height = 80;
- //        $oItem->length = 120;
- //        $oItem->quantity = 1;
-	// 	$oItem->description = 'Test product 1';
+	    $oBasket->expects($this->any())
+             	->method('getBasketArticles')
+             	->will($this->returnValue(array($oArticle1, $oArticle2, $oArticle3)));
+	    $oBasket->expects($this->at(1))
+             	->method('getArtStockInBasket')
+             	->will($this->returnValue(1));
+	    $oBasket->expects($this->at(2))
+             	->method('getArtStockInBasket')
+             	->will($this->returnValue(2));
+	    $oBasket->expects($this->at(3))
+             	->method('getArtStockInBasket')
+             	->will($this->returnValue(3));
 
-	// 	$aExpectedItems = array($oItem);
+        $oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array('getShopConfVar'));
+        $oTiramizooConfig->expects($this->any())
+                         ->method('getShopConfVar')
+                         ->will($this->returnValue(1));
 
-	// 	$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array(), array(), '', false);
+	    $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('getTiramizooConfig', 'getBasket'), array(), '', false);
+	    $oTiramizooCreateOrderData->expects($this->any())
+             					  ->method('getTiramizooConfig')
+             					  ->will($this->returnValue($oTiramizooConfig));
+	    $oTiramizooCreateOrderData->expects($this->any())
+             					  ->method('getBasket')
+             					  ->will($this->returnValue($oBasket));
 
-	//     $oTiramizooConfig->expects($this->any())
- //             			 ->method('getShopConfVar')
-	// 	                 ->will($this->returnCallback(function(){
-	// 	                    $valueMap = array(
-	// 							array('oxTiramizoo_package_strategy', 2),
-	// 							array('oxTiramizoo_std_package_width', 40),
-	// 							array('oxTiramizoo_std_package_length', 120),
-	// 							array('oxTiramizoo_std_package_height', 80),
-	// 							array('oxTiramizoo_std_package_weight', 15)
-	// 	                    );
-
-	// 						return returnValueMap($valueMap, func_get_args());
-	// 	                 }));
+		$this->assertEquals($aExpectedItems, $oTiramizooCreateOrderData->buildItems());
+	}
 
 
-	// 	$oArticle1 = oxNew('oxArticle');
-	// 	$oArticle1->oxarticles__oxid = new oxField(1);
-	// 	$oArticle1->oxarticles__oxtitle = new oxField('Test product 1');
-	// 	$oArticle1->oxarticles__oxstock = new oxField(3);
+	public function testBuildItemPackageStrategySinglePackage()
+	{
+        $aArticle1EffectiveData = array();
+        $aArticle1EffectiveData['enable'] = true;
+        $aArticle1EffectiveData['tiramizoo_use_package'] = true;
+        $aArticle1EffectiveData['weight'] = 2;
+        $aArticle1EffectiveData['width'] = 30;
+        $aArticle1EffectiveData['length'] = 30;
+        $aArticle1EffectiveData['height'] = 30;
 
-	// 	$oArticle2 = oxNew('oxArticle');
-	// 	$oArticle2->oxarticles__oxid = new oxField(2);
-	// 	$oArticle2->oxarticles__oxtitle = new oxField('Test product 2');
-	// 	$oArticle2->oxarticles__oxstock = new oxField(2);
+		$oItem = new stdClass();
+		$oItem->weight = 15;
+        $oItem->width = 40;
+        $oItem->height = 80;
+        $oItem->length = 120;
+        $oItem->quantity = 1;
+		$oItem->description = 'Test product 1';
 
-	// 	$oArticle3 = oxNew('oxArticle');
-	// 	$oArticle3->oxarticles__oxid = new oxField(3);
-	// 	$oArticle3->oxarticles__oxtitle = new oxField('Test product 3');
-	// 	$oArticle3->oxarticles__oxstock = new oxField(4);
-	// 	$oArticle3->oxarticles__oxparentid = new oxField(4);
+		$aExpectedItems = array($oItem);
 
-	// 	$oArticle4 = oxNew('oxArticle');
-	// 	$oArticle4->oxarticles__oxid = new oxField(3);
-	// 	$oArticle4->oxarticles__oxtitle = new oxField('Test product 4');
-	// 	$oArticle4->oxarticles__oxstock = new oxField(4);
+		$oTiramizooConfig = $this->getMock('oxTiramizoo_Config', array(), array(), '', false);
 
- //        oxTestModules::addModuleObject('oxArticle', $oArticle4);
+	    $oTiramizooConfig->expects($this->any())
+             			 ->method('getShopConfVar')
+		                 ->will($this->returnCallback(function(){
+		                    $valueMap = array(
+								array('oxTiramizoo_package_strategy', 2),
+								array('oxTiramizoo_std_package_width', 40),
+								array('oxTiramizoo_std_package_length', 120),
+								array('oxTiramizoo_std_package_height', 80),
+								array('oxTiramizoo_std_package_weight', 15)
+		                    );
 
-	//     $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array(), array(), '', false);
+							return returnValueMap($valueMap, func_get_args());
+		                 }));
 
-	//     $oArticleExtended->expects($this->any())
- //             			 ->method('isEnabled')
- //             			 ->will($this->returnValue(true));
 
-	//     $oArticleExtended->expects($this->any())
- //             			 ->method('hasIndividualPackage')
- //             			 ->will($this->returnValue(false));
+		$oArticle1 = oxNew('oxArticle');
+		$oArticle1->oxarticles__oxid = new oxField(1);
+		$oArticle1->oxarticles__oxtitle = new oxField('Test product 1');
+		$oArticle1->oxarticles__oxstock = new oxField(3);
 
-	//     $oArticleExtended->expects($this->any())
- //             			 ->method('getIdByArticleId')
- //             			 ->will($this->returnValue('someID'));
+		$oArticle2 = oxNew('oxArticle');
+		$oArticle2->oxarticles__oxid = new oxField(2);
+		$oArticle2->oxarticles__oxtitle = new oxField('Test product 2');
+		$oArticle2->oxarticles__oxstock = new oxField(2);
 
-	//     $oArticleExtended->expects($this->any())
- //             			 ->method('buildArticleEffectiveData')
- //             			 ->will($this->returnValue($aArticle1EffectiveData));
+		$oArticle3 = oxNew('oxArticle');
+		$oArticle3->oxarticles__oxid = new oxField(3);
+		$oArticle3->oxarticles__oxtitle = new oxField('Test product 3');
+		$oArticle3->oxarticles__oxstock = new oxField(4);
+		$oArticle3->oxarticles__oxparentid = new oxField(4);
 
- //        oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oArticleExtended);
+		$oArticle4 = oxNew('oxArticle');
+		$oArticle4->oxarticles__oxid = new oxField(3);
+		$oArticle4->oxarticles__oxtitle = new oxField('Test product 4');
+		$oArticle4->oxarticles__oxstock = new oxField(4);
 
- //        $oArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
+        oxTestModules::addModuleObject('oxArticle', $oArticle4);
 
-	// 	$oBasket = $this->getMock('oxBasket', array('getBasketArticles', 'getArtStockInBasket'), array(), '', false);
+	    $oArticleExtended = $this->getMock('oxTiramizoo_ArticleExtended', array(), array(), '', false);
 
-	//     $oBasket->expects($this->any())
- //             	->method('getBasketArticles')
- //             	->will($this->returnValue(array($oArticle1, $oArticle2, $oArticle3)));
+	    $oArticleExtended->expects($this->any())
+             			 ->method('isEnabled')
+             			 ->will($this->returnValue(true));
 
-	//     $oBasket->expects($this->at(1))
- //             	->method('getArtStockInBasket')
- //             	->will($this->returnValue(1));
+	    $oArticleExtended->expects($this->any())
+             			 ->method('hasIndividualPackage')
+             			 ->will($this->returnValue(false));
 
-	//     $oBasket->expects($this->at(2))
- //             	->method('getArtStockInBasket')
- //             	->will($this->returnValue(2));
+	    $oArticleExtended->expects($this->any())
+             			 ->method('getIdByArticleId')
+             			 ->will($this->returnValue('someID'));
 
-	//     $oBasket->expects($this->at(3))
- //             	->method('getArtStockInBasket')
- //             	->will($this->returnValue(3));
+	    $oArticleExtended->expects($this->any())
+             			 ->method('buildArticleEffectiveData')
+             			 ->will($this->returnValue($aArticle1EffectiveData));
 
-	//     $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('getTiramizooConfig', 'getBasket'), array(), '', false);
-	//     $oTiramizooCreateOrderData->expects($this->any())
- //             					  ->method('getTiramizooConfig')
- //             					  ->will($this->returnValue($oTiramizooConfig));
-	//     $oTiramizooCreateOrderData->expects($this->any())
- //             					  ->method('getBasket')
- //             					  ->will($this->returnValue($oBasket));
+        oxTestModules::addModuleObject('oxTiramizoo_ArticleExtended', $oArticleExtended);
 
-	// 	$this->assertEquals($aExpectedItems, $oTiramizooCreateOrderData->buildItems());
-	// }
+        $oArticleExtended = oxNew('oxTiramizoo_ArticleExtended');
+
+		$oBasket = $this->getMock('oxBasket', array('getBasketArticles', 'getArtStockInBasket'), array(), '', false);
+
+	    $oBasket->expects($this->any())
+             	->method('getBasketArticles')
+             	->will($this->returnValue(array($oArticle1, $oArticle2, $oArticle3)));
+
+	    $oBasket->expects($this->at(1))
+             	->method('getArtStockInBasket')
+             	->will($this->returnValue(1));
+
+	    $oBasket->expects($this->at(2))
+             	->method('getArtStockInBasket')
+             	->will($this->returnValue(2));
+
+	    $oBasket->expects($this->at(3))
+             	->method('getArtStockInBasket')
+             	->will($this->returnValue(3));
+
+	    $oTiramizooCreateOrderData = $this->getMock('oxTiramizoo_CreateOrderDataExposed', array('getTiramizooConfig', 'getBasket'), array(), '', false);
+	    $oTiramizooCreateOrderData->expects($this->any())
+             					  ->method('getTiramizooConfig')
+             					  ->will($this->returnValue($oTiramizooConfig));
+	    $oTiramizooCreateOrderData->expects($this->any())
+             					  ->method('getBasket')
+             					  ->will($this->returnValue($oBasket));
+
+		$this->assertEquals($aExpectedItems, $oTiramizooCreateOrderData->buildItems());
+	}
 
 	public function testBuildItemsPackageStrategyIndividualPackage()
 	{

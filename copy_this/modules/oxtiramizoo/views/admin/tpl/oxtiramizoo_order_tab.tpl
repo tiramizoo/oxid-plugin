@@ -15,7 +15,8 @@ function ThisDate( sID)
     [{assign var="readonly" value=""}]
 [{/if}]
 
-[{assign var="oCurr" value=$edit->getOrderCurrency() }]
+[{assign var="oOrder" value=$oView->getOrder() }]
+[{assign var="oCurr" value=$oOrder->getOrderCurrency() }]
 
 <form name="transfer" id="transfer" action="[{ $shop->selflink }]" method="post">
     [{ $shop->hiddensid }]
@@ -27,67 +28,62 @@ function ThisDate( sID)
 
 
 <form name="myedit" id="myedit" action="[{ $shop->selflink }]" method="post">
-[{ $shop->hiddensid }]
-<input type="hidden" name="cur" value="[{ $oCurr->id }]">
-<input type="hidden" name="cl" value="oxtiramizoo_order_tab">
-<input type="hidden" name="fnc" value="save">
-<input type="hidden" name="oxid" value="[{ $oxid }]">
-<input type="hidden" name="editval[oxorder__oxid]" value="[{ $oxid }]">
+    [{ $shop->hiddensid }]
+    <input type="hidden" name="cur" value="[{ $oCurr->id }]">
+    <input type="hidden" name="cl" value="oxtiramizoo_order_tab">
+    <input type="hidden" name="fnc" value="save">
+    <input type="hidden" name="oxid" value="[{ $oxid }]">
+    <input type="hidden" name="editval[oxorder__oxid]" value="[{ $oxid }]">
 
-[{if $oxTiramizooOrderExtended}]
-
-<table cellspacing="0" cellpadding="0" border="0">
-<tr>
-    <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_status_label" }]</td>
-    <td class="edittext">[{$oxTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_status->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_status_help" }]</td>
-</tr>
-
-<tr>
-    <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_tracking_url_label" }]</td>
-    <td class="edittext"><a href="[{$oxTiramizooOrderExtended->getTrackingUrl() }]" target="_blank">[{$oxTiramizooOrderExtended->getTrackingUrl() }]</a> [{ oxinputhelp ident="oxTiramizoo_order_tab_tracking_url_help" }]</td>
-</tr>
-
-<tr>
-    <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_external_id_label" }]</td>
-    <td class="edittext">[{$oxTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_external_id->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_external_id_help" }]</td>
-</tr>
-
-<tr>
-    <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_request_label" }]</td>
-    <td class="edittext">
-        <textarea style="width:600px; height:180px; border:1px solid #AAA;" readonly="true">
-        [{$aTiramizooRequest|@print_r}]
-        </textarea>
-        [{ oxinputhelp ident="oxTiramizoo_order_tab_request_help" }]
-    </td>
-</tr>
-
-<tr>
-    <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_response_label" }]</td>
-    <td class="edittext">
-        <textarea style="width:600px; height:180px; border:1px solid #AAA;" readonly="true">
-        [{$aTiramizooResponse|@print_r}]
-        </textarea>
-        [{ oxinputhelp ident="oxTiramizoo_order_tab_response_help" }]
-    </td>
-</tr>
+    [{assign var="oTiramizooOrderExtended" value=$oView->getTiramizooOrderExtended() }]
 
 
-<tr>
-    <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_webhook_response_label" }]</td>
-    <td class="edittext">
-        <textarea style="width:600px; height:180px; border:1px solid #AAA;" readonly="true">
-        [{$aTiramizooWebhookResponse|@print_r}]
-        </textarea>
-        [{ oxinputhelp ident="oxTiramizoo_order_tab_webhook_response_help" }]
-    </td>
-</tr>
+    [{if $oTiramizooOrderExtended->getId()}]
 
+        <table cellspacing="0" cellpadding="0" border="0">
 
+            <tr>
+                <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_status_label" }]</td>
+                <td class="edittext">[{$oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_status->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_status_help" }]</td>
+            </tr>
 
-</table>
+            <tr>
+                <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_tracking_url_label" }]</td>
+                <td class="edittext"><a href="[{$oTiramizooOrderExtended->getTrackingUrl() }]" target="_blank">[{$oTiramizooOrderExtended->getTrackingUrl() }]</a> [{ oxinputhelp ident="oxTiramizoo_order_tab_tracking_url_help" }]</td>
+            </tr>
 
-[{/if}]
+            <tr>
+                <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_external_id_label" }]</td>
+                <td class="edittext">[{$oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_external_id->value}] [{ oxinputhelp ident="oxTiramizoo_order_tab_external_id_help" }]</td>
+            </tr>
+
+            <tr>
+                <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_request_label" }]</td>
+                <td class="edittext">
+                    <textarea style="width:600px; height:180px; border:1px solid #AAA;" readonly="true">[{$oView->getTiramizooRequest()|@print_r}]</textarea>
+                    [{ oxinputhelp ident="oxTiramizoo_order_tab_request_help" }]
+                </td>
+            </tr>
+
+            <tr>
+                <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_response_label" }]</td>
+                <td class="edittext">
+                    <textarea style="width:600px; height:180px; border:1px solid #AAA;" readonly="true">[{$oView->getTiramizooResponse()|@print_r}]</textarea>
+                    [{ oxinputhelp ident="oxTiramizoo_order_tab_response_help" }]
+                </td>
+            </tr>
+
+            <tr>
+                <td class="edittext">[{ oxmultilang ident="oxTiramizoo_order_tab_webhook_response_label" }]</td>
+                <td class="edittext">
+                    <textarea style="width:600px; height:180px; border:1px solid #AAA;" readonly="true">[{$oView->getTiramizooWebhookResponse()|@print_r}]</textarea>
+                    [{ oxinputhelp ident="oxTiramizoo_order_tab_webhook_response_help" }]
+                </td>
+            </tr>
+
+        </table>
+
+    [{/if}]
 
 
 </form>

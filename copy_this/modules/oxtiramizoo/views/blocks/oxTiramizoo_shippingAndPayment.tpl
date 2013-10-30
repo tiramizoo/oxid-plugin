@@ -14,9 +14,10 @@
 [{ $oShipSet->oxdeliveryset__oxtitle->value }]
 
 [{* oxtiramizoo BEGIN *}]
-[{if $sFormattedTiramizooTimeWindow}]
-    ([{ $sFormattedTiramizooTimeWindow }])
-[{/if}]
+    [{assign var="sFormattedTiramizooTimeWindow" value=$oView->getFormattedTiramizooTimeWindow() }]
+    [{if $sFormattedTiramizooTimeWindow}]
+        ([{ $sFormattedTiramizooTimeWindow }])
+    [{/if}]
 [{* oxtiramizoo END *}]
 
 </div>
@@ -35,7 +36,7 @@
     [{ $payment->oxpayments__oxdesc->value }]
 </div>
 [{else}]
-  [{$smarty.block.parent}]
+    [{$smarty.block.parent}]
 [{/if}]
 
 

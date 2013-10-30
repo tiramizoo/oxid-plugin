@@ -14,7 +14,7 @@
  */
 
 /**
- * Schedule Job Manager. Gets and runs jobs. 
+ * Schedule Job Manager. Gets and runs jobs.
  *
  * @package oxTiramizoo
  */
@@ -29,14 +29,14 @@ class oxTiramizoo_ScheduleJobManager
      * Hold information if manager finished runJobs
      *
      * @var string
-     */ 
+     */
 	protected $_isFinished = false;
 
     /**
      * Retrieve
      *
      * @return bool
-     */ 
+     */
 	public function isFinished()
 	{
 		return $this->_isFinished;
@@ -46,12 +46,12 @@ class oxTiramizoo_ScheduleJobManager
      * Retrieve limited number og jobs for run in request
      *
      * @return oxTiramizoo_ScheduleJobsList
-     */ 
+     */
 	public function getJobsForRun()
 	{
         $oScheduleJobList = oxNew('oxTiramizoo_ScheduleJobList');
         $oScheduleJobList->loadToRun(self::MAX_RUNNING_JOBS_PER_REQUEST);
-    
+
         return $oScheduleJobList;
 	}
 
@@ -59,10 +59,10 @@ class oxTiramizoo_ScheduleJobManager
      * Fires scheduled jobs. When finish set _isFinished to true.
      *
      * @return null
-     */ 
+     */
 	public function runJobs()
 	{
-		foreach ($this->getJobsForRun() as $oScheduleJob) 
+		foreach ($this->getJobsForRun() as $oScheduleJob)
 		{
 			$oScheduleJob->run();
 		}
@@ -71,10 +71,10 @@ class oxTiramizoo_ScheduleJobManager
 	}
 
     /**
-     * Add Tasks to run 
+     * Add Tasks to run
      *
      * @return null
-     */ 
+     */
 	public function addTasks()
 	{
 		$this->syncConfigDaily();
@@ -84,16 +84,18 @@ class oxTiramizoo_ScheduleJobManager
      * Generate synchronize configuration task.
      *
      * @return bool
-     */ 
+     */
 	public function syncConfigDaily()
 	{
 		$oSyncConfigJob = oxnew('oxTiramizoo_SyncConfigJob');
 
 		if ($oSyncConfigJob->getIdTodayByType('synchronize_configuration')) {
-			return false;
+			$blReturn = false;
 		} else {
             $oSyncConfigJob->save();
-            return true;
+            $blReturn = true;
 		}
+
+        return $blReturn;
 	}
 }

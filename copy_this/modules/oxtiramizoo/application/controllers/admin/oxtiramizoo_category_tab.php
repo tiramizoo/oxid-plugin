@@ -30,6 +30,16 @@ class oxTiramizoo_Category_Tab extends oxAdminDetails
     protected $_oTiramizooCategoryExtended = null;
 
     /**
+     * @var array
+     */
+    protected $_aEffectiveData = null;
+
+    /**
+     * @var oxCategory
+     */
+    protected $_oCategory = null;
+
+    /**
      * Getter method, returns oxTiramizoo_CategoryExtended object
      *
      * @return oxTiramizoo_CategoryExtended
@@ -37,6 +47,26 @@ class oxTiramizoo_Category_Tab extends oxAdminDetails
     public function getTiramizooCategoryExtended()
     {
         return $this->_oTiramizooCategoryExtended;
+    }
+
+    /**
+     * Getter method, returns array with article effective data
+     *
+     * @return array
+     */
+    public function getEffectiveData()
+    {
+        return $this->_aEffectiveData;
+    }
+
+    /**
+     * Getter method, returns oxCategory object
+     *
+     * @return oxCategory
+     */
+    public function getCategory()
+    {
+        return $this->_oCategory;
     }
 
     /**
@@ -55,7 +85,7 @@ class oxTiramizoo_Category_Tab extends oxAdminDetails
         }
         // @codeCoverageIgnoreEnd
 
-        $this->_aViewData['edit'] = oxNew( 'oxcategory' );
+        $this->_oCategory = oxNew( 'oxcategory' );
 
         $soxId = $this->getConfig()->getRequestParameter( "oxid");
 
@@ -64,10 +94,10 @@ class oxTiramizoo_Category_Tab extends oxAdminDetails
 
         $oTiramizooCategoryExtended = oxNew('oxTiramizoo_CategoryExtended');
         $oTiramizooCategoryExtended->load($oTiramizooCategoryExtended->getIdByCategoryId($soxId));
-        $this->_aViewData['oxTiramizooCategoryExtended'] = $oTiramizooCategoryExtended;
+        $this->_oTiramizooCategoryExtended = $oTiramizooCategoryExtended;
 
         $oArticleInheritedData = oxNew('oxTiramizoo_ArticleInheritedData');
-        $this->_aViewData['effectiveData'] = $oArticleInheritedData->getCategoryEffectiveData($oCategory, true);
+        $this->_aEffectiveData= $oArticleInheritedData->getCategoryEffectiveData($oCategory, true);
 
         return "oxTiramizoo_category_tab.tpl";
     }

@@ -25,29 +25,31 @@ class oxTiramizoo_DeliveryTypeEvening extends oxTiramizoo_DeliveryType
 	 * Delivery type name
 	 *
 	 * @var string
-	 */		
+	 */
 	protected $_sType = 'evening';
 
 	/**
 	 * Checks if is available depends on current time
-     * 
+     *
      * @extend oxTiramizoo_DeliveryType::isAvailable()
      *
 	 * @return bool
 	 */
 	public function isAvailable()
 	{
+        $blReturn = true;
+
 		if (parent::isAvailable() == false) {
-			return false;
-		}
+			$blReturn = false;
+		} else{
+    		$oTimeWindow = $this->getEveningTimeWindow();
 
-		$oTimeWindow = $this->getEveningTimeWindow();
+    		if ($oTimeWindow === null) {
+    			$blReturn = false;
+    		}
+        }
 
-		if ($oTimeWindow === null) {
-			return false;
-		}
-
-		return true;
+		return $blReturn;
 	}
 
 	/**
@@ -58,7 +60,7 @@ class oxTiramizoo_DeliveryTypeEvening extends oxTiramizoo_DeliveryType
 	public function hasPresetHours()
 	{
     	$aPresetHours = $this->getPresetHours();
-    	
+
     	return is_array($aPresetHours) && count($aPresetHours);
 	}
 
@@ -79,22 +81,27 @@ class oxTiramizoo_DeliveryTypeEvening extends oxTiramizoo_DeliveryType
 	 */
     public function getEveningTimeWindow()
     {
-		if (!$this->hasPresetHours()) {
-			return null;
-		}
+        $oReturn = null;
 
-    	$aPresetHours = $this->getPresetHours();
+		if ($this->hasPresetHours()) {
+        	$aPresetHours = $this->getPresetHours();
 
-        foreach ($this->_aTimeWindows as $aTimeWindow) 
-        {
-        	$oTimeWindow = new oxTiramizoo_TimeWindow($aTimeWindow);
+            foreach ($this->_aTimeWindows as $aTimeWindow)
+            {
+            	$oTimeWindow = new oxTiramizoo_TimeWindow($aTimeWindow);
 
-            if ($oTimeWindow->isValid() && $oTimeWindow->hasHours($aPresetHours) && $oTimeWindow->isToday()) {
-                return $oTimeWindow;
+                if ($oTimeWindow->isValid()
+                    && $oTimeWindow->hasHours($aPresetHours)
+                    && $oTimeWindow->isToday()
+                ) {
+                    $oReturn = $oTimeWindow;
+                    break;
+                }
             }
         }
 
-        return null;
+
+        return $oReturn;
     }
 
 	/**
@@ -108,7 +115,7 @@ class oxTiramizoo_DeliveryTypeEvening extends oxTiramizoo_DeliveryType
 	}
 
 	/**
-	 * Checks if time window is in available time windows 
+	 * Checks if time window is in available time windows
 	 *
 	 * @return bool
 	 */
@@ -117,5 +124,5 @@ class oxTiramizoo_DeliveryTypeEvening extends oxTiramizoo_DeliveryType
 		$oEveningTimeWindow = $this->getEveningTimeWindow();
 
         return $oEveningTimeWindow->getHash() == $sTimeWindow;
-	}	
+	}
 }

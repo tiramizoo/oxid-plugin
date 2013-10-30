@@ -16,7 +16,7 @@
 /**
  * Admin order extended tiramizoo parameters manager.
  * Collects extended order tiramizoo properties ( such as
- * weight, dimensions, enable tiramizoo delivery). 
+ * weight, dimensions, enable tiramizoo delivery).
  * Admin Menu: Administer Orders -> Orders -> Tiramizoo.
  *
  * @extend oxAdminDetails
@@ -25,10 +25,86 @@
 class oxTiramizoo_Order_Tab extends oxAdminDetails
 {
     /**
+     * @var oxOrder
+     */
+    protected $_oOrder = null;
+
+    /**
+     * @var oxTiramizoo_OrderExtended
+     */
+    protected $_oTiramizooOrderExtended = null;
+
+    /**
+     * @var array
+     */
+    protected $_aTiramizooWebhookResponse = null;
+
+    /**
+     * @var array
+     */
+    protected $_aTiramizooResponse = null;
+
+    /**
+     * @var array
+     */
+    protected $_aTiramizooRequest = null;
+
+    /**
+     * Getter method, returns oxTiramizoo_CategoryExtended object
+     *
+     * @return oxTiramizoo_CategoryExtended
+     */
+    public function getOrder()
+    {
+        return $this->_oOrder;
+    }
+
+    /**
+     * Getter method, returns oxTiramizoo_CategoryExtended object
+     *
+     * @return oxTiramizoo_OrderExtended
+     */
+    public function getTiramizooOrderExtended()
+    {
+        return $this->_oTiramizooOrderExtended;
+    }
+
+    /**
+     * Getter method, returns decoded webhook response
+     *
+     * @return array
+     */
+    public function getTiramizooWebhookResponse()
+    {
+        return $this->_aTiramizooWebhookResponse;
+    }
+
+    /**
+     * Getter method, returns decoded response data
+     *
+     * @return array
+     */
+    public function getTiramizooResponse()
+    {
+        return $this->_aTiramizooResponse;
+    }
+
+    /**
+     * Getter method, returns decoded request data
+     *
+     * @return array
+     */
+    public function getTiramizooRequest()
+    {
+        return $this->_aTiramizooRequest;
+    }
+
+
+    /**
      * Executes parent method parent::render(), creates oxorder and
      * oxuserpayment objects, passes data to Smarty engine and returns
      * name of template file "order_main.tpl".
-     * 
+     *
      * @extend oxAdminDetails::render
      *
      * @return string
@@ -42,19 +118,35 @@ class oxTiramizoo_Order_Tab extends oxAdminDetails
         // @codeCoverageIgnoreEnd
 
         $soxId = $this->getConfig()->getRequestParameter( "oxid");
+
         if ( $soxId != "-1" && isset( $soxId ) ) {
             $oOrder = oxNew( "oxorder" );
 
-            $this->_aViewData["edit"] =  $oOrder;
+            $this->_oOrder = $oOrder;
 
-            $oTiramizooOrderExtended = oxNew('oxTiramizoo_OrderExtended');
-            $oTiramizooOrderExtended->load($oTiramizooOrderExtended->getIdByOrderId($soxId));
+            $this->_oTiramizooOrderExtended = oxNew('oxTiramizoo_OrderExtended');
+            $this->_oTiramizooOrderExtended->load($this->_oTiramizooOrderExtended->getIdByOrderId($soxId));
 
-            $this->_aViewData["oxTiramizooOrderExtended"] =  $oTiramizooOrderExtended;
+            $this->_aTiramizooWebhookResponse = unserialize(
+                base64_decode($this->_oTiramizooOrderExtended
+                                        ->oxtiramizooorderextended__tiramizoo_webhook_response
+                                        ->value
+                )
+            );
 
-            $this->_aViewData["aTiramizooWebhookResponse"] = unserialize(base64_decode($oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_webhook_response->value));
-            $this->_aViewData["aTiramizooResponse"] = unserialize(base64_decode($oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_response->value));
-            $this->_aViewData["aTiramizooRequest"] = unserialize(base64_decode($oTiramizooOrderExtended->oxtiramizooorderextended__tiramizoo_request_data->value));
+            $this->_aTiramizooResponse = unserialize(
+                base64_decode($this->_oTiramizooOrderExtended
+                                        ->oxtiramizooorderextended__tiramizoo_response
+                                        ->value
+                )
+            );
+
+            $this->_aTiramizooRequest = unserialize(
+                base64_decode($this->_oTiramizooOrderExtended
+                                        ->oxtiramizooorderextended__tiramizoo_request_data
+                                        ->value
+                )
+            );
         }
 
         return "oxTiramizoo_order_tab.tpl";
