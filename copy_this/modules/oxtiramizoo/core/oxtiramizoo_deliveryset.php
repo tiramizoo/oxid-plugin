@@ -60,7 +60,7 @@ class oxTiramizoo_DeliverySet
      *
      * @var mixed
      */
-    protected $_aDeliveryTypes = array('immediate', 'evening');
+    protected $_aDeliveryTypes = array('immediate', 'evening', 'special');
 
     /**
      * All delivery types available in user's area

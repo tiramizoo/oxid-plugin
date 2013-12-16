@@ -46,13 +46,15 @@ class oxTiramizoo_Config extends oxConfig
         // synchronize service areas for 2 days
         $oStartDate = oxNew('oxTiramizoo_Date', date('Y-m-d'));
         $oEndDate = oxNew('oxTiramizoo_Date', date('Y-m-d'));
-        $oEndDate->modify('+2 days');
+        $oEndDate->modify('+7 days');
+        $oEndDateExpress = oxNew('oxTiramizoo_Date', date('Y-m-d'));
+        $oEndDateExpress->modify('+2 days');
 
         $startDate = $oStartDate->getForRestApi();
         $endDate = $oEndDate->getForRestApi();
 
         $aRangeDates = array('express_from' => $startDate,
-                             'express_to' => $endDate,
+                             'express_to' => $oEndDateExpress,
                              'standard_from' => $startDate,
                              'standard_to' => $endDate);
 

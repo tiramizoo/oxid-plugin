@@ -21,7 +21,7 @@ $aModule = array(
                         ),
 
     'thumbnail'    =>   'oxTiramizoo.png',
-    'version'      =>   '1.0.3',
+    'version'      =>   '1.0.4',
     'author'       =>   'tiramizoo',
     'url'          =>   'http://github.com/tiramizoo/oxid-plugin/',
     'email'        =>   'support@tiramizoo.com',
@@ -53,6 +53,7 @@ $aModule = array(
                             'oxTiramizoo_DeliveryType'          => 'oxtiramizoo/core/oxtiramizoo_deliverytype.php',
                             'oxTiramizoo_DeliveryTypeImmediate' => 'oxtiramizoo/core/oxtiramizoo_deliverytypeimmediate.php',
                             'oxTiramizoo_DeliveryTypeEvening'   => 'oxtiramizoo/core/oxtiramizoo_deliverytypeevening.php',
+                            'oxTiramizoo_DeliveryTypeSpecial'   => 'oxtiramizoo/core/oxtiramizoo_deliverytypespecial.php',
                             'oxTiramizoo_TimeWindow'            => 'oxtiramizoo/core/oxtiramizoo_timewindow.php',
                             'oxTiramizoo_Date'                  => 'oxtiramizoo/core/oxtiramizoo_date.php',
 

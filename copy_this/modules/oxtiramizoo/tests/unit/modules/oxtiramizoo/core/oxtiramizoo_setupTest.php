@@ -275,7 +275,8 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 		$aMigrationMethods = array('0.0.5'	=> 	'migration_0_0_5',
 								   '0.8.5'	=> 	'migration_0_8_5',
 								   '0.9.0'	=> 	'migration_0_9_0',
-								   '1.0.0'	=> 	'migration_1_0_0');
+								   '1.0.0'	=> 	'migration_1_0_0',
+                                   '1.0.4'  =>  'migration_1_0_4');
 
 		$this->assertEquals($aMigrationMethods, $oTiramizooSetup->getMigrationMethods());
 	}
@@ -285,7 +286,8 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_SetupTest extends OxidTestCase
 	{
 		$oTiramizooSetup = new oxTiramizoo_Setup();
 
-		$aMigrationMethods = array('0.9.0'	=> 	'migration_0_9_0');
+		$aMigrationMethods = array('0.9.0'	=> 	'migration_0_9_0',
+                                   '1.0.4'  =>  'migration_1_0_4');
 
 		$this->assertEquals($aMigrationMethods, $oTiramizooSetup->getMigrationMethods());
 	}

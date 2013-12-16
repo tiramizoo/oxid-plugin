@@ -157,6 +157,16 @@ class oxTiramizoo_Date
     }
 
     /**
+     * Check if is on date.
+     *
+     * @return bool
+     */
+    public function isOnDate($oOnDate)
+    {
+        return $this->get('Y-m-d') == $oOnDate->get('Y-m-d');
+    }
+
+    /**
      * Check if is time is equal to passed.
      *
      * @param string $sTime time in format (H, H:i, H:i:s)
@@ -227,7 +237,7 @@ class oxTiramizoo_Date
      */
     public function isLaterOrEqualTo(oxTiramizoo_Date $oDate)
     {
-        return $this->isLaterThan($oDate) || $oDate->isEqualTo($oDate);
+        return $this->isLaterThan($oDate) || $this->isEqualTo($oDate);
     }
 
     /**
@@ -251,6 +261,6 @@ class oxTiramizoo_Date
      */
     public function isEarlierOrEqualTo(oxTiramizoo_Date $oDate)
     {
-        return $this->isEarlierThan($oDate) || $oDate->isEqualTo($oDate);
+        return $this->isEarlierThan($oDate) || $this->isEqualTo($oDate);
     }
 }

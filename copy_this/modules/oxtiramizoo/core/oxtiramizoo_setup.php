@@ -23,7 +23,7 @@ class oxTiramizoo_Setup
     /**
      * Current version of oxTiramizoo module
      */
-    const VERSION = '1.0.3';
+    const VERSION = '1.0.4';
 
     /**
      * Error message
@@ -205,6 +205,15 @@ class oxTiramizoo_Setup
         $oTiramizooConfig->saveShopConfVar( "int", 'oxTiramizoo_package_strategy', 0);
     }
 
+    /**
+     * Update database to version 1.0.4
+     */
+    public function migration_1_0_4()
+    {
+        $this->executeSQL("ALTER TABLE oxtiramizooretaillocationconfig
+                                MODIFY oxvarvalue MEDIUMTEXT;");
+        $oTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_delivery_special', 1);
+    }
 
     /**
      * Execute sql query

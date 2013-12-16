@@ -93,6 +93,8 @@ $aLang = array(
 'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Enable only articles with stock > 0',
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Enable only articles with stock > 0',
 
+'oxTiramizoo_delivery_select_type_enable'               => 'Enable Tiramizoo special delivery type',
+'oxTiramizoo_delivery_select_type_enable_help'          => 'In forntend customer is able to select time windows today or next possible day. It depends on current hour.',
 
 'oxTiramizoo_settings_weight_label'                     => 'Weight',
 'oxTiramizoo_settings_weight_help'                      => 'This weight will be assigned for all products without specified weight. You can override it in category settings or article settings.',

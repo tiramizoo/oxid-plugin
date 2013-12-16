@@ -254,6 +254,18 @@ class oxTiramizoo_TimeWindow
     }
 
     /**
+     * Check if time window is tommorow according to current datetime.
+     *
+     * @return bool
+     */
+    public function isOnDate($oOnDate)
+    {
+        return  $this->getPickupFromDate()->isOnDate($oOnDate)
+                && $this->getPickupToDate()->isOnDate($oOnDate)
+                && $this->getDeliveryFromDate()->isOnDate($oOnDate)
+                && $this->getDeliveryToDate()->isOnDate($oOnDate);
+    }
+    /**
      * Check if time window has specified hours.
      *
      * @param array $aHours array of hours

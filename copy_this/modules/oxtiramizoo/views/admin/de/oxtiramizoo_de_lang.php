@@ -90,6 +90,9 @@ $aLang = array(
 'oxTiramizoo_settings_articles_with_stock_gt_0'         => 'Nur Artikel mit Lagerbestand > 0 über tiramizoo versendbar machen',
 'oxTiramizoo_settings_articles_with_stock_gt_0_help'    => 'Nur Artikel mit Lagerbestand > 0 über tiramizoo versendbar machen',
 
+'oxTiramizoo_delivery_select_type_enable'               => 'Enable Tiramizoo special delivery type',
+'oxTiramizoo_delivery_select_type_enable_help'          => 'In forntend customer is able to select time windows today or next possible day. It depends on current hour.',
+
 'oxTiramizoo_settings_weight_label'                     => 'Gewicht',
 'oxTiramizoo_settings_weight_help'                      => 'Dieses Gewicht wird allen Artikeln zugeordnet, bei denen es nicht angegeben ist. Sie können es in den Kategorie- oder Artikeleinstellungen anpassen.',
 'oxTiramizoo_settings_dimensions_label'                 => 'Abmessungen',

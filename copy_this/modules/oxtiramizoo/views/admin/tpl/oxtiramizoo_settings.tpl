@@ -201,6 +201,22 @@
                         </tr>
 
                         <tr>
+                          <td colspan="2"><h3>[{ oxmultilang ident="oxTiramizoo_delivery_select_type_enable" }]</h3></td>
+                        </tr>
+
+                        <tr>
+                            <td valign="top" class="edittext" nowrap="">
+                                [{ oxmultilang ident="oxTiramizoo_delivery_select_type_enable" }]
+                            </td>
+                            <td valign="top" class="edittext">
+                                <input type="hidden"  name="confbools[oxTiramizoo_delivery_special]" value"0" />
+                                <input type="checkbox" name="confbools[oxTiramizoo_delivery_special]" value"1" [{ if $aConfigValues.confbools.oxTiramizoo_delivery_special}]checked="checked"[{ /if }]>
+                                [{ oxinputhelp ident="oxTiramizoo_delivery_select_type_enable_help" }]
+                            </td>
+                        </tr>
+
+
+                        <tr>
                             <td valign="top" class="edittext" width="250" nowrap="">
                                 <input type="submit" name="save" value="[{ oxmultilang ident="oxTiramizoo_settings_save_label" }]" [{ $readonly}]>
 

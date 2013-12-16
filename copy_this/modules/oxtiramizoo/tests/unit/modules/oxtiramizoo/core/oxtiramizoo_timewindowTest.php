@@ -43,6 +43,17 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_TimeWindowTest extends OxidTestC
         $this->assertEquals(true, $this->_oSubj->isTomorrow());
     }
 
+    public function testIsOnDate()
+    {
+        $oDate1 = new oxTiramizoo_Date('2013-04-01 15:14:12');
+        $oDate2 = new oxTiramizoo_Date('2013-03-31 15:04:02');
+        $oDate3 = new oxTiramizoo_Date('2013-04-01 00:00:01');
+
+        $this->assertEquals(true, $this->_oSubj->isOnDate($oDate1));
+        $this->assertEquals(false, $this->_oSubj->isOnDate($oDate2));
+        $this->assertEquals(true, $this->_oSubj->isOnDate($oDate3));
+    }
+
     public function testHasHours()
     {
         $aHours = array('pickup_after' => '14:00',

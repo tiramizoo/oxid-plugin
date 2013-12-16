@@ -86,6 +86,17 @@ class Unit_Modules_oxTiramizoo_Core_oxTiramizoo_DateTest extends OxidTestCase
 		$this->assertEquals(true, $oDate->isTomorrow());
 	}
 
+    public function testIsOnDate()
+    {
+        $oDate1 = new oxTiramizoo_Date('2013-04-02 05:04:02');
+        $oDate2 = new oxTiramizoo_Date('2013-04-02 15:14:12');
+        $oDate3 = new oxTiramizoo_Date('2013-04-03 00:00:01');
+
+        $this->assertEquals(true, $oDate1->isOnDate($oDate2));
+        $this->assertEquals(false, $oDate2->isOnDate($oDate3));
+        $this->assertEquals(false, $oDate3->isOnDate($oDate1));
+    }
+
 	public function testIsOnTimeHis()
 	{
 		$oDate = new oxTiramizoo_Date('2013-04-02 05:04:02');
