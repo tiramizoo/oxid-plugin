@@ -212,6 +212,7 @@ class oxTiramizoo_Setup
     {
         $this->executeSQL("ALTER TABLE oxtiramizooretaillocationconfig
                                 MODIFY oxvarvalue MEDIUMTEXT;");
+        $oTiramizooConfig = oxRegistry::get('oxTiramizoo_Config');
         $oTiramizooConfig->saveShopConfVar( "bool", 'oxTiramizoo_delivery_special', 1);
     }
 
