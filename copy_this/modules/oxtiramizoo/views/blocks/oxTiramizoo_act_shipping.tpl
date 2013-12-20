@@ -5,11 +5,12 @@
 
 [{if $oView->getCurrentShipSet() == 'Tiramizoo' }]
 <p>
-	[{foreach from=$oView->getAvailableDeliveryTypes() item=oDeliveryType}]
+	[{ assign var=aAvailableDeliveryTypes value=$oView->getAvailableDeliveryTypes() }]
 
+	[{foreach from=$aAvailableDeliveryTypes item=oDeliveryType}]
 
 			[{if $oDeliveryType->getType() == 'immediate'}]
-				<input type="radio" onchange="JavaScript:document.forms.shipping.submit();" name="sTiramizooDeliveryType" value="[{ $oDeliveryType->getType() }]" [{if $oView->getTiramizooDeliveryType() == $oDeliveryType->getType() }]checked="true"[{/if}] /> [{ $oDeliveryType->getName() }]
+				<input type="radio" onchange="JavaScript:document.forms.shipping.submit();" name="sTiramizooDeliveryType" value="[{ $oDeliveryType->getType() }]" [{if $oView->getTiramizooDeliveryType() == $oDeliveryType->getType() }]checked="true"[{/if}] [{if $aAvailableDeliveryTypes|@count eq 1}]style="display: none"[{/if}] /> [{ $oDeliveryType->getName() }]
 
 				[{ assign var=oTimeWindow value=$oDeliveryType->getImmediateTimeWindow() }]
  				<span> - [{ $oTimeWindow->getFormattedDeliveryTimeWindow() }]</span>
@@ -19,7 +20,7 @@
 
 
 			[{elseif $oDeliveryType->getType() == 'evening'}]
-				<input type="radio" onchange="JavaScript:document.forms.shipping.submit();" name="sTiramizooDeliveryType" value="[{ $oDeliveryType->getType() }]" [{if $oView->getTiramizooDeliveryType() == $oDeliveryType->getType() }]checked="true"[{/if}] /> [{ $oDeliveryType->getName() }]
+				<input type="radio" onchange="JavaScript:document.forms.shipping.submit();" name="sTiramizooDeliveryType" value="[{ $oDeliveryType->getType() }]" [{if $oView->getTiramizooDeliveryType() == $oDeliveryType->getType() }]checked="true"[{/if}] [{if $aAvailableDeliveryTypes|@count eq 1}]style="display: none"[{/if}] /> [{ $oDeliveryType->getName() }]
 
 				[{ assign var=oTimeWindow value=$oDeliveryType->getEveningTimeWindow() }]
 				<span> - [{ $oTimeWindow->getFormattedDeliveryTimeWindow() }]</span>
@@ -28,7 +29,7 @@
 				</span>
 
 			[{elseif $oDeliveryType->getType() == 'special'}]
-				<span style="display:block;" >
+				<span style="[{if $aAvailableDeliveryTypes|@count eq 1}]display: none[{else}]display: block[{/if}]" >
 					<input type="radio" onchange="JavaScript:document.forms.shipping.submit();" name="sTiramizooDeliveryType" value="[{ $oDeliveryType->getType() }]" [{if $oView->getTiramizooDeliveryType() == $oDeliveryType->getType() }]checked="true"[{/if}] /> [{ $oDeliveryType->getName() }] <br />
 				</span>
 
